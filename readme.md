@@ -1,6 +1,11 @@
 # The Qwt Book
 
+Website content:
+
+https://ghorwin.github.io/qwtbook
+
 This project attempts to create a sort-of programmers manual to the Qwt library. Work is in progress, but feel free to look at the pages.
+
 
 The book is currently being written in German but webpage-translators do a great job at translating the text to english or other languages.
 
