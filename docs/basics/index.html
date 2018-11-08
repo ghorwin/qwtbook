@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Andreas Nicolai (andreas.nicolai@gmx.net)">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Grundlagen - Das QWT (Hand-)Buch</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Grundlagen";
+    var mkdocs_page_input_path = "basics.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Das QWT (Hand-)Buch</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Start</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../building/">Erstellen und Verwenden</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Grundlagen</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#kleine-einfuhrung-ins-qwtplot">Kleine Einführung ins QwtPlot</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#ein-kurvendiagramm">Ein Kurvendiagramm</a></li>
+        
+            <li><a class="toctree-l3" href="#legende-diagrammachsen-und-hauptgitterlinien">Legende, Diagrammachsen und Hauptgitterlinien</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#diagrammtypen">Diagrammtypen</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#liniendiagramme-und-punktwolken">Liniendiagramme und Punktwolken</a></li>
+        
+            <li><a class="toctree-l3" href="#balkendiagramme">Balkendiagramme</a></li>
+        
+            <li><a class="toctree-l3" href="#spektrogramme">Spektrogramme</a></li>
+        
+            <li><a class="toctree-l3" href="#vektorfelder">Vektorfelder</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#erscheinungsbild-des-plots-anpassen">Erscheinungsbild des Plots anpassen</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#rahmen-und-zeichenflache">Rahmen und Zeichenfläche</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#diagrammelemente">Diagrammelemente</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#titel-kopf-und-fuzeile">Titel, Kopf- und Fußzeile</a></li>
+        
+            <li><a class="toctree-l3" href="#kurven">Kurven</a></li>
+        
+            <li><a class="toctree-l3" href="#legenden">Legenden</a></li>
+        
+            <li><a class="toctree-l3" href="#achsen">Achsen</a></li>
+        
+            <li><a class="toctree-l3" href="#bereichsmarkierungen">Bereichsmarkierungen</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#zeichenreihenfolge">Zeichenreihenfolge</a></li>
+    
+
+    <li class="toctree-l2"><a href="#basisdatentypen">Basisdatentypen</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#qwttext">QwtText</a></li>
+        
+            <li><a class="toctree-l3" href="#datenhalteklassen">Datenhalteklassen</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../interaction/">Diagramm-Interaktion</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../advanced/">Fortgeschrittenes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../customization/">Anpassungen</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../export/">Drucken/Exportieren</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../porting/">von Qwt 5.x zu 6.x</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Das QWT (Hand-)Buch</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Grundlagen</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="kleine-einfuhrung-ins-qwtplot">Kleine Einführung ins QwtPlot</h1>
+<p>Ein paar kleinere Beispiele sollen zunächst die grundlegende Funktionalität und Benutzung des <code>QwtPlot</code>-Widgets zeigen.</p>
+<blockquote>
+<p><strong>Hinweis:</strong> In den nachfolgenden Beispielen werden die in der Qwt-Bibliothek enthaltenen Klassen direkt verwendet und nur deren Attribute angepasst. Weiterführende Anpassungen durch Re-Implementierung von Funktionen in abgeleiteten Klassen werden im Kapitel <a href="customization">Anpassungen</a> beschrieben.</p>
+</blockquote>
+<h2 id="ein-kurvendiagramm">Ein Kurvendiagramm</h2>
+<p>Beginnen wir mit einem einfachen X-Y-Diagramm welches eine Linie darstellt:</p>
+<pre><code class="c++">#include &lt;QApplication&gt;
+#include &lt;QwtPlot&gt;         // oder &lt;qwt_plot.h&gt;
+#include &lt;QwtPlotCurve&gt;    // oder &lt;qwt_plot_curve.h&gt;
+
+int main( int argc, char **argv ) {
+    QApplication a( argc, argv );
+
+    // create plot as main widget
+    QwtPlot plot;
+    plot.setTitle( &quot;Plot Demo&quot; );
+    plot.setCanvasBackground( Qt::white );
+
+    // create a new curve to be shown in the plot and set some properties
+    QwtPlotCurve *curve = new QwtPlotCurve();
+    curve-&gt;setTitle( &quot;Some Points&quot; ); // will later be used in legend
+    curve-&gt;setPen( Qt::blue, 4 ), // color and thickness in pixels
+    curve-&gt;setRenderHint( QwtPlotItem::RenderAntialiased, true ); // use antialiasing
+
+    // data points
+    QPolygonF points;
+    points &lt;&lt; QPointF( 0.0, 4.4 ) &lt;&lt; QPointF( 1.0, 3.0 )
+        &lt;&lt; QPointF( 2.0, 4.5 ) &lt;&lt; QPointF( 3.0, 6.8 )
+        &lt;&lt; QPointF( 4.0, 7.9 ) &lt;&lt; QPointF( 5.0, 7.1 );
+
+    // give some points to the curve
+    curve-&gt;setSamples( points );
+
+    // set the curve in the plot
+    curve-&gt;attach( &amp;plot );
+
+    plot.resize( 600, 400 );
+    plot.show();
+
+    return a.exec();
+}
+</code></pre>
+
+<p>Dies ergibt ein (noch ziemlich langweiliges) Diagrammfenster:</p>
+<p><img alt="basicsPlot1.png" src="../imgs/basicsPlot1.png" /></p>
+<h3 id="include-dateien">Include-Dateien</h3>
+<p>Grundsätzlich gibt es zwei unterschiedliche Varianten für Include-Dateinamen - entweder man verwendet die tatsächlichen Header-Dateinamen, also z.B. <code>#include &lt;qwt_plot.h&gt;</code> für die Klasse <code>QwtPlot</code>, oder man verwendet die klassenspezifischen Headerdateien <code>#include &lt;QwtPlot&gt;</code> (das sind Verweise auf die eigentlichen Headerdateien, wie bei Qt5 üblich). Da manche Headerdateien die Deklarationen für verschiedene Qwt-Klassen enthalten, ist es häufig einfacher bei Kenntniss des Klassennames auch einfach die entsprechend gleichnamigen Headerdateien zu verwenden.</p>
+<blockquote>
+<p><strong>Hinweis:</strong> In den nachfolgenden Beispielen werden die <em>neuen</em> Headerdateinamen (=Klassennamen) verwendet. In den Beispielen im <code>examples</code>-Verzeichnis der Qwt-Bibliothek werden die eigentlichen Headerdateinamen eingebunden.</p>
+</blockquote>
+<h3 id="plot-widget-und-hintergrundfarbe-der-zeichenflache">Plot-Widget und Hintergrundfarbe der Zeichenfläche</h3>
+<p>Im obigen Quelltext wird zunächst das <code>QwtPlot</code> Widget erstellt und erhält einen Titel. Der  <code>CanvasBackground</code> ist der Hintergrund der Zeichenfläche. Der Befehl:</p>
+<pre><code class="c++">plot.setCanvasBackground( Qt::white );
+</code></pre>
+
+<p>legt nur die Hintergrundfarbe der eigentlichen Zeichenfläche (engl. <em>Canvas</em>) fest (siehe auch <a href="#erscheinungsbild-des-plots-anpassen">Erscheinungsbild des Plots anpassen</a>).</p>
+<h3 id="kurve-als-zeichenobjekt-hinzufugen">Kurve als Zeichenobjekt hinzufügen</h3>
+<p>Als nächstes wird ein Zeichenobjekt (engl. <em>PlotItem</em>) für eine Linie/Kurve erstellt und konfiguriert.</p>
+<p>Es gibt viele verschiedene Arten von Zeichenobjekten. Alle haben gemeinsam, dass sie auf der Zeichenfläche gezeichnet werden. Die Reihenfolge des Zeichnens ist dabei für die Sichtbarkeit der einzelnen Zeichenobjekte wichtig (dazu später mehr, siehe Abschnitt <a href="advanced/#zeichenreihenfolge">Zeichenreihenfolge</a>).</p>
+<p><strong>Grundsätzlich</strong> werden alle Zeichenobjekte <strong>auf dem Heap (im Hauptspeicher) erstellt</strong> und später dem Plot übereignet. Das passiert mit:</p>
+<pre><code class="c++">curve-&gt;attach( &amp;plot );
+</code></pre>
+
+<p>wobei das Plot Besitzer des Zeichenobjekts (d.h. unserer Kurve) wird und sich später um das Speicheraufräumen kümmert.</p>
+<p>Zu den sinnvoll anzupassenden Eigenschaften einer Kurve gehören die Farbe und die Linienstärke, siehe <code>QwtPlotCurve::setPen()</code>. Bei dicken Linien lohnt sich das Einschalten von Antialiasing für die Liniendarstellung.</p>
+<blockquote>
+<p><strong>Hinweis:</strong> Das Setzen von Zeichenattributen via <code>setRenderHint()</code> wird von allen Zeichenobjekten unterstützt. So kann man Eigenschaften wie Antialiasing individuell für verschiedene Zeichenobjekte setzen.</p>
+</blockquote>
+<p>Die hinzugefügte Kurve ist standardmäßig der unteren X-Achse und der linken Y-Achse zugeordnet, sodass die Daten der Kurve gleichzeitig zur automatischen Skalierung der Achsen verwendet werden.</p>
+<p>Der Titel der Linie wird mittels <code>QwtPlotCurve::setTitle()</code> gesetzt und in der Legende verwendet, welche wir als nächstes einfügen (weitere Kurveneigenschaften werden später besprochen).</p>
+<h2 id="legende-diagrammachsen-und-hauptgitterlinien">Legende, Diagrammachsen und Hauptgitterlinien</h2>
+<h3 id="legende-hinzufugen">Legende hinzufügen</h3>
+<p>Um eine Legende hinzuzufügen, braucht man lediglich eine Instanz der <code>QwtLegend</code>-Klasse erstellen und im Plot einfügen:</p>
+<pre><code class="c++">QwtLegend * legend = new QwtLegend();
+plot.insertLegend( legend , QwtPlot::BottomLegend);
+</code></pre>
+
+<p>Der dazugehöriger Header wird mittels <code>#include &lt;QwtLegend&gt;</code> eingebunden. Wie auch beim Zeichenobjekt (Kurve) wird das Plot Besitzer der Legende und verwaltet die Resource.</p>
+<blockquote>
+<p><strong>Hinweis:</strong> Wird eine andere Legende gesetzt, so wird die alte zuerst gelöscht. Es ist daher nicht erlaubt, auf eine ersetzte Legende weiterhin zuzugreifen (um das zu umgehen, siehe auch <a href="advanced/#besitzubernahme-von-objekten-des-plots">Besitzübernahme von Objekten des Plots</a>).</p>
+</blockquote>
+<p>Weitere Eigenschaften der Legende werden im Kapitel zur <a href="#legenden">Legendenformatierung</a> erläutert.</p>
+<h3 id="diagrammachsen-konfigurieren">Diagrammachsen konfigurieren</h3>
+<p>Im Gegensatz zu Legende oder Kurven sind Achsen keine Zeichenobjekte sondern fest mit dem Diagramm verbunden. Die Sichtbarkeit der 4 Achsen (links, rechts, oben und unten) kann jedoch individuell festgelegt werden.</p>
+<p>Achseneigenschaften legt man direkt über Zugriffsfunktionen der <code>QwtPlot</code>-Klasse fest, wie z.B. selbstgewählte min/max-Werte:</p>
+<pre><code class="c++">plot.setAxisScale( QwtPlot::yLeft, 0.0, 10.0 );
+</code></pre>
+
+<p>Die Achsen werden durch <code>QwtPlot::yLeft</code>, <code>QwtPlot::yRight</code>, <code>QwtPlot::xBottom</code> und <code>QwtPlot::xTop</code> identifiziert.</p>
+<h3 id="gitterraster-einfugen">Gitterraster einfügen</h3>
+<p>Um in der Zeichenfläche Gitterlinien zu zeichnen, fügt man einfach ein entsprechendes Zeichenobjekt hinzu.</p>
+<pre><code class="c++">QwtPlotGrid *grid = new QwtPlotGrid();
+grid-&gt;setMajorPen(QPen(Qt::DotLine));
+grid-&gt;attach( &amp;plot );
+</code></pre>
+
+<p>Wie schon bei der Legende wird die Instanz der Klasse <code>QwtPlotGrid</code> (einzubinden via <code>#include &lt;QwtPlotGrid&gt;</code>) zunächst im Hauptspeicher angelegt, konfiguriert (hier wird nur der QPen der Hauptgitterlinien verändert) und schließlich dem Plot hinzugefügt.</p>
+<h3 id="liniensymbole-hinzufugen">Liniensymbole hinzufügen</h3>
+<p>Als ein Beispiel etwas weiterführender Konfiguration der Linien (<code>QwtPlotCurve</code>) wird hier ein Liniensymbol hinzugefügt. Diese Eigenschaft (konkret das Zeichnen des Symbols) ist wieder anpassungsfähig ausgelegt und nicht fest in der Klasse <code>QwtPlotCurve</code> integriert.</p>
+<p>Für das Zeichnen von Symbolen existiert die Klasse <code>QwtSymbol</code>, welche nicht direkt als Zeichenobjekt verwendet wird, sondern eine Hilfsimplementierung für verschiedene Anwendungszwecke darstellt. Liniensymbole werden folgendermaßen erstellt:</p>
+<pre><code class="c++">QwtSymbol *symbol = new QwtSymbol(
+    QwtSymbol::Ellipse,    // Form
+    QBrush( Qt::yellow ),  // Füllung
+    QPen( Qt::red, 2 ),    // Rand
+    QSize( 8, 8 ) );       // Größe in Pixel
+
+curve-&gt;setSymbol( symbol ); // Kurve wurde Besitzer
+</code></pre>
+
+<p>Mit diesen Anpassungen sieht das Diagramm schon besser aus (siehe auch Beispiel <code>examples/SimplePlot</code>)</p>
+<p><img alt="basicsPlot2.png" src="../imgs/basicsPlot2.png" /></p>
+<hr />
+<h1 id="diagrammtypen">Diagrammtypen</h1>
+<ul>
+<li>allgemeines zu PlotItems/Curves</li>
+</ul>
+<h2 id="liniendiagramme-und-punktwolken">Liniendiagramme und Punktwolken</h2>
+<p>Liniendiagramme, Punktwolken oder sonstige X-Y-Datenreihen werden mittels <code>QwtPlotCurve</code> Diagrammtypen gezeichnet. Wie im Beispiel oben wird eine Instanz einer solchen PlotCurve erstellt und dem Diagramm angehangen. Die Attribute einer <code>QwtPlotCurve</code> sind vielfältigt:</p>
+<ul>
+<li><code>CurveStyle</code> - legt fest, wie die Datenpunkte gezeichnet werden sollen</li>
+<li><code>CurveAttribute</code>- Zeichenattribute</li>
+<li><code>LegendAttribute</code> - beinflusst die Darstellung der Legendensymbole</li>
+<li><code>PaintAttribute</code> - Performance-bezogene Darstellungsoptionen</li>
+</ul>
+<p>Symbole (Marker) werden via <code>QwtPlotCurve::setSymbol()</code> hinzugefügt.</p>
+<h3 id="entfernen-von-kurven">Entfernen von Kurven</h3>
+<p>Kurven können Diagrammen entnommen oder nur ausgeblendet werden:</p>
+<ol>
+<li>mittels <code>curve-&gt;detach()</code> wird die Kurve dem Diagramm <strong>und</strong> der Legende entnommen (der Speicher der Kurve wird <em>nicht</em> freigegeben!),</li>
+<li>unsichtbar schalten mittels <code>curve-&gt;setVisible(false)</code>, oder</li>
+<li>alternativ Linientyp auf NoCurve und Symbol entfernen:</li>
+</ol>
+<pre><code class="c++">curve-&gt;setStyle(QwtPlotCurve::NoCurve);
+curve-&gt;setSymbol(NULL);
+</code></pre>
+
+<p>Bei Variante (2) und (3) bleibt der Legendeneintrag aber bestehen. Da kann man dann aber immer noch den Legendeneintrag ausblenden:</p>
+<pre><code class="c++">// das LegendenWidget, d.h. Legendeneintrag von der Legende holen
+QWidget* legendWidget = d_legend-&gt;legendWidget(itemToInfo(plotCurve));
+// Standardmäßig ist das Widget des Legendeneintrags vom Typ QwtLegendLabel
+QwtLegendLabel* label = qobject_cast&lt;QwtLegendLabel*&gt;(legendWidget);
+label-&gt;setVisible(true);
+</code></pre>
+
+<h3 id="feststellen-ob-eine-kurve-hinzugefugt-ist">Feststellen, ob eine Kurve hinzugefügt ist</h3>
+<p><code>QwtPlotCurve::plot()</code> liefert einen Zeiger auf das Diagramm, dem die Kurve hinzugefügt wurde, oder <code>NULL</code>, wenn die Kurven derzeit keinem Plot zugeordnet ist.</p>
+<hr />
+<h2 id="balkendiagramme">Balkendiagramme</h2>
+<p>Balkendiagramme zeigen Datenreihen als Balken, entweder horizontal oder vertikal. Dabei können die Balken groupiert oder aufeinandergestapelt angezeigt werden:</p>
+<p><img alt="BarChart-Varianten" src="../imgs/barChartVariants.png" /></p>
+<p>Das Beispiel <code>barchart</code> demonstriert die Erstellung:</p>
+<pre><code class="c++">// zuerst ein PlotItem für Balkendiagramme erstellen
+QwtPlotMultiBarChart * d_barChartItem = new QwtPlotMultiBarChart( &quot;Bar Chart &quot; );
+// die Breite der Balken soll automatische anhand der Achsenskalierung
+// und Widgetbreite bestimmt werden
+d_barChartItem-&gt;setLayoutPolicy( QwtPlotMultiBarChart::AutoAdjustSamples );
+// man kann die Abstände zwischen den Balken konfigurieren
+d_barChartItem-&gt;setSpacing( 20 );
+d_barChartItem-&gt;setMargin( 3 );
+// und wie immer wir zuletzt das PlotItem dem Diagramm hinzugefügt
+d_barChartItem-&gt;attach( this );
+</code></pre>
+
+<p>Eine Legende wird genau wie bei anderen Diagrammtypen hinzugefügt (siehe auch <a href="#legenden">Legenden</a>). Es ist eventuell sinnvoll, die Legendenicongröße anzupassen. Da die Legendenicons vom jeweiligen Diagrammelement generiert werden (hier vom QwtPlotMultiBarChart), setzt man die Legendenicongröße auch darüber:</p>
+<pre><code class="c++">d_barChartItem-&gt;setLegendIconSize( QSize( 10, 14 ) );
+</code></pre>
+
+<p>Die Daten eines Balkendiagramms sind in Datenpunkte (engl. <em>samples</em>) und Balken (engl. <em>bars</em>) organisiert.  Jeder Datenpunkt entspricht einem X-Achsenwert (bei vertikalen Balkendiagrammen) und für jeden Datenpunkt werden entsprechend viele Balken (nebeneinander/übereinander) gezeichnet.</p>
+<p>Die Beschriftung auf der X-Achse (bzw. auf der Y-Achse bei horizontalen Balken) wird mit <code>QwtPlotMultiBarChart::setTitles()</code> gesetzt:</p>
+<pre><code class="c++">QList&lt;QwtText&gt; titles;
+titles &lt;&lt; &quot;First group&quot;;
+titles &lt;&lt; &quot;Second group&quot;;
+titles &lt;&lt; &quot;Third group&quot;;
+d_barChartItem-&gt;setBarTitles( titles );
+</code></pre>
+
+<p>Das Erscheinungsbild der Balken definiert man durch Erstellen und Setzen von <code>QwtColumnSymbol</code> Objekten:</p>
+<pre><code class="c++">// Balkenfarben definieren
+static const char *colors[] = { &quot;DarkOrchid&quot;, &quot;SteelBlue&quot;, &quot;Gold&quot; };
+const int numBars = 3;
+// Für jeden Balken ein Symbol definieren
+for ( int i = 0; i &lt; numBars; i++ )
+{
+    QwtColumnSymbol *symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+    // Die Konfiguration ist ähnlich der regulärer Widgets
+    symbol-&gt;setLineWidth( 2 ); // Pixel-Dimension
+    symbol-&gt;setFrameStyle( QwtColumnSymbol::Raised );
+    symbol-&gt;setPalette( QPalette( colors[i] ) );
+
+    d_barChartItem-&gt;setSymbol( i, symbol );
+}
+</code></pre>
+
+<p>Die eigentlich Daten werden in einer Matrix definiert, welche zum Beispiel in einem Container <code>QVector&lt; QVector&lt;double&gt; &gt;</code> abgelegt werden können. Der erste Index ist die Nummer des "Samples" (der Gruppe), der zweite Index entspricht dem Balkenindex der jeweiligen Gruppe:</p>
+<pre><code class="c++">int numSamples = 5; // 5 Gruppen
+QVector&lt; QVector&lt;double&gt; &gt; samples;
+for ( int i = 0; i &lt; numSamples; i++ ) {
+    QVector&lt;double&gt; values(numBars);
+    // setzen der Werte
+    values[0] = barValue1;
+    values[1] = barValue2;
+    values[2] = barValue3;
+    // ...
+
+    // hinzufügen zur samples-Matrix
+    samples.append(values);
+}
+
+// Abschließend werden dem BarPlot die Daten übergeben
+d_barChartItem-&gt;setSamples( samples );
+</code></pre>
+
+<p>Ein derart erstelltes BarChart sieht zunächst so aus:
+<img alt="BarChart ohne Achsenanpassung" src="../imgs/barChartWithoutAxisConfig.png" /></p>
+<p>Die Samples sind standardmäßig ganzzahligen X-Koordinaten (0,1,2...) zugeordnet.</p>
+<p>Die Achsen werden ganz genauso wie bei anderen Diagrammtypen angepasst (siehe <a href="#achsen">Achsen</a>). Üblicherweise werden bei Balkendiagrammen jedoch keine Ticks und Ticklabels angezeigt. Daher kann man diese ausstellen:</p>
+<pre><code class="c++">// Zugriff auf das Zeichenobjekt für die Achsen holen
+QwtScaleDraw *scaleDraw1 = plot-&gt;axisScaleDraw( QwtPlot::xBottom );
+// Die Achsenlinie und die Ticks lassen sich individuell abschalten
+scaleDraw1-&gt;enableComponent( QwtScaleDraw::Backbone, false );
+scaleDraw1-&gt;enableComponent( QwtScaleDraw::Ticks, false );
+</code></pre>
+
+<p><img alt="BarChart ohne Achsenanpassung" src="../imgs/barChartWithAxisConfig.png" /></p>
+<p>Die Balken jeder Gruppe werden zentriert um die zugeordnete Koordinate gezeichnet, wodurch effektiv eine Skale verwendet wird, die in den negativen Bereich geht. Wird die Zeichenfläche auf die Koordinatenachse ausgerichtet, so werden die Balken am linken und rechten Rand abgeschnitten. Für vertikale Balken lässt sich das über die folgenden Befehle ausschalten:</p>
+<pre><code class="c++">// linksseitig nicht bei 0 abschneiden
+plotLayout()-&gt;setAlignCanvasToScale( QwtPlot::yLeft, false );
+// rechtsseitig nicht beim Maximalwert der X-Achse aufhören
+plotLayout()-&gt;setAlignCanvasToScale( QwtPlot::yRight, false );
+</code></pre>
+
+<h3 id="spezielle-beschriftungen">Spezielle Beschriftungen</h3>
+<p>Manchmal möchte man die Balkengruppe besonders beschriften, wie in folgendem Beispiel:
+<img alt="Monatsbilanzen" src="../imgs/barChartSpezialXAxis.png" /></p>
+<p>Dieses ist mit Qwt 6.1.x und den eingebauten Eigenschaften so nicht möglich. Kapitel <a href="/customization#balkendiagramme-mit-kategoriebeschriftungen">Balkendiagramme mit Kategoriebeschriftungen</a> beschreibt die Vorgehensweise, um mit eigens angepassten Klassen, diese Diagramme zu erstellen.</p>
+<h3 id="balken-entfernen-und-wieder-hinzufugen">Balken entfernen und wieder hinzufügen</h3>
+<p>Balken können mittels <code>QwtPlotMultiBarChart::setVisible()</code> sichtbar oder unsichtbar geschaltet werden. Dabei bleibt jedoch der entsprechende Legendeneintrag in der Liste. Möchte man den Balken einschließlich Legendenicon entfernen, so muss man das Balkendiagramm neu konfigurieren, d.h. neue Titel und neue Daten (mit passender Dimension des Samples-Matrix) setzen.</p>
+<blockquote>
+<p><em>TODO:</em> eleganter Weg einzelne Balken auszublenden?</p>
+</blockquote>
+<h2 id="spektrogramme">Spektrogramme</h2>
+<ul>
+<li>erste Anwendung der Re-Implementierungstechnik</li>
+<li>value() Berechnung</li>
+<li>spezielle Optimierungen</li>
+</ul>
+<h2 id="vektorfelder">Vektorfelder</h2>
+<p>ab <code>6.3.x_trunk</code></p>
+<ul>
+<li>Eingangsdaten, Interpretation</li>
+<li>Konfiguration</li>
+</ul>
+<h1 id="erscheinungsbild-des-plots-anpassen">Erscheinungsbild des Plots anpassen</h1>
+<h2 id="rahmen-und-zeichenflache">Rahmen und Zeichenfläche</h2>
+<p>Beim QwtPlot können verschiedene Elemente angepasst werden. Nachfolgend ist ein QwtPlot zu sehen, welches in einem äußeren Widget (dunkelgray) eingebettet ist. Die hellgraue Fläche ist das eigentliche <code>QwtPlot</code>:</p>
+<p><img alt="Rahmen und Zeichenfläche" src="../imgs/plotStylingOverview.png" /></p>
+<p>Im Screenshot sind die wichtigsten Attribute markiert:</p>
+<ol>
+<li>Innenabstand (siehe <code>QWidget::setContentsMargins()</code>)</li>
+<li>Rahmen (hauptsächlich für den Druck wichtig)</li>
+<li>Hintergrund des Plot-Widgets</li>
+<li>Zeichenfläche (engl. <em>Canvas</em>) (betrifft Hintergrundfarbe und Rahmen)</li>
+</ol>
+<h3 id="farbe-und-rahmen-des-plots">Farbe und Rahmen des Plots</h3>
+<p>Die Farbe des äußeren Bereichs des Plots wird über die Paletteneigenschaft des <code>QwtPlot</code> kontrolliert. Standardmäßig wird der äußere Rand des Plot-Widgets transparant gezeichnet, d.h. die Farbe des darunterliegenden Widgets ist sichtbar. Um eine eigene Farbe zu setzen, muss daher <code>setAutoFillBackground(true)</code> aufgerufen werden:</p>
+<pre><code class="c++">QPalette pal = plot.palette();
+// Die QPalette::Window Farbrolle definiert die Einfärbung
+// des äußeren Plotbereichs
+pal.setColor(QPalette::Window, QColor(196,196,220));
+plot-&gt;setPalette(pal);
+// die Eigenschaft &quot;autoFillBackground&quot; muss dafür eingeschaltet sein
+plot-&gt;setAutoFillBackground(true);
+</code></pre>
+
+<p><img alt="" src="../imgs/plotStyling1.png" /></p>
+<blockquote>
+<p><strong>Hinweis:</strong> In Abschnitt <a href="customization/#gradient-als-plot-hintergrund">Gradient als Plot-Hintergrund</a> wird beschrieben, wie man einen Farbverlauf im Plothintergrund umsetzt, und diesen bei Größenänderung entsprechend anpasst.</p>
+</blockquote>
+<p>Der Rahmen wird wie bei einem normalen Widget angepasst:</p>
+<pre><code class="c++">plot-&gt;setFrameStyle(QFrame::Box | QFrame::Sunken);
+</code></pre>
+
+<p>Normalerweise ist ein solcher Rahmen nicht notwendig für die Bildschirmdarstellung oder für das Einbetten des QwtPlot in eine Programmoberfläche. Der Rahmen ist jedoch häufig beim <a href="export">Export/Druck</a> des Widgets sinnvoll.</p>
+<h3 id="zeichenflache">Zeichenfläche</h3>
+<p>Die Zeichenfläche kann eingefärbt werden:</p>
+<pre><code class="c++">plot-&gt;setCanvasBackground(Qt::darkGray);
+</code></pre>
+
+<p><img alt="" src="../imgs/plotStyling3.png" /></p>
+<p>Der Randabstand zwischen Achsenbeschriftung und Titel zum Rand kann definiert werden:</p>
+<pre><code class="c++">plot-&gt;setContentsMargins(15,10,35,5);
+</code></pre>
+
+<p><img alt="" src="../imgs/plotStyling4.png" /></p>
+<p>Die Rahmen um die Zeichenfläche kann durch Anpassen des Zeichenflächenobjekts (<code>QwtPlotCanvas</code>) verändert werden. <code>QwtPlotCanvas</code> ist von QFrame abgeleitet, wodurch es entsprechend angepasst werden kann. Es wird einfach neues Objekt erstellt, konfiguriert und dem Plot übergeben (das QwtPlot wird neuer Besitzer des Zeichenflächenobjekts):</p>
+<pre><code class="c++">QwtPlotCanvas * canvas = new QwtPlotCanvas(&amp;plot);
+canvas-&gt;setPalette(Qt::white);
+canvas-&gt;setFrameStyle(QFrame::Box | QFrame::Plain );
+canvas-&gt;setLineWidth(1);
+plot-&gt;setCanvas(canvas);
+</code></pre>
+
+<p><img alt="" src="../imgs/plotStyling5.png" /></p>
+<p>Einfacher geht es durch Setzen des Stylesheets für das Canvas-Widget (siehe Qt-Widgets Dokumentation, welche Attribute unterstützt werden):</p>
+<pre><code class="c++">plot-&gt;canvas()-&gt;setStyleSheet(
+    &quot;border: 1px solid Black;&quot;
+    &quot;border-radius: 15px;&quot;
+    &quot;background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1,&quot;
+        &quot;stop: 0 LemonChiffon, stop: 1 PaleGoldenrod );&quot;
+);
+</code></pre>
+
+<p><img alt="" src="../imgs/plotStyling6.png" /></p>
+<h3 id="erweiterte-anpassungen">Erweiterte Anpassungen</h3>
+<p>Wie das Layout der Achsen, Legende, Titel, Kopf- und Fußzeile und die jeweiligen Abstände zusätzlich angepasst werden können, ist in Kapitel <a href="customization/#das-layout-system">Das Layout-System</a> beschrieben.</p>
+<h1 id="diagrammelemente">Diagrammelemente</h1>
+<h2 id="titel-kopf-und-fuzeile">Titel, Kopf- und Fußzeile</h2>
+<ul>
+<li>wo sind die</li>
+<li>RichText-Unterstützung (HTML Tags)</li>
+</ul>
+<h2 id="kurven">Kurven</h2>
+<ul>
+<li>Attribute von Kurven</li>
+<li>Erscheinungsbild und Wirkung von RenderHints</li>
+<li>Zeichenreihenfolge (anpassen)</li>
+</ul>
+<h2 id="legenden">Legenden</h2>
+<p>Grundsätzlich kann ein <code>QwtPlot</code> zwei Legenden haben, und diese sogar gleichzeitig:</p>
+<ul>
+<li>eine außenliegende Legende, und/oder</li>
+<li>eine Legende innerhalb der Zeichenfläche (über oder unter den anderen Diagrammelementen)</li>
+</ul>
+<p>Die Einträge der Legenden werden von den jeweiligen Diagrammtypen (Linen-, Balken-, Farbverlaufsdiagramme) beigesteuert und auch von diesen gezeichnet. Die Legende verwaltet nur deren Positionierung innerhalb der Legende.</p>
+<h3 id="auenliegende-legenden">Außenliegende Legenden</h3>
+<p>Eine außenliegende Legende bedeutet, dass ein reguläres Widget die Legende hält und seitlich (oben, unten, links oder rechts) der Zeichenfläche angeordnet ist.</p>
+<p>Dieses Widget kann auch abseits des QwtPlot in einem anderen Teil des Layouts angeordnet werden. In diesem Fall spricht man von einer <em>externen Legende</em>.</p>
+<p>Dazu wird eine Instanz der Klasse <code>QwtLegend</code> erstellt und dem Diagramm hinzugefügt:</p>
+<pre><code class="c++">QwtLegend * d_legend = new QwtLegend;
+insertLegend(d_legend, QwtPlot::RightLegend);
+</code></pre>
+
+<p>Dabei ist <code>QwtLegend</code> ein ganz reguläres Widget. Intern enthalten Sie ein dynamisches Rasterlayout (Klasse <code>QwtDynGridLayout</code>), welches die Legendeneinträge je nach verfügbarem Platz mehrspaltig auslegt.</p>
+<h4 id="maximale-anzahl-der-spalten-in-der-legende">Maximale Anzahl der Spalten in der Legende</h4>
+<p>Die Anzahl der maximal zu verwendenden Spalten wird mittels <code>QwtLegend::setMaxColumns( uint numColums )</code> festgelegt. Ein Wert von 0 (Standard) definert keine Begrenzung. Das ist für Legenden unterhalb und oberhalb des Plots sinnvoll, da hier auch mitunter sehr viele Legendeneinträge nebeneinander gezeichnet werden sollen. Links- und rechtsseitig angeordnete Legenden haben aber üblicherweise nur eine Spalte:</p>
+<pre><code class="c++">// links und rechtsseitige Legenden sollen nur eine Spalte verwenden
+d_legend-&gt;setMaxColumns(1);
+</code></pre>
+
+<h4 id="positionierung-der-legende">Positionierung der Legende</h4>
+<p>Die Positionierung der Legende wird beim Einfügen der Legende festgelegt. <code>QwtPlot::insertLegend()</code> erwartet einen der vier möglichen Parameter: <code>QwtPlot::BottomLegend</code>, <code>QwtPlot::TopLegend</code>, <code>QwtPlot::RightLegend</code>, <code>QwtPlot::LeftLegend</code>. Wird die Funktion <code>insertLegend()</code> ein weiteres Mal aufgerufen, so wird zunächst die alte Legende gelöscht (auch der Speicher wird freigegeben) und dann wird die neue Legende eingefügt.</p>
+<h4 id="legende-entfernen">Legende entfernen</h4>
+<p>Ruft man <code>QwtPlot::insertLegend()</code> mit einem NULL-Zeiger auf, so wird die bisherige Legende gelöscht, aber keine neue eingefügt. Damit entfernt das Plot auch das Legendenwidget.</p>
+<blockquote>
+<p><strong>Hinweis</strong>: Der Abschnitt <a href="advanced/#besitzubernahme-von-objekten-des-plots">Besitzübernahme von Objekten des Plots</a> zeigt einen Trick, wie man z.B. eine Legende dem Plot temporär entnehmen kann und später wieder hinzufügen kann, ohne dass das Legendenobjekt neu im Speicher erstellt werden muss.</p>
+</blockquote>
+<h4 id="abstande-zwischen-legendeneintragen">Abstände zwischen Legendeneinträgen</h4>
+<p>Bei einer außenliegende Legende sind die eigentlichen Legendeneinträge selbst Widgets die in einem dynamischen GridLayout angeordnet sind. Das dynamische GridLayout steckt selbst in einer QScrollArea-Widget, weswegen die Legende bei zu wenig Platz mit Scrollbalken ausgestattet wird. Auf dieses QScrollArea-Widget kann man mittels <code>QwtLegend::contentsWidget()</code> zugreifen, und darüber auf das dynamische GridLayout.</p>
+<p>Wie bei anderen QLayout-Klassen lassen sich die Abstände zwischen den Widgets mit <code>QLayout::setSpacing()</code> anpassen. Interessant ist das vor allem bei <a href="interaction/#legendeneintrage-einausschalten">umschaltbaren/anklickbaren Legendeneinträgen</a>:</p>
+<pre><code class="c++">// verkleinern der Abstände zwischen den Legendeneinträgen
+d_legend-&gt;contentsWidget()-&gt;layout()-&gt;setSpacing(1);
+</code></pre>
+
+<p>So lassen sich auch Legenden mit vielen Einträgen recht kompakt anzeigen:</p>
+<p><img alt="" src="../imgs/legendIconSpacingBig.png" /> <img alt="" src="../imgs/legendIconSpacingSmall.png" /></p>
+<h4 id="rahmen-und-farbiger-hintergrund-bei-der-legende">Rahmen und farbiger Hintergrund bei der Legende</h4>
+<p>Da QwtLegend-Objekte selber Widgets sind, lässt sich das Erscheinungsbild entsprechend mit Qt-Standardmitteln anpassen, z.B. ein Rahmen setzen und die Hintergrundfarbe anpassen:</p>
+<pre><code class="c++">// einfacher Rahmen
+d_legend-&gt;setFrameStyle(QFrame::Box|QFrame::Sunken);
+// Hintergrundfarbe anpassen
+QPalette pal = d_legend-&gt;palette();
+pal.setColor(QPalette::Window, backgroundColor);
+d_legend-&gt;setPalette(pal);
+// Wichtig: Widget soll selbst den Hintergrund zeichnen
+d_legend-&gt;setAutoFillBackground(true);
+</code></pre>
+
+<p>Gegenüber der Standardeinstellung (links) hebt sich die Legende dadurch optisch ab (rechts):</p>
+<p><img alt="Legende ohne Hintergrund" src="../imgs/legendNoBackgroundColor.png" /> <img alt="Legende with Hintergrund" src="../imgs/legendBackgroundColor.png" /></p>
+<h4 id="todo">TODO</h4>
+<ul>
+<li>Ratio Parameter</li>
+</ul>
+<h3 id="legendensymbole">Legendensymbole</h3>
+<p>Die LegendIcons bzw. allgemein die Einträge in der Legende werden vom jeweiligen PlotItem bzw. der Kurve generiert. Entsprechende Anpassungsfunktionen sind daher für die jeweiligen Diagrammtypklassen verfügbar, d.h. in <code>QwtPlotCurve</code>, <code>QwtPlotSpectrogram</code> und <code>QwtPlotMultiBarChart</code> definiert.</p>
+<p>Man kann die Legendeneinträge auch komplett selbst zeichnen, wie im Kapitel <a href="customization/#eigene-legendeneintrage-zeichnen">Eigene Legendeneinträge zeichnen</a> beschrieben ist.</p>
+<h4 id="darstellung-der-legendeneintrage-bei-kurven-linie-rechteck-oder-farbe">Darstellung der Legendeneinträge bei Kurven: Linie, Rechteck oder Farbe?</h4>
+<p>...<code>QwtPlotCurve::setLegendAttribute()</code></p>
+<h3 id="innenliegende-legenden">Innenliegende Legenden</h3>
+<ul>
+<li>Skizze mit relevanten Abmessungen</li>
+<li>Konfiguration</li>
+<li>Offset (Version 6.1.x und 6.3.x_trunk)</li>
+</ul>
+<h2 id="achsen">Achsen</h2>
+<ul>
+<li>allgemeines zum Zusammenspiel zwischen ScaleDiv und ScaleDraw, wie werden diese von Achsen verwendet</li>
+<li>woher erhalten Achsen die Werte</li>
+</ul>
+<h3 id="sichtbarkeit-der-achsen">Sichtbarkeit der Achsen</h3>
+<p>Achsen können individuell sichtbar oder versteckt geschaltet werden. Standardmäßig sind die xBottom-Achse und die yLeft-Achse sichtbar. Die Sichtbarkeit wird mit <code>QwtPlot::enableAxis(axisID, on)</code> umgeschaltet.</p>
+<h3 id="achsentitel">Achsentitel</h3>
+<p>Achsentitel werden mittels <code>QwtPlot::setAxisTitle(int axisId, const QwtText &amp;title)</code> gesetzt.</p>
+<h4 id="achsentitel-invertierenvon-rechts-lesbar-machen">Achsentitel invertieren/von rechts lesbar machen</h4>
+<p>Bei technischen Diagrammen ist es üblich, den Titel der rechten y-Achse von rechts lesbar zu zeichnen. Dies wird durch Setzen eines LayoutFlags des Achsenwidgets erreicht:</p>
+<pre><code class="c++">plot-&gt;axisWidget(QwtPlot::yRight)-&gt;setLayoutFlag(QwtScaleWidget::TitleInverted, false);
+</code></pre>
+
+<h3 id="achsenbeschriftung-zahlendatumzeit">Achsenbeschriftung (Zahlen/Datum/Zeit)</h3>
+<p>Die Achsentitel können ferner rotiert und positioniert werden, wofür die Funktionen</p>
+<pre><code class="c++">void setAxisLabelAlignment( int axisId, Qt::Alignment );
+void setAxisLabelRotation( int axisId, double rotation );
+</code></pre>
+
+<p>verwendet werden. Der Rotationswinkel wird hierbei in Grad angegeben. Je nach Rotation muss man den Abstand zwischen Label und Achse anpassen, bzw. die Ausrichtung (Alignment) verändern.</p>
+<p>Für die untere X-Achse sind folgende Einstellungen sinnvoll:</p>
+<pre><code class="c++">// Senkrechte Beschriftung, von rechts lesbar
+plot-&gt;setAxisLabelRotation(QwtPlot::xBottom, -90);
+plot-&gt;setAxisLabelAlignment(QwtPlot::xBottom, Qt::AlignLeft | Qt::AlignVCenter);
+// 45° Beschriftung
+plot-&gt;setAxisLabelRotation(QwtPlot::xBottom, -45);
+plot-&gt;setAxisLabelAlignment(QwtPlot::xBottom, Qt::AlignLeft | Qt::AlignBottom);
+</code></pre>
+
+<h3 id="lineare-achsen-und-deren-eigenschaften">Lineare Achsen und deren Eigenschaften</h3>
+<p>...</p>
+<h3 id="logarithmische-achsen-und-andere-transformationen">Logarithmische Achsen und andere Transformationen</h3>
+<p>...
+Beispiel: <code>scaleengine</code></p>
+<h3 id="datums-zeit-achsen">Datums-/Zeit-Achsen</h3>
+<ul>
+<li>Werte in ms (Epoche)</li>
+<li>Formatierung, Zoomstufen</li>
+</ul>
+<hr />
+<h2 id="bereichsmarkierungen">Bereichsmarkierungen</h2>
+<p>Ein horizontales oder vertikales Band als Hervorherbung kann durch ein <code>QwtPlotZoneItem</code> erstellt werden:</p>
+<pre><code class="c++">QwtPlotZoneItem* zone = new QwtPlotZoneItem();
+zone-&gt;setPen( Qt::darkGray );
+zone-&gt;setBrush( QColor( &quot;#834358&quot; ) );
+// Ausrichtung: vertikales oder horizontales Band
+zone-&gt;setOrientation( Qt::Horizontal );
+// Der Bereich des Bandes in Koordinateneinheiten
+zone-&gt;setInterval( 3.8, 5.7 );
+// Hinzufügen zum Diagramm
+zone-&gt;attach( this );
+</code></pre>
+
+<hr />
+<h1 id="zeichenreihenfolge">Zeichenreihenfolge</h1>
+<p>Alle Elemente, die innerhalb der Zeichenflächte gezeichnet werden, sind von QwtPlotItem abgeleitet. Diese Klasse hat die Eigenschaft zValue, welche die Zeichenreihenfolge definiert. Höhere Werte bedeuten</p>
+<ul>
+<li>wie kontrolliert man die Zeichenreihenfolge (zValues)</li>
+<li>Standardreihenfolge beim Zeichnen</li>
+</ul>
+<hr />
+<h1 id="basisdatentypen">Basisdatentypen</h1>
+<p>Die Qwt-Bibliothek bringt einige grundlegende Datentypen/Klassen mit, welche die Datentypen der Qt Bibliothek erweitert.</p>
+<h2 id="qwttext">QwtText</h2>
+<p>Die Klasse <code>QwtText</code> ersetzt die <code>QString</code> Klasse und erlaubt die Definition von Texten, welche auf unterschiedliche Art und Weise interpretiert und damit gezeichnet werden können.</p>
+<p>Man kann mittels der <code>QwtText</code> Klasse unter anderem HTML-basierten RichText verwenden, z.B. für die Hoch- und Tiefstellung von Zahlen bei Einheiten:</p>
+<pre><code class="c++">// Ein Achsentitel mit HTML-basierter Hochstellung
+QwtText axisTitle(tr(&quot;Area [m&lt;sup&gt;2&lt;/sup&gt;]&quot;), QwtText::RichText);
+</code></pre>
+
+<p>Natürlich können auf diese Weise auch beliebig in HTML formatierte Texte verwendet werden.</p>
+<p><code>QwtText</code> wird bei allen Zugriffsfunktionen verwendet, bei dehnen eine Zeichenkette verlangt wird.</p>
+<h3 id="textengine">TextEngine</h3>
+<h3 id="paintattributes-and-layoutattributes">PaintAttributes and LayoutAttributes</h3>
+<h2 id="datenhalteklassen">Datenhalteklassen</h2>
+<h3 id="qwtrasterdata">QwtRasterData</h3>
+<h3 id="qwtintervalsample">QwtIntervalSample</h3>
+<h3 id="qwtsetsample">QwtSetSample</h3>
+<h3 id="qwtohlcsample">QwtOHLCSample</h3>
+<h3 id="qwtvectorsample-ab-qwt-63x">QwtVectorSample (ab Qwt 6.3.x)</h3>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../interaction/" class="btn btn-neutral float-right" title="Diagramm-Interaktion">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../building/" class="btn btn-neutral" title="Erstellen und Verwenden"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright 2018 - Andreas Nicolai (andreas.nicolai@gmx.net)</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../building/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../interaction/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

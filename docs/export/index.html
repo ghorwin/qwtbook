@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Andreas Nicolai (andreas.nicolai@gmx.net)">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Drucken/Exportieren - Das QWT (Hand-)Buch</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Drucken/Exportieren";
+    var mkdocs_page_input_path = "export.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Das QWT (Hand-)Buch</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Start</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../building/">Erstellen und Verwenden</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../basics/">Grundlagen</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../interaction/">Diagramm-Interaktion</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../advanced/">Fortgeschrittenes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../customization/">Anpassungen</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Drucken/Exportieren</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#qwtplot-exportieren-und-drucken">QwtPlot exportieren und drucken</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#the-basics">The basics</a></li>
+        
+            <li><a class="toctree-l3" href="#resolution">Resolution</a></li>
+        
+            <li><a class="toctree-l3" href="#line-widths-and-the-cosmetic-property">Line widths and the 'cosmetic' property</a></li>
+        
+            <li><a class="toctree-l3" href="#transformations-and-their-impact-on-plot-items">Transformations and their impact on plot items</a></li>
+        
+            <li><a class="toctree-l3" href="#exporting-bitmaps">Exporting bitmaps</a></li>
+        
+            <li><a class="toctree-l3" href="#exporting-vector-imagesprinting">Exporting vector images/printing</a></li>
+        
+            <li><a class="toctree-l3" href="#additional-topics">Additional topics</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../porting/">von Qwt 5.x zu 6.x</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Das QWT (Hand-)Buch</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Drucken/Exportieren</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="qwtplot-exportieren-und-drucken">QwtPlot exportieren und drucken</h1>
+<p>This section discusses various aspects related to exporting a QwtPlot to images
+(or image files) and printing charts with good quality to different sources.</p>
+<h2 id="the-basics">The basics</h2>
+<p>The process of drawing the actual QwtPlot is called <em>rendering</em> the plot. There are
+several different functions available for that, which we discuss later.</p>
+<p>When a QwtPlot is rendered on a raster-based paint device (see QPaintDevice), the
+result will be a pixel buffer (e.g. image/pixmap), which can be stored, for example,
+in PNG files.</p>
+<p>When the plot is rendered on a vector paint device (PDF, SVG, ...) the result will
+be a vector graphic and it depends on the viewer (or printer) to show/print it. As
+a vector graphic, all items are drawn within some coordinate system which can
+represent either real distances (mm or inch) or pixels or anything. Conversion
+between these coordinate systems is typically done by some factor.</p>
+<h2 id="resolution">Resolution</h2>
+<p>A typical way to relate between real distances to pixels/points is the resolution,
+expressed as DotsPerInch (DPI). Printers have typically a resolution of 600 DPI or
+1200 DPI. The resolution of a monitor depends on the screen resolution
+(e.g. FullHD 1920x1080) and the monitor size, with typical values between 72 and
+120 DPI. Above that (for 4K laptop screens) such displays are sometimes termed
+HighDPI displays.</p>
+<p>It is important to keep this resolution in mind, because viewers of the plot have
+different expectations when whatching a plot on the monitor or on paper or in
+a PDF. Here, you can zoom in to see details (same as using magnifying glass for the
+printed plot).</p>
+<p>The equation for converting from distance in mm to pixel is:</p>
+<pre><code>resolution / 25.4 mm/inch = pixel / mm
+sizePixel = sizeMM * resolution / 25.4
+</code></pre>
+<p>For example, on a monitor with resolution of 85 DPI a single pixel has a width of:</p>
+<pre><code>1 pixel * 25.4 / 85 = 0.3 mm
+</code></pre>
+<h2 id="line-widths-and-the-cosmetic-property">Line widths and the 'cosmetic' property</h2>
+<p>For example, if you have a 15'' screen with full HD resolution, you may want to
+use exactly 1 pixel-wide lines for the plot grid or the curves. Such a single
+pixel line then has about 0.2...0.3 mm width (see above) - good to see without
+too much effort.</p>
+<p>Using the same screen size but with 4k display, a single-pixel line may be already
+too thin to see. Still, 1 pixel wide lines are typically good for drawing on
+computer screens. Since drawing single-pixel lines is very common, Qt such
+lines can be drawn using a QPen with pen width of 0 (Note: in previous Qt versions
+this was the default, since Qt 5 the default is 1 pixel wide). A pen with 0 width
+is also termed a <em>cosmetic</em> pen, meaning that regardless on the resolution of the
+paint device, always only 1 pixel is used for drawing.</p>
+<p>However, the cosmetic property can be also set for pens with other widths:</p>
+<pre><code class="c++">    QPen::setCosmetic(bool)
+</code></pre>
+
+<p>Generally, all lines with cosmetic pens shall be drawn with exactly the
+specified number of pixels, regardless of target paint device resolution and
+possible <strong>transformations</strong>.</p>
+<h2 id="transformations-and-their-impact-on-plot-items">Transformations and their impact on plot items</h2>
+<p>When rendering the plot to a painting device, the plot items are drawn with
+coordinates which are transformed to the target coordinate system. Part of this
+transformation is also the scaling of plot item properties, such as font sizes
+and line widths. Normally, all plot items are drawn scaled to the coordinate
+system (and resolution) of the target paint device. The scale factor is
+determined by various factors, as we will see below.</p>
+<p>Only cosmetic pens are exempt from the scaling. This may lead to surprising
+results, when a cosmetic pen with width of 1 is rendered onto a 1200 DPI
+printer page. Indeed, the printer will only print a single dot as line width,
+leading to a tiny and hard to see line. Apparently, the cosmetic pen size
+should somehow be aligned with the target resolution to get an expected
+physical width. Different options on how to do this are shown below.</p>
+<h2 id="exporting-bitmaps">Exporting bitmaps</h2>
+<p>Rendering a QwtPlot onto a bitmap is fairly easy. However, there are three
+different options to consider:</p>
+<ul>
+<li>hardcopy of the plot as shown on the screen</li>
+<li>rendering on different pixel size yet same scaling</li>
+<li>rendering on different pixel size yet keep appearance and simply scale chart</li>
+</ul>
+<h3 id="bitmap-hardcopy">Bitmap hardcopy</h3>
+<p>Basically, the same as a screenshot, good for copying the QwtPlot to the
+clipboard, simply use:</p>
+<pre><code class="c++">    pixmap = plot-&gt;grab();              // Qt 5 or newer
+    pixmap = QPixmap::grabWidget(plot); // Qt 4
+</code></pre>
+
+<h3 id="bitmap-with-different-size-yet-same-scaling">Bitmap with different size yet same scaling</h3>
+<p>This is basically the same as resizing a QwtPlot widget - there will be
+more space for the coordinate axes, there will be more canvas area for the plot
+items and more space for labels and text.</p>
+<p>Use:</p>
+<pre><code class="c++">  QwtPlotRenderer renderer; // the renderer
+    QRect imageRect( 0.0, 0.0, imageWidth, imageHeight ); // target size in pixels
+    QImage image( imageRect.size(), QImage::Format_ARGB32 );
+    image.fill( Qt::white ); // fill with uniform background color, usually white
+
+    QPainter painter( &amp;image );
+    renderer.render( plot, &amp;painter, imageRect );
+    painter.end();
+</code></pre>
+
+<p>For this variant, all pens and fonts will remain exactly the same as in the
+QwtPlot widget.</p>
+<h3 id="export-bitmap-with-proportional-scaling">Export bitmap with proportional scaling</h3>
+<p>This type of export can be thought of as method to shrink/expand the current
+plot to a new size. Major difference to the method above is that the proportions
+within the chart stay the same. For example, the ratio of grid lines distance to
+label text lengths and curve distances stays (approximately) the same.</p>
+<p>Use:</p>
+<pre><code class="c++">    QwtPlotRenderer renderer; // the renderer
+
+    QRect imageRect( 0.0, 0.0, imageWidth, imageHeight ); // target size in pixels
+    QImage image( imageRect.size(), QImage::Format_ARGB32 );
+
+    int resolution = 96; // in DPI, 24'' Monitor with 1920x1080 screen resolution
+    const double mmToInch = 1.0 / 25.4;
+    const int dotsPerMeter = qRound( resolution * mmToInch * 1000.0 );
+    image.setDotsPerMeterX( dotsPerMeter );
+    image.setDotsPerMeterY( dotsPerMeter );
+
+    image.fill( Qt::white ); // fill with uniform background color, usually white
+
+    QPainter painter( &amp;image );
+    renderer.render( plot, &amp;painter, imageRect );
+    painter.end();
+</code></pre>
+
+<p>It is now possible to generate a bitmap with the same dimensions, yet different
+level of detail, by adjusting the resolution. <em>Higher resolution</em> means effectively
+<em>more pixels per item</em>, e.g larger fonts, larger line width etc.</p>
+<blockquote>
+<p><strong>Note:</strong> The scaling properties (cosmetic!) have already an impact. When curve pens
+and grid pens have a cosmetic pen assigned (e.g. 1 or 2 pixels), they will be drawn
+with exactly this amount of pixels onto the bitmap.</p>
+</blockquote>
+<p>To summarize: <em>when exporting bitmaps, use cosmetic pens</em></p>
+<h3 id="bitmap-export-for-screen-presentation">Bitmap export for screen presentation</h3>
+<p>When exporting bitmaps for use in a presentation and the resolution is
+known (e.g. 1024x786 on old projectors), typically the task is to generate
+a plot with a given maximum resolution (to fit on screen), without any
+scaling in the presentation software (pixel = pixel) when the presentation
+is shown on screen, and yet enough detail of the plot.</p>
+<p>Suppose your plot is configured to look nicely
+in the QwtPlot widget with a resolution of 1980x1080 pixels (full HD).
+In your presentation you have only about 600x450 pixels. When exporting,
+select the target size as image size and adjust the DPI value until you have a good
+compromise between level of detail and size of fonts in the diagram. Thanks
+to the cosmetic pens (if used), the lines and grid will always be drawn
+nicely with good contrast and without blurring.</p>
+<h2 id="exporting-vector-imagesprinting">Exporting vector images/printing</h2>
+<p>Exporting a vector image or printing a plot works essentially the same. The
+plot is simply rendered on a vector-based paint device. Such a paint device has
+properties such as size and resolution, something
+that is, for example, provided by a QPrinter.</p>
+<h3 id="expectations-on-plot-resultsdifferences-to-screen-view">Expectations on plot results/differences to screen view</h3>
+<p>When exporting a plot to a vector graphic, some expectations can be formulated:</p>
+<ol>
+<li>
+<p>when looking at the vector graphic in a viewer (e.g. in a PDF viewer) it
+  should look similar to the plot in the QwtPlot widget</p>
+</li>
+<li>
+<p>when zooming in, there should be more details visible; for example, when the
+  original 100% view shows high frequency oscillations in the diagram such that
+  many lines are drawn next to/over each other, zooming in into the vector graphic
+  should reveal more details</p>
+</li>
+<li>
+<p>when <em>looking</em> at a PDF/Vector graphic in a viewer, some lines (grid,
+   coordinates and label ticks) should be drawn with 1-pixel-wide lines, yet
+   when <em>printing</em> the plot, the same lines should be drawn with
+   a meaningful thickness (e.g. 0.2 mm thick lines), so that they appear
+   nicely on the page</p>
+</li>
+<li>
+<p>exporting a plot with 40x30 mm size or 80x60 mm size should result in the
+   same line ticknesses to be used (e.g. curve line thickness should be 0.6 mm
+   as selected)</p>
+</li>
+</ol>
+<p>Apparently, there is no single correct solution and different options have to be
+used depending on the desired scenario.</p>
+<blockquote>
+<p><strong>Note:</strong> A general misconception may be, that a vector graphic output format
+can be used to emulate the zooming features of QwtPlot. Instead, the general
+purpose of a vector plot is to <em>maintain the general appearance</em> (incl. line
+thicknesses) regardless of target resolution. For example, when exploiting
+a PDF viewer to zoom into a chart, one may <em>not</em> expect the same functionality as
+zooming into a QwtPlot, i.e. more samples being drawn with line widths kept
+the same regardless of zoom level (see discussion of cosmetic property treatment
+below).</p>
+</blockquote>
+<h3 id="export-formats">Export formats</h3>
+<h4 id="pdf-specifics">PDF specifics</h4>
+<p>A common understanding of the PDF requirement is, that zooming into the PDF
+scales <em>all elements</em> in correct
+proportions. Hence, if a plot shown at 100% zoom hides some details (because curve
+line thickness is too large), zooming in will not help at all, since curve line
+thicknesses scale just the same.</p>
+<p>For cosmetic pens the property has only an impact on the <em>initial
+composition</em> of the vector graphic. A viewer will nonetheless scale line width
+during zoom.</p>
+<p>Tricky is the situation for PDFs with cosmetic, 1-pixel wide lines (pen-width = 0).
+For viewing PDFs in a pdf viewer this may be quite neat, yet when printing such
+a PDF with 600 DPI or higher, the extremely thin lines will almost vanish. So when
+exporting, one should distinguish between "screen viewing" and "printing", which
+may be quite confusing to the user of the PDF.</p>
+<p>Therefore, for <em>generally</em> usable PDFs, it is recommended to <em>avoid cosmetic 1-pixel
+lines (i.e. pen-width = 0) in PDFs</em>, altogether.</p>
+<blockquote>
+<p><strong>Note:</strong> for Qt 5.10 and probably other versions as well there appears to be a bug
+that prevents the pdf paint engine of Qt to consider the cosmetic property when
+a solid line with full opaque color is plotted with pen width != 0. Workaround
+is to set the alpha value of the curve pen to 254. However, there is generally
+a better way to handle line widths, see below. Do not use cosmetic pens for
+PDF export.</p>
+</blockquote>
+<h4 id="svg-features">SVG features</h4>
+<p>SVG files (at least with SVG version 1.2 or newer) have a property for path elements
+<code>vector-effect="non-scaling-stroke"</code></p>
+<p>In a viewer that supports this feature (and with certain additional requirements:
+viewport attribute must exist, width and height attribute must <em>not</em> exist),
+the cosmetic lines will be shown indeed with constant width regardless of the zoom
+level. However, this feature is far from being universally supported. At the
+current state, using cosmetic pens will not even work for SVG export.</p>
+<p><strong>Do not rely on the cosmetic property to work when exporting SVG images.</strong></p>
+<h4 id="pseps-export">PS/EPS export</h4>
+<p>Postscript/Encapsulated Postscript export has been removed from Qt with version 5,
+so there is no paint device available anylonger that generates this. However,
+using a postscript printer driver and storing the result to file will
+generally work (see printing section below).</p>
+<h4 id="emf-export">EMF export</h4>
+<p>EMF export is important for Windows users, but relies on translating
+Qt paint engine drawing commands into Windows drawing API commands. To export
+the plot to emf format (either cliboard or *.emf file), a third-party
+library (e.g. EmfLibary) is needed that generates EMF commands from
+paint device commands.</p>
+<blockquote>
+<p><strong>Note:</strong> It is important that the EMF library implements a paint device, that is
+recognized by its type as a vector-based paint device (greater or equal to
+User-type). QwtPlot distinguishes between raster and vector based paint devices,
+so if characteristic steps appear in lines within the EMF output, it is likely
+that the paint device type is reported/recognized wrong.</p>
+</blockquote>
+<h3 id="target-paint-device-resolution">Target paint device resolution</h3>
+<p>The target paint device resolution is usually given. A printer will report
+the resolution selected by the printer driver. For PDF or SVG export, the resolution
+can be arbitrarily selected. However, it should be selected such, that enough
+points remain to render a plot without data loss. For example, if 10000 samples/data
+points are equally spaced over the canvas area, the resulting width of
+generated plot (=total number of points) should be well above 10000,
+if chart should be plotted without data loss. If the line thickness is selected
+fine enough, zooming into the vector graphic will eventually yield</p>
+<h3 id="adjusting-line-width">Adjusting line width</h3>
+<p>When configuring a QwtPlot for viewing a diagram in the widget, the curve pen widths
+are typically selected based on pixels on the screen. For FullHD displays, pen widths
+of 1-3 pixels are common, for 3K and 4K displays (HighDPI displays), pen widths up
+to 6 pixels are used.</p>
+<p>However, when printing charts, typical pen widths should in the magnitude
+of 0.2 ... 1 mm (where 1 mm is already a fairly thick line). Marker symbols are often
+drawn with less than 0.3 mm thick lines.</p>
+<p>There are generally two approaches on how to achieve this:</p>
+<ol>
+<li>
+<p>select export DPI such, that the desired mm widths are achieved based on the current pen widths already used for the widget (requires <em>non-cosmetic</em> pens to be used)</p>
+</li>
+<li>
+<p>modify pen widths of all plot items prior to printing to get the desired width (this works with cosmetic and non-cosmetic pens, though the calculation of the
+actual pen width to use will be different)</p>
+</li>
+</ol>
+<h3 id="adjusting-dpi">Adjusting DPI</h3>
+<p>It is important to note that a change of the DPI settings will affect not only
+line width but also font heights.</p>
+<p>The required DPI can be calculated based on the equation shown above in
+section <a href="#print-resolution">Print Resolution</a>.</p>
+<p>\subsubsection exportingVectorLineWidthPenAdjustment Adjusting pen width</p>
+<p>The advantage of this approach is, that the overall appearance of the vector image
+looks very close to that rendered on the QwtPlot widget.</p>
+<p>Suppose the resolution (in DPI) of the target device is known and a given, i.e.
+the plot should be rendered with exactly this resolution. This avoids print-time
+scaling and may give best quality (though I wonder if someone can really see
+the difference between a 300 DPI plot upscaled to 1200 DPI or a natively
+rendered 1200 DPI plot. The effect on antialiasing will be minor, but maybe
+worth a try).</p>
+<p>Again, we rearrage the equation from section \ref printingResolution.</p>
+<h2 id="additional-topics">Additional topics</h2>
+<pre><code>renderer.setLayoutFlag(QwtPlotRenderer::FrameWithScales, true);
+</code></pre>
+<h3 id="sample-reduction">Sample reduction</h3>
+<p>...</p>
+<p>*/</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../porting/" class="btn btn-neutral float-right" title="von Qwt 5.x zu 6.x">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../customization/" class="btn btn-neutral" title="Anpassungen"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright 2018 - Andreas Nicolai (andreas.nicolai@gmx.net)</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../customization/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../porting/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

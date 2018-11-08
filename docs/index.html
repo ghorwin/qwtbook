@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="None">
+  <meta name="author" content="Andreas Nicolai (andreas.nicolai@gmx.net)">
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <title>Start - Das QWT (Hand-)Buch</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Start";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> Das QWT (Hand-)Buch</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href=".">Start</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#das-qwt-hand-buch">Das Qwt (Hand-)Buch</a></li>
+    
+
+    <li class="toctree-l2"><a href="#handbuchstruktur">Handbuchstruktur</a></li>
+    
+
+    <li class="toctree-l2"><a href="#allgemeine-einfuhrung">Allgemeine Einführung</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#uber-die-bibliothek">Über die Bibliothek</a></li>
+        
+            <li><a class="toctree-l3" href="#widget-konzept-und-erscheinungsbild">Widget-Konzept und Erscheinungsbild</a></li>
+        
+            <li><a class="toctree-l3" href="#besitzereigentumer-konzept-des-qwtplot-widgets">Besitzer/Eigentümer-Konzept des QwtPlot-Widgets</a></li>
+        
+            <li><a class="toctree-l3" href="#zeichenobjekte-und-deren-achsenabhangigkeit">Zeichenobjekte und deren Achsenabhängigkeit</a></li>
+        
+            <li><a class="toctree-l3" href="#vererbungskonzept">Vererbungskonzept</a></li>
+        
+            <li><a class="toctree-l3" href="#verwendung-der-designer-plugins">Verwendung der Designer Plugins</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="building/">Erstellen und Verwenden</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="basics/">Grundlagen</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="interaction/">Diagramm-Interaktion</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="advanced/">Fortgeschrittenes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="customization/">Anpassungen</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="export/">Drucken/Exportieren</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="porting/">von Qwt 5.x zu 6.x</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">Das QWT (Hand-)Buch</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Start</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="das-qwt-hand-buch">Das Qwt (Hand-)Buch</h1>
+<p><em>Copyright 2018, Andreas Nicolai <andreas.nicolai-at-gmx.net></em></p>
+<pre><code></code></pre>
+
+<p>Qwt (<em>Qwt - Qt Widgets for Technical Applications</em>, akt. Entwickler <em>Uwe Rathmann</em>) ist eine open-source Bibliothek für technische Anwendungen und stellt
+bestimmte Widgets für Anzeigen und Kontrollkomponenten bereit. Die wohl wichtigste Komponente der Qwt Bibliothek ist das <code>QwtPlot</code>,
+eine sehr flexible und mächtige Diagrammkomponente.</p>
+<p><img alt="QwtPlot Beispieldiagramm" src="imgs/exBode.png" /></p>
+<p>Die Qwt Bibliothek steht unter einer OpenSource Lizenz und wird auf
+SourceForge.net gehostet:</p>
+<ul>
+<li><a href="http://qwt.sourceforge.net">Qwt Webseite (englisch)</a></li>
+<li><a href="https://sourceforge.net/projects/qwt">Qwt SourceForge Projektseite</a></li>
+</ul>
+<h1 id="handbuchstruktur">Handbuchstruktur</h1>
+<p>Das Handbuch ist in folgende Kapitel unterteilt:</p>
+<ul>
+<li><a href="#allgemeine-einfuhrung">Allgemeine Einführung</a> gibt einen Kurzüberblick über die Bibliothek und deren Grundkonzepte</li>
+<li><a href="building">Erstellen und Verwenden</a> beschreibt die Konfiguration und Erstellung der Bibliothek, und die Verwendung in eigenen Programmen</li>
+<li>Das Kapitel <a href="basics">Grundlagen</a> beginnt mit einem einfachen Einführungsbeispiel, in welchem die einzelnen Schritte bis zum fertigen Diagramm beschrieben sind. Danach werden die einzelnen Anpassungsmöglichkeiten beschrieben.</li>
+<li><a href="interaction">Diagramm-Interaktion</a> beschreibt die Funktionen zur Nutzerinterkation mit dem Diagramm, z.B. Zoomen und Verschieben des Diagrammausschnitts, Anzeige von Werten unter dem Cursor, etc.</li>
+<li>Im Kapitel <a href="advanced">Fortgeschrittenes</a> werden weiterführende Techniken zur Anpassung des Diagrammerscheinungsbildes beschrieben.</li>
+<li><a href="customization">Anpassungen</a> beschreibt die Erweiterung der Diagrammfunktionalität durch eigenen Klassen, welche die eingebauten Qwt-Klassen durch Überladung erweitern</li>
+<li><a href="export">Drucken/Exportieren</a> behandelt das Thema des Diagrammexports als Bild oder Vektorgrafik, letzteres auch zum Drucken des Diagramms</li>
+<li>Im Anhangskapitel <a href="porting">von Qwt 5.x zu 6.x</a> werden typische Fragen und Problemstellungen bei der Portierung von Qwt 5 auf Qwt 6 beantwortet.</li>
+</ul>
+<h1 id="allgemeine-einfuhrung">Allgemeine Einführung</h1>
+<h2 id="uber-die-bibliothek">Über die Bibliothek</h2>
+<h3 id="entwicklungsgeschichte">Entwicklungsgeschichte</h3>
+<ul>
+<li>die erste Version der Qwt-Bibliothek stammt noch aus dem Jahr 1997 von Josef Wilgen</li>
+<li>seit 2002 wird die Bibliothek von <em>Uwe Rathmann</em> entwickelt und gepflegt</li>
+<li>Version 5 ist wohl am weitesten verbreitet (erstes Release vom 26.02.2007)</li>
+<li>Version 6 (erstes Release vom 15.04.2011, kein Qt3 Support mehr) enthält wesentliche API-Änderungen</li>
+<li>aktuelle stabile Version 6.1.3, im trunk gibt es bereits wesentlich mehr und fortgeschrittene Funktionen</li>
+</ul>
+<h3 id="download-der-bibliothek">Download der Bibliothek</h3>
+<p>Die Qwt Bibliothek kann von der <a href="https://sourceforge.net/projects/qwt">Qwt SourceForge Projektseite</a> als Quelltextarchiv
+geladen werden. Unter Linux wird Qwt bei vielen Distributionen als Paket gehalten. Genau genommen gibt es mehrere Pakete für die unterschiedlichen Qwt-Bibliotheksversionen.</p>
+<p><strong>Ubuntu 16.04 LTS</strong>:</p>
+<pre><code class="bash"># Qwt 5.x unter Verwendung von qt4 (für Qwt 5.2.3-1)
+sudo apt install libqwt5-qt4-dev
+
+# Qwt 6.x unter Verwendung von qt5 (für Qwt 6.1.2-5)
+sudo apt install libqwt-qt5-dev
+</code></pre>
+
+<p><strong>Ubuntu 18.04 LTS</strong>:</p>
+<pre><code class="bash"># Qwt 5.x unter Verwendung von qt4 (für Qwt 5.2.3-1)
+sudo apt install libqwt5-qt4-dev
+
+# Qwt 6.x unter Verwendung von qt4 (für Qwt 6.1.3-1)
+sudo apt install libqwt-dev
+
+# Qwt 6.x unter Verwendung von qt5 (für Qwt 6.1.3-1)
+sudo apt install libqwt-qt5-dev
+</code></pre>
+
+<h2 id="widget-konzept-und-erscheinungsbild">Widget-Konzept und Erscheinungsbild</h2>
+<p>Die Qwt Bibliothek liefert Komponenten, welche analog zu den normalen Qt-Widgets in Deskopanwendungen verwendet werden können. Die Komponenten verwenden die vom jeweiligen Oberflächenstil definierten Paletteneinstellungen, sodass die Qwt-Widgets in die jeweilige Oberfläche passen. Dadurch integrieren sich die Widgets nahtlos in Programmoberflächen. Abrundungseffekte beim Plot-Widget ermöglichen das Immitieren klassischer Anzeigen:</p>
+<p><img alt="" src="imgs/styledDialsAndPlot.png" /></p>
+<p>Bei den Kontroll-Komponenten wird die Farbgebung über Palettenrollen definiert, z.B. bei den Zeigerkontrollen (<code>QwtDial</code>) via <code>QPalette::WindowText</code> (der Hintergrund der inneren Fläche) und <code>QPalette::Base</code> (die Grundfarbe des äußeren Ringes) und <code>QPalette::Text</code> (die Schriftfarbe):
+<img alt="Anzeigen, eingefärbt" src="imgs/dialsColored.png" /></p>
+<p>In ähnlicher Weise können auch Gradienten benutzt werden, um ein plastisches Erscheinungsbild zu erzeugen:
+<img alt="Anzeigen, mit Gradient" src="imgs/exDials2.png" /></p>
+<p>Bei der <code>QwtPlot</code>-Komponente betrifft das alle Teile, die außerhalb der eigentlichen Zeichenfläche liegen. Das heißt</p>
+<ul>
+<li>Titel,</li>
+<li>außenliegende Legende,</li>
+<li>Achsen, und</li>
+<li>Diagrammrahmen (einschließlich des möglichen 3D Rahmeneffekts)</li>
+</ul>
+<p>werden durch die Paletten-Eigenschaften des Plotwidgets beeinflusst (siehe Beschreibung der relevanten Funktionen in <a href="basics/#rahmen-und-zeichenflache">Rahmen und Zeichenfläche</a>)</p>
+<h2 id="besitzereigentumer-konzept-des-qwtplot-widgets">Besitzer/Eigentümer-Konzept des QwtPlot-Widgets</h2>
+<p>Eine grundlegende Eigenschaft der <code>QwtPlot</code>-Klasse ist die Besitzübername hinzugefügter Elemente. Dies gilt allgemein für Zeichenobjekte, die Legende etc. Einmal hinzugefügte Elemente können nicht wieder losgelöst werden (bzw. nur über einen Trick, wie im Kapitel <a href="advanced">Fortgeschrittenes</a> beschrieben wird). Daher ist es sinnvoll bei veränderlichen Diagrammelementen einen Mechanismus zur jeweiligen Neuerstellung eines Zeichenobjekts  vorzusehen (Factory-Konzept).</p>
+<p>Beispiel:</p>
+<pre><code class="c++">void Plot::updateLegend() {
+    QwtLegend * legend = new Qwtlegend();
+    // Legendeneigenschaften setzen
+    ...
+
+    // Legende in Diagramm ersetzen (alte Legende wird gelöscht)
+    insertLegend(legend);
+}
+</code></pre>
+
+<h2 id="zeichenobjekte-und-deren-achsenabhangigkeit">Zeichenobjekte und deren Achsenabhängigkeit</h2>
+<p>Ein wesentliches Designmerkmal beim <code>QwtPlot</code> ist die Möglichkeit, beliebige Zeichenobjekte (Kurven, Marker, Legende, ...) dem Plot zu übergeben. Damit sich diese Zeichenobjekte (engl. <em>PlotItem</em>) am Koordinatengitter ausrichten können, wird ihnen eine Achsenabhängigkeit gegeben. Dadurch erhalten diese Zeichenobjekte eine Information, wann immer sich die Achsenskalierung ändert (durch Zoomen, oder Änderung der Wertebereiche etc.).</p>
+<p>Diese Funktionalität definiert die zentrale Bedeutung der (bis zu) 4 Achsen im Diagramm. Deswegen sind diese auch fest im <code>QwtPlot</code> verankert und werden nicht wie andere Zeichenobjekte beliebig hinzugefügt.</p>
+<h2 id="vererbungskonzept">Vererbungskonzept</h2>
+<p>Grundsätzlich ist das <code>QwtPlot</code> und die beteiligten Klassen auf maximale Anpassungsfähigkeit ausgelegt, d.h. es wird (fast) überall Polymorphie unterstützt. Wenn die eingebaute Funktionalität nicht zureichend ist, kann man einfach immer die entsprechende Klasse ableiten und die jeweils anzupassende Funktion re-implementieren und verändern (siehe Kapitel <a href="customization">Anpassungen</a>).</p>
+<h2 id="verwendung-der-designer-plugins">Verwendung der Designer Plugins</h2>
+<p>Die Qwt Bibliothek bringt Plugins für Qt Designer mit, welche das Einfügen von Qwt-Komponenten in ui-Dateien erleichtert. Es lassen sich jedoch keine QwtPlot-Eigenschaften festlegen oder Kurven hinzufügen. Die eigentliche Anpassung und Ausgestaltung des Plots erfolgt im Quelltext. Deswegen wird die Konfiguration und Anpassung des <code>QwtPlot</code> in diesem Handbuch ausschließlich durch normale API-Aufrufe demonstriert.</p>
+<blockquote>
+<p><strong>Hinweis:</strong> Soll das QwtPlot auch ohne Designer-Plugins im grafischen QtDesigner-Editor eingefügt werden, kann man einfach ein QWidget einfügen und dieses als Platzhalter für die <code>QwtPlot</code>-Klasse definieren.</p>
+</blockquote>
+<p>Eine Beschreibung, wie Designer-plugins erstellt und in Qt Creator/Designer integriert werden ist am Abschnitt [Qwt Designer Plugins(building#qwt-designer-plugins)] beschrieben.</p>
+<hr />
+<p><em>Autoreninfo: Schreibkonventionen</em>:</p>
+<ul>
+<li><code>QwtDial</code> - Qwt-Klassen im Fließtext immer als Code-Schnipsel</li>
+<li>Quelltextblöcke immer mit c++ Hervorhebung einfügen (Dreifach schräges Hochkomma)</li>
+<li>Bilder ohne Skalierung einfügen (Skalierung erfolgt durch CSS)</li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="building/" class="btn btn-neutral float-right" title="Erstellen und Verwenden">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright 2018 - Andreas Nicolai (andreas.nicolai@gmx.net)</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+        <span style="margin-left: 15px"><a href="building/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.0.2
+Build Date UTC : 2018-11-08 09:00:49
+-->

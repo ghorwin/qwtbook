@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Andreas Nicolai (andreas.nicolai@gmx.net)">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Erstellen und Verwenden - Das QWT (Hand-)Buch</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Erstellen und Verwenden";
+    var mkdocs_page_input_path = "building.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Das QWT (Hand-)Buch</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Start</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Erstellen und Verwenden</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#verwendung-der-bibliothek-in-eigenen-programmen">Verwendung der Bibliothek in eigenen Programmen</a></li>
+    
+
+    <li class="toctree-l2"><a href="#verwenden-der-vorkompilierten-bibliothek">Verwenden der vorkompilierten Bibliothek</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#qmake-und-qt-creator">QMake und Qt Creator</a></li>
+        
+            <li><a class="toctree-l3" href="#cmake">CMake</a></li>
+        
+            <li><a class="toctree-l3" href="#visual-studio">Visual Studio</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#erstellung-aus-dem-quelltext">Erstellung aus dem Quelltext</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#quelltext-verzeichnisstruktur">Quelltext-Verzeichnisstruktur</a></li>
+        
+            <li><a class="toctree-l3" href="#erstellen-mit-qmake">Erstellen mit qmake</a></li>
+        
+            <li><a class="toctree-l3" href="#erstellen-mit-cmake">Erstellen mit cmake</a></li>
+        
+            <li><a class="toctree-l3" href="#visual-studio-projektdateien">Visual Studio Projektdateien</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#qwt-designer-plugins">Qwt Designer Plugins</a></li>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../basics/">Grundlagen</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../interaction/">Diagramm-Interaktion</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../advanced/">Fortgeschrittenes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../customization/">Anpassungen</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../export/">Drucken/Exportieren</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../porting/">von Qwt 5.x zu 6.x</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Das QWT (Hand-)Buch</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Erstellen und Verwenden</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="verwendung-der-bibliothek-in-eigenen-programmen">Verwendung der Bibliothek in eigenen Programmen</h1>
+<p>Wie bei anderen externen Bibliotheken, gibt es grundsätzlich zwei Möglichkeiten, die Qwt-Bibliothek in eigenen Projekten zu verwenden:</p>
+<ol>
+<li>Verwendung einer installierten, kompilierten Bibliothek unter Verwendung der installierten Headerdateien</li>
+<li>Verwendung der Qwt-Bibliothek im Quelltext innerhalb der eigenen Projektstruktur</li>
+</ol>
+<p>Unter Linux-Systemen (bzw. unter MacOSX, wenn Qwt über Homebrew oder MacPorts installiert ist), wird zumeist die Variante 1 sinnvoll sein.</p>
+<p>Variante 2 ist stets dann sinnvoll, wenn man Zugriff auf die Implementierung der Qwt-Bibliothek haben möchte und gegebenenfalls eigene Änderungen einbringen möchte, oder wenn man mit einer noch nicht veröffentlichten Version aus einem Quelltextarchiv arbeiten will.</p>
+<p>Auch für die Verwendung von Visual Studio unter Windows ist die Variante 2 am sinnvollsten, da so flexibel zwischen Debug und Release-Builds umgeschaltet werden kann (siehe <a href="#erstellen-mit-visual-studio">Visual Studio Projekte</a>).</p>
+<h1 id="verwenden-der-vorkompilierten-bibliothek">Verwenden der vorkompilierten Bibliothek</h1>
+<ul>
+<li>include Pfade</li>
+<li>lib-Dateinamen, statische/dynamische libs</li>
+</ul>
+<h2 id="qmake-und-qt-creator">QMake und Qt Creator</h2>
+<p>...</p>
+<h2 id="cmake">CMake</h2>
+<p>...</p>
+<h2 id="visual-studio">Visual Studio</h2>
+<p>...</p>
+<h1 id="erstellung-aus-dem-quelltext">Erstellung aus dem Quelltext</h1>
+<p>Die Qwt-Bibliothek kann auch als Quelltext-Archiv heruntergeladen werden. In diesem Fall muss die Bibliothek zuerst erstellt und gegebenenfalls installiert werden. Letzteres kopiert Bibliothek und benötigte Headerdateien ins Installationsverzeichnis, sodass andere Bibliotheken/Programme darauf zugreifen können.</p>
+<p>Je nach Entwicklungsumgebung/Build-System kann man die Bibliothek auch ohne Installation verwenden (siehe <a href="#verwenden-der-vorkompilierten-bibliothek">Verwendung der vorkompilierten Bibliothek</a>).</p>
+<h2 id="quelltext-verzeichnisstruktur">Quelltext-Verzeichnisstruktur</h2>
+<p>Das Quelltextarchiv enthält folgende Verzeichnisstruktur:</p>
+<pre><code class="bash">admin         # Deployment-Scripte, in trunk
+classincludes # Include-Dateien im Still von Qt5 Includes
+designer/     # Quelltext der Designer-Plugins
+doc/          # Doxygen Konfigurationsdateien
+examples/     # Beispiele
+playground/   # Zusätzliche Tests/Beispiele, ab Qwt 6.2
+src/          # Der eigentliche Quelltext
+tests/        # spez. Komponententests, ab Qwt 6.2
+textengines/  # Zusatzkomponenten für Texte (MathML), ab Qwt 6.3
+
+Qwtbuild.pri      # Grundlegende Kompilierungseinstellungen
+Qwtconfig.pri     # Auswahl der zu kompilierenden Teile
+Qwt.pro           # Master QMake-Datei
+</code></pre>
+
+<h2 id="erstellen-mit-qmake">Erstellen mit qmake</h2>
+<h3 id="konfiguration">Konfiguration</h3>
+<ul>
+<li>TODO: QMake Build System und einflussreiche Dateien</li>
+<li>TODO: wo passe ich was an</li>
+<li>TODO: wie erstelle ich Beispiele (-&gt; Examples + Playground)</li>
+</ul>
+<h3 id="erstellen-und-optionale-installation">Erstellen und (optionale) Installation</h3>
+<p>Im Basisverzeichnes des Qwt Quelltextarchivs (bezeichnet mit <code>&lt;qwt-root&gt;</code>) ist <code>qmake</code> aufzurufen und dann <code>make</code>, bzw. unter Windows entsprechend <code>jom</code> oder <code>nmake</code>.</p>
+<pre><code class="bash">qmake
+make
+</code></pre>
+
+<p>Die Beispiele (sofern konfiguriert) werden in <code>&lt;qwt-root&gt;/examples/bin</code> erstellt.</p>
+<p>... TODO</p>
+<h2 id="erstellen-mit-cmake">Erstellen mit cmake</h2>
+<h2 id="visual-studio-projektdateien">Visual Studio Projektdateien</h2>
+<ul>
+<li>mit Erstellen der Bibliothek (Qwt-vcproj)</li>
+</ul>
+<h1 id="qwt-designer-plugins">Qwt Designer Plugins</h1>
+<p>...</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../basics/" class="btn btn-neutral float-right" title="Grundlagen">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Start"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright 2018 - Andreas Nicolai (andreas.nicolai@gmx.net)</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../basics/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>
