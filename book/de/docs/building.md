@@ -13,8 +13,23 @@ Auch für die Verwendung von Visual Studio unter Windows ist die Variante 2 am s
 
 # Verwenden der vorkompilierten Bibliothek
 
-- include Pfade
-- lib-Dateinamen, statische/dynamische libs
+## Typische Installationspfade
+
+### Ubuntu 16.04 - Qwt mit Qt5
+
+Installieren via Paketmanager:
+```bash
+sudo apt install libqwt-qt5-dev
+```
+
+Projektkonfiguration:
+```bash
+# includes
+/usr/include/qwt
+# library
+qwt-qt5
+```
+
 
 ## QMake und Qt Creator
 ...
