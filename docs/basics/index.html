@@ -13,19 +13,20 @@
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   <link href="../extra.css" rel="stylesheet">
   
   <script>
     // Current page data
     var mkdocs_page_name = "Grundlagen";
     var mkdocs_page_input_path = "basics.md";
-    var mkdocs_page_url = "/basics/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="../js/jquery-2.1.1.min.js"></script>
-  <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -39,7 +40,7 @@
         <a href=".." class="icon icon-home"> Das QWT (Hand-)Buch</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -192,7 +193,7 @@
                 <h1 id="kleine-einfuhrung-ins-qwtplot">Kleine Einführung ins QwtPlot</h1>
 <p>Ein paar kleinere Beispiele sollen zunächst die grundlegende Funktionalität und Benutzung des <code>QwtPlot</code>-Widgets zeigen.</p>
 <blockquote>
-<p><strong>Hinweis:</strong> In den nachfolgenden Beispielen werden die in der Qwt-Bibliothek enthaltenen Klassen direkt verwendet und nur deren Attribute angepasst. Weiterführende Anpassungen durch Re-Implementierung von Funktionen in abgeleiteten Klassen werden im Kapitel <a href="../customization">Anpassungen</a> beschrieben.</p>
+<p><strong>Hinweis:</strong> In den nachfolgenden Beispielen werden die in der Qwt-Bibliothek enthaltenen Klassen direkt verwendet und nur deren Attribute angepasst. Weiterführende Anpassungen durch Re-Implementierung von Funktionen in abgeleiteten Klassen werden im Kapitel <a href="customization">Anpassungen</a> beschrieben.</p>
 </blockquote>
 <h2 id="ein-kurvendiagramm">Ein Kurvendiagramm</h2>
 <p>Beginnen wir mit einem einfachen X-Y-Diagramm welches eine Linie darstellt:</p>
@@ -248,7 +249,7 @@ int main( int argc, char **argv ) {
 <p>legt nur die Hintergrundfarbe der eigentlichen Zeichenfläche (engl. <em>Canvas</em>) fest (siehe auch <a href="#erscheinungsbild-des-plots-anpassen">Erscheinungsbild des Plots anpassen</a>).</p>
 <h3 id="kurve-als-zeichenobjekt-hinzufugen">Kurve als Zeichenobjekt hinzufügen</h3>
 <p>Als nächstes wird ein Zeichenobjekt (engl. <em>PlotItem</em>) für eine Linie/Kurve erstellt und konfiguriert.</p>
-<p>Es gibt viele verschiedene Arten von Zeichenobjekten. Alle haben gemeinsam, dass sie auf der Zeichenfläche gezeichnet werden. Die Reihenfolge des Zeichnens ist dabei für die Sichtbarkeit der einzelnen Zeichenobjekte wichtig (dazu später mehr, siehe Abschnitt <a href="../advanced/#zeichenreihenfolge">Zeichenreihenfolge</a>).</p>
+<p>Es gibt viele verschiedene Arten von Zeichenobjekten. Alle haben gemeinsam, dass sie auf der Zeichenfläche gezeichnet werden. Die Reihenfolge des Zeichnens ist dabei für die Sichtbarkeit der einzelnen Zeichenobjekte wichtig (dazu später mehr, siehe Abschnitt <a href="advanced/#zeichenreihenfolge">Zeichenreihenfolge</a>).</p>
 <p><strong>Grundsätzlich</strong> werden alle Zeichenobjekte <strong>auf dem Heap (im Hauptspeicher) erstellt</strong> und später dem Plot übereignet. Das passiert mit:</p>
 <pre><code class="c++">curve-&gt;attach( &amp;plot );
 </code></pre>
@@ -269,7 +270,7 @@ plot.insertLegend( legend , QwtPlot::BottomLegend);
 
 <p>Der dazugehöriger Header wird mittels <code>#include &lt;QwtLegend&gt;</code> eingebunden. Wie auch beim Zeichenobjekt (Kurve) wird das Plot Besitzer der Legende und verwaltet die Resource.</p>
 <blockquote>
-<p><strong>Hinweis:</strong> Wird eine andere Legende gesetzt, so wird die alte zuerst gelöscht. Es ist daher nicht erlaubt, auf eine ersetzte Legende weiterhin zuzugreifen (um das zu umgehen, siehe auch <a href="../advanced/#besitzubernahme-von-objekten-des-plots">Besitzübernahme von Objekten des Plots</a>).</p>
+<p><strong>Hinweis:</strong> Wird eine andere Legende gesetzt, so wird die alte zuerst gelöscht. Es ist daher nicht erlaubt, auf eine ersetzte Legende weiterhin zuzugreifen (um das zu umgehen, siehe auch <a href="advanced/#besitzubernahme-von-objekten-des-plots">Besitzübernahme von Objekten des Plots</a>).</p>
 </blockquote>
 <p>Weitere Eigenschaften der Legende werden im Kapitel zur <a href="#legenden">Legendenformatierung</a> erläutert.</p>
 <h3 id="diagrammachsen-konfigurieren">Diagrammachsen konfigurieren</h3>
@@ -424,7 +425,7 @@ plotLayout()-&gt;setAlignCanvasToScale( QwtPlot::yRight, false );
 <h3 id="spezielle-beschriftungen">Spezielle Beschriftungen</h3>
 <p>Manchmal möchte man die Balkengruppe besonders beschriften, wie in folgendem Beispiel:
 <img alt="Monatsbilanzen" src="../imgs/barChartSpezialXAxis.png" /></p>
-<p>Dieses ist mit Qwt 6.1.x und den eingebauten Eigenschaften so nicht möglich. Kapitel <a href="../customization#balkendiagramme-mit-kategoriebeschriftungen">Balkendiagramme mit Kategoriebeschriftungen</a> beschreibt die Vorgehensweise, um mit eigens angepassten Klassen, diese Diagramme zu erstellen.</p>
+<p>Dieses ist mit Qwt 6.1.x und den eingebauten Eigenschaften so nicht möglich. Kapitel <a href="/customization#balkendiagramme-mit-kategoriebeschriftungen">Balkendiagramme mit Kategoriebeschriftungen</a> beschreibt die Vorgehensweise, um mit eigens angepassten Klassen, diese Diagramme zu erstellen.</p>
 <h3 id="balken-entfernen-und-wieder-hinzufugen">Balken entfernen und wieder hinzufügen</h3>
 <p>Balken können mittels <code>QwtPlotMultiBarChart::setVisible()</code> sichtbar oder unsichtbar geschaltet werden. Dabei bleibt jedoch der entsprechende Legendeneintrag in der Liste. Möchte man den Balken einschließlich Legendenicon entfernen, so muss man das Balkendiagramm neu konfigurieren, d.h. neue Titel und neue Daten (mit passender Dimension des Samples-Matrix) setzen.</p>
 <blockquote>
@@ -466,13 +467,13 @@ plot-&gt;setAutoFillBackground(true);
 
 <p><img alt="" src="../imgs/plotStyling1.png" /></p>
 <blockquote>
-<p><strong>Hinweis:</strong> In Abschnitt <a href="../customization/#gradient-als-plot-hintergrund">Gradient als Plot-Hintergrund</a> wird beschrieben, wie man einen Farbverlauf im Plothintergrund umsetzt, und diesen bei Größenänderung entsprechend anpasst.</p>
+<p><strong>Hinweis:</strong> In Abschnitt <a href="customization/#gradient-als-plot-hintergrund">Gradient als Plot-Hintergrund</a> wird beschrieben, wie man einen Farbverlauf im Plothintergrund umsetzt, und diesen bei Größenänderung entsprechend anpasst.</p>
 </blockquote>
 <p>Der Rahmen wird wie bei einem normalen Widget angepasst:</p>
 <pre><code class="c++">plot-&gt;setFrameStyle(QFrame::Box | QFrame::Sunken);
 </code></pre>
 
-<p>Normalerweise ist ein solcher Rahmen nicht notwendig für die Bildschirmdarstellung oder für das Einbetten des QwtPlot in eine Programmoberfläche. Der Rahmen ist jedoch häufig beim <a href="../export">Export/Druck</a> des Widgets sinnvoll.</p>
+<p>Normalerweise ist ein solcher Rahmen nicht notwendig für die Bildschirmdarstellung oder für das Einbetten des QwtPlot in eine Programmoberfläche. Der Rahmen ist jedoch häufig beim <a href="export">Export/Druck</a> des Widgets sinnvoll.</p>
 <h3 id="zeichenflache">Zeichenfläche</h3>
 <p>Die Zeichenfläche kann eingefärbt werden:</p>
 <pre><code class="c++">plot-&gt;setCanvasBackground(Qt::darkGray);
@@ -504,7 +505,7 @@ plot-&gt;setCanvas(canvas);
 
 <p><img alt="" src="../imgs/plotStyling6.png" /></p>
 <h3 id="erweiterte-anpassungen">Erweiterte Anpassungen</h3>
-<p>Wie das Layout der Achsen, Legende, Titel, Kopf- und Fußzeile und die jeweiligen Abstände zusätzlich angepasst werden können, ist in Kapitel <a href="../customization/#das-layout-system">Das Layout-System</a> beschrieben.</p>
+<p>Wie das Layout der Achsen, Legende, Titel, Kopf- und Fußzeile und die jeweiligen Abstände zusätzlich angepasst werden können, ist in Kapitel <a href="customization/#das-layout-system">Das Layout-System</a> beschrieben.</p>
 <h1 id="diagrammelemente">Diagrammelemente</h1>
 <h2 id="titel-kopf-und-fuzeile">Titel, Kopf- und Fußzeile</h2>
 <ul>
@@ -544,11 +545,11 @@ d_legend-&gt;setMaxColumns(1);
 <h4 id="legende-entfernen">Legende entfernen</h4>
 <p>Ruft man <code>QwtPlot::insertLegend()</code> mit einem NULL-Zeiger auf, so wird die bisherige Legende gelöscht, aber keine neue eingefügt. Damit entfernt das Plot auch das Legendenwidget.</p>
 <blockquote>
-<p><strong>Hinweis</strong>: Der Abschnitt <a href="../advanced/#besitzubernahme-von-objekten-des-plots">Besitzübernahme von Objekten des Plots</a> zeigt einen Trick, wie man z.B. eine Legende dem Plot temporär entnehmen kann und später wieder hinzufügen kann, ohne dass das Legendenobjekt neu im Speicher erstellt werden muss.</p>
+<p><strong>Hinweis</strong>: Der Abschnitt <a href="advanced/#besitzubernahme-von-objekten-des-plots">Besitzübernahme von Objekten des Plots</a> zeigt einen Trick, wie man z.B. eine Legende dem Plot temporär entnehmen kann und später wieder hinzufügen kann, ohne dass das Legendenobjekt neu im Speicher erstellt werden muss.</p>
 </blockquote>
 <h4 id="abstande-zwischen-legendeneintragen">Abstände zwischen Legendeneinträgen</h4>
 <p>Bei einer außenliegende Legende sind die eigentlichen Legendeneinträge selbst Widgets die in einem dynamischen GridLayout angeordnet sind. Das dynamische GridLayout steckt selbst in einer QScrollArea-Widget, weswegen die Legende bei zu wenig Platz mit Scrollbalken ausgestattet wird. Auf dieses QScrollArea-Widget kann man mittels <code>QwtLegend::contentsWidget()</code> zugreifen, und darüber auf das dynamische GridLayout.</p>
-<p>Wie bei anderen QLayout-Klassen lassen sich die Abstände zwischen den Widgets mit <code>QLayout::setSpacing()</code> anpassen. Interessant ist das vor allem bei <a href="../interaction/#legendeneintrage-einausschalten">umschaltbaren/anklickbaren Legendeneinträgen</a>:</p>
+<p>Wie bei anderen QLayout-Klassen lassen sich die Abstände zwischen den Widgets mit <code>QLayout::setSpacing()</code> anpassen. Interessant ist das vor allem bei <a href="interaction/#legendeneintrage-einausschalten">umschaltbaren/anklickbaren Legendeneinträgen</a>:</p>
 <pre><code class="c++">// verkleinern der Abstände zwischen den Legendeneinträgen
 d_legend-&gt;contentsWidget()-&gt;layout()-&gt;setSpacing(1);
 </code></pre>
@@ -575,7 +576,7 @@ d_legend-&gt;setAutoFillBackground(true);
 </ul>
 <h3 id="legendensymbole">Legendensymbole</h3>
 <p>Die LegendIcons bzw. allgemein die Einträge in der Legende werden vom jeweiligen PlotItem bzw. der Kurve generiert. Entsprechende Anpassungsfunktionen sind daher für die jeweiligen Diagrammtypklassen verfügbar, d.h. in <code>QwtPlotCurve</code>, <code>QwtPlotSpectrogram</code> und <code>QwtPlotMultiBarChart</code> definiert.</p>
-<p>Man kann die Legendeneinträge auch komplett selbst zeichnen, wie im Kapitel <a href="../customization/#eigene-legendeneintrage-zeichnen">Eigene Legendeneinträge zeichnen</a> beschrieben ist.</p>
+<p>Man kann die Legendeneinträge auch komplett selbst zeichnen, wie im Kapitel <a href="customization/#eigene-legendeneintrage-zeichnen">Eigene Legendeneinträge zeichnen</a> beschrieben ist.</p>
 <h4 id="darstellung-der-legendeneintrage-bei-kurven-linie-rechteck-oder-farbe">Darstellung der Legendeneinträge bei Kurven: Linie, Rechteck oder Farbe?</h4>
 <p>...<code>QwtPlotCurve::setLegendAttribute()</code></p>
 <h3 id="innenliegende-legenden">Innenliegende Legenden</h3>
@@ -711,9 +712,8 @@ QwtText axisTitle(tr(&quot;Area [m&lt;sup&gt;2&lt;/sup&gt;]&quot;), QwtText::Ric
     </span>
 </div>
     <script>var base_url = '..';</script>
-    <script src="../js/theme.js"></script>
-      <script src="../search/require.js"></script>
-      <script src="../search/search.js"></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
 
 </body>
 </html>

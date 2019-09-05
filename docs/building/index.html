@@ -13,19 +13,20 @@
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   <link href="../extra.css" rel="stylesheet">
   
   <script>
     // Current page data
     var mkdocs_page_name = "Erstellen und Verwenden";
     var mkdocs_page_input_path = "building.md";
-    var mkdocs_page_url = "/building/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="../js/jquery-2.1.1.min.js"></script>
-  <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -39,7 +40,7 @@
         <a href=".." class="icon icon-home"> Das QWT (Hand-)Buch</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -60,36 +61,31 @@
             
     <li class="toctree-l2"><a href="#verwendung-der-bibliothek-in-eigenen-programmen">Verwendung der Bibliothek in eigenen Programmen</a></li>
     
-
-    <li class="toctree-l2"><a href="#verwenden-der-vorkompilierten-bibliothek">Verwenden der vorkompilierten Bibliothek</a></li>
-    
         <ul>
         
-            <li><a class="toctree-l3" href="#qmake-und-qt-creator">QMake und Qt Creator</a></li>
+            <li><a class="toctree-l3" href="#installation-von-vorkompilierten-bibliotheken-aus-linux-paketrepositories">Installation von vorkompilierten Bibliotheken aus Linux-Paketrepositories</a></li>
         
-            <li><a class="toctree-l3" href="#cmake">CMake</a></li>
+            <li><a class="toctree-l3" href="#installation-mittels-homebrew-auf-dem-mac">Installation mittels HomeBrew auf dem Mac</a></li>
         
-            <li><a class="toctree-l3" href="#visual-studio">Visual Studio</a></li>
+            <li><a class="toctree-l3" href="#installation-vom-quelltextarchiv-alle-plattformen">Installation vom Quelltextarchiv (alle Plattformen)</a></li>
         
         </ul>
     
 
-    <li class="toctree-l2"><a href="#erstellung-aus-dem-quelltext">Erstellung aus dem Quelltext</a></li>
+    <li class="toctree-l2"><a href="#verwenden-der-installierten-bibliothek">Verwenden der installierten Bibliothek</a></li>
     
         <ul>
         
-            <li><a class="toctree-l3" href="#quelltext-verzeichnisstruktur">Quelltext-Verzeichnisstruktur</a></li>
+            <li><a class="toctree-l3" href="#typische-installationspfade-bei-vorkompilierten-bibliotheken-aus-dem-paketmanager">Typische Installationspfade bei vorkompilierten Bibliotheken aus dem Paketmanager</a></li>
         
-            <li><a class="toctree-l3" href="#erstellen-mit-qmake">Erstellen mit qmake</a></li>
+            <li><a class="toctree-l3" href="#konfiguration-von-projektdateien">Konfiguration von Projektdateien</a></li>
         
-            <li><a class="toctree-l3" href="#erstellen-mit-cmake">Erstellen mit cmake</a></li>
-        
-            <li><a class="toctree-l3" href="#visual-studio-projektdateien">Visual Studio Projektdateien</a></li>
+            <li><a class="toctree-l3" href="#suchpfade-fur-laufzeitbibliotheken">Suchpfade für Laufzeitbibliotheken</a></li>
         
         </ul>
     
 
-    <li class="toctree-l2"><a href="#qwt-designer-plugins">Qwt Designer Plugins</a></li>
+    <li class="toctree-l2"><a href="#erstellen-mit-visual-studio">Erstellen mit Visual Studio</a></li>
     
 
     </ul>
@@ -160,30 +156,45 @@
                 <h1 id="verwendung-der-bibliothek-in-eigenen-programmen">Verwendung der Bibliothek in eigenen Programmen</h1>
 <p>Wie bei anderen externen Bibliotheken, gibt es grundsätzlich zwei Möglichkeiten, die Qwt-Bibliothek in eigenen Projekten zu verwenden:</p>
 <ol>
-<li>Verwendung einer installierten, kompilierten Bibliothek unter Verwendung der installierten Headerdateien</li>
+<li>Verwendung einer installierten, kompilierten Bibliothek unter Verwendung der installierten Headerdateien und Bibliotheken</li>
 <li>Verwendung der Qwt-Bibliothek im Quelltext innerhalb der eigenen Projektstruktur</li>
 </ol>
 <p>Unter Linux-Systemen (bzw. unter MacOSX, wenn Qwt über Homebrew oder MacPorts installiert ist), wird zumeist die Variante 1 sinnvoll sein.</p>
 <p>Variante 2 ist stets dann sinnvoll, wenn man Zugriff auf die Implementierung der Qwt-Bibliothek haben möchte und gegebenenfalls eigene Änderungen einbringen möchte, oder wenn man mit einer noch nicht veröffentlichten Version aus einem Quelltextarchiv arbeiten will.</p>
 <p>Auch für die Verwendung von Visual Studio unter Windows ist die Variante 2 am sinnvollsten, da so flexibel zwischen Debug und Release-Builds umgeschaltet werden kann (siehe <a href="#erstellen-mit-visual-studio">Visual Studio Projekte</a>).</p>
-<h1 id="verwenden-der-vorkompilierten-bibliothek">Verwenden der vorkompilierten Bibliothek</h1>
-<ul>
-<li>include Pfade</li>
-<li>lib-Dateinamen, statische/dynamische libs</li>
-</ul>
-<h2 id="qmake-und-qt-creator">QMake und Qt Creator</h2>
-<p>...</p>
-<h2 id="cmake">CMake</h2>
-<p>...</p>
-<h2 id="visual-studio">Visual Studio</h2>
-<p>...</p>
-<h1 id="erstellung-aus-dem-quelltext">Erstellung aus dem Quelltext</h1>
-<p>Die Qwt-Bibliothek kann auch als Quelltext-Archiv heruntergeladen werden. In diesem Fall muss die Bibliothek zuerst erstellt und gegebenenfalls installiert werden. Letzteres kopiert Bibliothek und benötigte Headerdateien ins Installationsverzeichnis, sodass andere Bibliotheken/Programme darauf zugreifen können.</p>
-<p>Je nach Entwicklungsumgebung/Build-System kann man die Bibliothek auch ohne Installation verwenden (siehe <a href="#verwenden-der-vorkompilierten-bibliothek">Verwendung der vorkompilierten Bibliothek</a>).</p>
-<h2 id="quelltext-verzeichnisstruktur">Quelltext-Verzeichnisstruktur</h2>
-<p>Das Quelltextarchiv enthält folgende Verzeichnisstruktur:</p>
-<pre><code class="bash">admin         # Deployment-Scripte, in trunk
-classincludes # Include-Dateien im Still von Qt5 Includes
+<h2 id="installation-von-vorkompilierten-bibliotheken-aus-linux-paketrepositories">Installation von vorkompilierten Bibliotheken aus Linux-Paketrepositories</h2>
+<p>Bei populären Linux-Distributionen gibt es Pakete für die Qwt-Bibliothek. Bei Ubuntu sind das beispielsweise:</p>
+<p><strong>Ubuntu 16.04 LTS</strong>:</p>
+<pre><code class="bash"># Qwt 5.x unter Verwendung von qt4 (für Qwt 5.2.3-1)
+sudo apt install libqwt5-qt4-dev
+
+# Qwt 6.x unter Verwendung von qt5 (für Qwt 6.1.2-5)
+sudo apt install libqwt-qt5-dev
+</code></pre>
+
+<p><strong>Ubuntu 18.04 LTS</strong>:</p>
+<pre><code class="bash"># Qwt 5.x unter Verwendung von qt4 (für Qwt 5.2.3-1)
+sudo apt install libqwt5-qt4-dev
+
+# Qwt 6.x unter Verwendung von qt4 (für Qwt 6.1.3-1)
+sudo apt install libqwt-dev
+
+# Qwt 6.x unter Verwendung von qt5 (für Qwt 6.1.3-1)
+sudo apt install libqwt-qt5-dev
+</code></pre>
+
+<p>Bei anderen Linux-Distributionen ist das ähnlich.</p>
+<h2 id="installation-mittels-homebrew-auf-dem-mac">Installation mittels HomeBrew auf dem Mac</h2>
+<p>Für neuere Mac-Versionen (sierra bis mojave) kann man <a href="https://brew.sh/index_de">HomeBrew</a> verwenden:</p>
+<pre><code>brew install qwt
+</code></pre>
+
+<p>Für ältere Versionen kann man Qwt aus dem Quelltextarchiv installieren (siehe unten).</p>
+<h2 id="installation-vom-quelltextarchiv-alle-plattformen">Installation vom Quelltextarchiv (alle Plattformen)</h2>
+<p>Die jeweils aktuellste Qwt-Bibliothek kann vom SourceForge-Repository heruntergeladen werden: <a href="https://sourceforge.net/projects/qwt">Qwt SourceForge Projektseite</a>.</p>
+<p>Entweder man entpackt die zip-Datei eines Releases, oder man checkt the Quelltext des subversion-Repositories aus. Das Quelltextarchiv (aktueller Stand im Repository) enthält folgende Verzeichnisstruktur:</p>
+<pre><code class="bash">admin         # Deployment-Scripte, nur im Repository
+classincludes # Include-Dateien im Still von Qt5 Includes (ab Qwt 6.2)
 designer/     # Quelltext der Designer-Plugins
 doc/          # Doxygen Konfigurationsdateien
 examples/     # Beispiele
@@ -192,33 +203,125 @@ src/          # Der eigentliche Quelltext
 tests/        # spez. Komponententests, ab Qwt 6.2
 textengines/  # Zusatzkomponenten für Texte (MathML), ab Qwt 6.3
 
-Qwtbuild.pri      # Grundlegende Kompilierungseinstellungen
-Qwtconfig.pri     # Auswahl der zu kompilierenden Teile
-Qwt.pro           # Master QMake-Datei
+qwtbuild.pri      # Grundlegende Kompilierungseinstellungen
+qwtconfig.pri     # Auswahl der zu kompilierenden Teile
+qwt.pro           # Haupt QMake-pro-Datei
 </code></pre>
 
-<h2 id="erstellen-mit-qmake">Erstellen mit qmake</h2>
-<h3 id="konfiguration">Konfiguration</h3>
-<ul>
-<li>TODO: QMake Build System und einflussreiche Dateien</li>
-<li>TODO: wo passe ich was an</li>
-<li>TODO: wie erstelle ich Beispiele (-&gt; Examples + Playground)</li>
-</ul>
-<h3 id="erstellen-und-optionale-installation">Erstellen und (optionale) Installation</h3>
-<p>Im Basisverzeichnes des Qwt Quelltextarchivs (bezeichnet mit <code>&lt;qwt-root&gt;</code>) ist <code>qmake</code> aufzurufen und dann <code>make</code>, bzw. unter Windows entsprechend <code>jom</code> oder <code>nmake</code>.</p>
-<pre><code class="bash">qmake
-make
+<p>Im Verzeichnis gibt es die Datei <code>qwtconfig.pri</code>, welche gut dokumentiert ist und einige Anpassungen an den zu verwendenden/zu erstellenden Qwt-Komponenten erlaubt. Beispielsweise können durch Einschalten der Zeile die Beispiele erstellt werden.</p>
+<pre><code class="bash">QWT_CONFIG     += QwtExamples
 </code></pre>
 
-<p>Die Beispiele (sofern konfiguriert) werden in <code>&lt;qwt-root&gt;/examples/bin</code> erstellt.</p>
-<p>... TODO</p>
-<h2 id="erstellen-mit-cmake">Erstellen mit cmake</h2>
-<h2 id="visual-studio-projektdateien">Visual Studio Projektdateien</h2>
-<ul>
-<li>mit Erstellen der Bibliothek (Qwt-vcproj)</li>
-</ul>
-<h1 id="qwt-designer-plugins">Qwt Designer Plugins</h1>
-<p>...</p>
+<p>Nach der Anpassung der Konfigurationsdatei wird die Bibliothek erstellt.</p>
+<h3 id="erstellen-und-installation-der-bibliothek-unter-linuxmac">Erstellen und Installation der Bibliothek unter Linux/Mac</h3>
+<hr />
+<p><strong>MacOSX Anpassung</strong>:</p>
+<p>In der Datei <code>designer/designer.pro</code> den Text:</p>
+<pre><code>    target.path = $${QWT_INSTALL_PLUGINS}
+    INSTALLS += target
+}
+else {
+    TEMPLATE        = subdirs # do nothing
+}
+</code></pre>
+<p>mit</p>
+<pre><code>    target.path = $${QWT_INSTALL_PLUGINS}
+    INSTALLS += target
+
+    macx {
+        contains(QWT_CONFIG, QwtFramework) {
+            QWT_LIB = qwt.framework/Versions/$${QWT_VER_MAJ}/qwt
+        }
+        else {
+            QWT_LIB = libqwt.$${QWT_VER_MAJ}.dylib
+        }
+        QMAKE_POST_LINK = install_name_tool -change $${QWT_LIB} $${QWT_INSTALL_LIBS}/$${QWT_LIB} $(DESTDIR)$(TARGET)
+    }
+}
+else {
+    TEMPLATE        = subdirs # do nothing
+</code></pre>
+<p>ersetzen.</p>
+<p><strong>MacOSX Anpassung Ende</strong></p>
+<hr />
+<p>Im Wurzelverzeichnis werden auf der Kommandozeile folgende Befehler ausgeführt:</p>
+<pre><code class="bash">&gt; qmake
+&gt; make    # oder make -j4
+&gt; sudo make install
+</code></pre>
+
+<p>Standardmäßig wird Qwt in folgende Verzeichnisse installiert (weswegen sudo benötigt wird):</p>
+<pre><code>/usr/local/qwt-&lt;version&gt;
+</code></pre>
+<p>also z.B.:</p>
+<pre><code>Include-Dateien in : /usr/local/qwt-6.1.4/include
+Bibliothek in      : /usr/local/qwt-6.1.4/lib
+Dokumentation in   : /usr/local/qwt-6.1.4/doc
+</code></pre>
+<h3 id="erstellen-und-installation-der-bibliothek-unter-windows">Erstellen und Installation der Bibliothek unter Windows</h3>
+<p>Je nach verfügbarem Compiler ist das Prozedere etwas anders, aber meist sehr ähnlich. Ist der Qt Creator samt Compiler bereits eingerichtet, kann man die <code>qwt.pro</code>-Datei einfach als Projekt in Qt Creator öffnen und im Debug/Release-Modus erstellen. Man kann dann in den Projekteinstellungen einen <em>Deployment</em>-Schritt konfigurieren, und darüber dann die Bibliothek installieren.</p>
+<p>Alternativ braucht man eine Kommandozeile mit entsprechend gesetzten Umgebungsvariablen zum Übersetzen von C++-Programmen (Beispielsweise bei Visual Studio die <code>vcvarsall.bat</code> aufrufen). Auch die Pfade zur Qt-Installation müssen gesetzt sein, sodass <code>qmake</code> im Pfad ist.</p>
+<p>Beispiel:</p>
+<pre><code class="batch">:: Entwicklungsumgebung für VC (x64) einrichten
+C:\Downloads\qwt-6.1.4&gt;&quot;c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat&quot; x64
+
+:: Pfad zu Qt setzen
+C:\Downloads\qwt-6.1.4&gt;set PATH=%PATH%;C:\Qt\5.11.3\msvc2015_64\bin
+
+:: qmake ausführen
+C:\Downloads\qwt-6.1.4&gt;qmake
+Info: creating stash file C:\Downloads\qwt-6.1.4\.qmake.stash
+
+:: erstellen
+C:\Downloads\qwt-6.1.4&gt;nmake
+
+:: installieren
+C:\Downloads\qwt-6.1.4&gt;nmake install
+</code></pre>
+
+<p>Standardmäßig wird Qwt in folgende Verzeichnisse installiert:</p>
+<pre><code>C:\Qwt-&lt;version&gt;
+</code></pre>
+<p>also z.B.:</p>
+<pre><code>Include-Dateien in : C:\Qwt-6.1.4\include
+Bibliothek in      : C:\Qwt-6.1.4\lib
+Dokumentation in   : C:\Qwt-6.1.4\doc
+</code></pre>
+<blockquote>
+<p>Mächte man "am Ball" bleiben und Qwt gelegentlich aktualisieren, so kann man das Verzeichnis nach <code>C:\Qwt-6.1</code> umbenennen, und so die Konfiguration abhängiger Projekte längere Zeit unverändert lassen, auch wenn man zwischenzeitlich eine neue Qwt-Version installiert.</p>
+</blockquote>
+<h1 id="verwenden-der-installierten-bibliothek">Verwenden der installierten Bibliothek</h1>
+<h2 id="typische-installationspfade-bei-vorkompilierten-bibliotheken-aus-dem-paketmanager">Typische Installationspfade bei vorkompilierten Bibliotheken aus dem Paketmanager</h2>
+<p>Die Installationspfade sind von der jeweiligen Linux-Distribution abhängig, üblicherweise liegen die Bibliotheken und Include-Pfade jedoch in den systemweiten Standardsuchverzeichnissen. Das macht die Verwendung einfach.</p>
+<p>Bei manuell installierten Bibliotheken aus dem Quelltextarchiv, können die Pfade beliebig über den Install-Prefix angepasst werden - oder man verwendet die oben aufgeführten Standardpfade.</p>
+<h2 id="konfiguration-von-projektdateien">Konfiguration von Projektdateien</h2>
+<p>Unabhängig vom Buildsystem (qmake, cmake, Visual Studio, ...) muss der Pfad zur Datei <code>qwt.h</code> im Suchpfad stehen. Ebenso muss der Linker die <code>libqwt-xxx.so</code>-Datei finden (bzw. bei statisch erstellter Qwt-Bibliothek die Datei <code>libqwt.a</code>).</p>
+<h3 id="beispielkonfiguration-windows-qmake">Beispielkonfiguration - Windows - Qmake</h3>
+<pre><code>INCLUDEPATH += C:\Qwt-6.1.4\include
+
+LIBS += -LC:\Qwt-6.1.4\lib -lqwt
+</code></pre>
+
+<p>Im Debug-Modus kann auch <code>-lqwtd</code> verwendet werden.</p>
+<h3 id="beispielkonfiguration-linuxmac-qmake-bei-installation-aus-quelltextarchiv">Beispielkonfiguration - Linux/Mac - Qmake - bei Installation aus Quelltextarchiv</h3>
+<pre><code>INCLUDEPATH += /usr/local/qwt-6.1.4/include
+
+LIBS += -L/usr/local/qwt-6.1.4/lib -lqwt
+</code></pre>
+
+<h3 id="beispielkonfiguration-linuxmac-qmake-bei-installation-aus-paketquelle">Beispielkonfiguration - Linux/Mac - Qmake - bei Installation aus Paketquelle</h3>
+<pre><code>INCLUDEPATH += /usr/include/qwt
+
+LIBS += -L/usr/lib -lqwt-qt5
+</code></pre>
+
+<p>Der tatsächliche Bibliotheksname hängt von dem jeweiligen Paket der Linux-Distribution ab. Notfalls mal im Verzeichnis <code>/usr/lib</code> nachschauen, was da an <code>libqwt....</code>-Dateie existiert.</p>
+<h2 id="suchpfade-fur-laufzeitbibliotheken">Suchpfade für Laufzeitbibliotheken</h2>
+<p>Unter Windows muss man entweder den Pfad zur Qwt-DLL in die PATH-Variable eintragen, oder man kopiert einfach die DLL in das Verzeichnis der eigenen exe-Datei (das ist zumeist der einfachste Weg - hierbei je nach Debug/Release-Modus die passende <code>qwtd.dll</code> und <code>qwt.dll</code> linken und kopieren).</p>
+<p>Unter Linux kann man den LD_LIBRARY_PATH anpassen oder mittels RPATH den Laufzeitpfad in die Anwendung hineinkompilieren. Mehr dazu in der Qwt-Dokumentation unter <code>doc/html/qwtinstall.html</code>.</p>
+<p>Auch praktikabel ist unter beiden Plattformen die Erstellung und Verwendung von Qwt als statischer Bibliothek. Dies kann in der <code>qwtconfig.pri</code> eingestellt werden (Zeile <code>QWT_CONFIG           += QwtDll</code> auskommentieren!).</p>
+<h1 id="erstellen-mit-visual-studio">Erstellen mit Visual Studio</h1>
+<p>... TODO </p>
               
             </div>
           </div>
@@ -265,9 +368,8 @@ make
     </span>
 </div>
     <script>var base_url = '..';</script>
-    <script src="../js/theme.js"></script>
-      <script src="../search/require.js"></script>
-      <script src="../search/search.js"></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
 
 </body>
 </html>
