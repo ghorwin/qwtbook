@@ -203,6 +203,17 @@ INCLUDEPATH += /usr/local/qwt-6.1.4/include
 
 LIBS += -L/usr/local/qwt-6.1.4/lib -lqwt
 ```
+
+### Beispielkonfiguration - Linux/Mac - Qmake - bei Installation aus Paketquelle
+
+```
+INCLUDEPATH += /usr/include/qwt
+
+LIBS += -L/usr/lib -lqwt-qt5
+```
+
+Der tatsächliche Bibliotheksname hängt von dem jeweiligen Paket der Linux-Distribution ab. Notfalls mal im Verzeichnis `/usr/lib` nachschauen, was da an `libqwt....`-Dateie existiert.
+
 ## Suchpfade für Laufzeitbibliotheken
 
 Unter Windows muss man entweder den Pfad zur Qwt-DLL in die PATH-Variable eintragen, oder man kopiert einfach die DLL in das Verzeichnis der eigenen exe-Datei (das ist zumeist der einfachste Weg - hierbei je nach Debug/Release-Modus die passende `qwtd.dll` und `qwt.dll` linken und kopieren).
