@@ -17,7 +17,7 @@ extra:
 
 extra_css: [extra.css]
 
-pages:
+nav:
 - Start: index.md
 - Erstellen und Verwenden: building.md
 - Grundlagen: basics.md
