@@ -66,11 +66,47 @@ Nach der Anpassung der Konfigurationsdatei wird die Bibliothek erstellt.
 
 ### Erstellen und Installation der Bibliothek unter Linux/Mac
 
-Im Wurzelverzeichnis wird auf der Kommandozeile `qmake` aufgerufen und danach `make` (oder `make -j4` für das Erstellen mit mehreren Prozessoren).
+**MacOSX Anpassung**: In der Datei `designer/designer.pro` den Text:
 
-Standardmäßig wird Qwt in folgende Verzeichnisse installiert:
+		target.path = $${QWT_INSTALL_PLUGINS}
+		INSTALLS += target
+	}
+	else {
+		TEMPLATE        = subdirs # do nothing
+	}
 
-    Linux/Mac : /usr/local/qwt-<version>
+mit
+
+		target.path = $${QWT_INSTALL_PLUGINS}
+		INSTALLS += target
+
+		macx {
+			contains(QWT_CONFIG, QwtFramework) {
+				QWT_LIB = qwt.framework/Versions/$${QWT_VER_MAJ}/qwt
+			}
+			else {
+				QWT_LIB = libqwt.$${QWT_VER_MAJ}.dylib
+			}
+			QMAKE_POST_LINK = install_name_tool -change $${QWT_LIB} $${QWT_INSTALL_LIBS}/$${QWT_LIB} $(DESTDIR)$(TARGET)
+		}
+	}
+	else {
+		TEMPLATE        = subdirs # do nothing
+
+ersetzen. **MacOSX Anpassung Ende**
+
+
+Im Wurzelverzeichnis werden auf der Kommandozeile folgende Befehler ausgeführt:
+
+```bash
+> qmake
+> make    # oder make -j4
+> sudo make install
+```
+
+Standardmäßig wird Qwt in folgende Verzeichnisse installiert (weswegen sudo benötigt wird):
+
+    /usr/local/qwt-<version>
 
 mit z.B.:
 
