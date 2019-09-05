@@ -212,7 +212,7 @@ INCLUDEPATH += /usr/include/qwt
 LIBS += -L/usr/lib -lqwt-qt5
 ```
 
-Der tatsächliche Bibliotheksname hängt von dem jeweiligen Paket der Linux-Distribution ab. Notfalls mal im Verzeichnis `/usr/lib` nachschauen, was da an `libqwt....`-Dateie existiert.
+Der tatsächliche Bibliotheksname hängt von dem jeweiligen Paket der Linux-Distribution ab. Notfalls mal im Verzeichnis `/usr/lib` nachschauen, was da an `libqwt....`-Dateien existiert.
 
 ## Suchpfade für Laufzeitbibliotheken
 

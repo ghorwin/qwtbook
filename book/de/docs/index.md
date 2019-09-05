@@ -1,6 +1,6 @@
 # Das Qwt (Hand-)Buch
 
-_Copyright 2018, Andreas Nicolai <andreas.nicolai-at-gmx.net>_
+_Copyright 2018-heute, Andreas Nicolai <andreas.nicolai-at-gmx.net>_
 
 ```
 ```
