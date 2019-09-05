@@ -2,7 +2,7 @@
 
 Wie bei anderen externen Bibliotheken, gibt es grundsätzlich zwei Möglichkeiten, die Qwt-Bibliothek in eigenen Projekten zu verwenden:
 
-1. Verwendung einer installierten, kompilierten Bibliothek unter Verwendung der installierten Headerdateien
+1. Verwendung einer installierten, kompilierten Bibliothek unter Verwendung der installierten Headerdateien und Bibliotheken
 2. Verwendung der Qwt-Bibliothek im Quelltext innerhalb der eigenen Projektstruktur
 
 Unter Linux-Systemen (bzw. unter MacOSX, wenn Qwt über Homebrew oder MacPorts installiert ist), wird zumeist die Variante 1 sinnvoll sein.
@@ -10,6 +10,83 @@ Unter Linux-Systemen (bzw. unter MacOSX, wenn Qwt über Homebrew oder MacPorts i
 Variante 2 ist stets dann sinnvoll, wenn man Zugriff auf die Implementierung der Qwt-Bibliothek haben möchte und gegebenenfalls eigene Änderungen einbringen möchte, oder wenn man mit einer noch nicht veröffentlichten Version aus einem Quelltextarchiv arbeiten will.
 
 Auch für die Verwendung von Visual Studio unter Windows ist die Variante 2 am sinnvollsten, da so flexibel zwischen Debug und Release-Builds umgeschaltet werden kann (siehe [Visual Studio Projekte](#erstellen-mit-visual-studio)).
+
+## Installation von vorkompilierten Bibliotheken aus Linux-Paketrepositories
+
+Bei populären Linux-Distributionen gibt es Pakete für die Qwt-Bibliothek. Bei Ubuntu sind das beispielsweise:
+
+**Ubuntu 16.04 LTS**:
+
+```bash
+# Qwt 5.x unter Verwendung von qt4 (für Qwt 5.2.3-1)
+sudo apt install libqwt5-qt4-dev
+
+# Qwt 6.x unter Verwendung von qt5 (für Qwt 6.1.2-5)
+sudo apt install libqwt-qt5-dev
+```
+
+**Ubuntu 18.04 LTS**:
+
+```bash
+# Qwt 5.x unter Verwendung von qt4 (für Qwt 5.2.3-1)
+sudo apt install libqwt5-qt4-dev
+
+# Qwt 6.x unter Verwendung von qt4 (für Qwt 6.1.3-1)
+sudo apt install libqwt-dev
+
+# Qwt 6.x unter Verwendung von qt5 (für Qwt 6.1.3-1)
+sudo apt install libqwt-qt5-dev
+```
+
+Bei anderen Linux-Distributionen ist das ähnlich.
+
+## Installation mittels HomeBrew auf dem Mac
+
+Für neuere Mac-Versionen (sierra bis mojave) kann man [HomeBrew](https://brew.sh/index_de) verwenden:
+
+```
+brew install qwt
+```
+
+Für ältere Versionen kann man Qwt aus dem Quelltextarchiv installieren (siehe unten).
+
+## Installation vom Quelltextarchiv (alle Plattformen)
+
+Die jeweils aktuellste Qwt-Bibliothek kann vom SourceForge-Repository heruntergeladen werden: [Qwt SourceForge Projektseite](https://sourceforge.net/projects/qwt).
+
+Die zip-Datei wird entpackt.
+
+Im Verzeichnis gibt es die Datei `qwtconfig.pri`, welche gut dokumentiert ist und einige Anpassungen an den zu verwendenden/zu erstellenden Qwt-Komponenten erlaubt. Beispielsweise können durch Einschalten der Zeile die Beispiele erstellt werden.
+
+```bash
+QWT_CONFIG     += QwtExamples
+```
+
+Nach der Anpassung der Konfigurationsdatei wird die Bibliothek erstellt.
+
+### Erstellen und Installation der Bibliothek unter Linux/Mac
+
+Im Wurzelverzeichnis wird auf der Kommandozeile `qmake` aufgerufen und danach `make` (oder `make -j4` für das Erstellen mit mehreren Prozessoren).
+
+Standardmäßig wird Qwt in folgende Verzeichnisse installiert:
+
+    Linux/Mac : /usr/local/qwt-<version>
+
+mit z.B.:
+
+    Include-Dateien in : /usr/local/qwt-6.1.4/include
+    Bibliothek in      : /usr/local/qwt-6.1.4/lib
+    Dokumentation in   : /usr/local/qwt-6.1.4/doc
+
+### Erstellen und Installation der Bibliothek unter Windows
+
+Je nach verfügbarem Compiler ist das Prozedere etwas anders, aber ähnlich. Ist der Qt Creator samt Compiler bereits eingerichtet, kann man die `qwt.pro`-Datei einfach als Projekt in Qt Creator öffnen und im Debug/Release-Modus erstellen. Man kann dann in den Projekteinstellungen einen _Deployment_-Schritt konfigurieren, und darüber dann die Bibliothek installieren (man benötigt allerdings Schreibrechte im Zielverzeichnis, sodass dieses Verfahren nur bei Installation in einem selbstgewählten Zielverzeichnis außerhalb der Windows System/Programmverzeichnisse funktioniert).
+
+Alternativ braucht man eine Kommandozeile mit entsprechend gesetzten Umgebungsvariablen zum Übersetzen von C++-Programmen (Beispielsweise bei Visual Studio die `vcvarsall.bat` aufrufen). Auch die Pfade zur Qt-Installation müssen gesetzt sein, sodass `qmake` im Pfad ist.
+
+Dann wird wie unter Linux/Mac erst `qmake` und dann (bei VC) `nmake` bzw. `jom` aufgerufen.
+
+
 
 # Verwenden der vorkompilierten Bibliothek
 

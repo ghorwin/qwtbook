@@ -40,35 +40,12 @@ Das Handbuch ist in folgende Kapitel unterteilt:
 - seit 2002 wird die Bibliothek von _Uwe Rathmann_ entwickelt und gepflegt
 - Version 5 ist wohl am weitesten verbreitet (erstes Release vom 26.02.2007)
 - Version 6 (erstes Release vom 15.04.2011, kein Qt3 Support mehr) enthält wesentliche API-Änderungen
-- aktuelle stabile Version 6.1.3, im trunk gibt es bereits wesentlich mehr und fortgeschrittene Funktionen
+- aktuelle stabile Version 6.1.4, im trunk gibt es bereits wesentlich mehr und fortgeschrittene Funktionen
 
 ### Download der Bibliothek
 
 Die Qwt Bibliothek kann von der [Qwt SourceForge Projektseite](https://sourceforge.net/projects/qwt) als Quelltextarchiv
-geladen werden. Unter Linux wird Qwt bei vielen Distributionen als Paket gehalten. Genau genommen gibt es mehrere Pakete für die unterschiedlichen Qwt-Bibliotheksversionen.
-
-**Ubuntu 16.04 LTS**:
-
-```bash
-# Qwt 5.x unter Verwendung von qt4 (für Qwt 5.2.3-1)
-sudo apt install libqwt5-qt4-dev
-
-# Qwt 6.x unter Verwendung von qt5 (für Qwt 6.1.2-5)
-sudo apt install libqwt-qt5-dev
-```
-
-**Ubuntu 18.04 LTS**:
-
-```bash
-# Qwt 5.x unter Verwendung von qt4 (für Qwt 5.2.3-1)
-sudo apt install libqwt5-qt4-dev
-
-# Qwt 6.x unter Verwendung von qt4 (für Qwt 6.1.3-1)
-sudo apt install libqwt-dev
-
-# Qwt 6.x unter Verwendung von qt5 (für Qwt 6.1.3-1)
-sudo apt install libqwt-qt5-dev
-```
+geladen werden. Unter Linux wird Qwt bei vielen Distributionen als Paket gehalten. Genau genommen gibt es mehrere Pakete für die unterschiedlichen Qwt-Bibliotheksversionen bzw. Qt Versionen. Details zur Installation und Verwendung der Bibliothek gibt es im Abschnitt [Erstellen und Verwenden](building).
 
 ## Widget-Konzept und Erscheinungsbild
 
