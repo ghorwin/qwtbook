@@ -85,6 +85,19 @@
         </ul>
     
 
+    <li class="toctree-l2"><a href="#verwendung-von-qwt-komponenten-im-qt-creatordesigner">Verwendung von Qwt-Komponenten im Qt Creator/Designer</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#verwendung-der-platzhaltertechnik">Verwendung der Platzhaltertechnik</a></li>
+        
+            <li><a class="toctree-l3" href="#qwt-designer-plugins">Qwt Designer Plugins</a></li>
+        
+            <li><a class="toctree-l3" href="#qt-creator-plugins">Qt Creator Plugins</a></li>
+        
+        </ul>
+    
+
     <li class="toctree-l2"><a href="#erstellen-mit-visual-studio">Erstellen mit Visual Studio</a></li>
     
 
@@ -320,8 +333,31 @@ LIBS += -L/usr/lib -lqwt-qt5
 <p>Unter Windows muss man entweder den Pfad zur Qwt-DLL in die PATH-Variable eintragen, oder man kopiert einfach die DLL in das Verzeichnis der eigenen exe-Datei (das ist zumeist der einfachste Weg - hierbei je nach Debug/Release-Modus die passende <code>qwtd.dll</code> und <code>qwt.dll</code> linken und kopieren).</p>
 <p>Unter Linux kann man den LD_LIBRARY_PATH anpassen oder mittels RPATH den Laufzeitpfad in die Anwendung hineinkompilieren. Mehr dazu in der Qwt-Dokumentation unter <code>doc/html/qwtinstall.html</code>.</p>
 <p>Auch praktikabel ist unter beiden Plattformen die Erstellung und Verwendung von Qwt als statischer Bibliothek. Dies kann in der <code>qwtconfig.pri</code> eingestellt werden (Zeile <code>QWT_CONFIG           += QwtDll</code> auskommentieren!).</p>
+<h1 id="verwendung-von-qwt-komponenten-im-qt-creatordesigner">Verwendung von Qwt-Komponenten im Qt Creator/Designer</h1>
+<h2 id="verwendung-der-platzhaltertechnik">Verwendung der Platzhaltertechnik</h2>
+<p>Die einfachste Variante, Qt Komponenten im Qt Designer zu verwenden, ist die Platzhaltertechnik. Dabei wird einfach ein Widget eingefügt (man sollte eine Mindestgröße definieren!) und dann über Rechtsklick die Option <em>"Als Platzhalter für benutzerdefinierte Klasse festlegen..."</em> auswählen.</p>
+<p><img alt="Platzhalter-Kontextmenüeintrag" src="../imgs/designer_platzhalter_menueeintrag.png" /></p>
+<p>Im Dialog definiert man Klassenname (beispielsweise QwtPlot), den Include-Dateinamen (<code>qwt_plot.h</code>) und checkt die Option "Globale Include-Datei".</p>
+<p><img alt="Platzhalter-Klassendefinition" src="../imgs/designer_benutzerdefinierte_QwtPlot_Klasse.png" /></p>
+<p>Nach Bestätigen des Dialogs kann man die Klasse auswählen und auf "Anwenden" klicken. In der Widgethierarchie in der Eigenschaftsleiste sollte nun als Klassentyp "QwtPlot" beim ausgewählten Widget erscheinen, auch wenn weiterhin nur ein nacktes Widget im Formular/Dialog angezeigt wird. Ebenso können nur die Eigenschaften der vererbten QWidget-Klasse im Designer definiert werden. Die anderen Eigenschaften müssen klassisch im Quelltext der verwendenden Klasse angepasst werden.</p>
+<p>Möchte man etwes bequemer einzelen (ausgewählte) Klasseneigenschaften von Qwt-Widgets anpassen, so kann man das Qt Designer/Creator-Plugin verwenden:</p>
+<h2 id="qwt-designer-plugins">Qwt Designer Plugins</h2>
+<p>Das Qwt Designer Plugin wird bei manchen Paketverwaltungen (siehe oben Linux/Mac) bereits vorkompiliert installiert. Falls man Qwt vom Quelltext aus kompiliert und installiert, muss man die Plugin-Bibliothek noch in das entsprechende Verzeichnis kopieren.</p>
+<h3 id="plugin-installation-in-windows">Plugin-Installation in Windows</h3>
+<p>Falls wie im Beispiel oben Qwt nach <code>C:\Qwt-6.1.4</code> installiert wurde, so befindet sich die dll in:</p>
+<pre><code>c:\Qwt-6.1.4\plugins\designer\qwt_designer_plugin.dll
+</code></pre>
+<p>Diese Datei wird nun einfach in das Plugin-Verzeichnis des Qt Designers kopiert, also beispielsweise:</p>
+<pre><code>c:\Qt\5.11.3\msvc2015_64\plugins\designer\qwt_designer_plugin.dll
+</code></pre>
+<p>Öffnet man nun Qt Designer (<em>!!wirklich den Designer, nicht Qt Creator!!</em>), so sieht man nun eine neue Widget-Palette (links unten) und bei Auswahl eines Qwt-Objekts auch die dazugehörigen Eigenschaften in der Eigenschaftspalette:</p>
+<p><img alt="Designer mit Plugins" src="../imgs/designer_plugins.png" /></p>
+<h3 id="plugin-installation-in-linuxmac">Plugin-Installation in Linux/Mac</h3>
+<p>TODO ...</p>
+<h2 id="qt-creator-plugins">Qt Creator Plugins</h2>
+<p>TODO ...</p>
 <h1 id="erstellen-mit-visual-studio">Erstellen mit Visual Studio</h1>
-<p>... TODO </p>
+<p>... TODO ... Qt Addin -&gt; qwt.pro importieren ...</p>
               
             </div>
           </div>
