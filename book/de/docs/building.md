@@ -222,7 +222,48 @@ Unter Linux kann man den LD_LIBRARY_PATH anpassen oder mittels RPATH den Laufzei
 
 Auch praktikabel ist unter beiden Plattformen die Erstellung und Verwendung von Qwt als statischer Bibliothek. Dies kann in der `qwtconfig.pri` eingestellt werden (Zeile `QWT_CONFIG           += QwtDll` auskommentieren!).
 
+# Verwendung von Qwt-Komponenten im Qt Creator/Designer
+
+## Verwendung der Platzhaltertechnik
+Die einfachste Variante, Qt Komponenten im Qt Designer zu verwenden, ist die Platzhaltertechnik. Dabei wird einfach ein Widget eingefügt (man sollte eine Mindestgröße definieren!) und dann über Rechtsklick die Option _"Als Platzhalter für benutzerdefinierte Klasse festlegen..."_ auswählen.
+
+![Platzhalter-Kontextmenüeintrag](imgs/designer_platzhalter_menueeintrag.png)
+
+Im Dialog definiert man Klassenname (beispielsweise QwtPlot), den Include-Dateinamen (`qwt_plot.h`) und checkt die Option "Globale Include-Datei".
+
+![Platzhalter-Klassendefinition](imgs/designer_benutzerdefinierte_QwtPlot_Klasse.png)
+
+Nach Bestätigen des Dialogs kann man die Klasse auswählen und auf "Anwenden" klicken. In der Widgethierarchie in der Eigenschaftsleiste sollte nun als Klassentyp "QwtPlot" beim ausgewählten Widget erscheinen, auch wenn weiterhin nur ein nacktes Widget im Formular/Dialog angezeigt wird. Ebenso können nur die Eigenschaften der vererbten QWidget-Klasse im Designer definiert werden. Die anderen Eigenschaften müssen klassisch im Quelltext der verwendenden Klasse angepasst werden.
+
+Möchte man etwes bequemer einzelen (ausgewählte) Klasseneigenschaften von Qwt-Widgets anpassen, so kann man das Qt Designer/Creator-Plugin verwenden:
+
+## Qwt Designer Plugins
+
+Das Qwt Designer Plugin wird bei manchen Paketverwaltungen (siehe oben Linux/Mac) bereits vorkompiliert installiert. Falls man Qwt vom Quelltext aus kompiliert und installiert, muss man die Plugin-Bibliothek noch in das entsprechende Verzeichnis kopieren.
+
+### Plugin-Installation in Windows
+
+Falls wie im Beispiel oben Qwt nach `C:\Qwt-6.1.4` installiert wurde, so befindet sich die dll in:
+
+    c:\Qwt-6.1.4\plugins\designer\qwt_designer_plugin.dll
+
+Diese Datei wird nun einfach in das Plugin-Verzeichnis des Qt Designers kopiert, also beispielsweise:
+
+    c:\Qt\5.11.3\msvc2015_64\plugins\designer\qwt_designer_plugin.dll
+
+Öffnet man nun Qt Designer (_!!wirklich den Designer, nicht Qt Creator!!_), so sieht man nun eine neue Widget-Palette (links unten) und bei Auswahl eines Qwt-Objekts auch die dazugehörigen Eigenschaften in der Eigenschaftspalette:
+
+![Designer mit Plugins](imgs/designer_plugins.png)
+
+### Plugin-Installation in Linux/Mac
+
+TODO ...
+
+
+## Qt Creator Plugins
+
+TODO ...
 
 # Erstellen mit Visual Studio
 
-... TODO 
+... TODO ... Qt Addin -> qwt.pro importieren ...
