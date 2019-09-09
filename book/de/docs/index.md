@@ -99,7 +99,7 @@ Die Qwt Bibliothek bringt Plugins für Qt Designer mit, welche das Einfügen von
 
 > **Hinweis:** Soll das QwtPlot auch ohne Designer-Plugins im grafischen QtDesigner-Editor eingefügt werden, kann man einfach ein QWidget einfügen und dieses als Platzhalter für die `QwtPlot`-Klasse definieren.
 
-Eine Beschreibung, wie Designer-plugins erstellt und in Qt Creator/Designer integriert werden ist am Abschnitt [Qwt Designer Plugins](building/#qwt-designer-plugins) beschrieben.
+Eine Beschreibung, wie Designer-plugins erstellt und in Qt Creator/Designer integriert werden ist am Abschnitt [Qt Designer Plugins für Qwt Komponenten](building/#qt-designer-plugins-fur-qwt-komponenten) beschrieben.
 
 ---
 

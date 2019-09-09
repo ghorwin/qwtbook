@@ -91,7 +91,7 @@
         
             <li><a class="toctree-l3" href="#verwendung-der-platzhaltertechnik">Verwendung der Platzhaltertechnik</a></li>
         
-            <li><a class="toctree-l3" href="#qwt-designer-plugins">Qwt Designer Plugins</a></li>
+            <li><a class="toctree-l3" href="#qt-designer-plugins-fur-qwt-komponenten">Qt Designer Plugins für Qwt Komponenten</a></li>
         
             <li><a class="toctree-l3" href="#qt-creator-plugins">Qt Creator Plugins</a></li>
         
@@ -179,24 +179,24 @@
 <p>Bei populären Linux-Distributionen gibt es Pakete für die Qwt-Bibliothek. Bei Ubuntu sind das beispielsweise:</p>
 <p><strong>Ubuntu 16.04 LTS</strong>:</p>
 <pre><code class="bash"># Qwt 5.x unter Verwendung von qt4 (für Qwt 5.2.3-1)
-sudo apt install libqwt5-qt4-dev
+&gt; sudo apt install libqwt5-qt4-dev
 
 # Qwt 6.x unter Verwendung von qt5 (für Qwt 6.1.2-5)
-sudo apt install libqwt-qt5-dev
+&gt; sudo apt install libqwt-qt5-dev
 </code></pre>
 
 <p><strong>Ubuntu 18.04 LTS</strong>:</p>
 <pre><code class="bash"># Qwt 5.x unter Verwendung von qt4 (für Qwt 5.2.3-1)
-sudo apt install libqwt5-qt4-dev
+&gt; sudo apt install libqwt5-qt4-dev
 
 # Qwt 6.x unter Verwendung von qt4 (für Qwt 6.1.3-1)
-sudo apt install libqwt-dev
+&gt; sudo apt install libqwt-dev
 
 # Qwt 6.x unter Verwendung von qt5 (für Qwt 6.1.3-1)
-sudo apt install libqwt-qt5-dev
+&gt; sudo apt install libqwt-qt5-dev
 </code></pre>
 
-<p>Bei anderen Linux-Distributionen ist das ähnlich.</p>
+<p>Bei anderen Linux-Distributionen ist das ähnlich. Eventuell kann man bei der Gelegenheit auch noch die Qt-Designer-Plugins mit installieren (siehe <a href="#qt-designer-plugins-fur-qwt-komponenten">Plugin-Installation in Linux/Mac - Aus Paketquellen</a>.</p>
 <h2 id="installation-mittels-homebrew-auf-dem-mac">Installation mittels HomeBrew auf dem Mac</h2>
 <p>Für neuere Mac-Versionen (sierra bis mojave) kann man <a href="https://brew.sh/index_de">HomeBrew</a> verwenden:</p>
 <pre><code>brew install qwt
@@ -274,7 +274,7 @@ Dokumentation in   : /usr/local/qwt-6.1.4/doc
 <h3 id="erstellen-und-installation-der-bibliothek-unter-windows">Erstellen und Installation der Bibliothek unter Windows</h3>
 <p>Je nach verfügbarem Compiler ist das Prozedere etwas anders, aber meist sehr ähnlich. Ist der Qt Creator samt Compiler bereits eingerichtet, kann man die <code>qwt.pro</code>-Datei einfach als Projekt in Qt Creator öffnen und im Debug/Release-Modus erstellen. Man kann dann in den Projekteinstellungen einen <em>Deployment</em>-Schritt konfigurieren, und darüber dann die Bibliothek installieren.</p>
 <p>Alternativ braucht man eine Kommandozeile mit entsprechend gesetzten Umgebungsvariablen zum Übersetzen von C++-Programmen (Beispielsweise bei Visual Studio die <code>vcvarsall.bat</code> aufrufen). Auch die Pfade zur Qt-Installation müssen gesetzt sein, sodass <code>qmake</code> im Pfad ist.</p>
-<p>Beispiel:</p>
+<p><strong>Beispiel:</strong></p>
 <pre><code class="batch">:: Entwicklungsumgebung für VC (x64) einrichten
 C:\Downloads\qwt-6.1.4&gt;&quot;c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat&quot; x64
 
@@ -341,7 +341,7 @@ LIBS += -L/usr/lib -lqwt-qt5
 <p><img alt="Platzhalter-Klassendefinition" src="../imgs/designer_benutzerdefinierte_QwtPlot_Klasse.png" /></p>
 <p>Nach Bestätigen des Dialogs kann man die Klasse auswählen und auf "Anwenden" klicken. In der Widgethierarchie in der Eigenschaftsleiste sollte nun als Klassentyp "QwtPlot" beim ausgewählten Widget erscheinen, auch wenn weiterhin nur ein nacktes Widget im Formular/Dialog angezeigt wird. Ebenso können nur die Eigenschaften der vererbten QWidget-Klasse im Designer definiert werden. Die anderen Eigenschaften müssen klassisch im Quelltext der verwendenden Klasse angepasst werden.</p>
 <p>Möchte man etwas bequemer einzelne (ausgewählte) Klasseneigenschaften von Qwt-Widgets anpassen, so kann man das Qt Designer/Creator-Plugin verwenden:</p>
-<h2 id="qwt-designer-plugins">Qwt Designer Plugins</h2>
+<h2 id="qt-designer-plugins-fur-qwt-komponenten">Qt Designer Plugins für Qwt Komponenten</h2>
 <p>Das Qwt Designer Plugin wird bei manchen Paketverwaltungen (siehe oben Linux/Mac) bereits vorkompiliert installiert. Falls man Qwt vom Quelltext aus kompiliert und installiert, muss man die Plugin-Bibliothek noch in das entsprechende Verzeichnis kopieren.</p>
 <h3 id="plugin-installation-in-windows">Plugin-Installation in Windows</h3>
 <p>Falls wie im Beispiel oben Qwt nach <code>C:\Qwt-6.1.4</code> installiert wurde, so befindet sich die dll in:</p>
@@ -352,10 +352,33 @@ LIBS += -L/usr/lib -lqwt-qt5
 </code></pre>
 <p>Öffnet man nun Qt Designer (<em>!!wirklich den Designer, nicht Qt Creator!!</em>), so sieht man nun eine neue Widget-Palette (links unten) und bei Auswahl eines Qwt-Objekts auch die dazugehörigen Eigenschaften in der Eigenschaftspalette:</p>
 <p><img alt="Designer mit Plugins" src="../imgs/designer_plugins.png" /></p>
-<h3 id="plugin-installation-in-linuxmac">Plugin-Installation in Linux/Mac</h3>
-<p>TODO ...</p>
+<h3 id="plugin-installation-in-linuxmac-aus-paketquellen">Plugin-Installation in Linux/Mac - Aus Paketquellen</h3>
+<p>Unter Ubuntu gibt es eine Paketquelle, welche die qwt-Plugins mit installiert.</p>
+<pre><code class="bash">&gt; sudo apt install qtcreator-plugin-ubuntu
+</code></pre>
+
+<p>Zusammen mit dem bereitgestellten vorkompilierten Qwt-Bibliotheken kann man also direkt loslegen.</p>
+<h3 id="plugin-installation-in-linuxmac-bei-selbstkompiliertem-qwt">Plugin-Installation in Linux/Mac - bei selbstkompiliertem Qwt</h3>
+<p>Die Plugin-Installation funktioniert und Linux/Mac ähnlich, d.h. erst das Plugin compilieren, und dann die Datei <code>libqwt_designer_plugin.so</code> in das Unter-Verzeichnis <code>gcc_64/plugins/designer</code> der Qt-Installation kopieren.</p>
+<p><strong>Beispiel:</strong></p>
+<pre><code class="bash"># Pfad zu qwt
+/home/markus/qwt-6.1.4
+# erstelltes Plugin
+/home/markus/qwt-6.1.4/designer/plugins/designer/libqwt_designer_plugin.so
+# Zielpfad der so-Datei im Installationspfad Qt (aus manueller Installation)
+/home/markus/Qt5.13.0/5.13.0/gcc_64/plugins/designer/libqwt_designer_plugin.so
+</code></pre>
+
+<p>Bei einer systemweiten Qt-Installation ist das Zielverzeichnis (unter Ubuntu):</p>
+<pre><code class="bash"># Zielpfad für designer-plugin bei Qt Installation aus Paketquellen
+/usr/lib/x86_64-linux-gnu/qt5/plugins/designer/
+</code></pre>
+
+<blockquote>
+<p>Anmerkung: Falls man Qt aus den Paketquellen installiert hat, kann es sein, dass beim Erstellen der Qwt-Bibliothek die Plugins nicht kompiliert werden, obwohl das in der qwt-Config-Datei eingeschaltet ist. Wenn man <code>qmake</code> direkt im <code>designer</code>-Unterverzeichnis ausführt, erhält man die Fehlermeldung: <em>Project WARNING: QwtDesigner is enabled in qwtconfig.pri, but Qt has not been built with designer support</em>. In diesem Fall funktioniert es aber, den Qt Designer nebst Plugins für die ui-Erstellung/Konfiguration zu nehmen, und in den qmake-Projekten einfach die Include/Lib-Pfade zur selbsterstellten Qwt-Bibliothek zu verwenden.</p>
+</blockquote>
 <h2 id="qt-creator-plugins">Qt Creator Plugins</h2>
-<p>TODO ...</p>
+<p>TODO ... (siehe src-Paket https://packages.ubuntu.com/source/xenial/qtcreator-plugin-ubuntu)</p>
 <h1 id="erstellen-mit-visual-studio">Erstellen mit Visual Studio</h1>
 <p>... TODO ... Qt Addin -&gt; qwt.pro importieren ...</p>
               

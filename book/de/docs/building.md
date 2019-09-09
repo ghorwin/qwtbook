@@ -19,26 +19,26 @@ Bei populären Linux-Distributionen gibt es Pakete für die Qwt-Bibliothek. Bei 
 
 ```bash
 # Qwt 5.x unter Verwendung von qt4 (für Qwt 5.2.3-1)
-sudo apt install libqwt5-qt4-dev
+> sudo apt install libqwt5-qt4-dev
 
 # Qwt 6.x unter Verwendung von qt5 (für Qwt 6.1.2-5)
-sudo apt install libqwt-qt5-dev
+> sudo apt install libqwt-qt5-dev
 ```
 
 **Ubuntu 18.04 LTS**:
 
 ```bash
 # Qwt 5.x unter Verwendung von qt4 (für Qwt 5.2.3-1)
-sudo apt install libqwt5-qt4-dev
+> sudo apt install libqwt5-qt4-dev
 
 # Qwt 6.x unter Verwendung von qt4 (für Qwt 6.1.3-1)
-sudo apt install libqwt-dev
+> sudo apt install libqwt-dev
 
 # Qwt 6.x unter Verwendung von qt5 (für Qwt 6.1.3-1)
-sudo apt install libqwt-qt5-dev
+> sudo apt install libqwt-qt5-dev
 ```
 
-Bei anderen Linux-Distributionen ist das ähnlich.
+Bei anderen Linux-Distributionen ist das ähnlich. Eventuell kann man bei der Gelegenheit auch noch die Qt-Designer-Plugins mit installieren (siehe [Plugin-Installation in Linux/Mac - Aus Paketquellen](#qt-designer-plugins-fur-qwt-komponenten).
 
 ## Installation mittels HomeBrew auf dem Mac
 
@@ -142,7 +142,7 @@ Je nach verfügbarem Compiler ist das Prozedere etwas anders, aber meist sehr ä
 
 Alternativ braucht man eine Kommandozeile mit entsprechend gesetzten Umgebungsvariablen zum Übersetzen von C++-Programmen (Beispielsweise bei Visual Studio die `vcvarsall.bat` aufrufen). Auch die Pfade zur Qt-Installation müssen gesetzt sein, sodass `qmake` im Pfad ist.
 
-Beispiel:
+**Beispiel:**
 
 ```batch
 :: Entwicklungsumgebung für VC (x64) einrichten
@@ -237,7 +237,7 @@ Nach Bestätigen des Dialogs kann man die Klasse auswählen und auf "Anwenden" k
 
 Möchte man etwas bequemer einzelne (ausgewählte) Klasseneigenschaften von Qwt-Widgets anpassen, so kann man das Qt Designer/Creator-Plugin verwenden:
 
-## Qwt Designer Plugins
+## Qt Designer Plugins für Qwt Komponenten
 
 Das Qwt Designer Plugin wird bei manchen Paketverwaltungen (siehe oben Linux/Mac) bereits vorkompiliert installiert. Falls man Qwt vom Quelltext aus kompiliert und installiert, muss man die Plugin-Bibliothek noch in das entsprechende Verzeichnis kopieren.
 
@@ -255,14 +255,41 @@ Diese Datei wird nun einfach in das Plugin-Verzeichnis des Qt Designers kopiert,
 
 ![Designer mit Plugins](imgs/designer_plugins.png)
 
-### Plugin-Installation in Linux/Mac
+### Plugin-Installation in Linux/Mac - Aus Paketquellen
 
-TODO ...
+Unter Ubuntu gibt es eine Paketquelle, welche die qwt-Plugins mit installiert.
 
+```bash
+> sudo apt install qtcreator-plugin-ubuntu
+```
+Zusammen mit dem bereitgestellten vorkompilierten Qwt-Bibliotheken kann man also direkt loslegen.
+
+### Plugin-Installation in Linux/Mac - bei selbstkompiliertem Qwt
+
+Die Plugin-Installation funktioniert und Linux/Mac ähnlich, d.h. erst das Plugin compilieren, und dann die Datei `libqwt_designer_plugin.so` in das Unter-Verzeichnis `gcc_64/plugins/designer` der Qt-Installation kopieren.
+
+**Beispiel:**
+
+```bash
+# Pfad zu qwt
+/home/markus/qwt-6.1.4
+# erstelltes Plugin
+/home/markus/qwt-6.1.4/designer/plugins/designer/libqwt_designer_plugin.so
+# Zielpfad der so-Datei im Installationspfad Qt (aus manueller Installation)
+/home/markus/Qt5.13.0/5.13.0/gcc_64/plugins/designer/libqwt_designer_plugin.so
+```
+
+Bei einer systemweiten Qt-Installation ist das Zielverzeichnis (unter Ubuntu):
+```bash
+# Zielpfad für designer-plugin bei Qt Installation aus Paketquellen
+/usr/lib/x86_64-linux-gnu/qt5/plugins/designer/
+```
+
+> Anmerkung: Falls man Qt aus den Paketquellen installiert hat, kann es sein, dass beim Erstellen der Qwt-Bibliothek die Plugins nicht kompiliert werden, obwohl das in der qwt-Config-Datei eingeschaltet ist. Wenn man `qmake` direkt im `designer`-Unterverzeichnis ausführt, erhält man die Fehlermeldung: _Project WARNING: QwtDesigner is enabled in qwtconfig.pri, but Qt has not been built with designer support_. In diesem Fall funktioniert es aber, den Qt Designer nebst Plugins für die ui-Erstellung/Konfiguration zu nehmen, und in den qmake-Projekten einfach die Include/Lib-Pfade zur selbsterstellten Qwt-Bibliothek zu verwenden.
 
 ## Qt Creator Plugins
 
-TODO ...
+TODO ... (siehe src-Paket https://packages.ubuntu.com/source/xenial/qtcreator-plugin-ubuntu)
 
 # Erstellen mit Visual Studio
 
