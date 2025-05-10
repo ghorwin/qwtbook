@@ -1,0 +1,6 @@
+# Erste Schritte und ein Diagrammbeispiel
+
+Um mit dem QwtPlot warm zu werden, erstellen wir in einem einfachen Beispiel ein interaktives Diagramm.
+
+
+
