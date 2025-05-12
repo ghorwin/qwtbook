@@ -66,6 +66,120 @@ table {
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+pre.rouge table td { padding: 5px; }
+pre.rouge table pre { margin: 0; }
+pre.rouge, pre.rouge .w {
+  color: #24292f;
+  background-color: #f6f8fa;
+}
+pre.rouge .k, pre.rouge .kd, pre.rouge .kn, pre.rouge .kp, pre.rouge .kr, pre.rouge .kt, pre.rouge .kv {
+  color: #cf222e;
+}
+pre.rouge .gr {
+  color: #f6f8fa;
+}
+pre.rouge .gd {
+  color: #82071e;
+  background-color: #ffebe9;
+}
+pre.rouge .nb {
+  color: #953800;
+}
+pre.rouge .nc {
+  color: #953800;
+}
+pre.rouge .no {
+  color: #953800;
+}
+pre.rouge .nn {
+  color: #953800;
+}
+pre.rouge .sr {
+  color: #116329;
+}
+pre.rouge .na {
+  color: #116329;
+}
+pre.rouge .nt {
+  color: #116329;
+}
+pre.rouge .gi {
+  color: #116329;
+  background-color: #dafbe1;
+}
+pre.rouge .kc {
+  color: #0550ae;
+}
+pre.rouge .l, pre.rouge .ld, pre.rouge .m, pre.rouge .mb, pre.rouge .mf, pre.rouge .mh, pre.rouge .mi, pre.rouge .il, pre.rouge .mo, pre.rouge .mx {
+  color: #0550ae;
+}
+pre.rouge .sb {
+  color: #0550ae;
+}
+pre.rouge .bp {
+  color: #0550ae;
+}
+pre.rouge .ne {
+  color: #0550ae;
+}
+pre.rouge .nl {
+  color: #0550ae;
+}
+pre.rouge .py {
+  color: #0550ae;
+}
+pre.rouge .nv, pre.rouge .vc, pre.rouge .vg, pre.rouge .vi, pre.rouge .vm {
+  color: #0550ae;
+}
+pre.rouge .o, pre.rouge .ow {
+  color: #0550ae;
+}
+pre.rouge .gh {
+  color: #0550ae;
+  font-weight: bold;
+}
+pre.rouge .gu {
+  color: #0550ae;
+  font-weight: bold;
+}
+pre.rouge .s, pre.rouge .sa, pre.rouge .sc, pre.rouge .dl, pre.rouge .sd, pre.rouge .s2, pre.rouge .se, pre.rouge .sh, pre.rouge .sx, pre.rouge .s1, pre.rouge .ss {
+  color: #0a3069;
+}
+pre.rouge .nd {
+  color: #8250df;
+}
+pre.rouge .nf, pre.rouge .fm {
+  color: #8250df;
+}
+pre.rouge .err {
+  color: #f6f8fa;
+  background-color: #82071e;
+}
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cm, pre.rouge .cp, pre.rouge .cpf, pre.rouge .c1, pre.rouge .cs {
+  color: #6e7781;
+}
+pre.rouge .gl {
+  color: #6e7781;
+}
+pre.rouge .gt {
+  color: #6e7781;
+}
+pre.rouge .ni {
+  color: #24292f;
+}
+pre.rouge .si {
+  color: #24292f;
+}
+pre.rouge .ge {
+  color: #24292f;
+  font-style: italic;
+}
+pre.rouge .gs {
+  color: #24292f;
+  font-weight: bold;
+}
+</style>
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
@@ -94,15 +208,32 @@ table {
 <li><a href="#_verwendung_der_designer_plugins">1.6. Verwendung der Designer Plugins</a></li>
 </ul>
 </li>
-<li><a href="#_erste_schritte_und_ein_diagrammbeispiel">2. Erste Schritte und ein Diagrammbeispiel</a></li>
+<li><a href="#_erste_schritte_und_ein_interaktives_diagramm">2. Erste Schritte und ein interaktives Diagramm</a>
+<ul class="sectlevel2">
+<li><a href="#_programmrohbau">2.1. Programmrohbau</a>
+<ul class="sectlevel3">
+<li><a href="#_qmake_projektdatei">2.1.1. QMake Projektdatei</a></li>
+<li><a href="#_minimalistische_main_cpp">2.1.2. Minimalistische main.cpp</a></li>
+</ul>
+</li>
+<li><a href="#_kurven_hinzufügen">2.2. Kurven hinzufügen</a></li>
+<li><a href="#_das_qwtplot_in_eine_designer_oberflächeui_datei_integrieren">2.3. Das QwtPlot in eine Designer-Oberfläche/ui-Datei integrieren</a>
+<ul class="sectlevel3">
+<li><a href="#_definition_eines_platzhalterwidgets">2.3.1. Definition eines Platzhalterwidgets</a></li>
+<li><a href="#_verwendung_der_designer_plugins_2">2.3.2. Verwendung der Designer-Plugins</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#sec:styling">3. Anpassung/Styling der Qwt Komponenten</a></li>
 <li><a href="#sec:building">4. Download/Installation/Erstellung der Qwt Bibliothek</a>
 <ul class="sectlevel2">
 <li><a href="#_download_fertiger_pakete">4.1. Download fertiger Pakete</a></li>
-<li><a href="#_erstellung_aus_dem_quelltext">4.2. Erstellung aus dem Quelltext</a>
+<li><a href="#sec:buildingFromSource">4.2. Erstellung aus dem Quelltext</a>
 <ul class="sectlevel3">
 <li><a href="#_windows">4.2.1. Windows</a></li>
-<li><a href="#_linuxmac">4.2.2. Linux/Mac</a></li>
+<li><a href="#_windows_mingw32">4.2.2. Windows - MinGW32</a></li>
+<li><a href="#_linuxmac">4.2.3. Linux/Mac</a></li>
 </ul>
 </li>
 <li><a href="#sec:designerPlugins">4.3. Qt Designer Plugins</a></li>
@@ -129,11 +260,17 @@ table {
 <h2 id="_über_dieses_handbuch">Über dieses Handbuch</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Dieses Projekt ergänzt die Dokumentation zur Qwt-Bibliothek und bietet sowas wie ein Programmiererhandbuch mit vielen Details zu den Internas. Das Buch schreibe ich in Deutsch, aber Dank der modernen Webseiten-Übersetzer kann man das bestimmt auch locker in vielen anderen Sprachen lesen :-)</p>
+<p>Dieses Projekt ergänzt die Dokumentation zur Qwt-Bibliothek und bietet sowas wie ein Programmiererhandbuch mit vielen Details zu den Internas. Der Fokus liegt aber ganz klar auf der <code>QwtPlot</code> Diagrammkomponente.</p>
+</div>
+<div class="paragraph">
+<p>Das Buch schreibe ich in Deutsch, aber Dank der modernen Webseiten-Übersetzer kann man das bestimmt auch locker in vielen anderen Sprachen lesen :-)</p>
 </div>
 <div class="paragraph">
 <p>Die Texte, Bilder und Beispielquelltexte stehen unter der BDS-3 Lizenz (siehe <a href="https://github.com/ghorwin/QwtBook">Qwt Handbuch Repository</a>). Wäre natürlich cool,
-wenn der eine oder andere hier etwas beisteuern würde.</p>
+wenn der eine oder andere hier etwas beisteuern würde. Das ist übrigends schon die 2. Auflage (komplett neu überarbeitet), weil es zum Zeitpunkt der ersten Ausgabe noch kein tolles AsciiDoc gab und ich irgendwie beim Textschreiben hängengeblieben bin.</p>
+</div>
+<div class="paragraph">
+<p>Viel Spaß bei der Lektüre - und falls noch Inhalte fehlen, einfach Geduld haben und später wiederkommen (oder im Github-Repo ein Issue anlegen).</p>
 </div>
 <div class="paragraph">
 <p>&#8201;&#8212;&#8201;Andreas Nicolai</p>
@@ -263,10 +400,169 @@ eine sehr flexible und mächtige Diagrammkomponente.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_erste_schritte_und_ein_diagrammbeispiel">2. Erste Schritte und ein Diagrammbeispiel</h2>
+<h2 id="_erste_schritte_und_ein_interaktives_diagramm">2. Erste Schritte und ein interaktives Diagramm</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Um mit dem QwtPlot warm zu werden, erstellen wir in einem einfachen Beispiel ein interaktives Diagramm.</p>
+<p>Um mit der Qwt-Bibliothek warm zu werden, erstellen wir in einem einfachen Beispiel ein interaktives Diagramm mit der <code>QwtPlot</code>-Komponente.</p>
+</div>
+<div class="sect2">
+<h3 id="_programmrohbau">2.1. Programmrohbau</h3>
+<div class="sect3">
+<h4 id="_qmake_projektdatei">2.1.1. QMake Projektdatei</h4>
+<div class="paragraph">
+<p>Wir beginnen mit der qmake-Projektdatei, in der wir den Pfad für die Header-Dateien der Bibliothek und die zu linkende Bibliothek festlegen.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh">TARGET   <span class="o">=</span> Tutorial1
+QT       +<span class="o">=</span> core gui widgets
+CONFIG   +<span class="o">=</span> c++11
+
+<span class="c"># Pfad zu den Qwt Headerdateien hinzufügen</span>
+INCLUDEPATH +<span class="o">=</span> C:/qwt-6.3.0/include
+
+CONFIG<span class="o">(</span>debug, debug|release<span class="o">)</span> <span class="o">{</span>
+	QWTLIB <span class="o">=</span> qwtd
+<span class="o">}</span>
+<span class="k">else</span> <span class="o">{</span>
+	QWTLIB <span class="o">=</span> qwt
+<span class="o">}</span>
+
+<span class="c"># Linkerpfad</span>
+LIBS +<span class="o">=</span> <span class="nt">-LC</span>://qwt-6.3.0/lib <span class="nt">-l</span><span class="nv">$$</span>QWTLIB
+
+SOURCES +<span class="o">=</span> main.cpp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dies ist eine <code>.pro</code>-Datei für eine typische Windows-Installation der Qwt-Bibliothek (siehe <a href="#sec:buildingFromSource">Kapitel 4.2</a>). Unter Linux würden <code>INCLUDEPATH</code> und <code>LIBS</code> bei Installation der Qwt-Lib nach <code>/usr/local/share</code> eher so aussehen.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Beachte, dass die im Debug-Modus kompilierte Qwt-Bibliothek ein angehängtes d hat.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_minimalistische_main_cpp">2.1.2. Minimalistische main.cpp</h4>
+<div class="paragraph">
+<p>Für die Verwendung des <code>QwtPlot</code> braucht man nur eine sehr minimalistische <code>main.cpp</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Hauptprogramm, in dem nur das nackige Plot selbst erstellt und angezeigt wird</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;QApplication&gt;</span><span class="cp">
+</span>
+<span class="cp">#include</span> <span class="cpf">&lt;QwtPlot&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+	<span class="n">QApplication</span> <span class="n">a</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+	<span class="n">QwtPlot</span> <span class="n">plot</span><span class="p">;</span>
+	<span class="n">plot</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span><span class="mi">500</span><span class="p">);</span>
+	<span class="n">plot</span><span class="p">.</span><span class="n">show</span><span class="p">();</span>
+	<span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">exec</span><span class="p">();</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Wenn man das Programm compiliert hat und ausführen will, beklagt sich Windows über eine fehlende DLL.
+Dazu in den Projekteinstellungen, unter "Ausführen", im Abschnitt "Umgebung" die PATH-Variable bearbeiten und dort den Pfad <code>C:\qwt-6.3.0\lib</code> hinzufügen.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Das Programm zeigt ein ziemlich langweiliges (und hässliches) Diagrammfenster (später wird das noch ansehnlicher gestaltet).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_a.png" alt="Tutorial1 a">
+</div>
+<div class="title">Abbildung 3. Das nackte Plotwidget</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kurven_hinzufügen">2.2. Kurven hinzufügen</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_das_qwtplot_in_eine_designer_oberflächeui_datei_integrieren">2.3. Das QwtPlot in eine Designer-Oberfläche/ui-Datei integrieren</h3>
+<div class="paragraph">
+<p>Wenn man mittels Qt Designer eine Programmoberfläche baut, möchte man da vielleicht auch ein <code>QwtPlot</code> einbetten. Das kann man auf zwei verschiedene Arten machen:</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha">
+<li>
+<p>ein QWidget als Platzhalter einfügen und zu einem Platzhalterwidget für das <code>QwtPlot</code> machen, oder</p>
+</li>
+<li>
+<p>die Qwt-Designer-Plugins verwenden.</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="_definition_eines_platzhalterwidgets">2.3.1. Definition eines Platzhalterwidgets</h4>
+<div class="paragraph">
+<p>Zur Erklärung wird im Qt Designer ein einfaches Widget entworfen:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_ui1.png" alt="Tutorial1 ui1">
+</div>
+<div class="title">Abbildung 4. Widget mit Platzhalter-Widget für das Diagramm</div>
+</div>
+<div class="paragraph">
+<p>Unter der Spinbox wurde ein <code>QWidget</code> eingefügt. Dieses soll nun als Platzhalter für das <code>QwtPlot</code> dienen. Dazu im Kontextmenü des Widgets die Option "Als Platzhalter für benutzerdefinierte Klasse festlegen&#8230;&#8203;" auswählen:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_ui2.png" alt="Tutorial1 ui2">
+</div>
+</div>
+<div class="paragraph">
+<p>Und im Dialog eine neue Platzhalterklasse wie folgt definieren:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_ui3.png" alt="Tutorial1 ui3">
+</div>
+</div>
+<div class="paragraph">
+<p>Die Eingabe mit "Hinzufügen" bestätigen und dann auf "Anwenden" klicken, um das Platzhalter-Widget in das <code>QwtPlot</code> zu wandeln. Wir benennen das noch in <em>plot</em> um, und füge das horizontale Layout und das Plotwidget in ein vertikales Layout ein:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_ui4.png" alt="Tutorial1 ui4">
+</div>
+</div>
+<div class="paragraph">
+<p>Damit sich das Plotwidget den ganzen vertikalen Platz schnappt, wählt man das Top-Level Widget aus und scrollt in der Eigenschaftsleiste bis nach unten zu den Einstellungen für das vertikale Layout. Dort gibt man bei den Stretch-Faktoren "0,1" ein, wodurch sich das 2. Widget im Layout (das Plot) komplett ausdehnt.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_verwendung_der_designer_plugins_2">2.3.2. Verwendung der Designer-Plugins</h4>
+<div class="paragraph">
+<p>Wenn man die erstmal installiert hat (siehe <a href="#sec::designerPlugins">[sec::designerPlugins]</a>), kann man ein <code>QwtPlot</code> direkt aus der Komponentenpalette in den Entwurf zeihen und ist fertig.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -284,13 +580,68 @@ eine sehr flexible und mächtige Diagrammkomponente.</p>
 
 </div>
 <div class="sect2">
-<h3 id="_erstellung_aus_dem_quelltext">4.2. Erstellung aus dem Quelltext</h3>
+<h3 id="sec:buildingFromSource">4.2. Erstellung aus dem Quelltext</h3>
 <div class="sect3">
 <h4 id="_windows">4.2.1. Windows</h4>
-
+<div class="ulist">
+<ul>
+<li>
+<p>Release <code>qwt-6.3.0.zip</code>  herunterladen und entpacken.</p>
+</li>
+<li>
+<p>Datei <code>qwtconfig.pri</code> bearbeiten und Optionen ein-/ausschalten</p>
+</li>
+<li>
+<p>Kommandozeile mit Qt Umgebungsvariablen öffnen: Startmenu &#8594; Qt 5.15.2 (MinGW 8.1.0 64-bit)</p>
+</li>
+<li>
+<p>Ins Verzeichnis mit der <code>qwt.pro</code> wechseln</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect3">
-<h4 id="_linuxmac">4.2.2. Linux/Mac</h4>
+<h4 id="_windows_mingw32">4.2.2. Windows - MinGW32</h4>
+<div class="paragraph">
+<p>Es wird eine MinGW32 Installation mit <code>mingw32-make</code> im PATH erwartet.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bat"><span class="c">:: Makefile erstellen</span>
+<span class="kd">qmake</span> <span class="kd">qwt</span>.pro
+<span class="c">:: Bibliothek und Plugin/Beispiele bauen</span>
+<span class="kd">mingw32</span><span class="na">-make -j</span><span class="m">8</span>
+<span class="c">:: Biblithek installieren</span>
+<span class="kd">mingw32</span><span class="na">-make </span><span class="kd">install</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Die <code>-j8</code> sind für das parallele Bauen auf 8 CPUs.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Sofern nicht in der Datei <code>qwtconfig.pri</code> ein anderer Installationspräfix in der Variable <code>QWT_INSTALL_PREFIX</code> eingestellt wurde, ist die Bibliothek nun unter <code>c:\Qwt-6.3.0</code> installiert:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>c:\Qwt-6.3.0\include  - Header-Dateien
+c:\Qwt-6.3.0\lib      - Bibliothek/DLLs
+c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis öffnen)</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_linuxmac">4.2.3. Linux/Mac</h4>
 
 </div>
 </div>
@@ -338,7 +689,7 @@ eine sehr flexible und mächtige Diagrammkomponente.</p>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0<br>
-Last updated 2025-05-12 17:02:28 +0200
+Last updated 2025-05-12 17:45:32 +0200
 </div>
 </div>
 </body>
