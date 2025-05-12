@@ -42,6 +42,7 @@ Viel Spaß bei der Lektüre - und falls noch Inhalte fehlen, einfach Geduld habe
 include::Introduction.adoc[leveloffset=+1]
 include::BasicTutorial.adoc[leveloffset=+1]
 include::LineCurves.adoc[leveloffset=+1]
+include::Legend.adoc[leveloffset=+1]
 include::Styling.adoc[leveloffset=+1]
 include::Building.adoc[leveloffset=+1]
 include::Print.adoc[leveloffset=+1]

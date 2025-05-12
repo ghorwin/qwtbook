@@ -132,9 +132,58 @@ Das Ergebnis sieht schon eher nach Diagramm aus.
 .Diagramm mit Linie
 image::Tutorial1_b.png[pdfwidth=6cm]
 
-
 ### Legende hinzufügen
 
+Als nächstes wird eine Legende eingefügt:
+
+[source,cpp]
+----
+// Legende anzeigen
+QwtLegend * legend = new QwtLegend();
+plot.insertLegend( legend , QwtPlot::BottomLegend); // plot takes ownership
+----
+
+Auch hier wird oben wieder der Header für die Klasse `QwtLegend` eingebunden.
+
+Die Legende kann links, rechts, oberhalb oder unterhalb der Zeichenfläche liegen, oder in der Zeichenfläche selbst. Das Anpassen der Legende wird in <<sec:legend>> beschrieben.
+
+### Diagrammtitel hinzufügen
+
+[source,cpp]
+----
+// Titel hinzufügen
+QwtText text("Ein Beispieldiagramm");
+QFont titleFont;
+titleFont.setBold(true);
+titleFont.setPointSize(10);
+text.setFont(titleFont);
+plot.setTitle(text);
+----
+
+### Diagrammraster hinzufügen
+
+Gitterlinien werden durch das Zeichenobjekt `QwtPlotGrid` gezeichnet:
+
+[source,cpp]
+----
+// Hauptgitter anzeigen
+QwtPlotGrid *grid = new QwtPlotGrid();
+QPen gridPen(Qt::gray);
+gridPen.setStyle(Qt::DotLine);
+gridPen.setWidth(0);
+grid->setPen(gridPen);
+grid->attach( plot ); // plot takes ownership
+----
+
+[TIP]
+====
+Man kann auch mehrere Raster hinzufügen, z.B. eins für Hauptgitterlinien und eines für Nebengitterlinien.
+====
+
+Inzwischen sieht das Diagramm schon ganz ansehnlich aus.
+
+.Diagramm mit Linie, Legende, Titel und Gitterlinien
+image::Tutorial1_c.png[pdfwidth=6cm]
 
 
 ## Interaktion mit dem Diagramm
