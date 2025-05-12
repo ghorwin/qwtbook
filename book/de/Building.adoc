@@ -1,0 +1,26 @@
+:imagesdir: ../images
+
+[[sec:building]]
+# Download/Installation/Erstellung der Qwt Bibliothek
+
+## Download fertiger Pakete
+
+
+## Erstellung aus dem Quelltext
+
+### Windows
+
+
+### Linux/Mac
+
+[[sec:designerPlugins]]
+## Qt Designer Plugins
+
+... wie erstellt man die Designerplugins und bekommt die in die Komponentenpalette...
+
+## Verwendung des Plots in eigenen Programmen
+
+### Windows
+
+### Linux/Mac
+

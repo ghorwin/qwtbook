@@ -19,11 +19,25 @@ v1.0.0, Mai 2025
 :example-caption: Beispiel
 :figure-caption: Abbildung
 :table-caption: Tabelle
-:section-refsig: Abschnitt
+:section-refsig: Kapitel
+:xrefstyle: short
 
 :numbered!:
-include::Introduction.adoc[leveloffset=+1]
-:numbered:
-include::Kapitel01.adoc[leveloffset=+1]
 
-include::KapitelEnde.adoc[]
+## Über dieses Handbuch
+
+Dieses Projekt ergänzt die Dokumentation zur Qwt-Bibliothek und bietet sowas wie ein Programmiererhandbuch mit vielen Details zu den Internas. Das Buch schreibe ich in Deutsch, aber Dank der modernen Webseiten-Übersetzer kann man das bestimmt auch locker in vielen anderen Sprachen lesen :-)
+
+Die Texte, Bilder und Beispielquelltexte stehen unter der BDS-3 Lizenz (siehe https://github.com/ghorwin/QwtBook[Qwt Handbuch Repository]). Wäre natürlich cool, 
+wenn der eine oder andere hier etwas beisteuern würde.
+
+-- Andreas Nicolai
+
+:numbered:
+
+include::Introduction.adoc[leveloffset=+1]
+include::BasicTutorial.adoc[leveloffset=+1]
+include::Styling.adoc[leveloffset=+1]
+include::Building.adoc[leveloffset=+1]
+include::Print.adoc[leveloffset=+1]
+
