@@ -376,7 +376,7 @@ Es ist wichtig darauf zu achten, dass man beim Konstruktor der Klasse `QwtPlotZo
 Im Konstruktor der `QwtPlotZoomer` Klasse registriert sich das Objekt als Kind des Canvas-Widgets, wodurch das QObject-System sich um die Speicherverwaltung kümmert. Man muss also das `QwtPlotZoomer` Objekt nicht freigeben.
 ====
 
-Damit das Zoomer weiß, welche Achsen beim Zoom manipuliert werden sollen, muss man die x- und y-Achse im Konstruktor angeben. Möchte man z.B. beide y-Achsen gleichzeitig zoomen, braucht man zwei `QwtPlotZoomer`-Objekte.
+Damit der Zoomer weiß, welche Achsen beim Zoom manipuliert werden sollen, muss man die x- und y-Achse im Konstruktor angeben. Möchte man z.B. beide y-Achsen gleichzeitig zoomen, braucht man zwei `QwtPlotZoomer`-Objekte.
 
 .Diagramm mit aufgezogenem Zoom-Rechteck
 image::Tutorial1_g.png[pdfwidth=6cm]
