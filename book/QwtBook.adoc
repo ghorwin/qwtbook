@@ -26,10 +26,11 @@ v1.0.0, Mai 2025
 
 ## Über dieses Handbuch
 
-Dieses Projekt ergänzt die Dokumentation zur Qwt-Bibliothek und bietet sowas wie ein Programmiererhandbuch mit vielen Details zu den Internas. Der Fokus liegt aber ganz klar auf der `QwtPlot` Diagrammkomponente.  Das Buch schreibe ich in Deutsch, aber Dank der modernen Webseiten-Übersetzer kann man das bestimmt auch locker in vielen anderen Sprachen lesen :-)
+Dieses Projekt ergänzt die API-Dokumentation zur Qwt-Bibliothek und bietet sowas wie ein Programmiererhandbuch mit vielen Details zu den Internas der Bibliothek. Der Fokus liegt aber ganz klar auf der `QwtPlot` Diagrammkomponente.  Das Buch schreibe ich in Deutsch, aber Dank der modernen Webseiten-Übersetzer kann man das bestimmt auch locker in vielen anderen Sprachen lesen :-)
+Das ist übrigends schon die 2. Auflage (komplett neu überarbeitet), weil es zum Zeitpunkt der ersten Ausgabe noch kein tolles AsciiDoc gab und ich irgendwie beim Textschreiben hängengeblieben bin. 
 
-Die Texte, Bilder und Beispielquelltexte stehen unter der BDS-3 Lizenz (siehe Qwt Handbuch Repository https://github.com/ghorwin/QwtBook[https://github.com/ghorwin/QwtBook]). Wäre natürlich cool, 
-wenn der eine oder andere hier etwas beisteuern würde. Das ist übrigends schon die 2. Auflage (komplett neu überarbeitet), weil es zum Zeitpunkt der ersten Ausgabe noch kein tolles AsciiDoc gab und ich irgendwie beim Textschreiben hängengeblieben bin. 
+Die Texte und Bilder stehen unter der Creative-Commons BY-NC Lizenz (siehe Lizenztext im Qwt Handbuch Repository https://github.com/ghorwin/QwtBook[https://github.com/ghorwin/QwtBook]), können also frei verwendet, modifiziert und angepasst werden, aber bitte nicht publiziert oder zum Training von kommerziellen KI-Systemen benutzt werden.
+Alle Quelltextbeispiele, sowohl im Text, als auch in den herunterladbaren Tutorial/Beispiel-Quelltextarchiven, stehen unter der MIT-Lizenz und können damit in open-source wie auch kommerziellen Projekten genutzt werden.
 
 [TIP]
 ====
@@ -53,6 +54,10 @@ include::Zoomer.adoc[leveloffset=+1]
 
 include::Styling.adoc[leveloffset=+1]
 include::Print.adoc[leveloffset=+1]
+include::Fortgeschrittenes.adoc[leveloffset=+1]
 
 include::Building.adoc[leveloffset=+1]
 
+## Über den Autor
+
+... später, siehe https://schneggenport.de[https://schneggenport.de]

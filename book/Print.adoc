@@ -9,15 +9,73 @@ Neben der Anzeige auf dem Bildschirm ist das Speichern schicker Diagramme und Ve
 
 Der naheliegenste Export des Plots ist eine 1-zu-1 Kopie in die Zwischenablage oder in eine Bitmapdatei (jpg, gif, png,...).
 
-### Erstellen eines QPixmap mit dem Plotinhalt
+### Erstellen einer 1-zu-1 Kopie des Plotwidgets
 
-Man kann einfach
+Jedes QWidget kann direkt in eine QPixmap gezeichnet werden. Und dieses kann dann in eine Datei gespeichert werden.
+
+[source,cpp]
+----
+// Plot in Pixmap rendern
+QPixmap p = plot.grab();
+// Pixmap in Datei speichern
+p.save("diagramm_screenshot.png");
+----
 
 ### Kopie in die Zwischenablage
 
+Statt das Pixmap in eine Datei zu speichern, kann man das auch einfach in die Zwischenablage kopieren. Dazu `QClibBoard` und  `QApplication` einbinden und:
+
+[source,cpp]
+----
+// Plot in Pixmap rendern
+QPixmap p = plot.grab();
+// Pixmap in Zwischenablage kopieren
+qApp->clipboard()->setImage(p.toImage());
+----
+
+
+### QwtPlot mit anderer Auflösung abspeichern
+
+Wenn das QwtPlot mit einer anderen Auflösung/Pixelgröße als angezeigt auf dem Bildschirm abgespeichert werden soll, so verwendet man die `QwtPlotRenderer`:
+
+[source,cpp]
+----
+// Render-Objekt erstellen
+QwtPlotRenderer renderer;
+// Statt der versenkten Box wird ein Rahmen mit Skalenstrichen gezeichnen
+renderer.setLayoutFlag(QwtPlotRenderer::FrameWithScales);
+// Zielgröße festlegen
+QRect imageRect( 0.0, 0.0, 1200, 600 );
+// Bildobjekt in der entsprechenden Größe erstellen...
+QImage image( imageRect.size(), QImage::Format_ARGB32 );
+// und mit weißem Hintergrund füllen
+image.fill(Qt::white);
+
+// Das Diagramm in das QImage zeichnen
+QPainter painter( &image );
+renderer.render( &plot, &painter, imageRect );
+painter.end();
+
+// QImage zurück in Pixmap konvertieren
+QPixmap plotPixmap( QPixmap::fromImage(image) );
+plotPixmap.save("diagram.png");
+----
+
+Das Diagramm aus dem Tutorial 1 (<<sec:tutorial1>>) sieht dann z.B. so aus:
+
+.Plot in höherer Auflösung abgespeichert
+image::Tutorial1_h.png[pdfwidth=12cm]
+
+
+
+### Diagrammelemente skalieren (DPI ändern)
+
+TODO
 
 ## Exportieren des Plots als Vektorgrafik
 
+TODO 
 
 ## Drucken 
 
+TODO

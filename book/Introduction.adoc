@@ -43,7 +43,7 @@ Details zum Styling und zur Anpassung des Erscheinungsbildes sind im <<sec:styli
 
 Eine grundlegende Eigenschaft der `QwtPlot`-Klasse ist die Besitzübername hinzugefügter Elemente. Dies gilt allgemein für alle Elemente des Plots (Linien, Marker, Legende, ...). D.h. nach Übertragung der Eigentümerschaft kümmert sich das `QwtPlot` um das Aufräumen des Speichers.
 
-Einmal hinzugefügte Elemente werden nicht wieder losgelöst werden (bzw. nur über einen Trick, wie im <<sec:XXX>> beschrieben wird). Daher ist es sinnvoll, bei veränderlichen Diagrammelementen einen Mechanismus zur jeweiligen Neuerstellung eines Zeichenobjekts vorzusehen (Factory-Konzept).
+Einmal hinzugefügte Elemente werden nicht wieder losgelöst werden (bzw. nur über einen Trick, wie im <<sec:releasingObjectsFromQwtPlot>> beschrieben wird). Daher ist es sinnvoll, bei veränderlichen Diagrammelementen einen Mechanismus zur jeweiligen Neuerstellung eines Zeichenobjekts vorzusehen (Factory-Konzept).
 
 
 ## Zeichenobjekte und deren Achsenabhängigkeit
@@ -60,11 +60,11 @@ Grundsätzlich ist das `QwtPlot` und die beteiligten Klassen auf maximale Anpass
 
 ## Verwendung der Designer Plugins
 
-Die Qwt Bibliothek bringt Plugins für Qt Designer mit, welche das Einfügen von Qwt-Komponenten in ui-Dateien erleichtert. Es lassen sich jedoch keine QwtPlot-Eigenschaften festlegen oder Kurven hinzufügen. Die eigentliche Anpassung und Ausgestaltung des Plots erfolgt im Quelltext. Deswegen wird die Konfiguration und Anpassung des `QwtPlot` in diesem Handbuch ausschließlich durch normale API-Aufrufe demonstriert.
+Die Qwt Bibliothek bringt Plugins für QtDesigner mit, welche das Einfügen von Qwt-Komponenten in ui-Dateien erleichtert. Es lassen sich jedoch keine QwtPlot-Eigenschaften festlegen oder Kurven hinzufügen. Die eigentliche Anpassung und Ausgestaltung des Plots erfolgt im Quelltext. Deswegen wird die Konfiguration und Anpassung des `QwtPlot` in diesem Handbuch ausschließlich durch normale API-Aufrufe demonstriert.
 
 [TIP]
 ====
-Soll das `QwtPlot` auch ohne Designer-Plugins im grafischen QtDesigner-Editor eingefügt werden, kann man einfach ein QWidget einfügen und dieses als Platzhalter für die `QwtPlot`-Klasse definieren (siehe auch <<sec:insertWithWidget>> im Einsteiger-Tutorial).
+Soll das `QwtPlot` auch ohne Designer-Plugins im grafischen QtDesigner-Editor eingefügt werden, kann man einfach ein QWidget einfügen und dieses als Platzhalter für die `QwtPlot`-Klasse definieren, siehe <<sec:usingQwtPlot>>.
 ====
 
 Eine Beschreibung, wie die Designer-plugins erstellt und in Qt Creator/Designer integriert werden ist im <<sec:designerPlugins>> beschrieben.

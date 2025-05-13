@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python ../adoc_utils/adoc-link-check.py . 
+python3 adoc_utils/adoc-link-check.py . 

@@ -1,5 +1,6 @@
 :imagesdir: images
 
+[[sec:tutorial1]]
 # Erste Schritte und ein interaktives Diagramm
 
 Um mit der Qwt-Bibliothek warm zu werden, erstellen wir in einem einfachen Beispiel ein interaktives Diagramm mit der `QwtPlot`-Komponente.
