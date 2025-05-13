@@ -1,0 +1,363 @@
+:imagesdir: images
+
+# Erste Schritte und ein interaktives Diagramm
+
+Um mit der Qwt-Bibliothek warm zu werden, erstellen wir in einem einfachen Beispiel ein interaktives Diagramm mit der `QwtPlot`-Komponente.
+
+## Programmrohbau
+
+### QMake Projektdatei
+
+Wir beginnen mit der qmake-Projektdatei, in der wir den Pfad für die Header-Dateien der Bibliothek und die zu linkende Bibliothek festlegen.
+
+[source,sh]
+----
+TARGET   = Tutorial1
+QT       += core gui widgets
+CONFIG   += c++11
+
+win32 {
+	# Pfad zu den Qwt Headerdateien hinzufügen
+	INCLUDEPATH += C:/qwt-6.3.0/include
+	CONFIG(debug, debug|release) {
+		QWTLIB = qwtd
+	}
+	else {
+		QWTLIB = qwt
+	}
+	# Linkerpfad
+	LIBS += -LC://qwt-6.3.0/lib -l$$QWTLIB
+}
+else {
+	# Pfad zu den Qwt Headerdateien hinzufügen
+	INCLUDEPATH += /usr/local/qwt-6.3.0/include/
+	# Linkerpfad, unter Linux wird standardmäßig nur die release-Version der Lib gebaut und installiert
+	LIBS += -L/usr/local/qwt-6.3.0/lib -lqwt
+}
+
+SOURCES += main.cpp
+----
+
+Dies ist eine `.pro`-Datei für eine Qwt-6.3.0-Installation aus dem Quelltext mit Standardeinstellungen (siehe <<sec:buildingFromSource>>).
+
+[IMPORTANT]
+====
+Beachte, dass die im Debug-Modus kompilierte Qwt-Bibliothek ein angehängtes 'd' hat. Unter Linux wird standardmäßig nur die release-Version gebaut und installiert, daher braucht man hier die Fallunterscheidung nicht.
+====
+
+### Minimalistisches Hauptprogramm
+
+Für die Verwendung des `QwtPlot` braucht man nur eine sehr minimalistische `main.cpp`.
+
+.Hauptprogramm, in dem nur das nackige Plot selbst erstellt und angezeigt wird
+[source,cpp]
+----
+#include <QApplication>
+
+#include <QwtPlot>
+
+int main(int argc, char *argv[]) {
+	QApplication a(argc, argv);
+	QwtPlot plot;
+	plot.resize(800,500);
+	plot.show();
+	return a.exec();
+}
+----
+
+[TIP]
+====
+Wenn man das Programm compiliert hat und ausführen will, beklagt sich Windows über eine fehlende DLL.
+Dazu in den Projekteinstellungen, unter "Ausführen", im Abschnitt "Umgebung" die PATH-Variable bearbeiten und dort den Pfad `C:\qwt-6.3.0\lib` hinzufügen. 
+====
+
+Das Programm zeigt ein ziemlich langweiliges (und hässliches) Diagrammfenster (später wird das noch ansehnlicher gestaltet).
+
+.Das nackte Plotwidget
+image::Tutorial1_a.png[pdfwidth=6cm]
+
+[NOTE]
+====
+Ein Hinweis zu den Header-Dateien der Qwt-Bibliothek.
+
+Analog zu Qt Klassen werden die Qwt-Klassen über den gleichnamigen Header eingebunden, also:
+
+```cpp
+#include <QwtPlot>       // für Klasse QwtPlot
+#include <QwtPlotCurve>  // für Klasse QwtPlotCurve
+#include <QwtLegend>     // für Klasse QwtLegend
+// ...
+```
+
+Diese Header-Dateien sind aber nur Wrapper um die eigentlichen Include-Dateien, mit dem Benennungsschema:
+```cpp
+#include <qwt_plot.h>        // für Klasse QwtPlot
+#include <qwt_plot_curve.h>  // für Klasse QwtPlotCurve
+#include <qwt_legend.h>      // für Klasse QwtLegend
+// ...
+```
+
+In früheren Versionen der Qwt-lib (auch der Debian-Paket-Version `libqwt-qt5-dev`) wurden die Wrapper-Headerdateien nach dem neuen Namensschema nicht installiert, sodass man die originalen `qwt_xxx.h` Includes verwenden muss. Wenn man also auch ältere Qwt-Versionen unterstützen möchte, bzw. unter Linux die Paketversion verwenden will, sollte die originalen Headerdateinamen verwenden.
+====
+
+## Diagrammelemente hinzufügen
+
+### Linie hinzufügen
+
+Als erstes fügen wir eine Linie bzw. Diagrammkurve hinzu (Header `QwtPlotCurve` bzw. `qwt_plot_curve.h`):
+
+.Hauptprogramm mit einer Linie
+[source,cpp]
+----
+#include <QApplication>
+
+#include <QwtPlot>
+#include <QwtPlotCurve>
+
+int main(int argc, char *argv[]) {
+	QApplication a(argc, argv);
+	QwtPlot plot;
+	plot.resize(500,300);
+
+	// etwas Abstand zwischen Rand und Achsentiteln
+	plot.setContentsMargins(8,8,8,8);
+	// Hintergrund der Zeichenfläche soll weiß sein
+	plot.setCanvasBackground( Qt::white );
+
+	// Daten zum Darstellen
+	QVector<double> x = {0,4,5,10,12};
+	QVector<double> y = {5.1,4,6.8,6.5,5.2};
+
+	QwtPlotCurve *curve = new QwtPlotCurve();
+	curve->setPen(QColor(180,40,20), 0);
+	curve->setTitle("Line 1");
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+	curve->setSamples(x, y);
+	curve->attach(&plot); // Plot takes ownership
+
+	plot.show();
+	return a.exec();
+}
+----
+
+Im erweiterten Hauptprogramm wird zunächst der Header für die `QwtPlotCurve` eingebunden. Das Kurvenobjekt selbst wird mit `new` auf dem Heap erstellt. 
+
+[CAUTION]
+====
+Grundsätzlich gilt beim `QwtPlot`: Alle Plotelemente _müssen_ via new auf dem Heap erstellt werden und dem Plot dann übergeben werden. Dieses wird dann Besitzer und gibt den Speicher frei. Deshalb dürfen Linien, Legende, Marker etc. _niemals_ als Stack-Variablen erstellt werden, sonst gibt es (je nach Destruktoraufrufreihenfolge) einen Speicherzugriffsfehler.
+====
+
+Attribute wie Linienfarbe, Titel (wird später in der Legende angezeigt), und Antialising werden gesetzt (im <<sec:linecurves>> werden alle Eigenschaften von Linien im Detail erläutert). 
+
+Die Funktion `setSamples()` setzt die Daten der Linie. Wichtig ist hier, dass die übergebenen Vectoren die gleiche Länge haben. Es handelt sich um eine parametrische Kurve, d.h. weder x noch y Werte müssen monoton sein oder sonstwelchen Regeln folgen. Jedes x,y Wertepaar definiert einen Punkt und diese Punkte werden mit der Linie verbunden.
+
+Die Funktion `attach()` fügt das `QwtPlotCurve`-Objekt zum Diagramm hinzu.
+
+[IMPORTANT]
+====
+Beim Hinzufügen der Linie mittels `attach()` zum Diagramm wird das Plot neuer Eigentümer und kümmert sich um das Aufräumen des Speichers. Man muss also nicht mehr manuell `delete` für das `QwtPlotCurve`-Objekt aufrufen.
+====
+
+Zusätzlich zu dem Code, welcher die Linie hinzufügt, wurden noch 2 kleine Anpassungen am Erscheinungsbild vorgenommen:
+
+- Ränder wurden mittels `setContentsMargins()` hinzugefügt (siehe auch `QWidgdet::setContentsMargins()` )
+- der Hintergrund der Zeichenfläche (_canvas_) wurde weiß gefärbt.
+
+Das Ergebnis sieht schon eher nach Diagramm aus.
+
+.Diagramm mit Linie
+image::Tutorial1_b.png[pdfwidth=6cm]
+
+### Legende hinzufügen
+
+Als nächstes wird eine Legende eingefügt (Header `QwtLegend` bzw. `qwt_legend.h`):
+
+[source,cpp]
+----
+// Legende anzeigen
+QwtLegend * legend = new QwtLegend();
+plot.insertLegend( legend , QwtPlot::BottomLegend); // plot takes ownership
+----
+
+Auch hier wird oben wieder der Header für die Klasse `QwtLegend` eingebunden.
+
+Die Legende kann links, rechts, oberhalb oder unterhalb der Zeichenfläche liegen, oder in der Zeichenfläche selbst. Das Anpassen der Legende wird in <<sec:legend>> beschrieben.
+
+Das Plot nimmt beim Aufruf von `insertLegend()` wiederum Besitz vom Legendenobjekt und kümmert sich um das Aufräumen des Speichers.
+
+### Diagrammtitel hinzufügen
+
+[source,cpp]
+----
+// Titel hinzufügen
+QwtText text("Ein Beispieldiagramm");
+QFont titleFont;
+titleFont.setBold(true);
+titleFont.setPointSize(10);
+text.setFont(titleFont);
+plot.setTitle(text);
+----
+
+Die Klasse `QwtText` (Header `QwtText` bzw. `qwt_text.h`) kapselt einen QString und ergänzt Funktionalität zum Rendern von mathematischen Symbolen mittels MathML (siehe <<sec:mathML>>).
+
+### Diagrammraster hinzufügen
+
+Gitterlinien werden durch das Zeichenobjekt `QwtPlotGrid` gezeichnet (Header `QwtPlotGrid` bzw. `qwt_plot_grid.h`):
+
+[source,cpp]
+----
+// Hauptgitter anzeigen
+QwtPlotGrid *grid = new QwtPlotGrid();
+QPen gridPen(Qt::gray);
+gridPen.setStyle(Qt::DotLine);
+gridPen.setWidth(0);
+grid->setPen(gridPen);
+grid->attach( plot ); // plot takes ownership
+----
+
+[TIP]
+====
+Man kann auch mehrere Raster hinzufügen, z.B. eins für Hauptgitterlinien und eines für Nebengitterlinien.
+====
+
+Inzwischen sieht das Diagramm schon ganz ansehnlich aus.
+
+.Diagramm mit Linie, Legende, Titel und Gitterlinien
+image::Tutorial1_c.png[pdfwidth=6cm]
+
+
+### Achsenkonfiguration
+
+Das `QwtPlot` hat 4 Achsen eingebaut, genannt:
+
+- `QwtPlot::yLeft` und `QwtPlot::yRight`
+- `QwtPlot::xBottom` und `QwtPlot::xTop` 
+
+Standardmäßig sind die Achsen `xBottom` und `yLeft` sichtbar, wie im bisher verwendeten Plot.
+
+Jedes Zeichenelement im Plot (Kurven, Marker, ...) wird einer oder mehrerer Achsen zugeordnet. In unserem Einführungsbeispiel verwendet die `QwtPlotCurve` standardmäßig die Achsen `xBottom` und `yLeft`. 
+
+Die Achsen können wie folgt konfiguriert werden.
+
+[source,cpp]
+----
+// Achsen formatieren
+QFont axisFont;
+axisFont.setPointSize(8);
+axisFont.setBold(true);
+QFont axisLabelFont;
+axisLabelFont.setPointSize(8);
+// X-Achse
+QwtText axisTitle("X-Werte");
+axisTitle.setFont(axisFont);
+// Titel Text und Font setzen
+plot.setAxisTitle(QwtPlot::xBottom, axisTitle);
+// Font für Achsenzahlen setzen
+plot.setAxisFont(QwtPlot::xBottom, axisLabelFont);
+// Y-Achse
+axisTitle.setText("Y-Werte");
+plot.setAxisTitle(QwtPlot::yLeft, axisTitle);
+plot.setAxisFont(QwtPlot::yLeft, axisLabelFont);
+----
+
+Der Titel jeder Achse wird wiederum über ein `QwtText`-Objekt (enthält Text und Font) gesetzt.
+Der Font für die Zahlen an den Achsen selbst wird über `setAxisFont()` geändert.
+
+Die Achsen selbst lassen sich vielfältig anpassen, siehe <<sec:axes>>.
+
+.Vollständig formatiertes Diagramm (Linux Screenshot)
+image::Tutorial1_d.png[pdfwidth=6cm]
+
+Die Achsen passen sich standardmäßig automatisch an den Wertebereich der angezeigten Kurven an. Das kann man natürlich auch ändern, siehe <<sec:axes>>.
+
+
+## Interaktion mit dem Diagramm
+
+Das `QwtPlot` bietet die üblichen Interaktionsmöglichkeiten für den Anwender, wie z.B. Herein- und Herauszoonmen, oder Verschieben des Plotausschnitts.
+
+### Zoomfunktionalität mit QwtPlotZoomer
+
+Die Zoom-Funktionalität wird über die Klasse `QwtPlotZoomer` hinzugefügt (Header `QwtPlotZoomer` bzw. `qwt_plot_zoomer.h`):
+
+[source,cpp]
+----
+// Zoomer hinzufügen
+// Achtung: NICHT QwtPlot selbst als 3 Argument übergeben, sonder das canvas()
+QwtPlotZoomer * zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, plot.canvas());  // plot takes ownership
+zoomer->setTrackerMode( QwtPlotPicker::AlwaysOn ); // Kurvenvwerte unterm Cursor anzeigen
+----
+
+Wenn man mit der Maus über das Diagramm fährt, sieht man bereits einen veränderten Cursor und dank des Aufrufs `setTrackerMode(QwtPlotPicker::AlwaysOn)` sieht man nun auch die x- und y-Werte (des Achsen `xBottom` und `yLeft`) unter dem Cursor.
+
+Hineinzoomen kann man, indem man die Linke Maustaste gedrückt hält, und ein Zoom-Rechteck aufzieht. Das kann man auch mehrmals hintereinander machen. Das `QwtPlot` merkt sich intern diese Zoomstufen. Herauszoomen kann durch Klick auf die rechte Maustaste, wobei immer eine Zoomstufe hinausgezoomt wird.
+
+[TIP]
+====
+Die äußerste Zoomstufe wird im Konstruktor der `QwtPlotZoomer`-Klasse basierend auf den aktuellen Wertebereichen der _bereits hinzugefügten Kurven_ bestimmt. Sollte man die Werte der Kurven nachträglich ändern, oder den Zoomer hinzufügen, _bevor_ man dem Plot Kurven gegeben hat, so kann man die Funktion `QwtPlotZoomer::setZoomBase()` aufrufen. Details dazu gibt es im <<sec:zoomer>>.  
+====
+
+Im Quelltext gibt es eine Besonderheit. Während die bisherigen Plotelemente immer mit Memberfunktionen der `QwtPlot`-Klasse hinzugefügt wurde, bzw. mittels `attach()`, wird das Zoomerobjekt analog zu Qt Klassen als Kindobjekt der Zeichenfläche gegeben und registriert sich darüber als interaktives Element bei Plot. 
+
+
+[CAUTION]
+====
+Es ist wichtig darauf zu achten, dass man beim Konstruktor der Klasse `QwtPlotZoomer` als 3. Argument das Canvas-Objekt des Plots übergibt. Dieses erhält man mit der Funktion `QwtPlot::canvas()`. Wenn man hier stattdessen das Plot selbst übergibt, führt dies zu einem Speicherzugriffsfehler. 
+
+Im Konstruktor der `QwtPlotZoomer` Klasse registriert sich das Objekt als Kind des Canvas-Widgets, wodurch das QObject-System sich um die Speicherverwaltung kümmert. Man muss also das `QwtPlotZoomer` Objekt nicht freigeben.
+====
+
+Damit das Zoomer weiß, welche Achsen beim Zoom manipuliert werden sollen, muss man die x- und y-Achse im Konstruktor angeben. Möchte man z.B. beide y-Achsen gleichzeitig zoomen, braucht man zwei `QwtPlotZoomer`-Objekte.
+
+
+### Plotausschnitt verschieben mit QwtPlotPanner
+
+Wenn man Ausschnitt eines hineingezoomten Plots interaktiv verschieben möchte, kann man den `QwtPlotPanner` hinzufügen  (Header `QwtPlotZoomer` bzw. `qwt_plot_zoomer.h`):
+
+[source,cpp]
+----
+// Panner hinzufügen, wie auch beim PlotZoomer muss das Canvas-Objekt als Argument übergeben werden
+QwtPlotPanner * panner = new QwtPlotPanner(plot.canvas());  // plot takes ownership
+panner->setMouseButton(Qt::MidButton); // Mittlere Maustaste verschiebt
+----
+
+Wie beim `QwtPlotZoomer` wird das Objekt als Kindobjekt des Canvas-Widgets hinzugefügt.  Üblich ist das Verschieben von Bildschirminhalten mit gedrückter mittlerer Maustaste, also legt man das mit `setMouseButton()` fest.
+
+
+
+
+## Das QwtPlot in eine Designer-Oberfläche/ui-Datei integrieren
+
+Wenn man mittels Qt Designer eine Programmoberfläche baut, möchte man da vielleicht auch ein `QwtPlot` einbetten. Das kann man auf zwei verschiedene Arten machen:
+
+a. ein QWidget als Platzhalter einfügen und zu einem Platzhalterwidget für das `QwtPlot` machen, oder
+b. die Qwt-Designer-Plugins verwenden.
+
+### Definition eines Platzhalterwidgets
+
+Zur Erklärung wird im Qt Designer ein einfaches Widget entworfen:
+
+.Widget mit Platzhalter-Widget für das Diagramm
+image::Tutorial1_ui1.png[pdfwidth=8cm]
+
+Unter der Spinbox wurde ein `QWidget` eingefügt. Dieses soll nun als Platzhalter für das `QwtPlot` dienen. Dazu im Kontextmenü des Widgets die Option "Als Platzhalter für benutzerdefinierte Klasse festlegen..." auswählen:
+
+image::Tutorial1_ui2.png[pdfwidth=6cm]
+
+Und im Dialog eine neue Platzhalterklasse wie folgt definieren:
+
+image::Tutorial1_ui3.png[pdfwidth=6cm]
+
+Die Eingabe mit "Hinzufügen" bestätigen und dann auf "Anwenden" klicken, um das Platzhalter-Widget in das `QwtPlot` zu wandeln. Wir benennen das noch in _plot_ um, und füge das horizontale Layout und das Plotwidget in ein vertikales Layout ein:
+
+image::Tutorial1_ui4.png[pdfwidth=8cm]
+
+Damit sich das Plotwidget den ganzen vertikalen Platz schnappt, wählt man das Top-Level Widget aus und scrollt in der Eigenschaftsleiste bis nach unten zu den Einstellungen für das vertikale Layout. Dort gibt man bei den Stretch-Faktoren "0,1" ein, wodurch sich das 2. Widget im Layout (das Plot) komplett ausdehnt.
+
+### Verwendung der Designer-Plugins
+
+Wenn man die erstmal installiert hat (siehe <<sec::designerPlugins>>), kann man ein `QwtPlot` direkt aus der Komponentenpalette in den Entwurf zeihen und ist fertig.
+
+
+
+
+

@@ -1,0 +1,5 @@
+:imagesdir: images
+
+[[sec:styling]]
+# Anpassung/Styling der Qwt Komponenten
+
