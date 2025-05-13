@@ -1,7 +1,9 @@
 #include <QApplication>
 #include <QPen>
+#include <QFile>
+#include <QTextStream>
 
-//#define ORIGINAL_HEADERS
+#define ORIGINAL_HEADERS
 #ifndef ORIGINAL_HEADERS
 
 #include <QwtPlot>
@@ -9,6 +11,7 @@
 #include <QwtLegend>
 #include <QwtText>
 #include <QwtPlotGrid>
+#include <QwtPlotMarker>
 #include <QwtPlotZoomer>
 #include <QwtPlotPanner>
 #else
@@ -18,6 +21,7 @@
 #include <qwt_legend.h>
 #include <qwt_text.h>
 #include <qwt_plot_grid.h>
+#include <qwt_plot_marker.h>
 #include <qwt_plot_zoomer.h>
 #include <qwt_plot_panner.h>
 
@@ -33,9 +37,18 @@ int main(int argc, char *argv[]) {
 	// Hintergrund der Zeichenfläche soll weiß sein
 	plot.setCanvasBackground( Qt::white );
 
-	// Daten zum Darstellen
-	QVector<double> x = {0,4,5,10,12};
-	QVector<double> y = {5.1,4,6.8,6.5,5.2};
+	// Daten zum Darstellen einlesen
+	QVector<double> x, y;
+	QFile f("data.tsv");  // Datei enthält 2 Spalten
+	f.open(QFile::ReadOnly);
+	QTextStream strm(&f);
+	strm.readLine(); // Kopfzeile überspringen
+	while (!strm.atEnd()) {
+		double xval, yval;
+		strm >> xval >> yval;
+		x.append(xval);
+		y.append(yval);
+	}
 
 	QwtPlotCurve *curve = new QwtPlotCurve();
 	curve->setPen(QColor(180,40,20), 0);
@@ -93,6 +106,19 @@ int main(int argc, char *argv[]) {
 	// Panner hinzufügen, wie auch beim PlotZoomer muss das Canvas-Objekt als Argument übergeben werden
 	QwtPlotPanner * panner = new QwtPlotPanner(plot.canvas());  // plot takes ownership
 	panner->setMouseButton(Qt::MidButton); // Mittlere Maustaste verschiebt
+
+	// Vertikale, gestrichelte Plot-Markierung einfügen
+	QwtPlotMarker * marker = new QwtPlotMarker("207,50 keV");
+	marker->setLabelOrientation(Qt::Vertical);
+	marker->setLabelAlignment(Qt::AlignRight | Qt::AlignTop);
+	marker->setValue(6, 0); // bei vertikalen Linien muss die x-Koordinate festgelegt werden
+
+	QPen markerPen(Qt::black);
+	markerPen.setStyle(Qt::DashLine);
+	marker->setLinePen(markerPen);
+	marker->setLineStyle(QwtPlotMarker::VLine);
+	marker->setLabel(QwtText("207,50 keV"));
+	marker->attach(&plot); // plot takes ownership
 
 	plot.show();
 	return a.exec();

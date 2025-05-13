@@ -271,6 +271,20 @@ image::Tutorial1_d.png[pdfwidth=6cm]
 Die Achsen passen sich standardmäßig automatisch an den Wertebereich der angezeigten Kurven an. Das kann man natürlich auch ändern, siehe <<sec:axes>>.
 
 
+### Markierungslinien
+
+Ein weiteres Zeichenelement, das man hin und wieder braucht, sind horizontale oder vertikale Markierungslinien. Beispielhaft fügen wir eine solche Linie mal dem Plot hinzu (Header `QwtPlotMarker` bzw. `qwt_plot_marker.h`):
+
+[source,cpp]
+----
+
+----
+
+
+
+
+
+
 ## Interaktion mit dem Diagramm
 
 Das `QwtPlot` bietet die üblichen Interaktionsmöglichkeiten für den Anwender, wie z.B. Herein- und Herauszoonmen, oder Verschieben des Plotausschnitts.

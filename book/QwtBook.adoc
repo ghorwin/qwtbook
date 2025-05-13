@@ -26,12 +26,15 @@ v1.0.0, Mai 2025
 
 ## Über dieses Handbuch
 
-Dieses Projekt ergänzt die Dokumentation zur Qwt-Bibliothek und bietet sowas wie ein Programmiererhandbuch mit vielen Details zu den Internas. Der Fokus liegt aber ganz klar auf der `QwtPlot` Diagrammkomponente. 
-
-Das Buch schreibe ich in Deutsch, aber Dank der modernen Webseiten-Übersetzer kann man das bestimmt auch locker in vielen anderen Sprachen lesen :-)
+Dieses Projekt ergänzt die Dokumentation zur Qwt-Bibliothek und bietet sowas wie ein Programmiererhandbuch mit vielen Details zu den Internas. Der Fokus liegt aber ganz klar auf der `QwtPlot` Diagrammkomponente.  Das Buch schreibe ich in Deutsch, aber Dank der modernen Webseiten-Übersetzer kann man das bestimmt auch locker in vielen anderen Sprachen lesen :-)
 
 Die Texte, Bilder und Beispielquelltexte stehen unter der BDS-3 Lizenz (siehe Qwt Handbuch Repository https://github.com/ghorwin/QwtBook[https://github.com/ghorwin/QwtBook]). Wäre natürlich cool, 
 wenn der eine oder andere hier etwas beisteuern würde. Das ist übrigends schon die 2. Auflage (komplett neu überarbeitet), weil es zum Zeitpunkt der ersten Ausgabe noch kein tolles AsciiDoc gab und ich irgendwie beim Textschreiben hängengeblieben bin. 
+
+[TIP]
+====
+Häufig wird das `QwtPlot` ja benutzt, um ein eigenes Postprozessing oder Visualisierungstool zu schreiben. Vielleicht lohnt sich hier der Blick auf das kostenfreie _PostProc 2_, welches wir an der TU Dresden entwickelt haben und das intern ein angepasstes und erweitertes `QwtPlot` verwendet. Das Programm ist spezialisiert auf die Visualisierung von dynamischer Simulationsergebnissen und Messdaten/Zeitreihen und man kann da einen guten Eindruck davon bekommen, was mit `QwtPlot` alles machbar ist. _Postproc 2_ wird weiter aktiv gepflegt und kann hier heruntergeladen werden: https://bauklimatik-dresden.de/software/postproc2/[https://bauklimatik-dresden.de/software/postproc2/].
+====
 
 Viel Spaß bei der Lektüre - und falls noch Inhalte fehlen, einfach Geduld haben und später wiederkommen (oder im Github-Repo ein Issue anlegen). Schaut Euch auch meine anderen Tutorials an, unter: https://schneggenport.de[https://schneggenport.de]!
 
