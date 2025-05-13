@@ -1,11 +1,27 @@
 #include <QApplication>
 #include <QPen>
 
+//#define ORIGINAL_HEADERS
+#ifndef ORIGINAL_HEADERS
+
 #include <QwtPlot>
 #include <QwtPlotCurve>
 #include <QwtLegend>
 #include <QwtText>
 #include <QwtPlotGrid>
+#include <QwtPlotZoomer>
+#include <QwtPlotPanner>
+#else
+
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_legend.h>
+#include <qwt_text.h>
+#include <qwt_plot_grid.h>
+#include <qwt_plot_zoomer.h>
+#include <qwt_plot_panner.h>
+
+#endif
 
 int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
@@ -30,6 +46,9 @@ int main(int argc, char *argv[]) {
 
 	// Legende anzeigen
 	QwtLegend * legend = new QwtLegend();
+	QFont legendFont;
+	legendFont.setPointSize(8);
+	legend->setFont(legendFont);
 	plot.insertLegend( legend , QwtPlot::BottomLegend); // plot takes ownership
 
 	// Titel hinzufügen
@@ -47,6 +66,33 @@ int main(int argc, char *argv[]) {
 	gridPen.setWidth(0);
 	grid->setPen(gridPen);
 	grid->attach( &plot ); // plot takes ownership
+
+	// Achsen formatieren
+	QFont axisFont;
+	axisFont.setPointSize(8);
+	axisFont.setBold(true);
+	QFont axisLabelFont;
+	axisLabelFont.setPointSize(8);
+	// X-Achse
+	QwtText axisTitle("X-Werte");
+	axisTitle.setFont(axisFont);
+	// Titel Text und Font setzen
+	plot.setAxisTitle(QwtPlot::xBottom, axisTitle);
+	// Font für Achsenzahlen setzen
+	plot.setAxisFont(QwtPlot::xBottom, axisLabelFont);
+	// Y-Achse
+	axisTitle.setText("Y-Werte");
+	plot.setAxisTitle(QwtPlot::yLeft, axisTitle);
+	plot.setAxisFont(QwtPlot::yLeft, axisLabelFont);
+
+	// Zoomer hinzufügen
+	// Achtung: NICHT QwtPlot selbst als 3 Argument übergeben, sonder das canvas()
+	QwtPlotZoomer * zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, plot.canvas());  // plot takes ownership
+	zoomer->setTrackerMode( QwtPlotPicker::AlwaysOn ); // Kurvenvwerte unterm Cursor anzeigen
+
+	// Panner hinzufügen, wie auch beim PlotZoomer muss das Canvas-Objekt als Argument übergeben werden
+	QwtPlotPanner * panner = new QwtPlotPanner(plot.canvas());  // plot takes ownership
+	panner->setMouseButton(Qt::MidButton); // Mittlere Maustaste verschiebt
 
 	plot.show();
 	return a.exec();

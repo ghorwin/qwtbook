@@ -5,6 +5,20 @@
 
 ## Download fertiger Pakete
 
+### Linux
+
+Unter Linux kann man auf die Pakete des Paketmanagers zurückgreifen. 
+
+#### Debian/Ubuntu
+
+```sh
+# Paket mit Headern für die Entwicklung
+sudo apt install libqwt-qt5-dev 
+```
+
+Headerdatei-Pfad:  `/usr/include/qwt`
+
+
 
 [[sec:buildingFromSource]]
 ## Erstellung aus dem Quelltext

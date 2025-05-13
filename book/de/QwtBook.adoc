@@ -33,7 +33,7 @@ Das Buch schreibe ich in Deutsch, aber Dank der modernen Webseiten-Übersetzer k
 Die Texte, Bilder und Beispielquelltexte stehen unter der BDS-3 Lizenz (siehe https://github.com/ghorwin/QwtBook[Qwt Handbuch Repository]). Wäre natürlich cool, 
 wenn der eine oder andere hier etwas beisteuern würde. Das ist übrigends schon die 2. Auflage (komplett neu überarbeitet), weil es zum Zeitpunkt der ersten Ausgabe noch kein tolles AsciiDoc gab und ich irgendwie beim Textschreiben hängengeblieben bin. 
 
-Viel Spaß bei der Lektüre - und falls noch Inhalte fehlen, einfach Geduld haben und später wiederkommen (oder im Github-Repo ein Issue anlegen).
+Viel Spaß bei der Lektüre - und falls noch Inhalte fehlen, einfach Geduld haben und später wiederkommen (oder im Github-Repo ein Issue anlegen). Schaut Euch auch meine anderen Tutorials an, unter: https://schneggenport.de[Scheggenport-Blog und Tutorials]!
 
 -- Andreas Nicolai
 
