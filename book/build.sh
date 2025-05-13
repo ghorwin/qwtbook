@@ -15,4 +15,5 @@ mv QwtBook.pdf ../docs/QwtBook.pdf
 cp -r images ../docs/
 cp -r fonts ../docs/
 cp -r css ../docs/
+cp -r code ../docs/
 

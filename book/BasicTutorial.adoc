@@ -4,6 +4,8 @@
 # Erste Schritte und ein interaktives Diagramm
 
 Um mit der Qwt-Bibliothek warm zu werden, erstellen wir in einem einfachen Beispiel ein interaktives Diagramm mit der `QwtPlot`-Komponente.
+Der komplette Beispielquelltext ist als 7z-Archiv herunterladbar: https://./code/tutorial1.7z[tutorial1.7z]
+
 
 ## Programmrohbau
 
