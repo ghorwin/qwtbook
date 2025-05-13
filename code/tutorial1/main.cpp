@@ -2,11 +2,8 @@
 #include <QPen>
 #include <QFile>
 #include <QTextStream>
-#include <QClipboard>
-#include <QwtPlotRenderer>
-#include <QPainter>
 
-//#define ORIGINAL_HEADERS
+#define ORIGINAL_HEADERS
 #ifndef ORIGINAL_HEADERS
 
 #include <QwtPlot>
@@ -136,38 +133,5 @@ int main(int argc, char *argv[]) {
 	panner->setMouseButton(Qt::MidButton); // Mittlere Maustaste verschiebt
 
 	plot.show();
-
-	QPixmap p = plot.grab();
-	p.save("image.png");
-
-	qApp->clipboard()->setImage(p.toImage());
-
-	// Render-Objekt erstellen
-	QwtPlotRenderer renderer;
-//	// Transparents Diagramm und Zeichenfläche (z.B. um das in eine Präsentation mit farbigem Hintergrund einzufügen)
-//	renderer.setDiscardFlags(QwtPlotRenderer::DiscardBackground | QwtPlotRenderer::DiscardCanvasBackground);
-	// Statt der versenkten Box wird ein Rahmen mit Skalenstrichen gezeichnen
-	renderer.setLayoutFlag(QwtPlotRenderer::FrameWithScales);
-	// Zielgröße festlegen
-	QRect imageRect( 0.0, 0.0, 1200, 600 );
-	// Bildobjekt in der entsprechenden Größe erstellen...
-	QImage image( imageRect.size(), QImage::Format_ARGB32 );
-	// und mit weißem Hintergrund füllen
-	image.fill(Qt::white);
-
-	// Auflösung festlegen
-//	const int dpi = 72; // eventuell 300 oder 600 nehmen, wenn man das Diagramm hochaufgelöst drucken möchte
-//	const double mmToInch = 1.0 / 25.4;
-//	const int dotsPerMeter = qRound( dpi * mmToInch * 1000.0 );
-//	image.setDotsPerMeterX( dotsPerMeter );
-//	image.setDotsPerMeterY( dotsPerMeter );
-	QPainter painter( &image );
-	renderer.render( &plot, &painter, imageRect );
-	painter.end();
-
-	// image zurück in Pixmap konvertieren
-	QPixmap plotPixmap( QPixmap::fromImage(image) );
-	plotPixmap.save("image2.png");
-
 	return a.exec();
 }
