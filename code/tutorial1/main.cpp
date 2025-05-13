@@ -3,7 +3,7 @@
 #include <QFile>
 #include <QTextStream>
 
-#define ORIGINAL_HEADERS
+//#define ORIGINAL_HEADERS
 #ifndef ORIGINAL_HEADERS
 
 #include <QwtPlot>
@@ -11,6 +11,7 @@
 #include <QwtLegend>
 #include <QwtText>
 #include <QwtPlotGrid>
+#include <QwtLogScaleEngine>
 #include <QwtPlotMarker>
 #include <QwtPlotZoomer>
 #include <QwtPlotPanner>
@@ -24,6 +25,7 @@
 #include <qwt_plot_marker.h>
 #include <qwt_plot_zoomer.h>
 #include <qwt_plot_panner.h>
+#include <qwt_scale_engine.h>
 
 #endif
 
@@ -39,7 +41,7 @@ int main(int argc, char *argv[]) {
 
 	// Daten zum Darstellen einlesen
 	QVector<double> x, y;
-	QFile f("data.tsv");  // Datei enthält 2 Spalten
+	QFile f("spektrum.tsv");  // Datei enthält 2 Spalten
 	f.open(QFile::ReadOnly);
 	QTextStream strm(&f);
 	strm.readLine(); // Kopfzeile überspringen
@@ -65,7 +67,7 @@ int main(int argc, char *argv[]) {
 	plot.insertLegend( legend , QwtPlot::BottomLegend); // plot takes ownership
 
 	// Titel hinzufügen
-	QwtText text("Ein Beispieldiagramm");
+	QwtText text("Gamma-Spektrum");
 	QFont titleFont;
 	titleFont.setBold(true);
 	titleFont.setPointSize(10);
@@ -87,16 +89,22 @@ int main(int argc, char *argv[]) {
 	QFont axisLabelFont;
 	axisLabelFont.setPointSize(8);
 	// X-Achse
-	QwtText axisTitle("X-Werte");
+	QwtText axisTitle("Kanal");
 	axisTitle.setFont(axisFont);
 	// Titel Text und Font setzen
 	plot.setAxisTitle(QwtPlot::xBottom, axisTitle);
 	// Font für Achsenzahlen setzen
 	plot.setAxisFont(QwtPlot::xBottom, axisLabelFont);
 	// Y-Achse
-	axisTitle.setText("Y-Werte");
+	axisTitle.setText("Ereignisse");
 	plot.setAxisTitle(QwtPlot::yLeft, axisTitle);
 	plot.setAxisFont(QwtPlot::yLeft, axisLabelFont);
+
+	// Logarithmische Y-Achse
+	QwtLogScaleEngine * logScale = new QwtLogScaleEngine();
+	plot.setAxisScaleEngine(QwtPlot::yLeft, logScale); // plot takes ownership
+	// manuelle Achsenlimits festlegen, da autoscale bei log-Achsen nicht sinnvoll funktioniert
+	plot.setAxisScale(QwtPlot::yLeft, 1e-3,1000);
 
 	// Zoomer hinzufügen
 	// Achtung: NICHT QwtPlot selbst als 3 Argument übergeben, sonder das canvas()
@@ -111,7 +119,7 @@ int main(int argc, char *argv[]) {
 	QwtPlotMarker * marker = new QwtPlotMarker("207,50 keV");
 	marker->setLabelOrientation(Qt::Vertical);
 	marker->setLabelAlignment(Qt::AlignRight | Qt::AlignTop);
-	marker->setValue(6, 0); // bei vertikalen Linien muss die x-Koordinate festgelegt werden
+	marker->setValue(36, 0); // bei vertikalen Linien muss die x-Koordinate festgelegt werden
 
 	QPen markerPen(Qt::black);
 	markerPen.setStyle(Qt::DashLine);

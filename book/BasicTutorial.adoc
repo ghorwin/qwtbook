@@ -271,6 +271,24 @@ image::Tutorial1_d.png[pdfwidth=6cm]
 Die Achsen passen sich standardmäßig automatisch an den Wertebereich der angezeigten Kurven an. Das kann man natürlich auch ändern, siehe <<sec:axes>>.
 
 
+### Logarithmische Achsen
+
+Das `QwtPlot` kann auch logarithmische Achsen verwenden. Dazu muss man eine anderen Skalenberechnungsklasse einbinden, die `QwtLogScaleEngine` (Header `QwtLogScaleEngine` bzw. `qwt_scale_engine.h`):
+
+[source,cpp]
+----
+// Logarithmische Y-Achse
+QwtLogScaleEngine * logScale = new QwtLogScaleEngine();
+plot.setAxisScaleEngine(QwtPlot::yLeft, logScale); // plot takes ownership
+// manuelle Achsenlimits festlegen, da autoscale bei log-Achsen nicht sinnvoll funktioniert
+plot.setAxisScale(QwtPlot::yLeft, 1e-3,1000);
+----
+
+Beim Aufruf von `setAxisScaleEngine()` nimmt das Plot wiederum das Objekt in Besitz und kümmert sich dann um das Speicheraufräumen.
+
+<<sec:axes>> beschreibt die Details der _ScaleEngine_ und gibt weitere Beispiele.
+
+
 ### Markierungslinien
 
 Ein weiteres Zeichenelement, das man hin und wieder braucht, sind horizontale oder vertikale Markierungslinien. Beispielhaft fügen wir eine solche Linie mal dem Plot hinzu (Header `QwtPlotMarker` bzw. `qwt_plot_marker.h`):
