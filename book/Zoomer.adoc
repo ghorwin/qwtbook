@@ -1,0 +1,7 @@
+:imagesdir: images
+
+[[sec:zoomer]]
+# Interaktiver Zoom und Verschieben von Diagrammausschnitten
+
+
+

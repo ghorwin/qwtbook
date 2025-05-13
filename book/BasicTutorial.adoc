@@ -8,7 +8,7 @@ Um mit der Qwt-Bibliothek warm zu werden, erstellen wir in einem einfachen Beisp
 
 ### QMake Projektdatei
 
-Wir beginnen mit der qmake-Projektdatei, in der wir den Pfad für die Header-Dateien der Bibliothek und die zu linkende Bibliothek festlegen.
+Wir beginnen mit der qmake-Projektdatei, in der wir den Pfad für die Header-Dateien der Bibliothek und die zu linkende Bibliothek festlegen. Hier gehe ich davon aus, dass Qwt aus dem 6.3.0er Quelltextarchiv gebaut und lokal in die Standardverzeichnisse (`C:\qwt-6.3.0` unter Windows und `/usr/local/qwt-6.3.0` unter Linux/Mac) installiert wurde. Infos über das Compilieren der Bibliothek aus dem Quelltext und Installation gibt es in <<sec:building>>.
 
 [source,sh]
 ----
@@ -124,13 +124,22 @@ int main(int argc, char *argv[]) {
 	// Hintergrund der Zeichenfläche soll weiß sein
 	plot.setCanvasBackground( Qt::white );
 
-	// Daten zum Darstellen
-	QVector<double> x = {0,4,5,10,12};
-	QVector<double> y = {5.1,4,6.8,6.5,5.2};
+	// Daten zum Darstellen einlesen
+	QVector<double> x, y;
+	QFile f("spektrum.tsv");  // Datei enthält 2 Spalten
+	f.open(QFile::ReadOnly);
+	QTextStream strm(&f);
+	strm.readLine(); // Kopfzeile überspringen
+	while (!strm.atEnd()) {
+		double xval, yval;
+		strm >> xval >> yval;
+		x.append(xval);
+		y.append(yval);
+	}
 
 	QwtPlotCurve *curve = new QwtPlotCurve();
 	curve->setPen(QColor(180,40,20), 0);
-	curve->setTitle("Line 1");
+	curve->setTitle("Gamma-Spektrum");
 	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
 	curve->setSamples(x, y);
 	curve->attach(&plot); // Plot takes ownership
@@ -140,7 +149,7 @@ int main(int argc, char *argv[]) {
 }
 ----
 
-Im erweiterten Hauptprogramm wird zunächst der Header für die `QwtPlotCurve` eingebunden. Das Kurvenobjekt selbst wird mit `new` auf dem Heap erstellt. 
+Im erweiterten Hauptprogramm wird zunächst der Header für die `QwtPlotCurve` eingebunden. Das Kurvenobjekt selbst wird mit `new` auf dem Heap erstellt. Die Daten der Kurve lesen wir aus einer Textdatei (2 Spalten, mit Kopfzeile) aus. Die Datei `spektrum.tsv` ist im Archiv des Tutorialquelltextes enthalten.
 
 [CAUTION]
 ====
@@ -176,12 +185,17 @@ Als nächstes wird eine Legende eingefügt (Header `QwtLegend` bzw. `qwt_legend.
 ----
 // Legende anzeigen
 QwtLegend * legend = new QwtLegend();
+QFont legendFont;
+legendFont.setPointSize(8);
+legend->setFont(legendFont);
 plot.insertLegend( legend , QwtPlot::BottomLegend); // plot takes ownership
 ----
 
 Auch hier wird oben wieder der Header für die Klasse `QwtLegend` eingebunden.
 
-Die Legende kann links, rechts, oberhalb oder unterhalb der Zeichenfläche liegen, oder in der Zeichenfläche selbst. Das Anpassen der Legende wird in <<sec:legend>> beschrieben.
+Die Legende bekommt hier noch einen veränderten Font. Das weitere Anpassen der Legende wird in <<sec:legend>> beschrieben.
+
+Die Legende kann links, rechts, oberhalb oder unterhalb der Zeichenfläche liegen, oder in der Zeichenfläche selbst. Die Platzierung wird beim Aufruf von `insertLegend()` festlegegt.
 
 Das Plot nimmt beim Aufruf von `insertLegend()` wiederum Besitz vom Legendenobjekt und kümmert sich um das Aufräumen des Speichers.
 
@@ -190,7 +204,7 @@ Das Plot nimmt beim Aufruf von `insertLegend()` wiederum Besitz vom Legendenobje
 [source,cpp]
 ----
 // Titel hinzufügen
-QwtText text("Ein Beispieldiagramm");
+QwtText text("Gamma-Spektrum");
 QFont titleFont;
 titleFont.setBold(true);
 titleFont.setPointSize(10);
@@ -206,18 +220,25 @@ Gitterlinien werden durch das Zeichenobjekt `QwtPlotGrid` gezeichnet (Header `Qw
 
 [source,cpp]
 ----
-// Hauptgitter anzeigen
+// Haupt- und Nebengitter anzeigen
 QwtPlotGrid *grid = new QwtPlotGrid();
 QPen gridPen(Qt::gray);
+gridPen.setStyle(Qt::DashLine);
+grid->setMajorPen(gridPen);
+// Minor grid
+grid->enableYMin( true );
+gridPen.setColor(Qt::lightGray);
 gridPen.setStyle(Qt::DotLine);
-gridPen.setWidth(0);
-grid->setPen(gridPen);
-grid->attach( plot ); // plot takes ownership
+grid->setMinorPen(gridPen);
+grid->attach( &plot ); // plot takes ownership
 ----
+
+Das Raster selbst kann hinsichtlich der Stifts (QPen) für das Haupt- und Nebengitter angepasst werden. Die Funktion `enableYMin()` schaltet das Nebengitter für die Y-Achse ein. 
+Wie auch bei den Plotkurven übergibt `attach()` das `QwtPlotGrid` Objekt an das `QwtPlot`, welches sich dann um die Speicherverwaltung kümmert.
 
 [TIP]
 ====
-Man kann auch mehrere Raster hinzufügen, z.B. eins für Hauptgitterlinien und eines für Nebengitterlinien.
+Ein Raster wird standardmäßig an eine x- und y-Achse gebunden, wobei man aber auch die Gitterlinien für eine der Achsen ausblenden kann. Wenn man z.B. ein Diagramm mit 2 y-Achsen hat und für jede ein Gitterraster anzeigen möchte (auch wenn das meistens verwirrend aussieht), dann braucht man zwei `QwtPlotGrid`-Objekte.
 ====
 
 Inzwischen sieht das Diagramm schon ganz ansehnlich aus.
@@ -248,14 +269,14 @@ axisFont.setBold(true);
 QFont axisLabelFont;
 axisLabelFont.setPointSize(8);
 // X-Achse
-QwtText axisTitle("X-Werte");
+QwtText axisTitle("Kanal");
 axisTitle.setFont(axisFont);
 // Titel Text und Font setzen
 plot.setAxisTitle(QwtPlot::xBottom, axisTitle);
 // Font für Achsenzahlen setzen
 plot.setAxisFont(QwtPlot::xBottom, axisLabelFont);
 // Y-Achse
-axisTitle.setText("Y-Werte");
+axisTitle.setText("Ereignisse");
 plot.setAxisTitle(QwtPlot::yLeft, axisTitle);
 plot.setAxisFont(QwtPlot::yLeft, axisLabelFont);
 ----
@@ -265,7 +286,7 @@ Der Font für die Zahlen an den Achsen selbst wird über `setAxisFont()` geände
 
 Die Achsen selbst lassen sich vielfältig anpassen, siehe <<sec:axes>>.
 
-.Vollständig formatiertes Diagramm (Linux Screenshot)
+.Vollständig formatiertes Diagramm
 image::Tutorial1_d.png[pdfwidth=6cm]
 
 Die Achsen passen sich standardmäßig automatisch an den Wertebereich der angezeigten Kurven an. Das kann man natürlich auch ändern, siehe <<sec:axes>>.
@@ -288,6 +309,9 @@ Beim Aufruf von `setAxisScaleEngine()` nimmt das Plot wiederum das Objekt in Bes
 
 <<sec:axes>> beschreibt die Details der _ScaleEngine_ und gibt weitere Beispiele.
 
+.Diagramm mit logarithmischer Y-Achse
+image::Tutorial1_e.png[pdfwidth=6cm]
+
 
 ### Markierungslinien
 
@@ -295,13 +319,25 @@ Ein weiteres Zeichenelement, das man hin und wieder braucht, sind horizontale od
 
 [source,cpp]
 ----
-
+// Vertikale, gestrichelte Plot-Markierung einfügen
+QwtPlotMarker * marker = new QwtPlotMarker("207,50 keV");
+marker->setLabelOrientation(Qt::Vertical); // Vertikale Linie
+marker->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom); // Label unten und rechts von der Linie
+marker->setValue(36, 0); // bei vertikalen Linien muss die x-Koordinate festgelegt werden
+QPen markerPen(QColor(40,60,255));
+markerPen.setStyle(Qt::SolidLine);
+marker->setLinePen(markerPen);
+marker->setLineStyle(QwtPlotMarker::VLine);
+marker->setLabel(QwtText("207,50 keV"));
+marker->attach(&plot); // plot takes ownership
 ----
 
+Auch bei den Markern gibt es vielfältige Einstellungsmöglichkeiten, siehe <<sec:marker>>.
 
+.Diagramm mit logarithmischer Y-Achse und vertikaler Peak-Markierung
+image::Tutorial1_f.png[pdfwidth=6cm]
 
-
-
+Nun ist das Diagramm selbst fertig und wir widmen uns der Nutzerinteraktion.
 
 ## Interaktion mit dem Diagramm
 
@@ -328,8 +364,7 @@ Hineinzoomen kann man, indem man die Linke Maustaste gedrückt hält, und ein Zo
 Die äußerste Zoomstufe wird im Konstruktor der `QwtPlotZoomer`-Klasse basierend auf den aktuellen Wertebereichen der _bereits hinzugefügten Kurven_ bestimmt. Sollte man die Werte der Kurven nachträglich ändern, oder den Zoomer hinzufügen, _bevor_ man dem Plot Kurven gegeben hat, so kann man die Funktion `QwtPlotZoomer::setZoomBase()` aufrufen. Details dazu gibt es im <<sec:zoomer>>.  
 ====
 
-Im Quelltext gibt es eine Besonderheit. Während die bisherigen Plotelemente immer mit Memberfunktionen der `QwtPlot`-Klasse hinzugefügt wurde, bzw. mittels `attach()`, wird das Zoomerobjekt analog zu Qt Klassen als Kindobjekt der Zeichenfläche gegeben und registriert sich darüber als interaktives Element bei Plot. 
-
+Im Quelltext gibt es noch eine Besonderheit. Während die bisherigen Plotelemente immer mit Memberfunktionen der `QwtPlot`-Klasse hinzugefügt wurde, bzw. mittels `attach()`, wird das Zoomerobjekt analog zu Qt Klassen als Kindobjekt der Zeichenfläche gegeben und registriert sich darüber als interaktives Element bei Plot. 
 
 [CAUTION]
 ====
@@ -339,6 +374,9 @@ Im Konstruktor der `QwtPlotZoomer` Klasse registriert sich das Objekt als Kind d
 ====
 
 Damit das Zoomer weiß, welche Achsen beim Zoom manipuliert werden sollen, muss man die x- und y-Achse im Konstruktor angeben. Möchte man z.B. beide y-Achsen gleichzeitig zoomen, braucht man zwei `QwtPlotZoomer`-Objekte.
+
+.Diagramm mit aufgezogenem Zoom-Rechteck
+image::Tutorial1_g.png[pdfwidth=6cm]
 
 
 ### Plotausschnitt verschieben mit QwtPlotPanner
@@ -355,41 +393,10 @@ panner->setMouseButton(Qt::MidButton); // Mittlere Maustaste verschiebt
 Wie beim `QwtPlotZoomer` wird das Objekt als Kindobjekt des Canvas-Widgets hinzugefügt.  Üblich ist das Verschieben von Bildschirminhalten mit gedrückter mittlerer Maustaste, also legt man das mit `setMouseButton()` fest.
 
 
+Damit ist das Einstiegstutorial beendet. Mit dem `QwtPlot` kann man bereits mit wenigen Handgriffen ein voll funktionsfähiges und interaktives Diagramm erstellen.  In diesem Tutorial war das `QwtPlot` gleichzeitig das Anwendungs-Widget. Wenn man das `QwtPlot` aber in bestehende Designer-Formularklassen einfügen will, gibt es verschiedene Techniken:
 
+- die Verwendung von Platzhalter-Widgets
+- die Einbindung von Qt Designer Plugins für die Qwt Bibliothek
 
-## Das QwtPlot in eine Designer-Oberfläche/ui-Datei integrieren
-
-Wenn man mittels Qt Designer eine Programmoberfläche baut, möchte man da vielleicht auch ein `QwtPlot` einbetten. Das kann man auf zwei verschiedene Arten machen:
-
-a. ein QWidget als Platzhalter einfügen und zu einem Platzhalterwidget für das `QwtPlot` machen, oder
-b. die Qwt-Designer-Plugins verwenden.
-
-### Definition eines Platzhalterwidgets
-
-Zur Erklärung wird im Qt Designer ein einfaches Widget entworfen:
-
-.Widget mit Platzhalter-Widget für das Diagramm
-image::Tutorial1_ui1.png[pdfwidth=8cm]
-
-Unter der Spinbox wurde ein `QWidget` eingefügt. Dieses soll nun als Platzhalter für das `QwtPlot` dienen. Dazu im Kontextmenü des Widgets die Option "Als Platzhalter für benutzerdefinierte Klasse festlegen..." auswählen:
-
-image::Tutorial1_ui2.png[pdfwidth=6cm]
-
-Und im Dialog eine neue Platzhalterklasse wie folgt definieren:
-
-image::Tutorial1_ui3.png[pdfwidth=6cm]
-
-Die Eingabe mit "Hinzufügen" bestätigen und dann auf "Anwenden" klicken, um das Platzhalter-Widget in das `QwtPlot` zu wandeln. Wir benennen das noch in _plot_ um, und füge das horizontale Layout und das Plotwidget in ein vertikales Layout ein:
-
-image::Tutorial1_ui4.png[pdfwidth=8cm]
-
-Damit sich das Plotwidget den ganzen vertikalen Platz schnappt, wählt man das Top-Level Widget aus und scrollt in der Eigenschaftsleiste bis nach unten zu den Einstellungen für das vertikale Layout. Dort gibt man bei den Stretch-Faktoren "0,1" ein, wodurch sich das 2. Widget im Layout (das Plot) komplett ausdehnt.
-
-### Verwendung der Designer-Plugins
-
-Wenn man die erstmal installiert hat (siehe <<sec::designerPlugins>>), kann man ein `QwtPlot` direkt aus der Komponentenpalette in den Entwurf zeihen und ist fertig.
-
-
-
-
+Diese Methoden sind in <<sec:usingQwtPlot>> beschrieben.
 

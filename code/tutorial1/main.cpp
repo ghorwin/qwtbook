@@ -32,7 +32,7 @@
 int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
 	QwtPlot plot;
-	plot.resize(500,300);
+	plot.resize(600,400);
 
 	// etwas Abstand zwischen Rand und Achsentiteln
 	plot.setContentsMargins(8,8,8,8);
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 
 	QwtPlotCurve *curve = new QwtPlotCurve();
 	curve->setPen(QColor(180,40,20), 0);
-	curve->setTitle("Line 1");
+	curve->setTitle("Gamma-Spektrum");
 	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
 	curve->setSamples(x, y);
 	curve->attach(&plot); // Plot takes ownership
@@ -74,13 +74,18 @@ int main(int argc, char *argv[]) {
 	text.setFont(titleFont);
 	plot.setTitle(text);
 
-	// Hauptgitter anzeigen
+	// Haupt- und Nebengitter anzeigen
 	QwtPlotGrid *grid = new QwtPlotGrid();
 	QPen gridPen(Qt::gray);
+	gridPen.setStyle(Qt::DashLine);
+	grid->setMajorPen(gridPen);
+	// Minor grid
+	grid->enableYMin( true );
+	gridPen.setColor(Qt::lightGray);
 	gridPen.setStyle(Qt::DotLine);
-	gridPen.setWidth(0);
-	grid->setPen(gridPen);
+	grid->setMinorPen(gridPen);
 	grid->attach( &plot ); // plot takes ownership
+
 
 	// Achsen formatieren
 	QFont axisFont;
@@ -106,6 +111,18 @@ int main(int argc, char *argv[]) {
 	// manuelle Achsenlimits festlegen, da autoscale bei log-Achsen nicht sinnvoll funktioniert
 	plot.setAxisScale(QwtPlot::yLeft, 1e-3,1000);
 
+	// Vertikale, gestrichelte Plot-Markierung einfügen
+	QwtPlotMarker * marker = new QwtPlotMarker("207,50 keV");
+	marker->setLabelOrientation(Qt::Vertical); // Vertikale Linie
+	marker->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom); // Label unten und rechts von der Linie
+	marker->setValue(36, 0); // bei vertikalen Linien muss die x-Koordinate festgelegt werden
+	QPen markerPen(QColor(40,60,255));
+	markerPen.setStyle(Qt::SolidLine);
+	marker->setLinePen(markerPen);
+	marker->setLineStyle(QwtPlotMarker::VLine);
+	marker->setLabel(QwtText("207,50 keV"));
+	marker->attach(&plot); // plot takes ownership
+
 	// Zoomer hinzufügen
 	// Achtung: NICHT QwtPlot selbst als 3 Argument übergeben, sonder das canvas()
 	QwtPlotZoomer * zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, plot.canvas());  // plot takes ownership
@@ -114,19 +131,6 @@ int main(int argc, char *argv[]) {
 	// Panner hinzufügen, wie auch beim PlotZoomer muss das Canvas-Objekt als Argument übergeben werden
 	QwtPlotPanner * panner = new QwtPlotPanner(plot.canvas());  // plot takes ownership
 	panner->setMouseButton(Qt::MidButton); // Mittlere Maustaste verschiebt
-
-	// Vertikale, gestrichelte Plot-Markierung einfügen
-	QwtPlotMarker * marker = new QwtPlotMarker("207,50 keV");
-	marker->setLabelOrientation(Qt::Vertical);
-	marker->setLabelAlignment(Qt::AlignRight | Qt::AlignTop);
-	marker->setValue(36, 0); // bei vertikalen Linien muss die x-Koordinate festgelegt werden
-
-	QPen markerPen(Qt::black);
-	markerPen.setStyle(Qt::DashLine);
-	marker->setLinePen(markerPen);
-	marker->setLineStyle(QwtPlotMarker::VLine);
-	marker->setLabel(QwtText("207,50 keV"));
-	marker->attach(&plot); // plot takes ownership
 
 	plot.show();
 	return a.exec();

@@ -3,8 +3,17 @@
 [[sec:print]]
 # Exportieren und Drucken
 
+Neben der Anzeige auf dem Bildschirm ist das Speichern schicker Diagramme und Verwendung dieser in Berichten eine nicht unwichtige Aufgabe. Allerdings ist es nicht trivial, gute Diagramme mit sinnvollen Schriftgrößen zu exportieren. Grundsätzlich muss hier zwischen Pixelgrafik-Export und Vektorgrafik unterschieden werden.
 
 ## Exportieren des Plots als Pixelgrafik
+
+Der naheliegenste Export des Plots ist eine 1-zu-1 Kopie in die Zwischenablage oder in eine Bitmapdatei (jpg, gif, png,...).
+
+### Erstellen eines QPixmap mit dem Plotinhalt
+
+Man kann einfach
+
+### Kopie in die Zwischenablage
 
 
 ## Exportieren des Plots als Vektorgrafik

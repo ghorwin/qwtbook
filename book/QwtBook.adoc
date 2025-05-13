@@ -36,7 +36,7 @@ wenn der eine oder andere hier etwas beisteuern würde. Das ist übrigends schon
 Häufig wird das `QwtPlot` ja benutzt, um ein eigenes Postprozessing oder Visualisierungstool zu schreiben. Vielleicht lohnt sich hier der Blick auf das kostenfreie _PostProc 2_, welches wir an der TU Dresden entwickelt haben und das intern ein angepasstes und erweitertes `QwtPlot` verwendet. Das Programm ist spezialisiert auf die Visualisierung von dynamischer Simulationsergebnissen und Messdaten/Zeitreihen und man kann da einen guten Eindruck davon bekommen, was mit `QwtPlot` alles machbar ist. _Postproc 2_ wird weiter aktiv gepflegt und kann hier heruntergeladen werden: https://bauklimatik-dresden.de/software/postproc2/[https://bauklimatik-dresden.de/software/postproc2/].
 ====
 
-Viel Spaß bei der Lektüre - und falls noch Inhalte fehlen, einfach Geduld haben und später wiederkommen (oder im Github-Repo ein Issue anlegen). Schaut Euch auch meine anderen Tutorials an, unter: https://schneggenport.de[https://schneggenport.de]!
+Viel Spaß bei der Lektüre - und falls noch Inhalte fehlen, einfach Geduld haben und später wiederkommen (oder im Github-Repo ein Issue anlegen). Und schaut Euch vielleicht auch meine anderen Tutorials unter https://schneggenport.de[https://schneggenport.de] an!
 
 -- Andreas Nicolai
 
@@ -46,7 +46,13 @@ include::Introduction.adoc[leveloffset=+1]
 include::BasicTutorial.adoc[leveloffset=+1]
 include::LineCurves.adoc[leveloffset=+1]
 include::Legend.adoc[leveloffset=+1]
+include::Marker.adoc[leveloffset=+1]
+include::Axes.adoc[leveloffset=+1]
+include::Text.adoc[leveloffset=+1]
+include::Zoomer.adoc[leveloffset=+1]
+
 include::Styling.adoc[leveloffset=+1]
-include::Building.adoc[leveloffset=+1]
 include::Print.adoc[leveloffset=+1]
+
+include::Building.adoc[leveloffset=+1]
 
