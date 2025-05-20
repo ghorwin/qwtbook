@@ -1,0 +1,80 @@
+:imagesdir: ../images
+
+[[sec:styling]]
+# Anpassung/Styling der Qwt Komponenten
+
+## Allgemeines zu Farbpaletten
+
+Die Qwt-Komponenten verwenden die Qt Palette und deren Farbrollen für die Einfärbung. 
+
+
+## Rahmen und Zeichenfläche des Diagramms
+
+Beim QwtPlot können verschiedene Elemente angepasst werden. Nachfolgend ist ein QwtPlot zu sehen, welches in einem äußeren Widget (dunkelgrau) eingebettet ist. Die hellgraue Fläche ist das eigentliche `QwtPlot`:
+
+![Rahmen und Zeichenfläche](imgs/plotStylingOverview.png)
+
+Im Screenshot sind die wichtigsten Attribute markiert:
+
+1. Innenabstand (siehe `QWidget::setContentsMargins()`)
+2. Rahmen (hauptsächlich für den Druck wichtig)
+3. Hintergrund des Plot-Widgets
+4. Zeichenfläche (engl. _Canvas_) (betrifft Hintergrundfarbe und Rahmen)
+
+### Farbe und Rahmen des Plots
+
+Die Farbe des äußeren Bereichs des Plots wird über die Paletteneigenschaft des `QwtPlot` kontrolliert. Standardmäßig wird der äußere Rand des Plot-Widgets transparant gezeichnet, d.h. die Farbe des darunterliegenden Widgets ist sichtbar. Um eine eigene Farbe zu setzen, muss daher ```setAutoFillBackground(true)``` aufgerufen werden:
+```c++
+QPalette pal = plot.palette();
+// Die QPalette::Window Farbrolle definiert die Einfärbung
+// des äußeren Plotbereichs
+pal.setColor(QPalette::Window, QColor(196,196,220));
+plot->setPalette(pal);
+// die Eigenschaft "autoFillBackground" muss dafür eingeschaltet sein
+plot->setAutoFillBackground(true);
+```
+![](imgs/plotStyling1.png)
+
+> **Hinweis:** In Abschnitt [Gradient als Plot-Hintergrund](customization/#gradient-als-plot-hintergrund) wird beschrieben, wie man einen Farbverlauf im Plothintergrund umsetzt, und diesen bei Größenänderung entsprechend anpasst.
+
+Der Rahmen wird wie bei einem normalen Widget angepasst:
+```c++
+plot->setFrameStyle(QFrame::Box | QFrame::Sunken);
+```
+Normalerweise ist ein solcher Rahmen nicht notwendig für die Bildschirmdarstellung oder für das Einbetten des QwtPlot in eine Programmoberfläche. Der Rahmen ist jedoch häufig beim [Export/Druck](export) des Widgets sinnvoll.
+
+### Zeichenfläche
+
+Die Zeichenfläche kann eingefärbt werden:
+```c++
+plot->setCanvasBackground(Qt::darkGray);
+```
+![](imgs/plotStyling3.png)
+
+Der Randabstand zwischen Achsenbeschriftung und Titel zum Rand kann definiert werden:
+```c++
+plot->setContentsMargins(15,10,35,5);
+```
+![](imgs/plotStyling4.png)
+
+Die Rahmen um die Zeichenfläche kann durch Anpassen des Zeichenflächenobjekts (`QwtPlotCanvas`) verändert werden. `QwtPlotCanvas` ist von QFrame abgeleitet, wodurch es entsprechend angepasst werden kann. Es wird einfach neues Objekt erstellt, konfiguriert und dem Plot übergeben (das QwtPlot wird neuer Besitzer des Zeichenflächenobjekts):
+```c++
+QwtPlotCanvas * canvas = new QwtPlotCanvas(&plot);
+canvas->setPalette(Qt::white);
+canvas->setFrameStyle(QFrame::Box | QFrame::Plain );
+canvas->setLineWidth(1);
+plot->setCanvas(canvas);
+```
+![](imgs/plotStyling5.png)
+
+Einfacher geht es durch Setzen des Stylesheets für das Canvas-Widget (siehe Qt-Widgets Dokumentation, welche Attribute unterstützt werden):
+```c++
+plot->canvas()->setStyleSheet(
+    "border: 1px solid Black;"
+    "border-radius: 15px;"
+    "background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1,"
+        "stop: 0 LemonChiffon, stop: 1 PaleGoldenrod );"
+);
+```
+![](imgs/plotStyling6.png)
+

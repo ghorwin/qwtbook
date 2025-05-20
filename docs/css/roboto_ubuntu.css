@@ -1,6 +1,6 @@
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
 
-@import url(css/asciidoctor.css); /* Default asciidoc style framework - important */
+@import url(../css/asciidoctor.css); /* Default asciidoc style framework - important */
 
 /* roboto-condensed-regular - latin */
 @font-face {

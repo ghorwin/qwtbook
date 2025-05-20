@@ -1,0 +1,4 @@
+:imagesdir: ../images
+
+[[sec:linecurves]]
+# Liniendiagramme

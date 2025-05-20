@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="author" content="Andreas Nicolai">
+<title>Das Qwt Handbuch</title>
+<style>
+/* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+
+@import url(../css/asciidoctor.css); /* Default asciidoc style framework - important */
+
+/* roboto-condensed-regular - latin */
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/roboto-condensed-v25-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../fonts/roboto-condensed-v25-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/roboto-condensed-v25-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../fonts/roboto-condensed-v25-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/roboto-condensed-v25-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/roboto-condensed-v25-latin-regular.svg#RobotoCondensed') format('svg'); /* Legacy iOS */
+}
+/* roboto-condensed-italic - latin */
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: italic;
+  font-weight: 400;
+  src: url('../fonts/roboto-condensed-v25-latin-italic.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../fonts/roboto-condensed-v25-latin-italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/roboto-condensed-v25-latin-italic.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../fonts/roboto-condensed-v25-latin-italic.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/roboto-condensed-v25-latin-italic.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/roboto-condensed-v25-latin-italic.svg#RobotoCondensed') format('svg'); /* Legacy iOS */
+}
+/* roboto-condensed-700 - latin */
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/roboto-condensed-v25-latin-700.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../fonts/roboto-condensed-v25-latin-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/roboto-condensed-v25-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../fonts/roboto-condensed-v25-latin-700.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/roboto-condensed-v25-latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/roboto-condensed-v25-latin-700.svg#RobotoCondensed') format('svg'); /* Legacy iOS */
+}
+/* roboto-condensed-700italic - latin */
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: italic;
+  font-weight: 700;
+  src: url('../fonts/roboto-condensed-v25-latin-700italic.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../fonts/roboto-condensed-v25-latin-700italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/roboto-condensed-v25-latin-700italic.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../fonts/roboto-condensed-v25-latin-700italic.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/roboto-condensed-v25-latin-700italic.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/roboto-condensed-v25-latin-700italic.svg#RobotoCondensed') format('svg'); /* Legacy iOS */
+}
+
+/* CUSTOMISATIONS */
+/* Change the values in root for quick customisation. If you want even more fine grain... venture further. */
+
+:root{
+--maincolor:#FFFFFF;
+--primarycolor:#a90e22;
+--secondarycolor:#9f1d0b;
+--tertiarycolor: #ededed;
+--sidebarbackground:#CCC;
+--linkcolor:#b71c1c;
+--linkcoloralternate:#f44336;
+--white:#FFFFFF;
+--black:#000000;
+}
+
+/* Text styles */
+body{font-family: "Roboto Condensed",sans-serif;}
+
+h1,h2{color:var(--primarycolor) !important;font-family:"Roboto Condensed",sans-serif;}
+h3,h4,h5,h6{color:var(--secondarycolor);font-family: "Roboto Condensed",sans-serif; }
+.title{color:(--primarycolor) !important;font-family:"Roboto Condensed",sans-serif;font-style: normal; font-weight: normal;}
+p{font-family: "Roboto Condensed",sans-serif ! important}
+#toc.toc2 a{font-family:"Roboto Condensed",sans-serif;}
+/*#toc.toc2 a:link{color:(--linkcolor) !important}
+a:visited {color: #ffdbad;}
+a.bare:visited {color: #204f83;}
+a:hover {color: #317ed4;}
+#toc.toc2 a:hover {color: #f1b464;}*/
+/* code{background-color: var(--secondarycolor) !important;color:var(--white)} */
+code,kbd,pre,samp{font-family:"Consolas","Droid Sans Mono","DejaVu Sans Mono",monospace;monospace;font-size:1em}
+
+/* Table styles */
+th{background-color: var(--tertiarycolor);color:var(--black) !important;}
+
+#toctitle{color:var(--primarycolor);font-family: "Roboto Condensed",sans-serif;font-size: 1.6875em;}
+#toc.toc2{background-color:#f4f8fd;}
+/*#toc.toc2{background-color:#2C001E;color:white;}
+#toc.toc2.a{color:white;}
+*/
+
+/* Responsiveness fixes */
+video {
+  max-width: 100%;
+}
+
+@media all and (max-width: 600px) {
+table {
+  width: 55vw!important;
+  font-size: 3vw;
+}
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+pre.rouge table td { padding: 5px; }
+pre.rouge table pre { margin: 0; }
+pre.rouge .cm {
+  color: #999988;
+  font-style: italic;
+}
+pre.rouge .cp {
+  color: #999999;
+  font-weight: bold;
+}
+pre.rouge .c1 {
+  color: #999988;
+  font-style: italic;
+}
+pre.rouge .cs {
+  color: #999999;
+  font-weight: bold;
+  font-style: italic;
+}
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cpf {
+  color: #999988;
+  font-style: italic;
+}
+pre.rouge .err {
+  color: #a61717;
+  background-color: #e3d2d2;
+}
+pre.rouge .gd {
+  color: #000000;
+  background-color: #ffdddd;
+}
+pre.rouge .ge {
+  color: #000000;
+  font-style: italic;
+}
+pre.rouge .gr {
+  color: #aa0000;
+}
+pre.rouge .gh {
+  color: #999999;
+}
+pre.rouge .gi {
+  color: #000000;
+  background-color: #ddffdd;
+}
+pre.rouge .go {
+  color: #888888;
+}
+pre.rouge .gp {
+  color: #555555;
+}
+pre.rouge .gs {
+  font-weight: bold;
+}
+pre.rouge .gu {
+  color: #aaaaaa;
+}
+pre.rouge .gt {
+  color: #aa0000;
+}
+pre.rouge .kc {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kd {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kn {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kp {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kr {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kt {
+  color: #445588;
+  font-weight: bold;
+}
+pre.rouge .k, pre.rouge .kv {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .mf {
+  color: #009999;
+}
+pre.rouge .mh {
+  color: #009999;
+}
+pre.rouge .il {
+  color: #009999;
+}
+pre.rouge .mi {
+  color: #009999;
+}
+pre.rouge .mo {
+  color: #009999;
+}
+pre.rouge .m, pre.rouge .mb, pre.rouge .mx {
+  color: #009999;
+}
+pre.rouge .sa {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .sb {
+  color: #d14;
+}
+pre.rouge .sc {
+  color: #d14;
+}
+pre.rouge .sd {
+  color: #d14;
+}
+pre.rouge .s2 {
+  color: #d14;
+}
+pre.rouge .se {
+  color: #d14;
+}
+pre.rouge .sh {
+  color: #d14;
+}
+pre.rouge .si {
+  color: #d14;
+}
+pre.rouge .sx {
+  color: #d14;
+}
+pre.rouge .sr {
+  color: #009926;
+}
+pre.rouge .s1 {
+  color: #d14;
+}
+pre.rouge .ss {
+  color: #990073;
+}
+pre.rouge .s, pre.rouge .dl {
+  color: #d14;
+}
+pre.rouge .na {
+  color: #008080;
+}
+pre.rouge .bp {
+  color: #999999;
+}
+pre.rouge .nb {
+  color: #0086B3;
+}
+pre.rouge .nc {
+  color: #445588;
+  font-weight: bold;
+}
+pre.rouge .no {
+  color: #008080;
+}
+pre.rouge .nd {
+  color: #3c5d5d;
+  font-weight: bold;
+}
+pre.rouge .ni {
+  color: #800080;
+}
+pre.rouge .ne {
+  color: #990000;
+  font-weight: bold;
+}
+pre.rouge .nf, pre.rouge .fm {
+  color: #990000;
+  font-weight: bold;
+}
+pre.rouge .nl {
+  color: #990000;
+  font-weight: bold;
+}
+pre.rouge .nn {
+  color: #555555;
+}
+pre.rouge .nt {
+  color: #000080;
+}
+pre.rouge .vc {
+  color: #008080;
+}
+pre.rouge .vg {
+  color: #008080;
+}
+pre.rouge .vi {
+  color: #008080;
+}
+pre.rouge .nv, pre.rouge .vm {
+  color: #008080;
+}
+pre.rouge .ow {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .o {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .w {
+  color: #bbbbbb;
+}
+pre.rouge {
+  background-color: #f8f8f8;
+}
+</style>
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>Das Qwt Handbuch</h1>
+<div class="details">
+<span id="author" class="author">Andreas Nicolai</span><br>
+<span id="email" class="email"><a href="mailto:andreas.nicolai@gmx.de">andreas.nicolai@gmx.de</a></span><br>
+<span id="revnumber">version 1.0.0,</span>
+<span id="revdate">Mai 2025</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Inhaltsverzeichnis</div>
+<ul class="sectlevel1">
+<li><a href="#_über_dieses_handbuch">Über dieses Handbuch</a></li>
+<li><a href="#_überblick_über_die_qwt_bibliothek">1. Überblick über die Qwt Bibliothek</a>
+<ul class="sectlevel2">
+<li><a href="#_entwicklungsgeschichte">1.1. Entwicklungsgeschichte</a>
+<ul class="sectlevel3">
+<li><a href="#_download_der_bibliothek">1.1.1. Download der Bibliothek</a></li>
+</ul>
+</li>
+<li><a href="#_widget_konzept_und_erscheinungsbild">1.2. Widget-Konzept und Erscheinungsbild</a></li>
+<li><a href="#_besitzereigentümer_konzept_des_qwtplot_widgets">1.3. Besitzer/Eigentümer-Konzept des QwtPlot-Widgets</a></li>
+<li><a href="#_zeichenobjekte_und_deren_achsenabhängigkeit">1.4. Zeichenobjekte und deren Achsenabhängigkeit</a></li>
+<li><a href="#_vererbungskonzept">1.5. Vererbungskonzept</a></li>
+<li><a href="#_verwendung_der_designer_plugins">1.6. Verwendung der Designer Plugins</a></li>
+</ul>
+</li>
+<li><a href="#sec:tutorial1">2. Erste Schritte und ein interaktives Diagramm</a>
+<ul class="sectlevel2">
+<li><a href="#_programmrohbau">2.1. Programmrohbau</a>
+<ul class="sectlevel3">
+<li><a href="#_qmake_projektdatei">2.1.1. QMake Projektdatei</a></li>
+<li><a href="#_minimalistisches_hauptprogramm">2.1.2. Minimalistisches Hauptprogramm</a></li>
+</ul>
+</li>
+<li><a href="#_diagrammelemente_hinzufügen">2.2. Diagrammelemente hinzufügen</a>
+<ul class="sectlevel3">
+<li><a href="#_linie_hinzufügen">2.2.1. Linie hinzufügen</a></li>
+<li><a href="#_legende_hinzufügen">2.2.2. Legende hinzufügen</a></li>
+<li><a href="#_diagrammtitel_hinzufügen">2.2.3. Diagrammtitel hinzufügen</a></li>
+<li><a href="#_diagrammraster_hinzufügen">2.2.4. Diagrammraster hinzufügen</a></li>
+<li><a href="#_achsenkonfiguration">2.2.5. Achsenkonfiguration</a></li>
+<li><a href="#_logarithmische_achsen">2.2.6. Logarithmische Achsen</a></li>
+<li><a href="#_markierungslinien">2.2.7. Markierungslinien</a></li>
+</ul>
+</li>
+<li><a href="#_interaktion_mit_dem_diagramm">2.3. Interaktion mit dem Diagramm</a>
+<ul class="sectlevel3">
+<li><a href="#_zoomfunktionalität_mit_qwtplotzoomer">2.3.1. Zoomfunktionalität mit QwtPlotZoomer</a></li>
+<li><a href="#_plotausschnitt_verschieben_mit_qwtplotpanner">2.3.2. Plotausschnitt verschieben mit QwtPlotPanner</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec:linecurves">3. Liniendiagramme</a></li>
+<li><a href="#sec:legend">4. Legende</a></li>
+<li><a href="#sec:marker">5. Markierungslinien</a></li>
+<li><a href="#sec:axes">6. Plotachsen</a>
+<ul class="sectlevel2">
+<li><a href="#_allgemeine_achsenformatierung">6.1. Allgemeine Achsenformatierung</a></li>
+</ul>
+</li>
+<li><a href="#sec:qwttext">7. QwtText und Sonderformatierungen</a>
+<ul class="sectlevel2">
+<li><a href="#sec:mathML">7.1. MathML</a></li>
+</ul>
+</li>
+<li><a href="#sec:zoomer">8. Interaktiver Zoom und Verschieben von Diagrammausschnitten</a></li>
+<li><a href="#sec:styling">9. Anpassung/Styling der Qwt Komponenten</a>
+<ul class="sectlevel2">
+<li><a href="#_allgemeines_zu_farbpaletten">9.1. Allgemeines zu Farbpaletten</a></li>
+<li><a href="#_rahmen_und_zeichenfläche_des_diagramms">9.2. Rahmen und Zeichenfläche des Diagramms</a>
+<ul class="sectlevel3">
+<li><a href="#_farbe_und_rahmen_des_plots">9.2.1. Farbe und Rahmen des Plots</a></li>
+<li><a href="#_zeichenfläche">9.2.2. Zeichenfläche</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec:print">10. Exportieren und Drucken</a>
+<ul class="sectlevel2">
+<li><a href="#_exportieren_des_plots_als_pixelgrafik">10.1. Exportieren des Plots als Pixelgrafik</a>
+<ul class="sectlevel3">
+<li><a href="#_erstellen_einer_1_zu_1_kopie_des_plotwidgets">10.1.1. Erstellen einer 1-zu-1 Kopie des Plotwidgets</a></li>
+<li><a href="#_kopie_in_die_zwischenablage">10.1.2. Kopie in die Zwischenablage</a></li>
+<li><a href="#_qwtplot_mit_anderer_auflösung_abspeichern">10.1.3. QwtPlot mit anderer Auflösung abspeichern</a></li>
+<li><a href="#_diagrammelemente_skalieren_dpi_ändern">10.1.4. Diagrammelemente skalieren (DPI ändern)</a></li>
+</ul>
+</li>
+<li><a href="#_exportieren_des_plots_als_vektorgrafik">10.2. Exportieren des Plots als Vektorgrafik</a></li>
+<li><a href="#_drucken">10.3. Drucken</a></li>
+</ul>
+</li>
+<li><a href="#_fortgeschrittene_themen">11. Fortgeschrittene Themen</a>
+<ul class="sectlevel2">
+<li><a href="#sec:releasingObjectsFromQwtPlot">11.1. Objekte aus dem QwtPlot loslösen</a></li>
+</ul>
+</li>
+<li><a href="#sec:building">12. Download/Installation/Erstellung der Qwt Bibliothek</a>
+<ul class="sectlevel2">
+<li><a href="#_download_fertiger_pakete">12.1. Download fertiger Pakete</a>
+<ul class="sectlevel3">
+<li><a href="#_linux">12.1.1. Linux</a></li>
+</ul>
+</li>
+<li><a href="#sec:buildingFromSource">12.2. Erstellung aus dem Quelltext</a>
+<ul class="sectlevel3">
+<li><a href="#_windows">12.2.1. Windows</a></li>
+<li><a href="#_windows_mingw32">12.2.2. Windows - MinGW32</a></li>
+<li><a href="#_linuxmac">12.2.3. Linux/Mac</a></li>
+</ul>
+</li>
+<li><a href="#sec:designerPlugins">12.3. Qt Designer Plugins</a></li>
+<li><a href="#_verwendung_des_plots_in_eigenen_programmen">12.4. Verwendung des Plots in eigenen Programmen</a>
+<ul class="sectlevel3">
+<li><a href="#_windows_2">12.4.1. Windows</a></li>
+<li><a href="#_linuxmac_2">12.4.2. Linux/Mac</a></li>
+</ul>
+</li>
+<li><a href="#sec:usingQwtPlot">12.5. Das QwtPlot in eine Designer-Oberfläche/ui-Datei integrieren</a>
+<ul class="sectlevel3">
+<li><a href="#_definition_eines_platzhalterwidgets">12.5.1. Definition eines Platzhalterwidgets</a></li>
+<li><a href="#_verwendung_der_designer_plugins_2">12.5.2. Verwendung der Designer-Plugins</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_über_den_autor">13. Über den Autor</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_über_dieses_handbuch">Über dieses Handbuch</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Dieses Projekt ergänzt die API-Dokumentation zur Qwt-Bibliothek und bietet sowas wie ein Programmiererhandbuch mit vielen Details zu den Internas der Bibliothek. Der Fokus liegt aber ganz klar auf der <code>QwtPlot</code> Diagrammkomponente.  Das Buch schreibe ich in Deutsch, aber Dank der modernen Webseiten-Übersetzer kann man das bestimmt auch locker in vielen anderen Sprachen lesen :-)
+Das ist übrigends schon die 2. Auflage (komplett neu überarbeitet), weil es zum Zeitpunkt der ersten Ausgabe noch kein tolles AsciiDoc gab und ich irgendwie beim Textschreiben hängengeblieben bin.</p>
+</div>
+<div class="paragraph">
+<p>Die Texte und Bilder stehen unter der Creative-Commons BY-NC Lizenz (siehe Lizenztext im Qwt Handbuch Repository <a href="https://github.com/ghorwin/QwtBook">https://github.com/ghorwin/QwtBook</a>), können also frei verwendet, modifiziert und angepasst werden, aber bitte nicht publiziert oder zum Training von kommerziellen KI-Systemen benutzt werden.
+Alle Quelltextbeispiele, sowohl im Text, als auch in den herunterladbaren Tutorial/Beispiel-Quelltextarchiven, stehen unter der MIT-Lizenz und können damit in open-source wie auch kommerziellen Projekten genutzt werden.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Häufig wird das <code>QwtPlot</code> ja benutzt, um ein eigenes Postprozessing oder Visualisierungstool zu schreiben. Vielleicht lohnt sich hier der Blick auf das kostenfreie <em>PostProc 2</em>, welches wir an der TU Dresden entwickelt haben und das intern ein angepasstes und erweitertes <code>QwtPlot</code> verwendet. Das Programm ist spezialisiert auf die Visualisierung von dynamischer Simulationsergebnissen und Messdaten/Zeitreihen und man kann da einen guten Eindruck davon bekommen, was mit <code>QwtPlot</code> alles machbar ist. <em>Postproc 2</em> wird weiter aktiv gepflegt und kann hier heruntergeladen werden: <a href="https://bauklimatik-dresden.de/software/postproc2/">https://bauklimatik-dresden.de/software/postproc2/</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Viel Spaß bei der Lektüre - und falls noch Inhalte fehlen, einfach Geduld haben und später wiederkommen (oder im Github-Repo ein Issue anlegen). Und schaut Euch vielleicht auch meine anderen Tutorials unter <a href="https://schneggenport.de">https://schneggenport.de</a> an!</p>
+</div>
+<div class="paragraph">
+<p>&#8201;&#8212;&#8201;Andreas Nicolai</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_überblick_über_die_qwt_bibliothek">1. Überblick über die Qwt Bibliothek</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Qwt - Qt Widgets for Technical Applications</em> ist eine Open-Source Bibliothek für technische Anwendungen und stellt
+bestimmte Widgets für Anzeigen und Kontrollkomponenten bereit. Die wohl wichtigste Komponente der Qwt Bibliothek ist das <code>QwtPlot</code>,
+eine sehr flexible und mächtige Diagrammkomponente.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/exBode.png" alt="exBode">
+</div>
+<div class="title">Abbildung 1. Beispiel für die QwtPlot-Komponente</div>
+</div>
+<div class="paragraph">
+<p>Die Qwt Bibliothek steht unter einer Open-Source-Lizenz, wurde und wird aktiv vom Entwickler <em>Uwe Rathmann</em> gepflegt und wird auf SourceForge.net gehostet:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://qwt.sourceforge.net">Qwt Webseite (englisch)</a></p>
+</li>
+<li>
+<p><a href="https://sourceforge.net/projects/qwt">Qwt SourceForge Projektseite</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_entwicklungsgeschichte">1.1. Entwicklungsgeschichte</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>die erste Version der Qwt-Bibliothek stammt noch aus dem Jahr 1997 von Josef Wilgen</p>
+</li>
+<li>
+<p>seit 2002 wird die Bibliothek von <em>Uwe Rathmann</em> entwickelt und gepflegt</p>
+</li>
+<li>
+<p>Version 5 ist wohl am weitesten verbreitet (erstes Release vom 26.02.2007)</p>
+</li>
+<li>
+<p>Version 6 (erstes Release vom 15.04.2011, kein Qt3 Support mehr) enthält wesentliche API-Änderungen</p>
+</li>
+<li>
+<p>aktuelle stabile Version 6.3.0 (Stand Mai 2025)</p>
+</li>
+<li>
+<p>im trunk gibt es zum Teil bereits wesentlich mehr und fortgeschrittene Funktionen</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_download_der_bibliothek">1.1.1. Download der Bibliothek</h4>
+<div class="paragraph">
+<p>Die Qwt Bibliothek kann von der <a href="https://sourceforge.net/projects/qwt">Qwt SourceForge Projektseite</a> als Quelltextarchiv geladen werden. Unter Linux wird Qwt bei vielen Distributionen als Paket gehalten. Genau genommen gibt es mehrere Pakete für die unterschiedlichen Qwt-Bibliotheksversionen bzw. Qt Versionen. Details zur Installation und Verwendung der Bibliothek gibt es im <a href="#sec:building">Kapitel 12</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_widget_konzept_und_erscheinungsbild">1.2. Widget-Konzept und Erscheinungsbild</h3>
+<div class="paragraph">
+<p>Die Qwt Bibliothek liefert Komponenten, welche analog zu den normalen Qt-Widgets in Desktopanwendungen verwendet werden können. Die Komponenten verwenden die Qt Palette, sodass die Qwt-Widgets in die jeweilige Oberfläche passen. Dadurch integrieren sich die Widgets nahtlos in Programmoberflächen. Einzelne Komponenten des <code>QwtPlot</code> unterstützen auch Styles. So ermöglichen z.B. Abrundungseffekte beim Plot-Widget das Immitieren klassischer Anzeigen.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/styledDialsAndPlot.png" alt="styledDialsAndPlot">
+</div>
+<div class="title">Abbildung 2. QwtPlot mit abgerundeten Ecken</div>
+</div>
+<div class="paragraph">
+<p>Details zum Styling und zur Anpassung des Erscheinungsbildes sind im <a href="#sec:styling">Kapitel 9</a> zu finden.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_besitzereigentümer_konzept_des_qwtplot_widgets">1.3. Besitzer/Eigentümer-Konzept des QwtPlot-Widgets</h3>
+<div class="paragraph">
+<p>Eine grundlegende Eigenschaft der <code>QwtPlot</code>-Klasse ist die Besitzübername hinzugefügter Elemente. Dies gilt allgemein für alle Elemente des Plots (Linien, Marker, Legende, &#8230;&#8203;). D.h. nach Übertragung der Eigentümerschaft kümmert sich das <code>QwtPlot</code> um das Aufräumen des Speichers.</p>
+</div>
+<div class="paragraph">
+<p>Einmal hinzugefügte Elemente werden nicht wieder losgelöst werden (bzw. nur über einen Trick, wie im <a href="#sec:releasingObjectsFromQwtPlot">Kapitel 11.1</a> beschrieben wird). Daher ist es sinnvoll, bei veränderlichen Diagrammelementen einen Mechanismus zur jeweiligen Neuerstellung eines Zeichenobjekts vorzusehen (Factory-Konzept).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_zeichenobjekte_und_deren_achsenabhängigkeit">1.4. Zeichenobjekte und deren Achsenabhängigkeit</h3>
+<div class="paragraph">
+<p>Ein wesentliches Designmerkmal beim <code>QwtPlot</code> ist die Möglichkeit, beliebige Zeichenobjekte (Kurven, Marker, Legende, &#8230;&#8203;) dem Plot zu übergeben. Damit sich diese Zeichenobjekte (engl. <em>PlotItem</em>) am Koordinatengitter ausrichten können, wird ihnen eine Achsenabhängigkeit gegeben. Dadurch erhalten diese Zeichenobjekte eine Information, wann immer sich die Achsenskalierung ändert (durch Zoomen, oder Änderung der Wertebereiche etc.).</p>
+</div>
+<div class="paragraph">
+<p>Diese Funktionalität definiert die zentrale Bedeutung der (bis zu) 4 Achsen im Diagramm. Deswegen sind diese auch fest im <code>QwtPlot</code> verankert und werden nicht wie andere Zeichenobjekte beliebig hinzugefügt.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vererbungskonzept">1.5. Vererbungskonzept</h3>
+<div class="paragraph">
+<p>Grundsätzlich ist das <code>QwtPlot</code> und die beteiligten Klassen auf maximale Anpassungsfähigkeit ausgelegt, d.h. es wird (fast) überall Polymorphie unterstützt. Wenn die eingebaute Funktionalität nicht zureichend ist, kann man einfach immer die entsprechende Klasse ableiten und die jeweils anzupassende Funktion re-implementieren und verändern. Dies wird anhand von Beispielen in den individuellen Kapiteln des Handbuchs beschrieben.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_verwendung_der_designer_plugins">1.6. Verwendung der Designer Plugins</h3>
+<div class="paragraph">
+<p>Die Qwt Bibliothek bringt Plugins für QtDesigner mit, welche das Einfügen von Qwt-Komponenten in ui-Dateien erleichtert. Es lassen sich jedoch keine QwtPlot-Eigenschaften festlegen oder Kurven hinzufügen. Die eigentliche Anpassung und Ausgestaltung des Plots erfolgt im Quelltext. Deswegen wird die Konfiguration und Anpassung des <code>QwtPlot</code> in diesem Handbuch ausschließlich durch normale API-Aufrufe demonstriert.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Soll das <code>QwtPlot</code> auch ohne Designer-Plugins im grafischen QtDesigner-Editor eingefügt werden, kann man einfach ein QWidget einfügen und dieses als Platzhalter für die <code>QwtPlot</code>-Klasse definieren, siehe <a href="#sec:usingQwtPlot">Kapitel 12.5</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Eine Beschreibung, wie die Designer-plugins erstellt und in Qt Creator/Designer integriert werden ist im <a href="#sec:designerPlugins">Kapitel 12.3</a> beschrieben.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec:tutorial1">2. Erste Schritte und ein interaktives Diagramm</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Um mit der Qwt-Bibliothek warm zu werden, erstellen wir in einem einfachen Beispiel ein interaktives Diagramm mit der <code>QwtPlot</code>-Komponente.
+Der komplette Beispielquelltext ist als 7z-Archiv herunterladbar: <a href="../code/tutorial1.7z">tutorial1.7z</a></p>
+</div>
+<div class="sect2">
+<h3 id="_programmrohbau">2.1. Programmrohbau</h3>
+<div class="sect3">
+<h4 id="_qmake_projektdatei">2.1.1. QMake Projektdatei</h4>
+<div class="paragraph">
+<p>Wir beginnen mit der qmake-Projektdatei, in der wir den Pfad für die Header-Dateien der Bibliothek und die zu linkende Bibliothek festlegen. Hier gehe ich davon aus, dass Qwt aus dem 6.3.0er Quelltextarchiv gebaut und lokal in die Standardverzeichnisse (<code>C:\qwt-6.3.0</code> unter Windows und <code>/usr/local/qwt-6.3.0</code> unter Linux/Mac) installiert wurde. Infos über das Compilieren der Bibliothek aus dem Quelltext und Installation gibt es in <a href="#sec:building">Kapitel 12</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh">TARGET   <span class="o">=</span> Tutorial1
+QT       +<span class="o">=</span> core gui widgets
+CONFIG   +<span class="o">=</span> c++11
+
+win32 <span class="o">{</span>
+	<span class="c"># Pfad zu den Qwt Headerdateien hinzufügen</span>
+	INCLUDEPATH +<span class="o">=</span> C:/qwt-6.3.0/include
+	CONFIG<span class="o">(</span>debug, debug|release<span class="o">)</span> <span class="o">{</span>
+		QWTLIB <span class="o">=</span> qwtd
+	<span class="o">}</span>
+	<span class="k">else</span> <span class="o">{</span>
+		QWTLIB <span class="o">=</span> qwt
+	<span class="o">}</span>
+	<span class="c"># Linkerpfad</span>
+	LIBS +<span class="o">=</span> <span class="nt">-LC</span>://qwt-6.3.0/lib <span class="nt">-l</span><span class="nv">$$</span>QWTLIB
+<span class="o">}</span>
+<span class="k">else</span> <span class="o">{</span>
+	<span class="c"># Pfad zu den Qwt Headerdateien hinzufügen</span>
+	INCLUDEPATH +<span class="o">=</span> /usr/local/qwt-6.3.0/include/
+	<span class="c"># Linkerpfad, unter Linux wird standardmäßig nur die release-Version der Lib gebaut und installiert</span>
+	LIBS +<span class="o">=</span> <span class="nt">-L</span>/usr/local/qwt-6.3.0/lib <span class="nt">-lqwt</span>
+<span class="o">}</span>
+
+SOURCES +<span class="o">=</span> main.cpp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dies ist eine <code>.pro</code>-Datei für eine Qwt-6.3.0-Installation aus dem Quelltext mit Standardeinstellungen (siehe <a href="#sec:buildingFromSource">Kapitel 12.2</a>).</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Beachte, dass die im Debug-Modus kompilierte Qwt-Bibliothek ein angehängtes <em>d</em> hat. Unter Linux wird standardmäßig nur die release-Version gebaut und installiert, daher braucht man hier die Fallunterscheidung nicht.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_minimalistisches_hauptprogramm">2.1.2. Minimalistisches Hauptprogramm</h4>
+<div class="paragraph">
+<p>Für die Verwendung des <code>QwtPlot</code> braucht man nur eine sehr minimalistische <code>main.cpp</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Hauptprogramm, in dem nur das nackige Plot selbst erstellt und angezeigt wird</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;QApplication&gt;</span><span class="cp">
+</span>
+<span class="cp">#include</span> <span class="cpf">&lt;QwtPlot&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+	<span class="n">QApplication</span> <span class="n">a</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+	<span class="n">QwtPlot</span> <span class="n">plot</span><span class="p">;</span>
+	<span class="n">plot</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span><span class="mi">500</span><span class="p">);</span>
+	<span class="n">plot</span><span class="p">.</span><span class="n">show</span><span class="p">();</span>
+	<span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">exec</span><span class="p">();</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Wenn man das Programm compiliert hat und ausführen will, beklagt sich Windows über eine fehlende DLL.
+Dazu in den Projekteinstellungen, unter "Ausführen", im Abschnitt "Umgebung" die PATH-Variable bearbeiten und dort den Pfad <code>C:\qwt-6.3.0\lib</code> hinzufügen.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Das Programm zeigt ein ziemlich langweiliges (und hässliches) Diagrammfenster (später wird das noch ansehnlicher gestaltet).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_a.png" alt="Tutorial1 a">
+</div>
+<div class="title">Abbildung 3. Das nackte Plotwidget</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Ein Hinweis zu den Header-Dateien der Qwt-Bibliothek.</p>
+</div>
+<div class="paragraph">
+<p>Analog zu Qt Klassen werden die Qwt-Klassen über den gleichnamigen Header eingebunden, also:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;QwtPlot&gt;</span><span class="c1">       // für Klasse QwtPlot</span><span class="cp">
+#include</span> <span class="cpf">&lt;QwtPlotCurve&gt;</span><span class="c1">  // für Klasse QwtPlotCurve</span><span class="cp">
+#include</span> <span class="cpf">&lt;QwtLegend&gt;</span><span class="c1">     // für Klasse QwtLegend</span><span class="cp">
+</span><span class="c1">// ...</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Diese Header-Dateien sind aber nur Wrapper um die eigentlichen Include-Dateien, mit dem Benennungsschema:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;qwt_plot.h&gt;</span><span class="c1">        // für Klasse QwtPlot</span><span class="cp">
+#include</span> <span class="cpf">&lt;qwt_plot_curve.h&gt;</span><span class="c1">  // für Klasse QwtPlotCurve</span><span class="cp">
+#include</span> <span class="cpf">&lt;qwt_legend.h&gt;</span><span class="c1">      // für Klasse QwtLegend</span><span class="cp">
+</span><span class="c1">// ...</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In früheren Versionen der Qwt-lib (auch der Debian-Paket-Version <code>libqwt-qt5-dev</code>) wurden die Wrapper-Headerdateien nach dem neuen Namensschema nicht installiert, sodass man die originalen <code>qwt_xxx.h</code> Includes verwenden muss. Wenn man also auch ältere Qwt-Versionen unterstützen möchte, bzw. unter Linux die Paketversion verwenden will, sollte die originalen Headerdateinamen verwenden.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_diagrammelemente_hinzufügen">2.2. Diagrammelemente hinzufügen</h3>
+<div class="sect3">
+<h4 id="_linie_hinzufügen">2.2.1. Linie hinzufügen</h4>
+<div class="paragraph">
+<p>Als erstes fügen wir eine Linie bzw. Diagrammkurve hinzu (Header <code>QwtPlotCurve</code> bzw. <code>qwt_plot_curve.h</code>):</p>
+</div>
+<div class="listingblock">
+<div class="title">Hauptprogramm mit einer Linie</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;QApplication&gt;</span><span class="cp">
+</span>
+<span class="cp">#include</span> <span class="cpf">&lt;QwtPlot&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;QwtPlotCurve&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+	<span class="n">QApplication</span> <span class="n">a</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+	<span class="n">QwtPlot</span> <span class="n">plot</span><span class="p">;</span>
+	<span class="n">plot</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="mi">300</span><span class="p">);</span>
+
+	<span class="c1">// etwas Abstand zwischen Rand und Achsentiteln</span>
+	<span class="n">plot</span><span class="p">.</span><span class="n">setContentsMargins</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">);</span>
+	<span class="c1">// Hintergrund der Zeichenfläche soll weiß sein</span>
+	<span class="n">plot</span><span class="p">.</span><span class="n">setCanvasBackground</span><span class="p">(</span> <span class="n">Qt</span><span class="o">::</span><span class="n">white</span> <span class="p">);</span>
+
+	<span class="c1">// Daten zum Darstellen einlesen</span>
+	<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+	<span class="n">QFile</span> <span class="n">f</span><span class="p">(</span><span class="s">"spektrum.tsv"</span><span class="p">);</span>  <span class="c1">// Datei enthält 2 Spalten</span>
+	<span class="n">f</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">QFile</span><span class="o">::</span><span class="n">ReadOnly</span><span class="p">);</span>
+	<span class="n">QTextStream</span> <span class="n">strm</span><span class="p">(</span><span class="o">&amp;</span><span class="n">f</span><span class="p">);</span>
+	<span class="n">strm</span><span class="p">.</span><span class="n">readLine</span><span class="p">();</span> <span class="c1">// Kopfzeile überspringen</span>
+	<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">strm</span><span class="p">.</span><span class="n">atEnd</span><span class="p">())</span> <span class="p">{</span>
+		<span class="kt">double</span> <span class="n">xval</span><span class="p">,</span> <span class="n">yval</span><span class="p">;</span>
+		<span class="n">strm</span> <span class="o">&gt;&gt;</span> <span class="n">xval</span> <span class="o">&gt;&gt;</span> <span class="n">yval</span><span class="p">;</span>
+		<span class="n">x</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">xval</span><span class="p">);</span>
+		<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">yval</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotCurve</span><span class="p">();</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setTitle</span><span class="p">(</span><span class="s">"Gamma-Spektrum"</span><span class="p">);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span> <span class="p">);</span> <span class="c1">// Antialiasing verwenden</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSamples</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">attach</span><span class="p">(</span><span class="o">&amp;</span><span class="n">plot</span><span class="p">);</span> <span class="c1">// Plot takes ownership</span>
+
+	<span class="n">plot</span><span class="p">.</span><span class="n">show</span><span class="p">();</span>
+	<span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">exec</span><span class="p">();</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Im erweiterten Hauptprogramm wird zunächst der Header für die <code>QwtPlotCurve</code> eingebunden. Das Kurvenobjekt selbst wird mit <code>new</code> auf dem Heap erstellt. Die Daten der Kurve lesen wir aus einer Textdatei (2 Spalten, mit Kopfzeile) aus. Die Datei <code>spektrum.tsv</code> ist im Archiv des Tutorialquelltextes enthalten.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Achtung"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Grundsätzlich gilt beim <code>QwtPlot</code>: Alle Plotelemente <em>müssen</em> via new auf dem Heap erstellt werden und dem Plot dann übergeben werden. Dieses wird dann Besitzer und gibt den Speicher frei. Deshalb dürfen Linien, Legende, Marker etc. <em>niemals</em> als Stack-Variablen erstellt werden, sonst gibt es (je nach Destruktoraufrufreihenfolge) einen Speicherzugriffsfehler.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Attribute wie Linienfarbe, Titel (wird später in der Legende angezeigt), und Antialising werden gesetzt (im <a href="#sec:linecurves">Kapitel 3</a> werden alle Eigenschaften von Linien im Detail erläutert).</p>
+</div>
+<div class="paragraph">
+<p>Die Funktion <code>setSamples()</code> setzt die Daten der Linie. Wichtig ist hier, dass die übergebenen Vectoren die gleiche Länge haben. Es handelt sich um eine parametrische Kurve, d.h. weder x noch y Werte müssen monoton sein oder sonstwelchen Regeln folgen. Jedes x,y Wertepaar definiert einen Punkt und diese Punkte werden mit der Linie verbunden.</p>
+</div>
+<div class="paragraph">
+<p>Die Funktion <code>attach()</code> fügt das <code>QwtPlotCurve</code>-Objekt zum Diagramm hinzu.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Beim Hinzufügen der Linie mittels <code>attach()</code> zum Diagramm wird das Plot neuer Eigentümer und kümmert sich um das Aufräumen des Speichers. Man muss also nicht mehr manuell <code>delete</code> für das <code>QwtPlotCurve</code>-Objekt aufrufen.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Zusätzlich zu dem Code, welcher die Linie hinzufügt, wurden noch 2 kleine Anpassungen am Erscheinungsbild vorgenommen:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ränder wurden mittels <code>setContentsMargins()</code> hinzugefügt (siehe auch <code>QWidgdet::setContentsMargins()</code> )</p>
+</li>
+<li>
+<p>der Hintergrund der Zeichenfläche (<em>canvas</em>) wurde weiß gefärbt.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Das Ergebnis sieht schon eher nach Diagramm aus.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_b.png" alt="Tutorial1 b">
+</div>
+<div class="title">Abbildung 4. Diagramm mit Linie</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_legende_hinzufügen">2.2.2. Legende hinzufügen</h4>
+<div class="paragraph">
+<p>Als nächstes wird eine Legende eingefügt (Header <code>QwtLegend</code> bzw. <code>qwt_legend.h</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="c1">// Legende anzeigen</span>
+<span class="n">QwtLegend</span> <span class="o">*</span> <span class="n">legend</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtLegend</span><span class="p">();</span>
+<span class="n">QFont</span> <span class="n">legendFont</span><span class="p">;</span>
+<span class="n">legendFont</span><span class="p">.</span><span class="n">setPointSize</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+<span class="n">legend</span><span class="o">-&gt;</span><span class="n">setFont</span><span class="p">(</span><span class="n">legendFont</span><span class="p">);</span>
+<span class="n">plot</span><span class="p">.</span><span class="n">insertLegend</span><span class="p">(</span> <span class="n">legend</span> <span class="p">,</span> <span class="n">QwtPlot</span><span class="o">::</span><span class="n">BottomLegend</span><span class="p">);</span> <span class="c1">// plot takes ownership</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Auch hier wird oben wieder der Header für die Klasse <code>QwtLegend</code> eingebunden.</p>
+</div>
+<div class="paragraph">
+<p>Die Legende bekommt hier noch einen veränderten Font. Das weitere Anpassen der Legende wird in <a href="#sec:legend">Kapitel 4</a> beschrieben.</p>
+</div>
+<div class="paragraph">
+<p>Die Legende kann links, rechts, oberhalb oder unterhalb der Zeichenfläche liegen, oder in der Zeichenfläche selbst. Die Platzierung wird beim Aufruf von <code>insertLegend()</code> festlegegt.</p>
+</div>
+<div class="paragraph">
+<p>Das Plot nimmt beim Aufruf von <code>insertLegend()</code> wiederum Besitz vom Legendenobjekt und kümmert sich um das Aufräumen des Speichers.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_diagrammtitel_hinzufügen">2.2.3. Diagrammtitel hinzufügen</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="c1">// Titel hinzufügen</span>
+<span class="n">QwtText</span> <span class="nf">text</span><span class="p">(</span><span class="s">"Gamma-Spektrum"</span><span class="p">);</span>
+<span class="n">QFont</span> <span class="n">titleFont</span><span class="p">;</span>
+<span class="n">titleFont</span><span class="p">.</span><span class="n">setBold</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<span class="n">titleFont</span><span class="p">.</span><span class="n">setPointSize</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="n">text</span><span class="p">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">titleFont</span><span class="p">);</span>
+<span class="n">plot</span><span class="p">.</span><span class="n">setTitle</span><span class="p">(</span><span class="n">text</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Die Klasse <code>QwtText</code> (Header <code>QwtText</code> bzw. <code>qwt_text.h</code>) kapselt einen QString und ergänzt Funktionalität zum Rendern von mathematischen Symbolen mittels MathML (siehe <a href="#sec:mathML">Kapitel 7.1</a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_diagrammraster_hinzufügen">2.2.4. Diagrammraster hinzufügen</h4>
+<div class="paragraph">
+<p>Gitterlinien werden durch das Zeichenobjekt <code>QwtPlotGrid</code> gezeichnet (Header <code>QwtPlotGrid</code> bzw. <code>qwt_plot_grid.h</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="c1">// Haupt- und Nebengitter anzeigen</span>
+<span class="n">QwtPlotGrid</span> <span class="o">*</span><span class="n">grid</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotGrid</span><span class="p">();</span>
+<span class="n">QPen</span> <span class="nf">gridPen</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">gray</span><span class="p">);</span>
+<span class="n">gridPen</span><span class="p">.</span><span class="n">setStyle</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">DashLine</span><span class="p">);</span>
+<span class="n">grid</span><span class="o">-&gt;</span><span class="n">setMajorPen</span><span class="p">(</span><span class="n">gridPen</span><span class="p">);</span>
+<span class="c1">// Minor grid</span>
+<span class="n">grid</span><span class="o">-&gt;</span><span class="n">enableYMin</span><span class="p">(</span> <span class="nb">true</span> <span class="p">);</span>
+<span class="n">gridPen</span><span class="p">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">lightGray</span><span class="p">);</span>
+<span class="n">gridPen</span><span class="p">.</span><span class="n">setStyle</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">DotLine</span><span class="p">);</span>
+<span class="n">grid</span><span class="o">-&gt;</span><span class="n">setMinorPen</span><span class="p">(</span><span class="n">gridPen</span><span class="p">);</span>
+<span class="n">grid</span><span class="o">-&gt;</span><span class="n">attach</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">plot</span> <span class="p">);</span> <span class="c1">// plot takes ownership</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Das Raster selbst kann hinsichtlich der Stifts (QPen) für das Haupt- und Nebengitter angepasst werden. Die Funktion <code>enableYMin()</code> schaltet das Nebengitter für die Y-Achse ein.
+Wie auch bei den Plotkurven übergibt <code>attach()</code> das <code>QwtPlotGrid</code> Objekt an das <code>QwtPlot</code>, welches sich dann um die Speicherverwaltung kümmert.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Ein Raster wird standardmäßig an eine x- und y-Achse gebunden, wobei man aber auch die Gitterlinien für eine der Achsen ausblenden kann. Wenn man z.B. ein Diagramm mit 2 y-Achsen hat und für jede ein Gitterraster anzeigen möchte (auch wenn das meistens verwirrend aussieht), dann braucht man zwei <code>QwtPlotGrid</code>-Objekte.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Inzwischen sieht das Diagramm schon ganz ansehnlich aus.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_c.png" alt="Tutorial1 c">
+</div>
+<div class="title">Abbildung 5. Diagramm mit Linie, Legende, Titel und Gitterlinien</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_achsenkonfiguration">2.2.5. Achsenkonfiguration</h4>
+<div class="paragraph">
+<p>Das <code>QwtPlot</code> hat 4 Achsen eingebaut, genannt:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>QwtPlot::yLeft</code> und <code>QwtPlot::yRight</code></p>
+</li>
+<li>
+<p><code>QwtPlot::xBottom</code> und <code>QwtPlot::xTop</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Standardmäßig sind die Achsen <code>xBottom</code> und <code>yLeft</code> sichtbar, wie im bisher verwendeten Plot.</p>
+</div>
+<div class="paragraph">
+<p>Jedes Zeichenelement im Plot (Kurven, Marker, &#8230;&#8203;) wird einer oder mehrerer Achsen zugeordnet. In unserem Einführungsbeispiel verwendet die <code>QwtPlotCurve</code> standardmäßig die Achsen <code>xBottom</code> und <code>yLeft</code>.</p>
+</div>
+<div class="paragraph">
+<p>Die Achsen können wie folgt konfiguriert werden.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="c1">// Achsen formatieren</span>
+<span class="n">QFont</span> <span class="n">axisFont</span><span class="p">;</span>
+<span class="n">axisFont</span><span class="p">.</span><span class="n">setPointSize</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+<span class="n">axisFont</span><span class="p">.</span><span class="n">setBold</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<span class="n">QFont</span> <span class="n">axisLabelFont</span><span class="p">;</span>
+<span class="n">axisLabelFont</span><span class="p">.</span><span class="n">setPointSize</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+<span class="c1">// X-Achse</span>
+<span class="n">QwtText</span> <span class="nf">axisTitle</span><span class="p">(</span><span class="s">"Kanal"</span><span class="p">);</span>
+<span class="n">axisTitle</span><span class="p">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">axisFont</span><span class="p">);</span>
+<span class="c1">// Titel Text und Font setzen</span>
+<span class="n">plot</span><span class="p">.</span><span class="n">setAxisTitle</span><span class="p">(</span><span class="n">QwtPlot</span><span class="o">::</span><span class="n">xBottom</span><span class="p">,</span> <span class="n">axisTitle</span><span class="p">);</span>
+<span class="c1">// Font für Achsenzahlen setzen</span>
+<span class="n">plot</span><span class="p">.</span><span class="n">setAxisFont</span><span class="p">(</span><span class="n">QwtPlot</span><span class="o">::</span><span class="n">xBottom</span><span class="p">,</span> <span class="n">axisLabelFont</span><span class="p">);</span>
+<span class="c1">// Y-Achse</span>
+<span class="n">axisTitle</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="s">"Ereignisse"</span><span class="p">);</span>
+<span class="n">plot</span><span class="p">.</span><span class="n">setAxisTitle</span><span class="p">(</span><span class="n">QwtPlot</span><span class="o">::</span><span class="n">yLeft</span><span class="p">,</span> <span class="n">axisTitle</span><span class="p">);</span>
+<span class="n">plot</span><span class="p">.</span><span class="n">setAxisFont</span><span class="p">(</span><span class="n">QwtPlot</span><span class="o">::</span><span class="n">yLeft</span><span class="p">,</span> <span class="n">axisLabelFont</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Der Titel jeder Achse wird wiederum über ein <code>QwtText</code>-Objekt (enthält Text und Font) gesetzt.
+Der Font für die Zahlen an den Achsen selbst wird über <code>setAxisFont()</code> geändert.</p>
+</div>
+<div class="paragraph">
+<p>Die Achsen selbst lassen sich vielfältig anpassen, siehe <a href="#sec:axes">Kapitel 6</a>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_d.png" alt="Tutorial1 d">
+</div>
+<div class="title">Abbildung 6. Vollständig formatiertes Diagramm</div>
+</div>
+<div class="paragraph">
+<p>Die Achsen passen sich standardmäßig automatisch an den Wertebereich der angezeigten Kurven an. Das kann man natürlich auch ändern, siehe <a href="#sec:axes">Kapitel 6</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_logarithmische_achsen">2.2.6. Logarithmische Achsen</h4>
+<div class="paragraph">
+<p>Das <code>QwtPlot</code> kann auch logarithmische Achsen verwenden. Dazu muss man eine anderen Skalenberechnungsklasse einbinden, die <code>QwtLogScaleEngine</code> (Header <code>QwtLogScaleEngine</code> bzw. <code>qwt_scale_engine.h</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="c1">// Logarithmische Y-Achse</span>
+<span class="n">QwtLogScaleEngine</span> <span class="o">*</span> <span class="n">logScale</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtLogScaleEngine</span><span class="p">();</span>
+<span class="n">plot</span><span class="p">.</span><span class="n">setAxisScaleEngine</span><span class="p">(</span><span class="n">QwtPlot</span><span class="o">::</span><span class="n">yLeft</span><span class="p">,</span> <span class="n">logScale</span><span class="p">);</span> <span class="c1">// plot takes ownership</span>
+<span class="c1">// manuelle Achsenlimits festlegen, da autoscale bei log-Achsen nicht sinnvoll funktioniert</span>
+<span class="n">plot</span><span class="p">.</span><span class="n">setAxisScale</span><span class="p">(</span><span class="n">QwtPlot</span><span class="o">::</span><span class="n">yLeft</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span><span class="mi">1000</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Beim Aufruf von <code>setAxisScaleEngine()</code> nimmt das Plot wiederum das Objekt in Besitz und kümmert sich dann um das Speicheraufräumen.</p>
+</div>
+<div class="paragraph">
+<p><a href="#sec:axes">Kapitel 6</a> beschreibt die Details der <em>ScaleEngine</em> und gibt weitere Beispiele.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_e.png" alt="Tutorial1 e">
+</div>
+<div class="title">Abbildung 7. Diagramm mit logarithmischer Y-Achse</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_markierungslinien">2.2.7. Markierungslinien</h4>
+<div class="paragraph">
+<p>Ein weiteres Zeichenelement, das man hin und wieder braucht, sind horizontale oder vertikale Markierungslinien. Beispielhaft fügen wir eine solche Linie mal dem Plot hinzu (Header <code>QwtPlotMarker</code> bzw. <code>qwt_plot_marker.h</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="c1">// Vertikale, gestrichelte Plot-Markierung einfügen</span>
+<span class="n">QwtPlotMarker</span> <span class="o">*</span> <span class="n">marker</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotMarker</span><span class="p">(</span><span class="s">"207,50 keV"</span><span class="p">);</span>
+<span class="n">marker</span><span class="o">-&gt;</span><span class="n">setLabelOrientation</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">Vertical</span><span class="p">);</span> <span class="c1">// Vertikale Linie</span>
+<span class="n">marker</span><span class="o">-&gt;</span><span class="n">setLabelAlignment</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">AlignRight</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">::</span><span class="n">AlignBottom</span><span class="p">);</span> <span class="c1">// Label unten und rechts von der Linie</span>
+<span class="n">marker</span><span class="o">-&gt;</span><span class="n">setValue</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span> <span class="c1">// bei vertikalen Linien muss die x-Koordinate festgelegt werden</span>
+<span class="n">QPen</span> <span class="nf">markerPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">255</span><span class="p">));</span>
+<span class="n">markerPen</span><span class="p">.</span><span class="n">setStyle</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">SolidLine</span><span class="p">);</span>
+<span class="n">marker</span><span class="o">-&gt;</span><span class="n">setLinePen</span><span class="p">(</span><span class="n">markerPen</span><span class="p">);</span>
+<span class="n">marker</span><span class="o">-&gt;</span><span class="n">setLineStyle</span><span class="p">(</span><span class="n">QwtPlotMarker</span><span class="o">::</span><span class="n">VLine</span><span class="p">);</span>
+<span class="n">marker</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="n">QwtText</span><span class="p">(</span><span class="s">"207,50 keV"</span><span class="p">));</span>
+<span class="n">marker</span><span class="o">-&gt;</span><span class="n">attach</span><span class="p">(</span><span class="o">&amp;</span><span class="n">plot</span><span class="p">);</span> <span class="c1">// plot takes ownership</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Auch bei den Markern gibt es vielfältige Einstellungsmöglichkeiten, siehe <a href="#sec:marker">Kapitel 5</a>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_f.png" alt="Tutorial1 f">
+</div>
+<div class="title">Abbildung 8. Diagramm mit logarithmischer Y-Achse und vertikaler Peak-Markierung</div>
+</div>
+<div class="paragraph">
+<p>Nun ist das Diagramm selbst fertig und wir widmen uns der Nutzerinteraktion.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_interaktion_mit_dem_diagramm">2.3. Interaktion mit dem Diagramm</h3>
+<div class="paragraph">
+<p>Das <code>QwtPlot</code> bietet die üblichen Interaktionsmöglichkeiten für den Anwender, wie z.B. Herein- und Herauszoonmen, oder Verschieben des Plotausschnitts.</p>
+</div>
+<div class="sect3">
+<h4 id="_zoomfunktionalität_mit_qwtplotzoomer">2.3.1. Zoomfunktionalität mit QwtPlotZoomer</h4>
+<div class="paragraph">
+<p>Die Zoom-Funktionalität wird über die Klasse <code>QwtPlotZoomer</code> hinzugefügt (Header <code>QwtPlotZoomer</code> bzw. <code>qwt_plot_zoomer.h</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="c1">// Zoomer hinzufügen</span>
+<span class="c1">// Achtung: NICHT QwtPlot selbst als 3 Argument übergeben, sonder das canvas()</span>
+<span class="n">QwtPlotZoomer</span> <span class="o">*</span> <span class="n">zoomer</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotZoomer</span><span class="p">(</span><span class="n">QwtPlot</span><span class="o">::</span><span class="n">xBottom</span><span class="p">,</span> <span class="n">QwtPlot</span><span class="o">::</span><span class="n">yLeft</span><span class="p">,</span> <span class="n">plot</span><span class="p">.</span><span class="n">canvas</span><span class="p">());</span>  <span class="c1">// plot takes ownership</span>
+<span class="n">zoomer</span><span class="o">-&gt;</span><span class="n">setTrackerMode</span><span class="p">(</span> <span class="n">QwtPlotPicker</span><span class="o">::</span><span class="n">AlwaysOn</span> <span class="p">);</span> <span class="c1">// Kurvenvwerte unterm Cursor anzeigen</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wenn man mit der Maus über das Diagramm fährt, sieht man bereits einen veränderten Cursor und dank des Aufrufs <code>setTrackerMode(QwtPlotPicker::AlwaysOn)</code> sieht man nun auch die x- und y-Werte (des Achsen <code>xBottom</code> und <code>yLeft</code>) unter dem Cursor.</p>
+</div>
+<div class="paragraph">
+<p>Hineinzoomen kann man, indem man die Linke Maustaste gedrückt hält, und ein Zoom-Rechteck aufzieht. Das kann man auch mehrmals hintereinander machen. Das <code>QwtPlot</code> merkt sich intern diese Zoomstufen. Herauszoomen kann durch Klick auf die rechte Maustaste, wobei immer eine Zoomstufe hinausgezoomt wird.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Die äußerste Zoomstufe wird im Konstruktor der <code>QwtPlotZoomer</code>-Klasse basierend auf den aktuellen Wertebereichen der <em>bereits hinzugefügten Kurven</em> bestimmt. Sollte man die Werte der Kurven nachträglich ändern, oder den Zoomer hinzufügen, <em>bevor</em> man dem Plot Kurven gegeben hat, so kann man die Funktion <code>QwtPlotZoomer::setZoomBase()</code> aufrufen. Details dazu gibt es im <a href="#sec:zoomer">Kapitel 8</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Im Quelltext gibt es noch eine Besonderheit. Während die bisherigen Plotelemente immer mit Memberfunktionen der <code>QwtPlot</code>-Klasse hinzugefügt wurde, bzw. mittels <code>attach()</code>, wird das Zoomerobjekt analog zu Qt Klassen als Kindobjekt der Zeichenfläche gegeben und registriert sich darüber als interaktives Element bei Plot.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Achtung"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Es ist wichtig darauf zu achten, dass man beim Konstruktor der Klasse <code>QwtPlotZoomer</code> als 3. Argument das Canvas-Objekt des Plots übergibt. Dieses erhält man mit der Funktion <code>QwtPlot::canvas()</code>. Wenn man hier stattdessen das Plot selbst übergibt, führt dies zu einem Speicherzugriffsfehler.</p>
+</div>
+<div class="paragraph">
+<p>Im Konstruktor der <code>QwtPlotZoomer</code> Klasse registriert sich das Objekt als Kind des Canvas-Widgets, wodurch das QObject-System sich um die Speicherverwaltung kümmert. Man muss also das <code>QwtPlotZoomer</code> Objekt nicht freigeben.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Damit der Zoomer weiß, welche Achsen beim Zoom manipuliert werden sollen, muss man die x- und y-Achse im Konstruktor angeben. Möchte man z.B. beide y-Achsen gleichzeitig zoomen, braucht man zwei <code>QwtPlotZoomer</code>-Objekte.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_g.png" alt="Tutorial1 g">
+</div>
+<div class="title">Abbildung 9. Diagramm mit aufgezogenem Zoom-Rechteck</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_plotausschnitt_verschieben_mit_qwtplotpanner">2.3.2. Plotausschnitt verschieben mit QwtPlotPanner</h4>
+<div class="paragraph">
+<p>Wenn man Ausschnitt eines hineingezoomten Plots interaktiv verschieben möchte, kann man den <code>QwtPlotPanner</code> hinzufügen  (Header <code>QwtPlotZoomer</code> bzw. <code>qwt_plot_zoomer.h</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="c1">// Panner hinzufügen, wie auch beim PlotZoomer muss das Canvas-Objekt als Argument übergeben werden</span>
+<span class="n">QwtPlotPanner</span> <span class="o">*</span> <span class="n">panner</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotPanner</span><span class="p">(</span><span class="n">plot</span><span class="p">.</span><span class="n">canvas</span><span class="p">());</span>  <span class="c1">// plot takes ownership</span>
+<span class="n">panner</span><span class="o">-&gt;</span><span class="n">setMouseButton</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">MidButton</span><span class="p">);</span> <span class="c1">// Mittlere Maustaste verschiebt</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wie beim <code>QwtPlotZoomer</code> wird das Objekt als Kindobjekt des Canvas-Widgets hinzugefügt.  Üblich ist das Verschieben von Bildschirminhalten mit gedrückter mittlerer Maustaste, also legt man das mit <code>setMouseButton()</code> fest.</p>
+</div>
+<div class="paragraph">
+<p>Damit ist das Einstiegstutorial beendet. Mit dem <code>QwtPlot</code> kann man bereits mit wenigen Handgriffen ein voll funktionsfähiges und interaktives Diagramm erstellen.  In diesem Tutorial war das <code>QwtPlot</code> gleichzeitig das Anwendungs-Widget. Wenn man das <code>QwtPlot</code> aber in bestehende Designer-Formularklassen einfügen will, gibt es verschiedene Techniken:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>die Verwendung von Platzhalter-Widgets</p>
+</li>
+<li>
+<p>die Einbindung von Qt Designer Plugins für die Qwt Bibliothek</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Diese Methoden sind in <a href="#sec:usingQwtPlot">Kapitel 12.5</a> beschrieben.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec:linecurves">3. Liniendiagramme</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec:legend">4. Legende</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec:marker">5. Markierungslinien</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec:axes">6. Plotachsen</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Die Achsen/Skalen eines Plots (insgesamt 4, open, unten, links und rechts) können bereits in den mitgeliferten Klassenimplementierungen vielfältig angepasst und verändert werden.
+Und natürlich können die beteiligten Klassen auch abgeleitet und so beliebig modifiziert/geändert werden.</p>
+</div>
+<div class="paragraph">
+<p>Die wichtigsten Klassen in Bezug auf die Achsen sind:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>QwtAxis</code></p>
+</li>
+<li>
+<p><code>QwtAbstractScaleDraw</code> und die Spezialisierungen <code>QwtScaleDraw</code> und <code>QwtDateScaleDraw</code></p>
+</li>
+<li>
+<p><code>QwtScaleEngine`und die Spezialisierungen `QwtLinearScaleEngine`und `QwtLogScaleEngine</code></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_allgemeine_achsenformatierung">6.1. Allgemeine Achsenformatierung</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec:qwttext">7. QwtText und Sonderformatierungen</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="sec:mathML">7.1. MathML</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec:zoomer">8. Interaktiver Zoom und Verschieben von Diagrammausschnitten</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec:styling">9. Anpassung/Styling der Qwt Komponenten</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_allgemeines_zu_farbpaletten">9.1. Allgemeines zu Farbpaletten</h3>
+<div class="paragraph">
+<p>Die Qwt-Komponenten verwenden die Qt Palette und deren Farbrollen für die Einfärbung.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rahmen_und_zeichenfläche_des_diagramms">9.2. Rahmen und Zeichenfläche des Diagramms</h3>
+<div class="paragraph">
+<p>Beim QwtPlot können verschiedene Elemente angepasst werden. Nachfolgend ist ein QwtPlot zu sehen, welches in einem äußeren Widget (dunkelgrau) eingebettet ist. Die hellgraue Fläche ist das eigentliche <code>QwtPlot</code>:</p>
+</div>
+<div class="paragraph">
+<p>![Rahmen und Zeichenfläche](imgs/plotStylingOverview.png)</p>
+</div>
+<div class="paragraph">
+<p>Im Screenshot sind die wichtigsten Attribute markiert:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Innenabstand (siehe <code>QWidget::setContentsMargins()</code>)</p>
+</li>
+<li>
+<p>Rahmen (hauptsächlich für den Druck wichtig)</p>
+</li>
+<li>
+<p>Hintergrund des Plot-Widgets</p>
+</li>
+<li>
+<p>Zeichenfläche (engl. <em>Canvas</em>) (betrifft Hintergrundfarbe und Rahmen)</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="_farbe_und_rahmen_des_plots">9.2.1. Farbe und Rahmen des Plots</h4>
+<div class="paragraph">
+<p>Die Farbe des äußeren Bereichs des Plots wird über die Paletteneigenschaft des <code>QwtPlot</code> kontrolliert. Standardmäßig wird der äußere Rand des Plot-Widgets transparant gezeichnet, d.h. die Farbe des darunterliegenden Widgets ist sichtbar. Um eine eigene Farbe zu setzen, muss daher ```setAutoFillBackground(true)``` aufgerufen werden:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QPalette</span> <span class="n">pal</span> <span class="o">=</span> <span class="n">plot</span><span class="p">.</span><span class="n">palette</span><span class="p">();</span>
+<span class="c1">// Die QPalette::Window Farbrolle definiert die Einfärbung</span>
+<span class="c1">// des äußeren Plotbereichs</span>
+<span class="n">pal</span><span class="p">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">QPalette</span><span class="o">::</span><span class="n">Window</span><span class="p">,</span> <span class="n">QColor</span><span class="p">(</span><span class="mi">196</span><span class="p">,</span><span class="mi">196</span><span class="p">,</span><span class="mi">220</span><span class="p">));</span>
+<span class="n">plot</span><span class="o">-&gt;</span><span class="n">setPalette</span><span class="p">(</span><span class="n">pal</span><span class="p">);</span>
+<span class="c1">// die Eigenschaft "autoFillBackground" muss dafür eingeschaltet sein</span>
+<span class="n">plot</span><span class="o">-&gt;</span><span class="n">setAutoFillBackground</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>![](imgs/plotStyling1.png)</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><strong>Hinweis:</strong> In Abschnitt [Gradient als Plot-Hintergrund](customization/#gradient-als-plot-hintergrund) wird beschrieben, wie man einen Farbverlauf im Plothintergrund umsetzt, und diesen bei Größenänderung entsprechend anpasst.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Der Rahmen wird wie bei einem normalen Widget angepasst:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">plot</span><span class="o">-&gt;</span><span class="n">setFrameStyle</span><span class="p">(</span><span class="n">QFrame</span><span class="o">::</span><span class="n">Box</span> <span class="o">|</span> <span class="n">QFrame</span><span class="o">::</span><span class="n">Sunken</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Normalerweise ist ein solcher Rahmen nicht notwendig für die Bildschirmdarstellung oder für das Einbetten des QwtPlot in eine Programmoberfläche. Der Rahmen ist jedoch häufig beim [Export/Druck](export) des Widgets sinnvoll.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_zeichenfläche">9.2.2. Zeichenfläche</h4>
+<div class="paragraph">
+<p>Die Zeichenfläche kann eingefärbt werden:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">plot</span><span class="o">-&gt;</span><span class="n">setCanvasBackground</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">darkGray</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>![](imgs/plotStyling3.png)</p>
+</div>
+<div class="paragraph">
+<p>Der Randabstand zwischen Achsenbeschriftung und Titel zum Rand kann definiert werden:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">plot</span><span class="o">-&gt;</span><span class="n">setContentsMargins</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">35</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>![](imgs/plotStyling4.png)</p>
+</div>
+<div class="paragraph">
+<p>Die Rahmen um die Zeichenfläche kann durch Anpassen des Zeichenflächenobjekts (<code>QwtPlotCanvas</code>) verändert werden. <code>QwtPlotCanvas</code> ist von QFrame abgeleitet, wodurch es entsprechend angepasst werden kann. Es wird einfach neues Objekt erstellt, konfiguriert und dem Plot übergeben (das QwtPlot wird neuer Besitzer des Zeichenflächenobjekts):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QwtPlotCanvas</span> <span class="o">*</span> <span class="n">canvas</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCanvas</span><span class="p">(</span><span class="o">&amp;</span><span class="n">plot</span><span class="p">);</span>
+<span class="n">canvas</span><span class="o">-&gt;</span><span class="n">setPalette</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">white</span><span class="p">);</span>
+<span class="n">canvas</span><span class="o">-&gt;</span><span class="n">setFrameStyle</span><span class="p">(</span><span class="n">QFrame</span><span class="o">::</span><span class="n">Box</span> <span class="o">|</span> <span class="n">QFrame</span><span class="o">::</span><span class="n">Plain</span> <span class="p">);</span>
+<span class="n">canvas</span><span class="o">-&gt;</span><span class="n">setLineWidth</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">plot</span><span class="o">-&gt;</span><span class="n">setCanvas</span><span class="p">(</span><span class="n">canvas</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>![](imgs/plotStyling5.png)</p>
+</div>
+<div class="paragraph">
+<p>Einfacher geht es durch Setzen des Stylesheets für das Canvas-Widget (siehe Qt-Widgets Dokumentation, welche Attribute unterstützt werden):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">plot</span><span class="o">-&gt;</span><span class="n">canvas</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setStyleSheet</span><span class="p">(</span>
+    <span class="s">"border: 1px solid Black;"</span>
+    <span class="s">"border-radius: 15px;"</span>
+    <span class="s">"background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1,"</span>
+        <span class="s">"stop: 0 LemonChiffon, stop: 1 PaleGoldenrod );"</span>
+<span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>![](imgs/plotStyling6.png)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec:print">10. Exportieren und Drucken</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Neben der Anzeige auf dem Bildschirm ist das Speichern schicker Diagramme und Verwendung dieser in Berichten eine nicht unwichtige Aufgabe. Allerdings ist es nicht trivial, gute Diagramme mit sinnvollen Schriftgrößen zu exportieren. Grundsätzlich muss hier zwischen Pixelgrafik-Export und Vektorgrafik unterschieden werden.</p>
+</div>
+<div class="sect2">
+<h3 id="_exportieren_des_plots_als_pixelgrafik">10.1. Exportieren des Plots als Pixelgrafik</h3>
+<div class="paragraph">
+<p>Der naheliegenste Export des Plots ist eine 1-zu-1 Kopie in die Zwischenablage oder in eine Bitmapdatei (jpg, gif, png,&#8230;&#8203;).</p>
+</div>
+<div class="sect3">
+<h4 id="_erstellen_einer_1_zu_1_kopie_des_plotwidgets">10.1.1. Erstellen einer 1-zu-1 Kopie des Plotwidgets</h4>
+<div class="paragraph">
+<p>Jedes QWidget kann direkt in eine QPixmap gezeichnet werden. Und dieses kann dann in eine Datei gespeichert werden.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="c1">// Plot in Pixmap rendern</span>
+<span class="n">QPixmap</span> <span class="n">p</span> <span class="o">=</span> <span class="n">plot</span><span class="p">.</span><span class="n">grab</span><span class="p">();</span>
+<span class="c1">// Pixmap in Datei speichern</span>
+<span class="n">p</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="s">"diagramm_screenshot.png"</span><span class="p">);</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_kopie_in_die_zwischenablage">10.1.2. Kopie in die Zwischenablage</h4>
+<div class="paragraph">
+<p>Statt das Pixmap in eine Datei zu speichern, kann man das auch einfach in die Zwischenablage kopieren. Dazu <code>QClibBoard</code> und  <code>QApplication</code> einbinden und:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="c1">// Plot in Pixmap rendern</span>
+<span class="n">QPixmap</span> <span class="n">p</span> <span class="o">=</span> <span class="n">plot</span><span class="p">.</span><span class="n">grab</span><span class="p">();</span>
+<span class="c1">// Pixmap in Zwischenablage kopieren</span>
+<span class="n">qApp</span><span class="o">-&gt;</span><span class="n">clipboard</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setImage</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">toImage</span><span class="p">());</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_qwtplot_mit_anderer_auflösung_abspeichern">10.1.3. QwtPlot mit anderer Auflösung abspeichern</h4>
+<div class="paragraph">
+<p>Wenn das QwtPlot mit einer anderen Auflösung/Pixelgröße als angezeigt auf dem Bildschirm abgespeichert werden soll, so verwendet man die <code>QwtPlotRenderer</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="cpp"><span class="c1">// Render-Objekt erstellen</span>
+<span class="n">QwtPlotRenderer</span> <span class="n">renderer</span><span class="p">;</span>
+<span class="c1">// Statt der versenkten Box wird ein Rahmen mit Skalenstrichen gezeichnen</span>
+<span class="n">renderer</span><span class="p">.</span><span class="n">setLayoutFlag</span><span class="p">(</span><span class="n">QwtPlotRenderer</span><span class="o">::</span><span class="n">FrameWithScales</span><span class="p">);</span>
+<span class="c1">// Zielgröße festlegen</span>
+<span class="n">QRect</span> <span class="nf">imageRect</span><span class="p">(</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">1200</span><span class="p">,</span> <span class="mi">600</span> <span class="p">);</span>
+<span class="c1">// Bildobjekt in der entsprechenden Größe erstellen...</span>
+<span class="n">QImage</span> <span class="nf">image</span><span class="p">(</span> <span class="n">imageRect</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">QImage</span><span class="o">::</span><span class="n">Format_ARGB32</span> <span class="p">);</span>
+<span class="c1">// und mit weißem Hintergrund füllen</span>
+<span class="n">image</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">white</span><span class="p">);</span>
+
+<span class="c1">// Das Diagramm in das QImage zeichnen</span>
+<span class="n">QPainter</span> <span class="nf">painter</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">image</span> <span class="p">);</span>
+<span class="n">renderer</span><span class="p">.</span><span class="n">render</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">plot</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">painter</span><span class="p">,</span> <span class="n">imageRect</span> <span class="p">);</span>
+<span class="n">painter</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+
+<span class="c1">// QImage zurück in Pixmap konvertieren</span>
+<span class="n">QPixmap</span> <span class="nf">plotPixmap</span><span class="p">(</span> <span class="n">QPixmap</span><span class="o">::</span><span class="n">fromImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="p">);</span>
+<span class="n">plotPixmap</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="s">"diagram.png"</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Das Diagramm aus dem Tutorial 1 (<a href="#sec:tutorial1">Kapitel 2</a>) sieht dann z.B. so aus:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_h.png" alt="Tutorial1 h">
+</div>
+<div class="title">Abbildung 10. Plot in höherer Auflösung abgespeichert</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_diagrammelemente_skalieren_dpi_ändern">10.1.4. Diagrammelemente skalieren (DPI ändern)</h4>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exportieren_des_plots_als_vektorgrafik">10.2. Exportieren des Plots als Vektorgrafik</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_drucken">10.3. Drucken</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fortgeschrittene_themen">11. Fortgeschrittene Themen</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Die nachfolgend vorgestellten Themen greifen in die internen Datenstrukturen der Qwt-Bibliotheksklassen ein und diese könnten sich in zukünftigen Bibliotheksversionen sicher nocheinmal deutlich ändern.
+Daher sind diese Techniken mit Vorsicht zu genießen!</p>
+</div>
+<div class="sect2">
+<h3 id="sec:releasingObjectsFromQwtPlot">11.1. Objekte aus dem QwtPlot loslösen</h3>
+<div class="paragraph">
+<p>Die API des <code>QwtPlot</code> geht davon aus, dass Objekt beim Hinzufügen/Ersetzen existierender Plotelemente das Plot als neuen Eigentümer erhalten. Sobald ein Plotelement ein vorheriges Plotelement ersetzt, löscht das <code>QwtPlot</code> das alte Objekt automatisch. Es gibt keine <em>release</em>-Funktionen, wie man die von <em>shared pointer</em>-Implementierungen kennt. Daher kann man einmal hinzugefügte Objekte nicht entfernen, anpassen und wieder neu hinzufügen.</p>
+</div>
+<div class="paragraph">
+<p>Die empfohlene Methode ist:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Plotelement neu erstellen</p>
+</li>
+<li>
+<p>anpassen</p>
+</li>
+<li>
+<p>das bisherige PlotElement ersetzen</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Mitunter ist dies aber nicht praktikabel und man hätte gerne eine Methode, um ein existierendes Objekt loszulösen. Man kann das aber mit einem Trick dennoch machen.</p>
+</div>
+<div class="paragraph">
+<p>TODO&#8230;&#8203; erklären</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec:building">12. Download/Installation/Erstellung der Qwt Bibliothek</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_download_fertiger_pakete">12.1. Download fertiger Pakete</h3>
+<div class="sect3">
+<h4 id="_linux">12.1.1. Linux</h4>
+<div class="paragraph">
+<p>Unter Linux kann man auf die Pakete des Paketmanagers zurückgreifen.</p>
+</div>
+<div class="sect4">
+<h5 id="_debianubuntu">Debian/Ubuntu</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="sh"><span class="c"># Paket mit Headern für die Entwicklung</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>libqwt-qt5-dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Headerdatei-Pfad:  <code>/usr/include/qwt</code></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:buildingFromSource">12.2. Erstellung aus dem Quelltext</h3>
+<div class="sect3">
+<h4 id="_windows">12.2.1. Windows</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Release <code>qwt-6.3.0.zip</code>  herunterladen und entpacken.</p>
+</li>
+<li>
+<p>Datei <code>qwtconfig.pri</code> bearbeiten und Optionen ein-/ausschalten</p>
+</li>
+<li>
+<p>Kommandozeile mit Qt Umgebungsvariablen öffnen: Startmenu &#8594; Qt 5.15.2 (MinGW 8.1.0 64-bit)</p>
+</li>
+<li>
+<p>Ins Verzeichnis mit der <code>qwt.pro</code> wechseln</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_windows_mingw32">12.2.2. Windows - MinGW32</h4>
+<div class="paragraph">
+<p>Es wird eine MinGW32 Installation mit <code>mingw32-make</code> im PATH erwartet.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bat"><span class="c">:: Makefile erstellen</span>
+<span class="kd">qmake</span> <span class="kd">qwt</span>.pro
+<span class="c">:: Bibliothek und Plugin/Beispiele bauen</span>
+<span class="kd">mingw32</span><span class="na">-make -j</span><span class="m">8</span>
+<span class="c">:: Biblithek installieren</span>
+<span class="kd">mingw32</span><span class="na">-make </span><span class="kd">install</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Die <code>-j8</code> sind für das parallele Bauen auf 8 CPUs.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Sofern nicht in der Datei <code>qwtconfig.pri</code> ein anderer Installationspräfix in der Variable <code>QWT_INSTALL_PREFIX</code> eingestellt wurde, ist die Bibliothek nun unter <code>c:\Qwt-6.3.0</code> installiert:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>c:\Qwt-6.3.0\include  - Header-Dateien
+c:\Qwt-6.3.0\lib      - Bibliothek/DLLs
+c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis öffnen)</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_linuxmac">12.2.3. Linux/Mac</h4>
+
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:designerPlugins">12.3. Qt Designer Plugins</h3>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>wie erstellt man die Designerplugins und bekommt die in die Komponentenpalette&#8230;&#8203;</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_verwendung_des_plots_in_eigenen_programmen">12.4. Verwendung des Plots in eigenen Programmen</h3>
+<div class="sect3">
+<h4 id="_windows_2">12.4.1. Windows</h4>
+
+</div>
+<div class="sect3">
+<h4 id="_linuxmac_2">12.4.2. Linux/Mac</h4>
+
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:usingQwtPlot">12.5. Das QwtPlot in eine Designer-Oberfläche/ui-Datei integrieren</h3>
+<div class="paragraph">
+<p>Wenn man mittels Qt Designer eine Programmoberfläche baut, möchte man da vielleicht auch ein <code>QwtPlot</code> einbetten. Das kann man auf zwei verschiedene Arten machen:</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha">
+<li>
+<p>ein QWidget als Platzhalter einfügen und zu einem Platzhalterwidget für das <code>QwtPlot</code> machen, oder</p>
+</li>
+<li>
+<p>die Qwt-Designer-Plugins verwenden.</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="_definition_eines_platzhalterwidgets">12.5.1. Definition eines Platzhalterwidgets</h4>
+<div class="paragraph">
+<p>Zur Erklärung wird im Qt Designer ein einfaches Widget entworfen:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_ui1.png" alt="Tutorial1 ui1">
+</div>
+<div class="title">Abbildung 11. Widget mit Platzhalter-Widget für das Diagramm</div>
+</div>
+<div class="paragraph">
+<p>Unter der Spinbox wurde ein <code>QWidget</code> eingefügt. Dieses soll nun als Platzhalter für das <code>QwtPlot</code> dienen. Dazu im Kontextmenü des Widgets die Option "Als Platzhalter für benutzerdefinierte Klasse festlegen&#8230;&#8203;" auswählen:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_ui2.png" alt="Tutorial1 ui2">
+</div>
+</div>
+<div class="paragraph">
+<p>Und im Dialog eine neue Platzhalterklasse wie folgt definieren:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_ui3.png" alt="Tutorial1 ui3">
+</div>
+</div>
+<div class="paragraph">
+<p>Die Eingabe mit "Hinzufügen" bestätigen und dann auf "Anwenden" klicken, um das Platzhalter-Widget in das <code>QwtPlot</code> zu wandeln. Wir benennen das noch in <em>plot</em> um, und füge das horizontale Layout und das Plotwidget in ein vertikales Layout ein:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Tutorial1_ui4.png" alt="Tutorial1 ui4">
+</div>
+</div>
+<div class="paragraph">
+<p>Damit sich das Plotwidget den ganzen vertikalen Platz schnappt, wählt man das Top-Level Widget aus und scrollt in der Eigenschaftsleiste bis nach unten zu den Einstellungen für das vertikale Layout. Dort gibt man bei den Stretch-Faktoren "0,1" ein, wodurch sich das 2. Widget im Layout (das Plot) komplett ausdehnt.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_verwendung_der_designer_plugins_2">12.5.2. Verwendung der Designer-Plugins</h4>
+<div class="paragraph">
+<p>Dazu muss man die QtDesigner-Plugins zunächst erstellen und integrieren.</p>
+</div>
+<div class="paragraph">
+<p>TODO :</p>
+</div>
+<div class="paragraph">
+<p>Wenn man die erstmal installiert hat, kann man ein <code>QwtPlot</code> direkt aus der Komponentenpalette in den Entwurf zeihen und ist fertig.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_über_den_autor">13. Über den Autor</h2>
+<div class="sectionbody">
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>später, siehe <a href="https://schneggenport.de">https://schneggenport.de</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0<br>
+Last updated 2025-05-20 17:24:58 +0200
+</div>
+</div>
+</body>
+</html>

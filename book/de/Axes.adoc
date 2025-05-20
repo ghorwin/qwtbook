@@ -1,0 +1,19 @@
+:imagesdir: ../images
+
+[[sec:axes]]
+# Plotachsen
+
+Die Achsen/Skalen eines Plots (insgesamt 4, open, unten, links und rechts) können bereits in den mitgeliferten Klassenimplementierungen vielfältig angepasst und verändert werden.
+Und natürlich können die beteiligten Klassen auch abgeleitet und so beliebig modifiziert/geändert werden.
+
+Die wichtigsten Klassen in Bezug auf die Achsen sind:
+
+- `QwtAxis`
+- `QwtAbstractScaleDraw` und die Spezialisierungen `QwtScaleDraw` und `QwtDateScaleDraw`
+- `QwtScaleEngine`und die Spezialisierungen `QwtLinearScaleEngine`und `QwtLogScaleEngine`
+ 
+
+## Allgemeine Achsenformatierung
+
+
+
