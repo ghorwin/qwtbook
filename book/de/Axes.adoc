@@ -17,3 +17,6 @@ Die wichtigsten Klassen in Bezug auf die Achsen sind:
 
 
 
+[[sec:axisScales]]
+## Skalen
+

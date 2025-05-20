@@ -1,0 +1,54 @@
+:imagesdir: ../images
+
+[[sec:qwtWigets]]
+# QWT Widgets und Eingabekomponenten
+
+Neben dem `QwtPlot` gibt es in der Qwt-Bibliothek noch eine Reihe anderer Eingabekomponenten, die in diesem Kapitel kurz vorgestellt werden.
+Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissenschafltlich/technischen Geräten nachempfunden.
+
+Für die Anzeige der Skalen verwenden die nachfolgend vorgestellten Komponenten intern zur Darstellung der Skalen die in <<sec::axisScales>> näher beschriebenen Skalenberechnungs- und -zeichenklassen. 
+
+## Schieberegler (Slider)
+
+Die Klasse `QwtSlider` erlaubt die Darstellung verschiedener Schieberegler, welche mit der Maus oder Tastatur (Cursortasten) bedient werden können. Im Gegensatz zur  `QSlider` Klasse können die Skalen viel flexibler und auch nichtlinear definiert werden.
+
+.Beispiele für `QwtSlider`
+image::controlsSlider.png[pdfwidth=8cm]
+
+Das Beispiel im Screenshot oben ist in der Qwt-Bibliothek als Beispiel `controls` enthalten.
+
+
+## Drehräder/Einstellräder und 
+
+Die Klasse `QwtWheel` zeigt ein horizontales oder vertikales Einstellrad. Die Klasse `QwtThermo` zeigt eine Balkenanzeige, allerdings mit einer flexibel hinterlegbaren Farbtabelle. Dies erlaubt z.B. Farbverläufe oder Farbsprünge bei Übersteigen bestimmter Schwellwerte. 
+
+Qt selbst bietet für eine Balkenanzeige die Klasse `QProgressBar` an, welches sich aber im Erscheinungsbild an den jeweiligen Plattformstil für Fortschrittsbalken orientiert und auch keine Skalen bietet.
+
+.Beispiele für `QwtWheel` und  `QwtThermo`
+image::controlsWheelThermo.png[pdfwidth=8cm]
+
+Das Beispiel im Screenshot oben ist in der Qwt-Bibliothek als Beispiel `controls` enthalten.
+
+
+## Drehknöpfe
+
+Die Klasse `QwtKnob` zeigt einen Drehknopf, mit ebenso flexibel konfigurierbaren Skaleneinheiten. Die Qt-Klasse `QDial` bietet ebenso ein Einstellrad, jedoch wiederum viel simpler und mit weniger Einstellungsmöglichkeiten hinsichtlich der Skalendarstellung und -skalierung.
+
+.Beispiele für `QwtKnob`
+image::controlsKnob.png[pdfwidth=8cm]
+
+Das Beispiel im Screenshot oben ist in der Qwt-Bibliothek als Beispiel `controls` enthalten.
+
+
+## Analoge Zeiger-Anzeigen
+
+Die Klasse `QwtDial` zeichnet analoge Zeigeranzeigen, die aber auch mit der Maus/Tastatur verändert werden können (wenn man das aktiviert). Die Anzeigen lassen sich farblich sehr individuell konfigurieren.
+
+.Beispiele für `QwtDial`
+image::controlsDials.png[pdfwidth=8cm]
+
+Das Beispiel im Screenshot oben ist in der Qwt-Bibliothek als Beispiel `controls` enthalten.
+
+Bemerkenswert ist vielleicht noch, dass die Anzeigenadel selbst unabhängig von der Klasse `QwtDial` durch eine separate Klasse implementiert wird. Als Standard wird hier `QwtDialSimpleNeedle` verwendet, wie im Screenshot oben. Man kann sich hier aber auch austoben, und selber beliebige Anzeigenadeln entwerfen und integrieren.
+
+
