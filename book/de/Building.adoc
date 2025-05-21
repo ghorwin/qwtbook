@@ -5,11 +5,17 @@
 
 ## Download fertiger Pakete
 
+### Windows/Mac
+
+Auf diesen Plattformen würde ich immer das Bauen aus dem Quelltext empfehlen, da das hinreichend einfach ist (siehe <<sec:buildingFromSource>> unten).
+
 ### Linux
 
-Unter Linux kann man auf die Pakete des Paketmanagers zurückgreifen. 
+Unter Linux kann man auf die Pakete des Paketmanagers zurückgreifen.
 
 #### Debian/Ubuntu
+
+Beispielsweise für Ubuntu 24.04:
 
 ```sh
 # Paket mit Headern für die Entwicklung
@@ -17,6 +23,8 @@ sudo apt install libqwt-qt5-dev
 ```
 
 Headerdatei-Pfad:  `/usr/include/qwt`
+
+Für's Deployment eigener Programme und als Abhängigkeit eigener Pakete reicht es, dass Paket  `libqwt-qt5-6` zu installieren.
 
 
 
@@ -27,12 +35,18 @@ Headerdatei-Pfad:  `/usr/include/qwt`
 
 - Release `qwt-6.3.0.zip`  herunterladen und entpacken.
 - Datei `qwtconfig.pri` bearbeiten und Optionen ein-/ausschalten
-- Kommandozeile mit Qt Umgebungsvariablen öffnen: Startmenu -> Qt 5.15.2 (MinGW 8.1.0 64-bit)
+- Kommandozeile mit Qt Umgebungsvariablen öffnen, z.B.: _Startmenu_ -> _Qt 5.15.2 (MinGW 8.1.0 64-bit)_, oder alternativ in der Commandozeile die benötigten Umgebungsvariablen setzen.
 - Ins Verzeichnis mit der `qwt.pro` wechseln
 
-### Windows - MinGW32
 
-Es wird eine MinGW32 Installation mit `mingw32-make` im PATH erwartet.
+In der Commandozeile wird erwartet, dass:
+
+- der Compiler ausführbar d.h. im Suchpfad ist
+- der QTPATH gesetzt ist
+
+#### MinGW32/64
+
+Es wird eine MinGW32/64 Installation mit `mingw32-make` im PATH erwartet.
 
 ```bat
 :: Makefile erstellen
@@ -42,13 +56,45 @@ mingw32-make -j8
 :: Biblithek installieren
 mingw32-make install
 ``` 
+
 [TIP]
 ====
 Die `-j8` sind für das parallele Bauen auf 8 CPUs.
 ====
 
 
-Sofern nicht in der Datei `qwtconfig.pri` ein anderer Installationspräfix in der Variable `QWT_INSTALL_PREFIX` eingestellt wurde, ist die Bibliothek nun unter `c:\Qwt-6.3.0` installiert:
+#### Visual Studio Compiler
+
+Es gibt verschiedene Compilerversionen, wobei 2017, 2019, 2022 oder VSCode aktuell üblich sind. 
+Eine vorbereitete Kommandozeile öffnet man am Besten über den vorbereiteten Startmenü-Link, welcher für 2019 ungefähr so heißt: _Entwickler-Eingabeaufforderung für VS 2019_
+
+[TIP]
+====
+Man muss hier darauf achten, dass man die richtige Variante wählt, also x86 oder x64.
+====
+
+Alternativ kann man auch eine normale Kommandozeile öffnen und danach die Compilerpfade und Optionen setzen. 
+Hier hilft es, die normalerweise über das Startmenü verknüpfte Batchdatei auszuführen:
+
+```bat
+"%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat" -arch=amd64
+```
+
+Gebaut wird mit jom:
+
+```bat
+:: Makefile erstellen
+qmake qwt.pro
+:: Bibliothek und Plugin/Beispiele bauen
+nmake 
+:: Biblithek installieren
+nmake install
+``` 
+
+
+#### Installationsverzeichnis/Relevante Pfade
+
+Sofern nicht in der Datei `qwtconfig.pri` ein anderer Installationspräfix in der Variable `QWT_INSTALL_PREFIX` eingestellt wurde, ist die Bibliothek nach dem Erstellen unter `c:\Qwt-6.3.0` installiert:
 
   c:\Qwt-6.3.0\include  - Header-Dateien
   c:\Qwt-6.3.0\lib      - Bibliothek/DLLs
