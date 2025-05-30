@@ -46,6 +46,7 @@ Viel Spaß bei der Lektüre - und falls noch Inhalte fehlen, einfach Geduld habe
 include::Introduction.adoc[leveloffset=+1]
 include::BasicTutorial.adoc[leveloffset=+1]
 include::QwtWidgets.adoc[leveloffset=+1]
+include::QwtPlot.adoc[leveloffset=+1]
 include::LineCurves.adoc[leveloffset=+1]
 include::Legend.adoc[leveloffset=+1]
 include::Marker.adoc[leveloffset=+1]

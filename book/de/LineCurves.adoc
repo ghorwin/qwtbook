@@ -2,3 +2,5 @@
 
 [[sec:linecurves]]
 # Liniendiagramme
+
+Die wohl häufiges Diagrammart werden wohl Liniendiagramme sein. 

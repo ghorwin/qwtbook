@@ -1,0 +1,63 @@
+:imagesdir: ../images
+
+[[sec:qwtPlot]]
+# Allgemeine Grundlagen des QwtPlot
+
+Das `QwtPlot` ist sicher die nützlichste und am weitesten bekannte Komponente der Qwt Bibliothek.
+
+.Beispiele für ein typisches `QwtPlot`
+image::2D_time_plot_2axes.png[pdfwidth=10cm]
+
+Bevor ab <<sec:linecurves>> die einzelnen Diagrammtypen vorgestellt werden sollen in diesem Kapitel die wesentlichen Grundlagen gelegt werden.
+
+## Aufbau und Elemente der Diagrammkomponente
+
+Das `QwtPlot` besteht aus einem Titel, umliegenden Achsen, Legenden und der eigentlichen Zeichenfläche. Alle diese Elemente können konfiguriert und sichtbar/unsichtbar geschaltet werden.
+
+### Achsen und Koordinatensystem
+
+Das Diagramm selbst ist ein kartesisches Diagramm mit maximal 4 Achsen, identifiziert über folgende Enumerationswerte:
+
+- `QwtPlot::xBottom`
+- `QwtPlot::xTop`
+- `QwtPlot::yLeft`
+- `QwtPlot::yRight`
+
+Diese Achsen haben primär die Aufgabe, zwischen den Koordinaten des Plots (x,y) und Bildschirmkoordinaten umzurechnen. Jede der vier Achsen kann individuell konfiguriert werden, welches sich auf die min/max-Werte und die Achsenskalierung auswirkt.
+
+### Diagrammelemente
+
+Innerhalb der Zeichenfläche kann man nun die verschiedensten Elemente zeichen, bspw.:
+
+- Linien,
+- Balken,
+- Symbole,
+- Markierungen, 
+- Legendeneinträge,
+- Gitter,
+- ... und weitere...
+
+Alle diese Objekte sind von der Basisklasse  `QwtPlotItem` abgeleitet und teilen sich dadurch gewisse gemeinsame Eigenschaften.
+
+In einem Diagramm kann man alle möglichen Elemente kombinieren, also auch Liniendiagramme mit Balken, Symbolen und Markierungen darstellen.
+
+[TIP]
+====
+Die Zeichenreihenfolge bestimmt das z-Attribut, kontrolliert über die Funktionen `QwtPlotItem::setZ(...)` und `QwtPlotItem::z()`.
+====
+
+Die Positionierung der Diagrammelemente erfolgt über die Plotkoordinaten. Die Umrechung in Bildschirmkoordinaten bzw. die konkrete Position auf der Zeichenfläche wird mittels der jeweils zugeordneten x- und y-Achse gemacht.  Da es nun jeweils zwei x- und y-Achsen gibt, braucht man also bei Anzeige eines Diagrammelements an einem bestimmtenx,y-Datenpunkt zwingend eine Zuordnung zu _einer_ x- und _einer_ y-Achse. Diese Eigenschaft setzt man den einzelnen Zeichenelementen, wobei standardmäßig `xBottom` und `yLeft` ausgewählt sind.
+
+[TIP]
+====
+Die Zuordnung eines Zeichenelements zu einer Achse erfolgt mit den Memberfunktionen `QwtPlotItem::setAxes(...)`, `QwtPlotItem::setXAxis(...)`, `QwtPlotItem::setYAxis(...)`.
+====
+
+Alle Zeichenelemente werden _grundsätzlich_ auf dem Heap mit `new` erstellt und mittels der Memberfunktion `QwtPlotItem::attach(...)` dem eigentlichen `QwtPlot` hinzugefügt.
+
+[IMPORTANT]
+====
+Beim Aufruf von `attach()` wird das Zeichenelement in die Obhut des `QwtPlot` übergeben, welches sich dann um das Aufräumen des Speichers kümmert. Möchte man das Zeichenelement wieder zurückerhalten, ruft man die Memberfunktion `detach()` auf. Damit übernimmt man dann selbst wieder die Verantwortung für das Speicherbereinigen.
+====
+
+Das `QwtPlotItem` deklariert und implementiert auch die virtuellen Funktionen für das Zeichnen sowie Berechnen wichtiger Layoutdaten. Dies wird aber später in den fortgeschrittenen Kapiteln noch genauer erklärt. Nun aber zu den individuellen Zeichenelementen und daraus erstellten Diagrammtypen.
