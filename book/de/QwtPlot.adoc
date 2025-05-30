@@ -3,12 +3,12 @@
 [[sec:qwtPlot]]
 # Allgemeine Grundlagen des QwtPlot
 
-Das `QwtPlot` ist sicher die nützlichste und am weitesten bekannte Komponente der Qwt Bibliothek.
+Das `QwtPlot` ist sicher die nützlichste und am weitesten bekannte Komponente der Qwt Bibliothek. Im Gegensatz zu vielen anderen Qt-Diagrammkomponenten, kann man mit dem `QwtPlot` wirklich sehr flexibel (und effizient) alle möglichen Diagrammtypen erstellen und anzeigen.
 
-.Beispiele für ein typisches `QwtPlot`
+.Beispiel für ein typisches `QwtPlot` mit zwei y-Achsen und innenliegender Legende.
 image::2D_time_plot_2axes.png[pdfwidth=10cm]
 
-Bevor ab <<sec:linecurves>> die einzelnen Diagrammtypen vorgestellt werden sollen in diesem Kapitel die wesentlichen Grundlagen gelegt werden.
+Bevor ab <<sec:linecurves>> die einzelnen Diagrammtypen vorgestellt werden, geht es in diesem Kapitel um die wesentlichen Grundlagen.
 
 ## Aufbau und Elemente der Diagrammkomponente
 
@@ -34,8 +34,8 @@ Innerhalb der Zeichenfläche kann man nun die verschiedensten Elemente zeichen, 
 - Symbole,
 - Markierungen, 
 - Legendeneinträge,
-- Gitter,
-- ... und weitere...
+- Gitterraster,
+- ... und viele weitere
 
 Alle diese Objekte sind von der Basisklasse  `QwtPlotItem` abgeleitet und teilen sich dadurch gewisse gemeinsame Eigenschaften.
 
@@ -43,7 +43,7 @@ In einem Diagramm kann man alle möglichen Elemente kombinieren, also auch Linie
 
 [TIP]
 ====
-Die Zeichenreihenfolge bestimmt das z-Attribut, kontrolliert über die Funktionen `QwtPlotItem::setZ(...)` und `QwtPlotItem::z()`.
+Die Zeichenreihenfolge, also welches Zeichenelement ein anderes überdeckt, bestimmt das z-Attribut. Dies wird über die Funktionen `QwtPlotItem::setZ(...)` und `QwtPlotItem::z()`  kontrolliert.
 ====
 
 Die Positionierung der Diagrammelemente erfolgt über die Plotkoordinaten. Die Umrechung in Bildschirmkoordinaten bzw. die konkrete Position auf der Zeichenfläche wird mittels der jeweils zugeordneten x- und y-Achse gemacht.  Da es nun jeweils zwei x- und y-Achsen gibt, braucht man also bei Anzeige eines Diagrammelements an einem bestimmtenx,y-Datenpunkt zwingend eine Zuordnung zu _einer_ x- und _einer_ y-Achse. Diese Eigenschaft setzt man den einzelnen Zeichenelementen, wobei standardmäßig `xBottom` und `yLeft` ausgewählt sind.
