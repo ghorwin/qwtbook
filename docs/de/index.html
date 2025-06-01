@@ -316,7 +316,15 @@ pre.rouge .gs {
 <li><a href="#_stufendiagramme">5.3. Stufendiagramme</a></li>
 <li><a href="#_punkte_dots">5.4. Punkte (Dots)</a></li>
 <li><a href="#_keine_linie">5.5. Keine Linie</a></li>
-<li><a href="#sec:plotSymbols">5.6. Symbole/Punkte</a></li>
+<li><a href="#sec:plotSymbols">5.6. Symbole/Punkte</a>
+<ul class="sectlevel3">
+<li><a href="#_symbolstileeingebauten_symbolformen">5.6.1. Symbolstile/Eingebauten Symbolformen</a></li>
+<li><a href="#_nutzerdefinierte_formen_via_qpainterpath">5.6.2. Nutzerdefinierte Formen via QPainterPath</a></li>
+<li><a href="#_svg_symbole">5.6.3. SVG-Symbole</a></li>
+<li><a href="#_bild_symbole_pixmaps">5.6.4. Bild-Symbole (Pixmaps)</a></li>
+</ul>
+</li>
+<li><a href="#sec:intervalCurves">5.7. Intervallkurven</a></li>
 </ul>
 </li>
 <li><a href="#sec:legend">6. Legende</a></li>
@@ -405,6 +413,9 @@ pre.rouge .gs {
 Das ist übrigends schon die 2. Auflage (komplett neu überarbeitet), weil es zum Zeitpunkt der ersten Ausgabe noch kein tolles AsciiDoc gab und ich irgendwie beim Textschreiben hängengeblieben bin.</p>
 </div>
 <div class="paragraph">
+<p>Die englische Version und die PDF-Variante gibt&#8217;s hier: <a href="https://ghorwin.github.io/qwtbook">https://ghorwin.github.io/qwtbook</a>.</p>
+</div>
+<div class="paragraph">
 <p>Die Texte und Bilder stehen unter der Creative-Commons BY-NC Lizenz (siehe Lizenztext im Qwt Handbuch Repository <a href="https://github.com/ghorwin/QwtBook">https://github.com/ghorwin/QwtBook</a>), können also frei verwendet, modifiziert und angepasst werden, aber bitte nicht publiziert oder zum Training von kommerziellen KI-Systemen benutzt werden.
 Alle Quelltextbeispiele, sowohl im Text, als auch in den herunterladbaren Tutorial/Beispiel-Quelltextarchiven, stehen unter der MIT-Lizenz und können damit in open-source wie auch kommerziellen Projekten genutzt werden.</p>
 </div>
@@ -416,7 +427,7 @@ Alle Quelltextbeispiele, sowohl im Text, als auch in den herunterladbaren Tutori
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Häufig wird das <code>QwtPlot</code> ja benutzt, um ein eigenes Postprozessing oder Visualisierungstool zu schreiben. Vielleicht lohnt sich hier der Blick auf das kostenfreie <em>PostProc 2</em>, welches wir an der TU Dresden entwickelt haben und das intern ein angepasstes und erweitertes <code>QwtPlot</code> verwendet. Das Programm ist spezialisiert auf die Visualisierung von dynamischer Simulationsergebnissen und Messdaten/Zeitreihen und man kann da einen guten Eindruck davon bekommen, was mit <code>QwtPlot</code> alles machbar ist. <em>Postproc 2</em> wird weiter aktiv gepflegt und kann hier heruntergeladen werden: <a href="https://bauklimatik-dresden.de/software/postproc2/">https://bauklimatik-dresden.de/software/postproc2/</a>.</p>
+<p>Häufig wird das <code>QwtPlot</code> ja benutzt, um ein eigenes Postprozessing oder Visualisierungstool zu schreiben. Vielleicht lohnt sich hier der Blick auf das kostenfreie <em>PostProc 2</em>, welches wir an der TU Dresden entwickelt haben und das intern ein angepasstes und erweitertes <code>QwtPlot</code> verwendet. Das Programm ist spezialisiert auf die Visualisierung von dynamischen Simulationsergebnissen und Messdaten/Zeitreihen und man kann da einen guten Eindruck davon bekommen, was mit <code>QwtPlot</code> alles machbar ist. <em>Postproc 2</em> wird weiter aktiv gepflegt und kann hier kostenfrei heruntergeladen werden: <a href="https://bauklimatik-dresden.de/software/postproc2/">https://bauklimatik-dresden.de/software/postproc2/</a>.</p>
 </div>
 </td>
 </tr>
@@ -1615,6 +1626,228 @@ Das Zusatz-Attribut <code>QwtPlotCurve::Inverted</code> gibt dabei an, ob die St
 <div class="paragraph">
 <p>An den jeweiligen x,y-Koordinaten einer Kurve kann man auch Symbole zeichnen. Dafür bietet die Qwt-Bibliothek die Klasse <code>QwtSymbol</code> an.</p>
 </div>
+<div class="paragraph">
+<p>Ein Symbol fügt man zu eine Kurve wie folgt hinzu:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="c1">// Symbol hinzufügen</span>
+<span class="n">QwtSymbol</span> <span class="o">*</span> <span class="n">symbol</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtSymbol</span><span class="p">(</span><span class="n">QwtSymbol</span><span class="o">::</span><span class="n">Ellipse</span><span class="p">);</span>
+<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setSize</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">160</span><span class="p">),</span> <span class="mi">2</span><span class="p">);</span>
+<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setBrush</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span><span class="mi">170</span><span class="p">,</span><span class="mi">255</span><span class="p">));</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSymbol</span><span class="p">(</span><span class="n">symbol</span><span class="p">);</span> <span class="c1">// Curve takes ownership of symbol</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Symbols_EllipseFilled.png" alt="Symbols EllipseFilled">
+</div>
+<div class="title">Abbildung 22. Liniendiagramm mit ausgefüllten Kreissymbolen</div>
+</div>
+<div class="paragraph">
+<p>Zuerst wird das zu verwendende Symbol auf dem Heap mit new erzeugt. Der Konstruktor übernimmt den Typ des Symbols (siehe auch Galerie unten). Man kann das aber auch später über <code>QwtSymbol::setStyle()</code> setzen.</p>
+</div>
+<div class="paragraph">
+<p>Wichtig ist auch die Größe des Symbols, gesetzt mittels <code>QwtSymbol::setSize()</code> in Pixeln. Diese Größe skaliert das Symbol je nach Form.</p>
+</div>
+<div class="paragraph">
+<p>Außerdem wichtig sind die Eigenschaften Pen und Brush (<code>QwtSymbol::setPen()</code> und <code>QwtSymbol::setBruch()</code>). Der Pen wird für das Zeichnen des Umrisses verwendet und der Brush, so gesetzt, für das Ausfüllen der Form. Manche Symbole wie das Kreuz sind nicht ausgefüllt, daher hat hier der Brush keine Wirkung.</p>
+</div>
+<div class="paragraph">
+<p>Schließlich wird das Symbol der Kurve mit <code>QwtPlotCurve::setSymbol()</code> gegeben.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Beim Aufruf von <code>QwtPlotCurve::setSymbol()</code> übernimmt die Plot-Kurve die Verantwortung für&#8217;s Speicheraufräumen.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Die Symbolklasse ist ziemlich mächtig und kann verschiedenste Symbole zeichnen:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>vorgefertigte Formen wie Kreise, Rechtecke, Kreuze, etc. (Stil <code>QwtSymbol::Ellipse</code>&#8230;&#8203;<code>QwtSymbol::Hexagon</code></p>
+</li>
+<li>
+<p>nutzerdefinierte Bilder/Pixmaps (Stil <code>QwtSymbol::Pixmap</code>)</p>
+</li>
+<li>
+<p>spezifische Grafiken gekapselt in Klasse <code>QwtGraphic</code> und erzeugt durch eine Anzahl von <code>QwtPainterCommand</code> Anweisungen (Stil <code>QwtSymbol::Graphic</code>) (siehe auch <a href="#sec:qwtGraphic">[sec:qwtGraphic]</a>)</p>
+</li>
+<li>
+<p>SVG-Dokumente (Stil <code>QwtSymbol::SvgDocument</code>)</p>
+</li>
+<li>
+<p>nutzerdefinierte Formen, welche durch einen QPainterPath definiert sind (Stil <code>QwtSymbol::Path</code>)</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_symbolstileeingebauten_symbolformen">5.6.1. Symbolstile/Eingebauten Symbolformen</h4>
+<div class="paragraph">
+<p>Es gibt zahlreiche eingebaute Symbolformen (fett gedruckt im Diagrammtitel ist jeweils der <code>QwtSymbol::Style</code> Enumerationsname):</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Symbols_Gallery.png" alt="Symbols Gallery">
+</div>
+<div class="title">Abbildung 23. Eingebaute Symboltypen/Stile und deren Enumerationstypen</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_nutzerdefinierte_formen_via_qpainterpath">5.6.2. Nutzerdefinierte Formen via QPainterPath</h4>
+<div class="paragraph">
+<p>Man kann beliebige eigene Symbolformen setzen, indem man die Klasse <code>QPainterPath</code> verwendet.
+Folgendes Beispiel generiert ein Glühlampensymbol:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="c1">// Symbol hinzufügen</span>
+<span class="n">QwtSymbol</span> <span class="o">*</span> <span class="n">symbol</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtSymbol</span><span class="p">(</span><span class="n">QwtSymbol</span><span class="o">::</span><span class="n">Path</span><span class="p">);</span>
+<span class="n">QPainterPath</span> <span class="n">p</span><span class="p">;</span>
+<span class="n">p</span><span class="p">.</span><span class="n">addEllipse</span><span class="p">(</span><span class="n">QRectF</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">));</span>
+<span class="n">p</span><span class="p">.</span><span class="n">moveTo</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="o">-</span><span class="mi">7</span><span class="p">);</span>
+<span class="n">p</span><span class="p">.</span><span class="n">lineTo</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span>
+<span class="n">p</span><span class="p">.</span><span class="n">moveTo</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="o">-</span><span class="mi">7</span><span class="p">);</span>
+<span class="n">p</span><span class="p">.</span><span class="n">lineTo</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span>
+<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setPath</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">120</span><span class="p">),</span> <span class="mi">2</span><span class="p">);</span>
+<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setBrush</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">160</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">255</span><span class="p">));</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSymbol</span><span class="p">(</span><span class="n">symbol</span><span class="p">);</span> <span class="c1">// Curve takes ownership of symbol</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Symbols_PainterPath.png" alt="Symbols PainterPath">
+</div>
+<div class="title">Abbildung 24. Eigenes Symbol definiert mittels QPainterPath</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Achtung"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Wenn man eine nicht-rechteckige Geometrie mit QPainterPath definiert, sollte man beim Ändern der Größe mittels <code>QwtSymbol::setSize()</code> die Variante mit den zwei Argumenten aufrufen, also <code>QwtSymbol::setSize(width,height)</code>. Die Variante mit nur einem Argument transformiert den Pfad onst auf ein Quadrat. Da man üblicherweise keine nicht-quadratischen Formen als Symbol definiert, dürfte das aber nur selten ein Problem sein.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_svg_symbole">5.6.3. SVG-Symbole</h4>
+<div class="paragraph">
+<p>Man kann eigene SVG-Dateien rendern und anzeigen lassen. Dafür muss man nur eine SVG-Datei einlesen/definieren und als Symbol setzen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QwtSymbol</span> <span class="o">*</span> <span class="n">symbol</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtSymbol</span><span class="p">(</span><span class="n">QwtSymbol</span><span class="o">::</span><span class="n">SvgDocument</span><span class="p">);</span>
+<span class="n">QFile</span> <span class="nf">f</span><span class="p">(</span><span class="s">"symbol.svg"</span><span class="p">);</span>
+<span class="n">f</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">QFile</span><span class="o">::</span><span class="n">ReadOnly</span><span class="p">);</span>
+<span class="n">QTextStream</span> <span class="nf">strm</span><span class="p">(</span><span class="o">&amp;</span><span class="n">f</span><span class="p">);</span>
+<span class="n">QByteArray</span> <span class="n">svgDoc</span> <span class="o">=</span> <span class="n">strm</span><span class="p">.</span><span class="n">readAll</span><span class="p">().</span><span class="n">toLatin1</span><span class="p">();</span>
+<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setSvgDocument</span><span class="p">(</span><span class="n">svgDoc</span><span class="p">);</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSymbol</span><span class="p">(</span><span class="n">symbol</span><span class="p">);</span> <span class="c1">// Curve takes ownership of symbol</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Achtung"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Auch hier ist beim Festlegen der Größe wieder auf das Seitenverhältnis zu achten und zumeist die Variante <code>QwtSymbol::setSize(width,height)</code> zu verwenden.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Manchmal liegt der Ankerpunkt des SVG-Bildes nicht im Zentrum, wie in obigem Beispiel:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Symbols_SvgCentered.png" alt="Symbols SvgCentered">
+</div>
+<div class="title">Abbildung 25. Zentriertes SVG-Symbol, welches eigentlich aber nach oben verschoben sein sollte</div>
+</div>
+<div class="paragraph">
+<p>Man kann den Ankerpunkt bzw. den Zentrierpunkt des Symbols aber mit <code>QwtSymbol::setPinPoint()</code> ändern. Die Koordinaten des PinPoint werden dabei von links/oben des SVG-Bildes gemessen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="p">...</span>
+<span class="n">QRect</span> <span class="n">br</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">-&gt;</span><span class="n">boundingRect</span><span class="p">();</span> <span class="c1">// size of symbol</span>
+<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setPinPoint</span><span class="p">(</span><span class="n">QPointF</span><span class="p">(</span><span class="n">br</span><span class="p">.</span><span class="n">width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">br</span><span class="p">.</span><span class="n">height</span><span class="p">()</span><span class="o">-</span><span class="mi">3</span><span class="p">));</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Symbols_SvgWithPinPoint.png" alt="Symbols SvgWithPinPoint">
+</div>
+<div class="title">Abbildung 26. SVG-Symbol mit korrekter Ausrichtung des "Stecknadel"-Punktes</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Man kann die manuell gesetzten Ankerpunkt auch wieder mit <code>QwtSymbol::setPinPointEnabled(false)</code> deaktivieren.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_bild_symbole_pixmaps">5.6.4. Bild-Symbole (Pixmaps)</h4>
+<div class="paragraph">
+<p>Alternativ zu eigenen Vektorgrafiksymbolen kann man auch beliebige Bilder als Symbole verwenden. Dies geschieht analog zu den SVG-Symbolen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QwtSymbol</span> <span class="o">*</span> <span class="n">symbol</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtSymbol</span><span class="p">(</span><span class="n">QwtSymbol</span><span class="o">::</span><span class="n">Pixmap</span><span class="p">);</span>
+<span class="n">QwtText</span> <span class="nf">t</span><span class="p">(</span><span class="s">"QwtSymbol::Pixmap"</span><span class="p">);</span>
+<span class="n">QPixmap</span> <span class="n">pixmap</span><span class="p">;</span>
+<span class="n">pixmap</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">"symbol.png"</span><span class="p">);</span>
+<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">);</span>
+<span class="n">QRect</span> <span class="n">br</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">-&gt;</span><span class="n">boundingRect</span><span class="p">();</span> <span class="c1">// size of symbol</span>
+<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setPinPoint</span><span class="p">(</span><span class="n">QPointF</span><span class="p">(</span><span class="n">br</span><span class="p">.</span><span class="n">width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="n">br</span><span class="p">.</span><span class="n">height</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSymbol</span><span class="p">(</span><span class="n">symbol</span><span class="p">);</span> <span class="c1">// Curve takes ownership of symbol</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/Symbols_Pixmap.png" alt="Symbols Pixmap">
+</div>
+<div class="title">Abbildung 27. Pixmap-Symbol, auch mit manuell festgelegtem "Stecknadel"-Punkt</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:intervalCurves">5.7. Intervallkurven</h3>
+<div class="paragraph">
+<p>Eine spezielle Kurvenart ist die <em>Intervallkurve</em>, bereitgestellt über die Klasse <code>QwtPlotIntervalCurve</code>.</p>
+</div>
 </div>
 </div>
 </div>
@@ -1885,7 +2118,7 @@ Und natürlich können die beteiligten Klassen auch abgeleitet und so beliebig m
 <div class="content">
 <img src="../images/Tutorial1_h.png" alt="Tutorial1 h">
 </div>
-<div class="title">Abbildung 22. Plot in höherer Auflösung abgespeichert</div>
+<div class="title">Abbildung 28. Plot in höherer Auflösung abgespeichert</div>
 </div>
 </div>
 <div class="sect3">
@@ -2152,7 +2385,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 <div class="content">
 <img src="../images/Tutorial1_ui1.png" alt="Tutorial1 ui1">
 </div>
-<div class="title">Abbildung 23. Widget mit Platzhalter-Widget für das Diagramm</div>
+<div class="title">Abbildung 29. Widget mit Platzhalter-Widget für das Diagramm</div>
 </div>
 <div class="paragraph">
 <p>Unter der Spinbox wurde ein <code>QWidget</code> eingefügt. Dieses soll nun als Platzhalter für das <code>QwtPlot</code> dienen. Dazu im Kontextmenü des Widgets die Option "Als Platzhalter für benutzerdefinierte Klasse festlegen&#8230;&#8203;" auswählen:</p>
@@ -2213,7 +2446,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0<br>
-Last updated 2025-05-30 19:54:59 +0200
+Last updated 2025-06-01 16:50:19 +0200
 </div>
 </div>
 </body>
