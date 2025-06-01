@@ -1,6 +1,155 @@
 :imagesdir: ../images
 
 [[sec:linecurves]]
-# Liniendiagramme
+# Kurvendiagramme
 
-Die wohl häufiges Diagrammart werden wohl Liniendiagramme sein. 
+Die wohl häufiges Diagrammart werden wohl Kurvendiagramme sein. Kurvendiagramme bzw. Liniendiagramme sind parametrische Kurven, bei denen die einzelnen Punkte nacheinander gezeichnet werden, und im Fall von Liniendiagrammen durch Linien verbunden werden. Weder x- noch y-Werte müssen monoton steigen.
+
+Das Zeichenelement `QwtPlotCurve` wird jedoch nicht nur für Liniendiagramme im klassischen Sinn benutzt, sondern auch für Stufen, Stäbchen, Punkt/Symbol-Diagramme und so weiter. Alle diese Varianten haben jedoch gemein, dass sie als Daten einen x- und einen y-Vector mit Daten in Plotkoordinaten erwarten.
+
+Der individuelle Stil der Kurve wird mit der Funktion `QwtPlotCurve::setStyle()` festgelegt. Je nach Stil können/müssen weitere Parameter festgelegt werden. In den folgenden Abschnitten werden die möglichen Diagrammtypen für jeweils die gleichen x/y-Daten im Vergleich gezeigt. 
+
+.Testdaten für die nachfolgenden Diagramme
+[width="25%",options="header", colwidths="10%,10%"]
+|====================
+|  x |  y
+|	1	|	5
+|	2	|	4
+|	5	|	8
+|	6	|	8
+|	10	|	4
+|	12	|	5
+|	15	|	8
+|	16	|	9
+|	17	|	11
+|====================
+
+## Liniendiagramm
+
+Konfiguration einer `QwtPlotCurve` als Linie:
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Lines);
+```
+
+.Liniendiagramm
+image::PlotCurves_StyleLines.png[pdfwidth=5cm]
+ 
+## Stäbchen (Sticks)
+
+Konfiguration einer `QwtPlotCurve` als vertikale Stäbchen:
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Lines);
+curve->setOrientation(Qt::Vertical);
+```
+
+.Vertikale Stäbchen
+image::PlotCurves_StyleSticksVertical.png[pdfwidth=5cm]
+
+Alternativ kann man die Stäbchen auch horizontal zeichnen. Dazu muss man zusätzlich die Ausrichtung mit `QwtPlotSeriesItem::setOrientation()` setzen:
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Lines);
+curve->setOrientation(Qt::Horizontal);
+```
+
+.Horizontale Stäbchen
+image::PlotCurves_StyleSticksHorizontal.png[pdfwidth=5cm]
+
+
+## Stufendiagramme
+
+Wenn die Daten nicht linear verbunden werden sollen, sondern eher Stufen darstellen, kann man den Linientyp `Steps` verwenden.
+Das Zusatz-Attribut `QwtPlotCurve::Inverted` gibt dabei an, ob die Stufe am Ende des Intervals oder Anfang des Intervals sein soll. Kurvenattribute werden mit `QwtPlotCurve::setCurveAttribute()` gesetzt:
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Steps);
+curve->setCurveAttribute(QwtPlotCurve::Inverted, false);
+```
+
+.Stufendiagramm (normal)
+image::PlotCurves_StyleSteps.png[pdfwidth=5cm]
+
+
+Betrachtet man die Eingangsdaten:
+
+```
+x   y
+1   5
+2   4
+5   8
+...
+``` 
+
+so fällt auf, dass im ersten Intervall, also zwischen x=1..2, der Wert y2=4 gezeichnet wird und an der Stelle x1=1 die Verbindungslinie zwischen y1=5 und y2=4 gezeichnet wird.
+
+Will man direkt den ersten y-Wert im ersten Intervall zeichnen (das wäre eher die natürliche Erwartungshaltung), so muss man das Attribut `Inverted` setzen:
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Steps);
+curve->setCurveAttribute(QwtPlotCurve::Inverted, true);
+```
+
+.Stufendiagramm (invertiert)
+image::PlotCurves_StyleStepsInverted.png[pdfwidth=5cm]
+
+
+## Punkte (Dots)
+
+Man kann an den jeweiligen x,y-Koordinaten auch einfach nur Punkte (auch nur einzelne Pixel) zeichnen. Das geht _sehr schnell_ vergleichen mit dem Zeichnen von Symbolen (siehe <<sec:plotSymbols>>) und kann für größere Punktwolken verwendet werden.
+
+[TIP]
+====
+Bei der Verwendung von `QwtPlotCurve::Dots` sollte man bei heute üblichen Bildschirmauflösungen immer einen `QPen` mit größerer Breite einstellen, da mein _einzelne Pixel_ sonst nur noch schwer sehen kann. Für die Visualisierung großer Punktwolken (> 100000 Pixel) kann die Verwendung von einzelnen Pixeln durchaus noch einen Mehrwert bieten. Für alle besonderen Formen (Kreuze, Rauten, Ringe, Sterne, ...)  ist die Verwendung von Symbolen (siehe <<sec:plotSymbols>>) sinnvoll.
+====
+
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Dots);
+curve->setPen(QColor(180,40,20), 4); // width of 4 makes points better visible
+```
+
+.Punktediagramm
+image::PlotCurves_StyleDots.png[pdfwidth=5cm]
+
+[TIP]
+====
+Bei der Visualisierung von Punktwolken kann es hilfreich sein, Transparenz/Alphablending zu benutzen. Dazu einfach bei der Zeichenfarbe noch einen Alphawert kleiner als 255 setzen.
+====
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Dots);
+curve->setPen(QColor(0,40,180,32), 2); // 2 pixels wide, alpha value 32
+```
+
+.Punktwolke mit halbtransparenten Punkten
+image::PlotCurves_StyleDotsScatter.png[pdfwidth=5cm]
+
+[TIP]
+====
+Wenn man ein Liniendiagramm mit Visualisierung von Stützstellen erhalten will, so kann man natürlich _zwei_ Linien ins Diagramm einfügen: eine mit Stil `QwtPlotCurve::Lines` und die zweite mit Stil `QwtPlotCurve::Dots` darüber, d.h. mit höherem z-Wert, zeichnen. Dann muss man aber auch zwei mal die Daten ins Diagramm geben und man erhält auch zwei Legendeneinträge (die kann man zwar abschalten, siehe <<sec:legend>>, aber trotzdem). Besser ist hier die Verwendung von nur einer Kurve und Symbolen an den Stützstellen (siehe <<sec:plotSymbols>>).
+====
+
+## Keine Linie
+
+Möchte man eine Kurve ausschließlich mit Symbolen zeichnen (siehe nachfolgendes Kapitel), so kann man das Zeichnen des Linienzugs auch komplett ausstellen:
+
+```c++
+curve->setStyle(QwtPlotCurve::NoLine);
+```
+
+
+[[sec:plotSymbols]]
+## Symbole/Punkte
+
+An den jeweiligen x,y-Koordinaten einer Kurve kann man auch Symbole zeichnen. Dafür bietet die Qwt-Bibliothek die Klasse `QwtSymbol` an.
+
+

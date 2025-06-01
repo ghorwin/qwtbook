@@ -9,7 +9,7 @@ asciidoctor-pdf -a pdf-theme=pdf-theme.yml -r ../rouge_theme.rb  -a pdf-fontsdir
 
 echo '*** Copying files to ../docs directory' &&
 
-mv QwtBook.html ../../docs/de/index.html &&
+cp QwtBook.html ../../docs/de/index.html &&
 mv QwtBook.pdf ../../docs/QwtBook_de.pdf &&
 
 cp -r ../images ../../docs/ &&

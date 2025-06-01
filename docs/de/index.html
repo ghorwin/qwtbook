@@ -309,7 +309,16 @@ pre.rouge .gs {
 </li>
 </ul>
 </li>
-<li><a href="#sec:linecurves">5. Liniendiagramme</a></li>
+<li><a href="#sec:linecurves">5. Kurvendiagramme</a>
+<ul class="sectlevel2">
+<li><a href="#_liniendiagramm">5.1. Liniendiagramm</a></li>
+<li><a href="#_stäbchen_sticks">5.2. Stäbchen (Sticks)</a></li>
+<li><a href="#_stufendiagramme">5.3. Stufendiagramme</a></li>
+<li><a href="#_punkte_dots">5.4. Punkte (Dots)</a></li>
+<li><a href="#_keine_linie">5.5. Keine Linie</a></li>
+<li><a href="#sec:plotSymbols">5.6. Symbole/Punkte</a></li>
+</ul>
+</li>
 <li><a href="#sec:legend">6. Legende</a></li>
 <li><a href="#sec:marker">7. Markierungslinien</a></li>
 <li><a href="#sec:axes">8. Plotachsen</a>
@@ -1217,16 +1226,16 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 <h2 id="sec:qwtPlot">4. Allgemeine Grundlagen des QwtPlot</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Das <code>QwtPlot</code> ist sicher die nützlichste und am weitesten bekannte Komponente der Qwt Bibliothek.</p>
+<p>Das <code>QwtPlot</code> ist sicher die nützlichste und am weitesten bekannte Komponente der Qwt Bibliothek. Im Gegensatz zu vielen anderen Qt-Diagrammkomponenten, kann man mit dem <code>QwtPlot</code> wirklich sehr flexibel (und effizient) alle möglichen Diagrammtypen erstellen und anzeigen.</p>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="../images/2D_time_plot_2axes.png" alt="2D time plot 2axes">
 </div>
-<div class="title">Abbildung 14. Beispiele für ein typisches <code>QwtPlot</code></div>
+<div class="title">Abbildung 14. Beispiel für ein typisches <code>QwtPlot</code> mit zwei y-Achsen und innenliegender Legende.</div>
 </div>
 <div class="paragraph">
-<p>Bevor ab <a href="#sec:linecurves">Kapitel 5</a> die einzelnen Diagrammtypen vorgestellt werden sollen in diesem Kapitel die wesentlichen Grundlagen gelegt werden.</p>
+<p>Bevor ab <a href="#sec:linecurves">Kapitel 5</a> die einzelnen Diagrammtypen vorgestellt werden, geht es in diesem Kapitel um die wesentlichen Grundlagen.</p>
 </div>
 <div class="sect2">
 <h3 id="_aufbau_und_elemente_der_diagrammkomponente">4.1. Aufbau und Elemente der Diagrammkomponente</h3>
@@ -1281,10 +1290,10 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 <p>Legendeneinträge,</p>
 </li>
 <li>
-<p>Gitter,</p>
+<p>Gitterraster,</p>
 </li>
 <li>
-<p>&#8230;&#8203; und weitere&#8230;&#8203;</p>
+<p>&#8230;&#8203; und viele weitere</p>
 </li>
 </ul>
 </div>
@@ -1302,7 +1311,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Die Zeichenreihenfolge bestimmt das z-Attribut, kontrolliert über die Funktionen <code>QwtPlotItem::setZ(...)</code> und <code>QwtPlotItem::z()</code>.</p>
+<p>Die Zeichenreihenfolge, also welches Zeichenelement ein anderes überdeckt, bestimmt das z-Attribut. Dies wird über die Funktionen <code>QwtPlotItem::setZ(...)</code> und <code>QwtPlotItem::z()</code>  kontrolliert.</p>
 </div>
 </td>
 </tr>
@@ -1350,10 +1359,262 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </div>
 </div>
 <div class="sect1">
-<h2 id="sec:linecurves">5. Liniendiagramme</h2>
+<h2 id="sec:linecurves">5. Kurvendiagramme</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Die wohl häufiges Diagrammart werden wohl Liniendiagramme sein.</p>
+<p>Die wohl häufiges Diagrammart werden wohl Kurvendiagramme sein. Kurvendiagramme bzw. Liniendiagramme sind parametrische Kurven, bei denen die einzelnen Punkte nacheinander gezeichnet werden, und im Fall von Liniendiagrammen durch Linien verbunden werden. Weder x- noch y-Werte müssen monoton steigen.</p>
+</div>
+<div class="paragraph">
+<p>Das Zeichenelement <code>QwtPlotCurve</code> wird jedoch nicht nur für Liniendiagramme im klassischen Sinn benutzt, sondern auch für Stufen, Stäbchen, Punkt/Symbol-Diagramme und so weiter. Alle diese Varianten haben jedoch gemein, dass sie als Daten einen x- und einen y-Vector mit Daten in Plotkoordinaten erwarten.</p>
+</div>
+<div class="paragraph">
+<p>Der individuelle Stil der Kurve wird mit der Funktion <code>QwtPlotCurve::setStyle()</code> festgelegt. Je nach Stil können/müssen weitere Parameter festgelegt werden. In den folgenden Abschnitten werden die möglichen Diagrammtypen für jeweils die gleichen x/y-Daten im Vergleich gezeigt.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 25%;">
+<caption class="title">Tabelle 1. Testdaten für die nachfolgenden Diagramme</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">x</th>
+<th class="tableblock halign-left valign-top">y</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">17</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_liniendiagramm">5.1. Liniendiagramm</h3>
+<div class="paragraph">
+<p>Konfiguration einer <code>QwtPlotCurve</code> als Linie:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Lines</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/PlotCurves_StyleLines.png" alt="PlotCurves StyleLines">
+</div>
+<div class="title">Abbildung 15. Liniendiagramm</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_stäbchen_sticks">5.2. Stäbchen (Sticks)</h3>
+<div class="paragraph">
+<p>Konfiguration einer <code>QwtPlotCurve</code> als vertikale Stäbchen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Lines</span><span class="p">);</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setOrientation</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">Vertical</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/PlotCurves_StyleSticksVertical.png" alt="PlotCurves StyleSticksVertical">
+</div>
+<div class="title">Abbildung 16. Vertikale Stäbchen</div>
+</div>
+<div class="paragraph">
+<p>Alternativ kann man die Stäbchen auch horizontal zeichnen. Dazu muss man zusätzlich die Ausrichtung mit <code>QwtPlotSeriesItem::setOrientation()</code> setzen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Lines</span><span class="p">);</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setOrientation</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">Horizontal</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/PlotCurves_StyleSticksHorizontal.png" alt="PlotCurves StyleSticksHorizontal">
+</div>
+<div class="title">Abbildung 17. Horizontale Stäbchen</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_stufendiagramme">5.3. Stufendiagramme</h3>
+<div class="paragraph">
+<p>Wenn die Daten nicht linear verbunden werden sollen, sondern eher Stufen darstellen, kann man den Linientyp <code>Steps</code> verwenden.
+Das Zusatz-Attribut <code>QwtPlotCurve::Inverted</code> gibt dabei an, ob die Stufe am Ende des Intervals oder Anfang des Intervals sein soll. Kurvenattribute werden mit <code>QwtPlotCurve::setCurveAttribute()</code> gesetzt:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Steps</span><span class="p">);</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setCurveAttribute</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Inverted</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/PlotCurves_StyleSteps.png" alt="PlotCurves StyleSteps">
+</div>
+<div class="title">Abbildung 18. Stufendiagramm (normal)</div>
+</div>
+<div class="paragraph">
+<p>Betrachtet man die Eingangsdaten:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code>x   y
+1   5
+2   4
+5   8
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>so fällt auf, dass im ersten Intervall, also zwischen x=1..2, der Wert y2=4 gezeichnet wird und an der Stelle x1=1 die Verbindungslinie zwischen y1=5 und y2=4 gezeichnet wird.</p>
+</div>
+<div class="paragraph">
+<p>Will man direkt den ersten y-Wert im ersten Intervall zeichnen (das wäre eher die natürliche Erwartungshaltung), so muss man das Attribut <code>Inverted</code> setzen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Steps</span><span class="p">);</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setCurveAttribute</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Inverted</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/PlotCurves_StyleStepsInverted.png" alt="PlotCurves StyleStepsInverted">
+</div>
+<div class="title">Abbildung 19. Stufendiagramm (invertiert)</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_punkte_dots">5.4. Punkte (Dots)</h3>
+<div class="paragraph">
+<p>Man kann an den jeweiligen x,y-Koordinaten auch einfach nur Punkte (auch nur einzelne Pixel) zeichnen. Das geht <em>sehr schnell</em> vergleichen mit dem Zeichnen von Symbolen (siehe <a href="#sec:plotSymbols">Kapitel 5.6</a>) und kann für größere Punktwolken verwendet werden.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Bei der Verwendung von <code>QwtPlotCurve::Dots</code> sollte man bei heute üblichen Bildschirmauflösungen immer einen <code>QPen</code> mit größerer Breite einstellen, da mein <em>einzelne Pixel</em> sonst nur noch schwer sehen kann. Für die Visualisierung großer Punktwolken (&gt; 100000 Pixel) kann die Verwendung von einzelnen Pixeln durchaus noch einen Mehrwert bieten. Für alle besonderen Formen (Kreuze, Rauten, Ringe, Sterne, &#8230;&#8203;)  ist die Verwendung von Symbolen (siehe <a href="#sec:plotSymbols">Kapitel 5.6</a>) sinnvoll.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Dots</span><span class="p">);</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="mi">4</span><span class="p">);</span> <span class="c1">// width of 4 makes points better visible</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/PlotCurves_StyleDots.png" alt="PlotCurves StyleDots">
+</div>
+<div class="title">Abbildung 20. Punktediagramm</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Bei der Visualisierung von Punktwolken kann es hilfreich sein, Transparenz/Alphablending zu benutzen. Dazu einfach bei der Zeichenfarbe noch einen Alphawert kleiner als 255 setzen.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Dots</span><span class="p">);</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">180</span><span class="p">,</span><span class="mi">32</span><span class="p">),</span> <span class="mi">2</span><span class="p">);</span> <span class="c1">// 2 pixels wide, alpha value 32</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/PlotCurves_StyleDotsScatter.png" alt="PlotCurves StyleDotsScatter">
+</div>
+<div class="title">Abbildung 21. Punktwolke mit halbtransparenten Punkten</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Wenn man ein Liniendiagramm mit Visualisierung von Stützstellen erhalten will, so kann man natürlich <em>zwei</em> Linien ins Diagramm einfügen: eine mit Stil <code>QwtPlotCurve::Lines</code> und die zweite mit Stil <code>QwtPlotCurve::Dots</code> darüber, d.h. mit höherem z-Wert, zeichnen. Dann muss man aber auch zwei mal die Daten ins Diagramm geben und man erhält auch zwei Legendeneinträge (die kann man zwar abschalten, siehe <a href="#sec:legend">Kapitel 6</a>, aber trotzdem). Besser ist hier die Verwendung von nur einer Kurve und Symbolen an den Stützstellen (siehe <a href="#sec:plotSymbols">Kapitel 5.6</a>).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_keine_linie">5.5. Keine Linie</h3>
+<div class="paragraph">
+<p>Möchte man eine Kurve ausschließlich mit Symbolen zeichnen (siehe nachfolgendes Kapitel), so kann man das Zeichnen des Linienzugs auch komplett ausstellen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">NoLine</span><span class="p">);</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:plotSymbols">5.6. Symbole/Punkte</h3>
+<div class="paragraph">
+<p>An den jeweiligen x,y-Koordinaten einer Kurve kann man auch Symbole zeichnen. Dafür bietet die Qwt-Bibliothek die Klasse <code>QwtSymbol</code> an.</p>
+</div>
 </div>
 </div>
 </div>
@@ -1624,7 +1885,7 @@ Und natürlich können die beteiligten Klassen auch abgeleitet und so beliebig m
 <div class="content">
 <img src="../images/Tutorial1_h.png" alt="Tutorial1 h">
 </div>
-<div class="title">Abbildung 15. Plot in höherer Auflösung abgespeichert</div>
+<div class="title">Abbildung 22. Plot in höherer Auflösung abgespeichert</div>
 </div>
 </div>
 <div class="sect3">
@@ -1891,7 +2152,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 <div class="content">
 <img src="../images/Tutorial1_ui1.png" alt="Tutorial1 ui1">
 </div>
-<div class="title">Abbildung 16. Widget mit Platzhalter-Widget für das Diagramm</div>
+<div class="title">Abbildung 23. Widget mit Platzhalter-Widget für das Diagramm</div>
 </div>
 <div class="paragraph">
 <p>Unter der Spinbox wurde ein <code>QWidget</code> eingefügt. Dieses soll nun als Platzhalter für das <code>QwtPlot</code> dienen. Dazu im Kontextmenü des Widgets die Option "Als Platzhalter für benutzerdefinierte Klasse festlegen&#8230;&#8203;" auswählen:</p>
