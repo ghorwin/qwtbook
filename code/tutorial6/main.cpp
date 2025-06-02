@@ -39,7 +39,7 @@ THE SOFTWARE.
 #include <QwtPlotMarker>
 #include <QwtPlotZoomer>
 #include <QwtPlotPanner>
-#include <QwtSymbol>
+#include <QwtPlotIntervalCurve>
 
 int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
@@ -56,62 +56,26 @@ int main(int argc, char *argv[]) {
 	plot.setAxisScale(QwtPlot::yLeft, 0, 20);
 
 	QVector<double> x{1,2,5,6,10,12,15,16,17};
-	QVector<double> y{5,4,8,8, 4, 5, 8, 9,11};
+	QVector<double> y1{2,2,3,4, 2, 4, 4, 5,11};
+	QVector<double> y2{6,4.4,9,10, 5.5, 5.7, 9, 11,12};
 
-	QwtPlotCurve *curve = new QwtPlotCurve();
-	curve->setStyle(QwtPlotCurve::NoCurve);
-	curve->setPen(QColor(0,40,180,128), 2);
+	QVector<QwtIntervalSample> intervalSamples;
+	for (int i=0; i<x.count(); ++i) {
+		intervalSamples.append(QwtIntervalSample(x[i],y1[i],y2[i]));
+	}
+
+	QwtPlotIntervalCurve *curve = new QwtPlotIntervalCurve();
+	curve->setStyle(QwtPlotIntervalCurve::Tube);
+	curve->setPen(QColor(0,40,180), 2);
+	curve->setBrush(QColor(8,180,255,128));
 	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
-	curve->setSamples(x, y);
+	curve->setSamples(intervalSamples);
 	curve->attach(&plot); // Plot takes ownership
-
-// #define PAINTERPATH
-#ifdef PAINTERPATH
-	// Symbol hinzufügen
-	QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Path);
-	QwtText t("QwtSymbol::Path");
-	QPainterPath p;
-	p.addEllipse(QRectF(-10,-10,20,20));
-	p.moveTo(-7,-7);
-	p.lineTo(7,7);
-	p.moveTo(7,-7);
-	p.lineTo(-7,7);
-	symbol->setPath(p);
-	symbol->setPen(QColor(0,0,120), 2);
-	symbol->setBrush(QColor(160,200,255));
-	curve->setSymbol(symbol); // Curve takes ownership of symbol
-#endif
-
-// #define SVG
-#ifdef SVG
-	QwtSymbol * symbol = new QwtSymbol(QwtSymbol::SvgDocument);
-	QwtText t("QwtSymbol::SvgDocument");
-	QFile f("symbol.svg");
-	f.open(QFile::ReadOnly);
-	QTextStream strm(&f);
-	QByteArray svgDoc = strm.readAll().toLatin1();
-	symbol->setSvgDocument(svgDoc);
-	QRect br = symbol->boundingRect(); // size of symbol
-	symbol->setPinPoint(QPointF(br.width()/2-1,br.height()-3));
-	curve->setSymbol(symbol); // Curve takes ownership of symbol
-#endif
-
-// #define PNG
-#ifdef PNG
-	QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Pixmap);
-	QwtText t("QwtSymbol::Pixmap");
-	QPixmap pixmap;
-	pixmap.load("symbol.png");
-	symbol->setPixmap(pixmap);
-	QRect br = symbol->boundingRect(); // size of symbol
-	symbol->setPinPoint(QPointF(br.width()/2,br.height()-1));
-	curve->setSymbol(symbol); // Curve takes ownership of symbol
-#endif
-
 
 	QFont titleFont(qApp->font());
 	titleFont.setPointSize(10);
 	titleFont.setBold(true);
+	QwtText t("QwtIntervalSample");
 	t.setFont(titleFont);
 	plot.setTitle(t);
 
