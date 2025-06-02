@@ -295,6 +295,8 @@ image::Symbols_Pixmap.png[pdfwidth=5cm]
 
 Eine spezielle Kurvenart ist die _Intervallkurve_, bereitgestellt über die Klasse `QwtPlotIntervalCurve`.
 
+Im Prinzip ist das eine Kurve mit zwei y-Werten pro x-Koordinate im Datensatz. Es werden zwei reguläre Kurven gezeichnet und dazwischen wird die Fläche ausgefüllt. Dies kann man auch gut dazu nutzen, um gestackte Liniendiagramme zu zeichnen.
 
+```c++f        
 
 
