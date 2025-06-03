@@ -325,6 +325,7 @@ pre.rouge .gs {
 </ul>
 </li>
 <li><a href="#sec:intervalCurves">5.7. Intervallkurven</a></li>
+<li><a href="#_gestapelte_intervall_kurvenflächendiagramme">5.8. Gestapelte (Intervall-)Kurven/Flächendiagramme</a></li>
 </ul>
 </li>
 <li><a href="#sec:legend">6. Legende</a></li>
@@ -1617,7 +1618,7 @@ Das Zusatz-Attribut <code>QwtPlotCurve::Inverted</code> gibt dabei an, ob die St
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="c++"><span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">NoLine</span><span class="p">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">NoCurve</span><span class="p">);</span></code></pre>
 </div>
 </div>
 </div>
@@ -1847,6 +1848,132 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 <h3 id="sec:intervalCurves">5.7. Intervallkurven</h3>
 <div class="paragraph">
 <p>Eine spezielle Kurvenart ist die <em>Intervallkurve</em>, bereitgestellt über die Klasse <code>QwtPlotIntervalCurve</code>.</p>
+</div>
+<div class="paragraph">
+<p>Im Prinzip ist das eine Kurve mit zwei y-Werten pro x-Koordinate im Datensatz. Es werden zwei reguläre Kurven gezeichnet und dazwischen wird die Fläche ausgefüllt. Dies kann man auch gut dazu nutzen, um gestackte Liniendiagramme zu zeichnen.</p>
+</div>
+<div class="listingblock">
+<div class="title">Beispiel für eine Intervallkurve</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">x</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">17</span><span class="p">};</span>
+<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">y1</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span><span class="mi">11</span><span class="p">};</span>
+<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">y2</span><span class="p">{</span><span class="mi">6</span><span class="p">,</span><span class="mf">4.4</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="mf">5.7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">};</span>
+
+<span class="n">QVector</span><span class="o">&lt;</span><span class="n">QwtIntervalSample</span><span class="o">&gt;</span> <span class="n">intervalSamples</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+	<span class="n">intervalSamples</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">QwtIntervalSample</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y2</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+
+<span class="n">QwtPlotIntervalCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotIntervalCurve</span><span class="p">();</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotIntervalCurve</span><span class="o">::</span><span class="n">Tube</span><span class="p">);</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">180</span><span class="p">),</span> <span class="mi">2</span><span class="p">);</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setBrush</span><span class="p">(</span> <span class="n">QColor</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">);</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span> <span class="p">);</span> <span class="c1">// Antialiasing verwenden</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSamples</span><span class="p">(</span><span class="n">intervalSamples</span><span class="p">);</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">attach</span><span class="p">(</span><span class="o">&amp;</span><span class="n">plot</span><span class="p">);</span> <span class="c1">// Plot takes ownership</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/IntervalCurve.png" alt="IntervalCurve">
+</div>
+<div class="title">Abbildung 28. Intervallkurve</div>
+</div>
+<div class="paragraph">
+<p>Die Funktion <code>setSamples()</code> gibt es in zwei Varianten:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>QwtPlotIntervalCurve::setSamples( const QVector&lt; QwtIntervalSample &gt;&amp; )</code> : erwartet einen Vektor mit Interval-Samples, bestehend aus x-Koordinate, unterem und oberen y-Wert</p>
+</li>
+<li>
+<p><code>QwtPlotIntervalCurve::setSamples( QwtSeriesData&lt; QwtIntervalSample &gt;* )</code> : erwartet ein <code>QwtSeriesData</code> Objekt (siehe <a href="#sec:seriesData">[sec:seriesData]</a>) welches Eigentum der Intervallkurve wird. Diese Funktion entspricht der Funktion <code>setData()</code> der Elternklasse <code>QwtSeriesStore</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Man kann das Erscheinungsbild noch etwas Aufwerten, wenn man für die Füllung der Kurve einen Gradienten verwendet. Dafür gibt man der Kurve einfach einen <code>QBrush</code>, der mit einem Gradienten erstellt wurde.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="p">...</span>
+<span class="n">QLinearGradient</span> <span class="nf">grad</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">220</span><span class="p">);</span>
+<span class="n">grad</span><span class="p">.</span><span class="n">setColorAt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">QColor</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">255</span><span class="p">));</span>
+<span class="n">grad</span><span class="p">.</span><span class="n">setColorAt</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">QColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">120</span><span class="p">));</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setBrush</span><span class="p">(</span> <span class="n">QBrush</span><span class="p">(</span><span class="n">grad</span><span class="p">));</span>
+<span class="p">...</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/IntervalCurve_Gradient.png" alt="IntervalCurve Gradient">
+</div>
+<div class="title">Abbildung 29. Intervallkurve mit Gradientenfüllung</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Achtung"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Die Colorstops der Gradienten in Qt werden in Pixelkoordinaten angegeben. Wenn man also das Plot-Fenster vergrößert/verkleinert, dann führt das zu witzigen Effekten.
+Die Lösung ist, das QwtPlot in einer eigenen Klasse abzuleiten und im Resize-Event den Gradienten entsprechend anzupassen. Gleiches gilt auch für das interaktive Verschieben/Zoomen im Plotfenster, also immer wenn ich sich die Pixelkoordinaten der gefüllten Fläche ändern.
+Insgesamt einfacher ist es, die Klasse <code>QwtPlotIntervalCurve</code> abzuleiten und die Zeichenfunktion selbst zu implementieren, siehe auch Beispiel in <a href="#sec:advancedCurves">[sec:advancedCurves]</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<div class="title">Intervallkurve mit festem Gradienten bei Änderung der Plotgeometrie</div>
+<p><span class="image"><img src="../images/IntervalCurve_Gradient_200.png" alt="Height200" width="200" height="400"></span>
+<span class="image"><img src="../images/IntervalCurve_Gradient_300.png" alt="Height300" width="200" height="400"></span>
+<span class="image"><img src="../images/IntervalCurve_Gradient_400.png" alt="Height400" width="200" height="400"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_gestapelte_intervall_kurvenflächendiagramme">5.8. Gestapelte (Intervall-)Kurven/Flächendiagramme</h3>
+<div class="paragraph">
+<p>Man kann die Intervallkurven auch nutzen, um gestapelte, ausgefüllte Kurven bzw. Flächendiagramme zu erstellen. Dazu erstellt man einfach mehrere <code>QwtPlotIntervalCurve</code> Zeichenelemente, die sich jeweils die gleichen Y-Werte teilen.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">x</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">17</span><span class="p">};</span>
+<span class="n">QVector</span><span class="o">&lt;</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">y</span><span class="p">;</span>
+<span class="c1">// 3 curves, 4 lines</span>
+<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">}</span> <span class="p">);</span>
+<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">}</span> <span class="p">);</span>
+<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">6</span><span class="p">,</span><span class="mf">4.4</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span><span class="mf">5.5</span><span class="p">,</span><span class="mf">5.7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">}</span> <span class="p">);</span>
+<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">7</span><span class="p">,</span><span class="mf">6.6</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span>  <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">}</span> <span class="p">);</span>
+
+<span class="k">const</span> <span class="n">QColor</span> <span class="n">cols</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">QColor</span><span class="p">(</span><span class="mi">96</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span>
+						<span class="n">QColor</span><span class="p">(</span><span class="mi">156</span><span class="p">,</span><span class="mi">39</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span>
+						<span class="n">QColor</span><span class="p">(</span><span class="mi">212</span><span class="p">,</span><span class="mi">91</span><span class="p">,</span><span class="mi">18</span><span class="p">),</span>
+						<span class="n">QColor</span><span class="p">(</span><span class="mi">242</span><span class="p">,</span><span class="mi">188</span><span class="p">,</span><span class="mi">43</span><span class="p">)</span>
+					  <span class="p">};</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">y</span><span class="p">.</span><span class="n">count</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">QwtPlotIntervalCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotIntervalCurve</span><span class="p">();</span>
+	<span class="c1">// generate intervals for current curve</span>
+	<span class="n">QVector</span><span class="o">&lt;</span><span class="n">QwtIntervalSample</span><span class="o">&gt;</span> <span class="n">intervalSamples</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+		<span class="n">intervalSamples</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">QwtIntervalSample</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">]));</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotIntervalCurve</span><span class="o">::</span><span class="n">Tube</span><span class="p">);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">96</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setBrush</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span> <span class="p">);</span> <span class="c1">// Antialiasing verwenden</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSamples</span><span class="p">(</span><span class="n">intervalSamples</span><span class="p">);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">attach</span><span class="p">(</span><span class="o">&amp;</span><span class="n">plot</span><span class="p">);</span> <span class="c1">// Plot takes ownership</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/IntervalCurve_StackedCurve.png" alt="IntervalCurve StackedCurve">
+</div>
+<div class="title">Abbildung 30. Diagramm mit gestapelten Kurven/Flächendiagramm</div>
 </div>
 </div>
 </div>
@@ -2118,7 +2245,7 @@ Und natürlich können die beteiligten Klassen auch abgeleitet und so beliebig m
 <div class="content">
 <img src="../images/Tutorial1_h.png" alt="Tutorial1 h">
 </div>
-<div class="title">Abbildung 28. Plot in höherer Auflösung abgespeichert</div>
+<div class="title">Abbildung 31. Plot in höherer Auflösung abgespeichert</div>
 </div>
 </div>
 <div class="sect3">
@@ -2385,7 +2512,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 <div class="content">
 <img src="../images/Tutorial1_ui1.png" alt="Tutorial1 ui1">
 </div>
-<div class="title">Abbildung 29. Widget mit Platzhalter-Widget für das Diagramm</div>
+<div class="title">Abbildung 32. Widget mit Platzhalter-Widget für das Diagramm</div>
 </div>
 <div class="paragraph">
 <p>Unter der Spinbox wurde ein <code>QWidget</code> eingefügt. Dieses soll nun als Platzhalter für das <code>QwtPlot</code> dienen. Dazu im Kontextmenü des Widgets die Option "Als Platzhalter für benutzerdefinierte Klasse festlegen&#8230;&#8203;" auswählen:</p>

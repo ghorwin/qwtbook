@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
 	QwtPlot plot;
 	plot.setWindowFlags(Qt::FramelessWindowHint);
-	plot.resize(400,300);
+	plot.resize(400,400);
 
 	// etwas Abstand zwischen Rand und Achsentiteln
 	plot.setContentsMargins(8,8,8,8);
@@ -54,7 +54,27 @@ int main(int argc, char *argv[]) {
 
 	// Achenskalierung
 	plot.setAxisScale(QwtPlot::yLeft, 0, 20);
+
 #if 0
+	QVector<double> x{1,2,5,6,10,12,15,16,17};
+	QVector<double> y1{2,2,3,4, 2, 4, 4, 5,11};
+	QVector<double> y2{6,4.4,9,10, 5.5, 5.7, 9, 11,12};
+
+	QVector<QwtIntervalSample> intervalSamples;
+	for (int i=0; i<x.count(); ++i)
+		intervalSamples.append(QwtIntervalSample(x[i],y1[i],y2[i]));
+
+	QwtPlotIntervalCurve *curve = new QwtPlotIntervalCurve();
+	curve->setStyle(QwtPlotIntervalCurve::Tube);
+	curve->setPen(QColor(0,40,180), 2);
+	curve->setBrush( QColor(60,200,255) );
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+	curve->setSamples(intervalSamples);
+	curve->attach(&plot); // Plot takes ownership
+
+#endif
+
+#if 1
 	QVector<double> x{1,2,5,6,10,12,15,16,17};
 	QVector<double> y1{2,2,3,4, 2, 4, 4, 5,11};
 	QVector<double> y2{6,4.4,9,10, 5.5, 5.7, 9, 11,12};
@@ -67,13 +87,17 @@ int main(int argc, char *argv[]) {
 	QwtPlotIntervalCurve *curve = new QwtPlotIntervalCurve();
 	curve->setStyle(QwtPlotIntervalCurve::Tube);
 	curve->setPen(QColor(0,40,180), 2);
-	curve->setBrush(QColor(8,180,255,128));
+	QLinearGradient grad(0,90,0,220);
+	// grad.setSpread(QGradient::RepeatSpread);
+	grad.setColorAt(0, QColor(60,200,255));
+	grad.setColorAt(1, QColor(0,60,120));
+	curve->setBrush( QBrush(grad));
 	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
 	curve->setSamples(intervalSamples);
 	curve->attach(&plot); // Plot takes ownership
 #endif
 
-#if 1
+#if 0
 	// stacked plot
 	QVector<double> x{1,2,5,6,10,12,15,16,17};
 	QVector<QVector<double> >  y;
@@ -84,18 +108,18 @@ int main(int argc, char *argv[]) {
 
 	const QColor cols[] = { QColor(96,60,20),
 							QColor(156,39,6),
-							QColor(212,91,18)
+							QColor(212,91,18),
+							QColor(242,188,43)
 						  };
 
 	for (int j=0;j<y.count()-1; ++j) {
 		QwtPlotIntervalCurve *curve = new QwtPlotIntervalCurve();
 		QVector<QwtIntervalSample> intervalSamples;
-		for (int i=0; i<x.count(); ++i) {
+		for (int i=0; i<x.count(); ++i)
 			intervalSamples.append(QwtIntervalSample(x[i],y[j][i],y[j+1][i]));
-		}
 		curve->setStyle(QwtPlotIntervalCurve::Tube);
-		curve->setPen(cols[j].darker(200), 2);
-		curve->setBrush(cols[j]);
+		curve->setPen(QColor(96,60,20), 1);
+		curve->setBrush(cols[j+1]);
 		curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
 		curve->setSamples(intervalSamples);
 		curve->attach(&plot); // Plot takes ownership
