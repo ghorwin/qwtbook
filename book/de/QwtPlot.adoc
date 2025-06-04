@@ -39,11 +39,15 @@ Innerhalb der Zeichenfläche kann man nun die verschiedensten Elemente zeichen, 
 
 Alle diese Objekte sind von der Basisklasse  `QwtPlotItem` abgeleitet und teilen sich dadurch gewisse gemeinsame Eigenschaften.
 
+.Von QwtPlotItem abgeleitete Klassen der verschiedenen Zeichenelemente
+image::ClassDiagrams/QwtPlotItem-class-hierarchy.png[pdfwidth=15cm]
+
+
 In einem Diagramm kann man alle möglichen Elemente kombinieren, also auch Liniendiagramme mit Balken, Symbolen und Markierungen darstellen.
 
 [TIP]
 ====
-Die Zeichenreihenfolge, also welches Zeichenelement ein anderes überdeckt, bestimmt das z-Attribut. Dies wird über die Funktionen `QwtPlotItem::setZ(...)` und `QwtPlotItem::z()`  kontrolliert.
+Die Zeichenreihenfolge, also welches Zeichenelement ein anderes überdeckt, bestimmt das z-Attribut. Dies wird über die Funktionen `QwtPlotItem::setZ(...)` und `::z()`  kontrolliert.
 ====
 
 Die Positionierung der Diagrammelemente erfolgt über die Plotkoordinaten. Die Umrechung in Bildschirmkoordinaten bzw. die konkrete Position auf der Zeichenfläche wird mittels der jeweils zugeordneten x- und y-Achse gemacht.  Da es nun jeweils zwei x- und y-Achsen gibt, braucht man also bei Anzeige eines Diagrammelements an einem bestimmtenx,y-Datenpunkt zwingend eine Zuordnung zu _einer_ x- und _einer_ y-Achse. Diese Eigenschaft setzt man den einzelnen Zeichenelementen, wobei standardmäßig `xBottom` und `yLeft` ausgewählt sind.
@@ -61,3 +65,65 @@ Beim Aufruf von `attach()` wird das Zeichenelement in die Obhut des `QwtPlot` ü
 ====
 
 Das `QwtPlotItem` deklariert und implementiert auch die virtuellen Funktionen für das Zeichnen sowie Berechnen wichtiger Layoutdaten. Dies wird aber später in den fortgeschrittenen Kapiteln noch genauer erklärt. Nun aber zu den individuellen Zeichenelementen und daraus erstellten Diagrammtypen.
+
+[[sec:seriesData]]
+## Datenhaltung im QwtPlot / QwtSeriesStore
+
+Für die Darstellen von Plotkurven/Balken oder anderen Zeichenelementen werden die Daten für mehrere Datenpunkte (_samples_) benötigt. Es gibt verschiedene Typen von _samples_, je nach Anforderung des Zeichenelements. So brauchen Linienkurven normalerweise x,y-Wertepaare, aber Intervallkurven jeweils x,y1,y2-Tuples.
+
+Alle Zeichenelemente, welche solche Reihendaten verwenden, sind Kinder der Klasse `QwtPlotSeriesItem`.
+
+.Klasse QwtPlotSeriesItem, Elternklassen und abgeleitete Klassen
+image::ClassDiagrams/QwtPlotSeriesItem-class-hierarchy.png[pdfwidth=15cm]
+
+Die Datenhaltung erfolgt in der Template-Klasse `QwtSeriesStore`, welche die abstrakte Schnittstellenklasse `QwtAbstractSeriesStore` implementiert.
+
+[TIP]
+====
+Die hier in Qwt verwendet Kombination von Template-Klassen für die Datenhaltung individueller Typen und gleichzeitig Implementierung gemeinschaftlicher Klassenfunktionalität via virtueller Funktionen, zeigt mal wieder schön die Flexibilität von C++.
+
+Allerdings macht es das Verständnis der Interaktion von Datenhalteklassen und die Zeichenelement-Klassen auf den ersten Blick etwas komplizierter. Glücklicherweise muss man das für die Verwendung des `QwtPlot` gar nicht so genau wissen.
+====
+
+Je nach Anforderung des individuellen Zeichenelements/Diagrammtyps werden unterschiedliche Daten benötigt:
+
+- `QPointF` für reguläre Reihen-/Seriendiagramme (Linien)
+- `QwtIntervalSample` für Histogramme und Intervallkurven
+- `QwtPoint3D` für Spektrogramplots (Farbverlaufsdiagramme)
+- `QwtOHLCSample` für Trading-Curves (OHLC - _Open-High-Low-Close_)
+- `QwtVectorFieldSample` für Vektorfelder
+
+
+.Abstrakte Klasse QwtAbstractSeriesStore und abgeleitete Klassen
+image::ClassDiagrams/QwtAbstractSeriesStore-class-hierarchy.png[pdfwidth=15cm]
+
+[TIP]
+====
+Die meisten Diagrammelemente/Diagrammklassen haben geeignete Schnittstellenfunktionen für die Übergabe der Plotdaten ans Diagramm. Daher muss man selten direkt mit `QwtSeriesStore` arbeiten. In den nachfolgenden Kapiteln wird dies jeweils individuell erklärt.
+====
+
+## Automatisches Zeichnen oder Zeichnen bei Bedarf
+
+Das Zeichnen eines komplexen Plots kann durchaus länger dauern, daher ist es bei Anpassungen des Plots häufig nicht notwendig, bei jeweil individuellen Änderung alles neu zu zeichnen. Stattdessen reicht es aus, nach Aktualisierung aller Daten und Anpassung anderer Einstellungen (Achsen, Legenden,...) das Plot neu zu zeichnen.
+
+_Zeichnen_ bedeutet hier eigentlich zwei unterschiedliche Arbeitsschritte:
+
+1. Neuberechnung des Layouts, d.h. Größen für Achsen, Legenden, Titel, Label, Zeichenfläche etc.. Dabei erfolgt auch eine Neuberechnung der Achsenskalierung und damit der Zuordnung von Plot-Koordinaten zu Pixelgrößen
+2. Das eigentliche Zeichnen (_render_) des Plots
+
+Schritt 1 wird ausgeführt, wenn man `QwtPlot::replot()` aufruft. Standardmäßig wird das immer gemacht, wenn man irgendeine Ploteigenschaft ändert. Diesen automatischen Aufruf kann man mit `QwtPlot::setAutoReplot()` an/ausschalten.
+
+```c++
+// Automatisches Neu-Layouten ausschalten
+plot->setAutoReplot(false);
+```
+
+[NOTE]
+====
+Der Aufruf von `replot()` direkt oder indirekt bei Änderungen, wenn _autoReplot_ angeschaltet ist, führt nicht zu dem teils zeitaufwändigen Rendern des Plots. Je nach Komplexität des Plots und Größe der Daten ist das sogar sehr schnell. Daher ist das Ausschalten des Auto-Plots selten aus Performancegründen notwendig. 
+
+Ein Ausschalten des _autoReplot_ kann aber sinnvoll sein, wenn bei Anpassungen von individuellen Ploteigenschaften ein zwischenzeitlich inkonsistenter Zustand eintreten könnte, wo ein Neulayouten nur Quatsch erzeugen könnte oder sowas wie _Division durch Null_ erzeugen könnte. Dann wartet man besser, bis alle Plot-/Kurveneigenschaften fertig aktualisiert wurden und ruft dann `replot()` auf.
+====
+
+Nach einem Aktualisieren des Layouts in `replot()` wird ein Zeichenupdate via Qt-Event-Queue angestoßen. Gezeichnet/gerendert wird dann _erst im nächsten Bildrefresh_ und auch nur _ein Mal_. Somit kann man gerne 1000 Mal `replot()` aufrufen, und es wird doch nur einmal gerendert. Dies spart sehr viel Zeit.
+

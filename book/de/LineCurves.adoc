@@ -24,6 +24,50 @@ Der individuelle Stil der Kurve wird mit der Funktion `QwtPlotCurve::setStyle()`
 |	17	|	11
 |====================
 
+## Datenübergabe
+Wie in <<sec:seriesData>> erklärt, wird für die interne Datenhaltung in `QwtPlotCurve` die Klasse `QwtSeriesStore<QPointF>` verwendet.
+
+Daten kann man nun auf mehrere Arten der Plot-Kurve übergeben:
+
+.Verwendung zweier QVector<double> (oder analog QVector<float>)
+```c++
+QVector<double> x{1,2,5,6,10,12,15,16,17};
+QVector<double> y{5,4,8,8, 4, 5, 8, 9,11};
+curve->setSamples(x, y);
+```
+
+.Verwendung eines QVector<QPointF>
+```c++
+QVector<QPointF> samples{
+	QPointF(1,5),
+	QPointF(2,4),
+	QPointF(5,8)
+};
+curve->setSamples(samples);
+```
+
+Wenn die Daten in einem C-Array oder `std::vector` vorliegen, bietet sich `QwtPlotCurve::setSamples()` an.
+
+.Übergabe der Daten direkt im Speicher
+```c++
+std::vector<double> x{1,2,5,6,10,12,15,16,17};
+std::vector<double> y{5,4,8,8, 4, 5, 8, 9,11};
+const double * xdata = x.data();
+const double * ydata = y.data();
+unsigned int count = x.size();
+
+curve->setSamples(xdata, ydata, count);
+```
+
+[IMPORTANT]
+====
+Bei der Verwendung von `QwtPlotCurve::setSamples()` werden die Daten _immer_ in den interne `QwtSeriesStore` der Plot-Kurve _kopiert_, auch wenn man hier direkt die Adresse des Speichers mit den Daten übergibt.
+====
+
+
+
+
+
 ## Liniendiagramm
 
 Konfiguration einer `QwtPlotCurve` als Linie:
