@@ -65,6 +65,24 @@ Bei der Verwendung von `QwtPlotCurve::setSamples()` werden die Daten _immer_ in 
 ====
 
 
+Bei sehr großen Datenmengen und begrenztem Hauptspeicher kann es sinnvoll sein, die Daten nicht in das Plot hineinzukopieren, sondern die Plotkurven direkt auf den Speicher zugreifen zu lassen. Dafür gibt es die Funktion `QwtPlotCurve::setRawSamples()`. Die Syntax ist wie beim vorherigen Beispiel:
+
+.Direkte Verwendung der im Speicher befindlichen Daten durch as Plot
+```c++
+const double * xdata = x.data(); // x ist ein std::vector
+const double * ydata = y.data(); // y ist ein std::vector
+unsigned int count = x.size();
+curve->setRawSamples(xdata, ydata, count);
+```
+
+[CAUTION]
+====
+Die Variablen und deren Speicherbereich, welche im Aufruf von `setRawSamples()` verwendet werden, müssen eine längere Lebensdauer haben, als das Plot bzw. die Plotkurve selbst.
+====
+
+Direkte Änderung der Daten im Speicher wird beim nächsten Rendern des Plots direkt sichtbar. Allerdings müssen das Plot und dessen  Zeichenelemente, die ein Interesse an den Wertebereichen der Plotkurven haben, manuell über eine Änderung der Daten information werden. Dazu einfach `QwtPlot::replot()`.
+
+
 
 
 
