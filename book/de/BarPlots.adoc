@@ -1,0 +1,133 @@
+:imagesdir: ../images
+
+[[sec:barPlots]]
+# Balkendiagramme
+
+Balkendiagramme sind mit `QwtPlot` ebenfalls einfach möglich. Dabei gibt es verschiedene Varianten, je nach Datenlage:
+
+- ein Balken pro Intervall, nebeneinander oder gestapelt
+- mehrere Balken pro Intervall, nebeneinander oder gestapelt
+- mehrere Balken pro Intervall, nebeneinander und gestapelt (das geht z.B. mit Excel nicht!)
+
+Als Zeichenelement/Diagrammtyp werden entweder `QwtPlotBarChart` oder `QwtPlotMultiBarChart` verwendet. Beide Klassen implementieren die Schnittstelle der abstrakten Basisklasse `QwtPlotAbstractBarChart`.
+
+## Grundlegende Eigenschaften der Plots
+
+Für einfache Balkendiagramme verwendet man die Klasse `QwtPlotBarChart`. Wie auch schon bei `QwtPlotCurve` wird das Balkendiagramm-Zeichenelement auf dem Heap erstellt und dem Diagramm mit `attach()` übergeben.
+
+```c++
+QwtPlotBarChart * curve = new QwtPlotBarChart();
+QVector<double> y{10,20,15,14,18,12};
+curve->setSamples(y);
+curve->attach(&plot); // Plot takes ownership
+```
+
+Ohne weitere Anpassung sieht das Diagramm noch recht langweilig aus.
+
+.Minimalistisches Balkendiagramm
+image::BarPlot_1.png[pdfwidth=6cm]
+
+
+## Bezugslinie
+
+Standardmäßig beginnen die Balken bei 0. Mitunter will man aber relative Unterschiede bezogen auf eine Grundlinie einstellen. Dazu verwendet man `setBaseLine(plotCoordinate)`.
+
+
+```c++
+...
+QVector<double> y{10,20,15,14,18,12};
+curve->setSamples(y);
+curve->setBaseLine(15);
+...
+```
+
+.Balkendiagramm mit Bezugslinie bei 15 
+image::BarPlot_1_baseLine.png[pdfwidth=6cm]
+
+
+## Layout und Abstände
+
+Das Erscheinungsbild des Diagramms lässt sich vielfältig anpassen. Wenn man das Diagramm vergrößert und verkleinert, werden dabei die Achsen skaliert und passend dazu auch die Balken.
+
+In der Standardeinstellung werden die Balken mit minimalem Abstand zueinander und vom Rand gezeichnet. Diese Abstände kann man anpassen.
+
+.Minimalistisches Balkendiagramm
+image::BarPlot_1_spacingMargin.png[pdfwidth=6cm]
+
+Der Randabstand wird mit `setMargin(pixels)` kontrolliert. Den Abstand zwischen den einzelnen Balken definiert man mit `setSpacing(pixels)`.
+
+
+[IMPORTANT]
+====
+Der Randabstand und Abstand zwischen Balken wird in Pixeln definiert, weswegen sich die Verhältnisse zwischen Balken und Abständen zwischen Balken bei Größenänderung verändern.
+====
+
+
+Die Breite  der Balken selbst wird über Layoutvorgaben und konkret über die Funktionen `QwtPlotAbstractBarChart::setLayoutPolicy()` und `QwtPlotAbstractBarChart::setLayoutHint()` kontrolliert.
+
+
+### QwtPlotAbstractBarChart::AutoAdjustSamples
+
+In diesem Modus wird die Größe der Balken basierend auf der Größe der Zeichenfläche und der benötigten Plotkoordinaten berechnet. Die Plotkoordinaten sind in x-Richtung die Anzahl der Balken und in y-Richtung die min/max-Werte unter Einbeziehung einer ggfs. verschobenen Bezugslinie. 
+
+```c++
+...
+curve->setLayoutPolicy(QwtPlotAbstractBarChart::AutoAdjustSamples);
+curve->setLayoutHint(100);  // minimum width of bars is 100 pixels
+...
+```
+
+.Balkendiagram im Layoutmodus `QwtPlotAbstractBarChart::AutoAdjustSamples`
+image:BarPlot_1_LayoutAutoAdjustSamples.png[pdfwidth=6cm] 
+image:BarPlot_1_LayoutAutoAdjustSamples_zoomed.png[pdfwidth=6cm]
+
+Die Balken, die Zwischenräume (spacing) und Randabstände (margin) füllen die Zeichenfläche komplett aus. Wie man am rechten Diagramm sieht, bleibt das auch beim Hineinzoomen ins Diagramm so.
+
+Der zusätzliche Parameter `setLayoutHint()` definiert die Anzahl der Pixel, die ein Balken mindestens breit sein sollte. Damit kann man verhindern, dass beim Verkleinern der Plotgröße die Balken irgendwann komplett verschwinden. Folgendes Beispiel zeigt, was bei einem größeren LayoutHint im Modus `AutoAdjustSamples` passiert:
+
+.Balkendiagram im Layoutmodus `QwtPlotAbstractBarChart::AutoAdjustSamples`, mit durch LayoutHint definierter Mindestbalkenbreite
+image::BarPlot_1_LayoutAutoAdjustSamples_minWidth.png[pdfwidth=6cm]
+
+
+### QwtPlotAbstractBarChart::ScaleSamplesToAxes
+
+In diesem Layoutmodus wird die Balkenbreite basierend auf einer x-Achsenbreite festgelegt. Wenn in diesem Layoutmodus den LayoutHint auf 0.5 setzt, dann wird ein Balken genau halb so breit wie ein Achsentick gezeichet und dann mittig am Achsentick ausgerichtet. Es wird also die X-Achse benutzt, um die 0.5 in Plotkoordinaten in Pixelbreiten der Zeichenfläche umzurechnen.
+
+```c++
+...
+curve->setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
+curve->setLayoutHint(0.5); // 0.5 axis scale as bar width 
+...
+```
+
+
+.Balkendiagram im Layoutmodus `QwtPlotAbstractBarChart::ScaleSamplesToAxes`, mit X-Achsenskalenwert 0.5
+image::BarPlot_1_LayoutScaleSamplesToAxes.png[pdfwidth=6cm]
+image::BarPlot_1_LayoutScaleSamplesToAxes_zoomed.png[pdfwidth=6cm]
+
+Auch beim Hereinzoomen orientiert sich die Balkenbreite stets an der X-Achsenskalierung.
+
+[NOTE]
+====
+Der Balkenabstand wird hier ausschließlich über den LayoutHint definiert und der Balkenabstand, den man mittels `setSpacing()` setzt, wird in diesem Layoutmodus nicht berücksichtigt. Wenn man also eine Balkenbreite 1 (in x-Achsenskaleneinheiten) setzt, dann werden die Balken dicht-an-dicht gezeichnet, unabhängig vom _spacing_. Der Randabstand _margin_ wird hingegen wie bisher angewendet.
+====
+
+
+### QwtPlotAbstractBarChart::ScaleSampleToCanvas
+
+In diesem Modus werden die Balkenbreiten in Abhängigkeit (als Prozentsatz) zur Zeichenflächengröße bestimmt. Man sollte sich zur Festlegung des LayoutHint-Parameters überlegen, wie viele Balken denn maximal im Diagramm sichtbar sein sollen.
+
+```c++
+...
+curve->setLayoutPolicy(QwtPlotBarChart::ScaleSampleToCanvas);
+curve->setLayoutHint(0.1); // bar width 10% of canvas width
+...
+```
+
+
+.Balkendiagram im Layoutmodus `QwtPlotAbstractBarChart::ScaleSampleToCanvas`, mit 10% Zeichenflächebreite als Balkenbreite
+image::BarPlot_1_LayoutScaleSampleToCanvas.png[pdfwidth=6cm]
+image::BarPlot_1_LayoutScaleSampleToCanvas_zoomed.png[pdfwidth=6cm]
+
+Beim Hereinzoomen bleibt die Balkenbreite konstant und ändert sich nur bei Größenänderung des Plots.
+
