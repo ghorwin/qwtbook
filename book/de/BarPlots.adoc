@@ -27,21 +27,23 @@ Ohne weitere Anpassung sieht das Diagramm noch recht langweilig aus.
 .Minimalistisches Balkendiagramm
 image::BarPlot_1.png[pdfwidth=6cm]
 
+[NOTE]
+====
+Die Funktion `QwtPlotBarChart::setSamples()` generiert aus dem Vektor der y-Werte automatisch einen Vektor mit x,y-Wertepaaren, wobei die x-Werte von 0 beginnend durchnummeriert werden. Die Balken entsprechen intern einer normalen Plotkurve mit equidistanten Stützstellen auf der x-Achse. 
+====
 
 ## Bezugslinie
 
-Standardmäßig beginnen die Balken bei 0. Mitunter will man aber relative Unterschiede bezogen auf eine Grundlinie einstellen. Dazu verwendet man `setBaseLine(plotCoordinate)`.
+Standardmäßig beginnen die Balken bei 0. Mitunter will man aber relative Unterschiede bezogen auf eine Grundlinie einstellen. Dazu verwendet man `setBaseLine(yPlotCoordinate)`.
 
 
 ```c++
-...
 QVector<double> y{10,20,15,14,18,12};
 curve->setSamples(y);
 curve->setBaseLine(15);
-...
 ```
 
-.Balkendiagramm mit Bezugslinie bei 15 
+.Balkendiagramm mit Bezugslinie bei y=15 
 image::BarPlot_1_baseLine.png[pdfwidth=6cm]
 
 
@@ -49,35 +51,26 @@ image::BarPlot_1_baseLine.png[pdfwidth=6cm]
 
 Das Erscheinungsbild des Diagramms lässt sich vielfältig anpassen. Wenn man das Diagramm vergrößert und verkleinert, werden dabei die Achsen skaliert und passend dazu auch die Balken.
 
-In der Standardeinstellung werden die Balken mit minimalem Abstand zueinander und vom Rand gezeichnet. Diese Abstände kann man anpassen.
+In der Standardeinstellung werden die Balken mit minimalem Abstand zueinander und vom Rand gezeichnet. Den Randabstand kann man mit `setMargin(pixels)` ändern und den Abstand zwischen den einzelnen Balken definiert man mit `setSpacing(pixels)`.
 
-.Minimalistisches Balkendiagramm
+.Balkendiagramm mit angepassten Abständen und Rändern
 image::BarPlot_1_spacingMargin.png[pdfwidth=6cm]
 
-Der Randabstand wird mit `setMargin(pixels)` kontrolliert. Den Abstand zwischen den einzelnen Balken definiert man mit `setSpacing(pixels)`.
+
+Die Breite der Balken selbst wird über Layoutvorgaben und konkret über die Funktionen `QwtPlotAbstractBarChart::setLayoutPolicy()` und `QwtPlotAbstractBarChart::setLayoutHint()` kontrolliert.
 
 
-[IMPORTANT]
-====
-Der Randabstand und Abstand zwischen Balken wird in Pixeln definiert, weswegen sich die Verhältnisse zwischen Balken und Abständen zwischen Balken bei Größenänderung verändern.
-====
+### AutoAdjustSamples
 
-
-Die Breite  der Balken selbst wird über Layoutvorgaben und konkret über die Funktionen `QwtPlotAbstractBarChart::setLayoutPolicy()` und `QwtPlotAbstractBarChart::setLayoutHint()` kontrolliert.
-
-
-### QwtPlotAbstractBarChart::AutoAdjustSamples
-
-In diesem Modus wird die Größe der Balken basierend auf der Größe der Zeichenfläche und der benötigten Plotkoordinaten berechnet. Die Plotkoordinaten sind in x-Richtung die Anzahl der Balken und in y-Richtung die min/max-Werte unter Einbeziehung einer ggfs. verschobenen Bezugslinie. 
+In diesem Modus, gesetzt durch
 
 ```c++
-...
 curve->setLayoutPolicy(QwtPlotAbstractBarChart::AutoAdjustSamples);
-curve->setLayoutHint(100);  // minimum width of bars is 100 pixels
-...
 ```
 
-.Balkendiagram im Layoutmodus `QwtPlotAbstractBarChart::AutoAdjustSamples`
+wird die Größe der Balken basierend auf der Größe der Zeichenfläche und der gesetzen Rand- und Zwischenabstände bestimmt.
+
+.Balkendiagram im Layoutmodus 'AutoAdjustSamples', normal (links) und hineingezoomt (rechts)
 image:BarPlot_1_LayoutAutoAdjustSamples.png[pdfwidth=6cm] 
 image:BarPlot_1_LayoutAutoAdjustSamples_zoomed.png[pdfwidth=6cm]
 
@@ -85,25 +78,29 @@ Die Balken, die Zwischenräume (spacing) und Randabstände (margin) füllen die 
 
 Der zusätzliche Parameter `setLayoutHint()` definiert die Anzahl der Pixel, die ein Balken mindestens breit sein sollte. Damit kann man verhindern, dass beim Verkleinern der Plotgröße die Balken irgendwann komplett verschwinden. Folgendes Beispiel zeigt, was bei einem größeren LayoutHint im Modus `AutoAdjustSamples` passiert:
 
-.Balkendiagram im Layoutmodus `QwtPlotAbstractBarChart::AutoAdjustSamples`, mit durch LayoutHint definierter Mindestbalkenbreite
-image::BarPlot_1_LayoutAutoAdjustSamples_minWidth.png[pdfwidth=6cm]
-
-
-### QwtPlotAbstractBarChart::ScaleSamplesToAxes
-
-In diesem Layoutmodus wird die Balkenbreite basierend auf einer x-Achsenbreite festgelegt. Wenn in diesem Layoutmodus den LayoutHint auf 0.5 setzt, dann wird ein Balken genau halb so breit wie ein Achsentick gezeichet und dann mittig am Achsentick ausgerichtet. Es wird also die X-Achse benutzt, um die 0.5 in Plotkoordinaten in Pixelbreiten der Zeichenfläche umzurechnen.
-
 ```c++
-...
-curve->setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
-curve->setLayoutHint(0.5); // 0.5 axis scale as bar width 
-...
+curve->setLayoutPolicy(QwtPlotAbstractBarChart::AutoAdjustSamples);
+curve->setLayoutHint(100);  // minimum width of bars is 100 pixels
 ```
 
 
-.Balkendiagram im Layoutmodus `QwtPlotAbstractBarChart::ScaleSamplesToAxes`, mit X-Achsenskalenwert 0.5
-image::BarPlot_1_LayoutScaleSamplesToAxes.png[pdfwidth=6cm]
-image::BarPlot_1_LayoutScaleSamplesToAxes_zoomed.png[pdfwidth=6cm]
+.Durch LayoutHint definierte Mindestbalkenbreite
+image::BarPlot_1_LayoutAutoAdjustSamples_minWidth.png[pdfwidth=6cm]
+
+
+### ScaleSamplesToAxes
+
+In diesem Layoutmodus wird die Balkenbreite basierend auf der aktuellen x-Achsenskalierung festgelegt. Wenn man in diesem Layoutmodus den LayoutHint auf 0.5 setzt, dann wird ein Balken genau halb so breit wie ein Achsentick gezeichet und dann mittig am Achsentick ausgerichtet. Es wird also die X-Achse benutzt, um die 0.5 in Plotkoordinaten in Pixelbreiten der Zeichenfläche umzurechnen.
+
+```c++
+curve->setLayoutPolicy(QwtPlotAbstractBarChart::ScaleSamplesToAxes);
+curve->setLayoutHint(0.5); // 0.5 axis scale as bar width 
+```
+
+
+.Balkendiagram im Layoutmodus 'ScaleSamplesToAxes', normal (links) und hineingezoomt (rechts)
+image:BarPlot_1_LayoutScaleSamplesToAxes.png[pdfwidth=6cm]
+image:BarPlot_1_LayoutScaleSamplesToAxes_zoomed.png[pdfwidth=6cm]
 
 Auch beim Hereinzoomen orientiert sich die Balkenbreite stets an der X-Achsenskalierung.
 
@@ -113,21 +110,172 @@ Der Balkenabstand wird hier ausschließlich über den LayoutHint definiert und d
 ====
 
 
-### QwtPlotAbstractBarChart::ScaleSampleToCanvas
+### ScaleSampleToCanvas
 
-In diesem Modus werden die Balkenbreiten in Abhängigkeit (als Prozentsatz) zur Zeichenflächengröße bestimmt. Man sollte sich zur Festlegung des LayoutHint-Parameters überlegen, wie viele Balken denn maximal im Diagramm sichtbar sein sollen.
+In diesem Modus werden die Balkenbreiten in Abhängigkeit (als Prozentsatz) zur Zeichenflächengröße bestimmt. Man sollte sich zur Festlegung des LayoutHint-Parameters überlegen, wie viele Balken denn maximal im Diagramm sichtbar sein werden.
 
 ```c++
-...
-curve->setLayoutPolicy(QwtPlotBarChart::ScaleSampleToCanvas);
+curve->setLayoutPolicy(QwtPlotAbstractBarChart::ScaleSampleToCanvas);
 curve->setLayoutHint(0.1); // bar width 10% of canvas width
-...
 ```
 
 
-.Balkendiagram im Layoutmodus `QwtPlotAbstractBarChart::ScaleSampleToCanvas`, mit 10% Zeichenflächebreite als Balkenbreite
-image::BarPlot_1_LayoutScaleSampleToCanvas.png[pdfwidth=6cm]
-image::BarPlot_1_LayoutScaleSampleToCanvas_zoomed.png[pdfwidth=6cm]
+.Balkendiagram im Layoutmodus 'ScaleSampleToCanvas', mit 10% Zeichenflächebreite als Balkenbreite
+image:BarPlot_1_LayoutScaleSampleToCanvas.png[pdfwidth=6cm]
+image:BarPlot_1_LayoutScaleSampleToCanvas_zoomed.png[pdfwidth=6cm]
 
 Beim Hereinzoomen bleibt die Balkenbreite konstant und ändert sich nur bei Größenänderung des Plots.
+
+
+### Layout-Empfehlung
+
+Abgesehen von speziellen Anforderungen ist für die meisten Fälle die LayoutPolicy `QwtPlotAbstractBarChart::ScaleSamplesToAxes` empfehlenswert. Sowohl beim Größenändern des Plots als auch beim Zoomen verhält sich das Plot so, wie man es erwartet. 
+
+```c++
+curve->setLayoutPolicy(QwtPlotAbstractBarChart::ScaleSamplesToAxes);
+curve->setLayoutHint(0.8); // 0.8 axis scale as bar width
+curve->setMargin(10); // 10 pixel margin
+```
+
+Möchte man wirklich immer die gleichen Abstände zwischen den Balken haben, egal wie groß das Plot ist oder wie weit man hineinzoomt, dann ist die LayoutPolicy `QwtPlotAbstractBarChart::AutoAdjustSamples` zu empfehlen.
+
+
+## Balkenformen und Farben
+
+Die Balken selbst werden durch die Klasse `QwtColumnSymbol` gezeichnet. Diese kann verschiedenartig konfiguriert werden. Standardmäßig wird der Symboltyp `QwtColumnSymbol::Box` verwendet, wie in nachfolgendem Beispiel:
+
+```c++
+QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+symbol->setLineWidth( 2 );
+symbol->setFrameStyle( QwtColumnSymbol::Raised );
+symbol->setPalette( QPalette( QColor(0xff0040) ) );
+curve->setSymbol( symbol );
+```
+
+Angepasst werden können die Form des Rechteckrahmens (`Raised`, `Plain`, `NoFrame`), die Füllfarbe und Linienfarbe.
+
+.Balkendiagram mit angepasstem Stil für die Balken
+image::BarPlot_1_BoxSymbol.png[pdfwidth=6cm]
+
+
+[TIP]
+====
+Wenn man ein `QPalette` Objekt mit einer einzelnen Farbe im Konstruktor erstellt, dann werden die Farben für die einzelnen Palettenrollen automatisch berechnet.
+`QwtColumnSymbol` verwendet die Rollen `QPalette::Window`, `QPalette::Dark` und `QPalette::Light` für die individuelle Elemente. Beim Stil `plain` wird der Rahmen mit der Palettenrolle `Dark` gezeichnet.
+====
+
+Durch Anpassung individueller Palettenrollen kann man das Zeichnen der Balken anpassen.
+
+```c++
+QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+symbol->setFrameStyle(QwtColumnSymbol::Plain);
+symbol->setLineWidth(1);
+QPalette palette(QColor(0xc1e311));
+palette.setBrush(QPalette::Dark, Qt::black); // black frame
+symbol->setPalette(palette);
+curve->setSymbol( symbol );
+```
+
+
+.Balkendiagram mit schwarz umrandeten, einfarbigen Balken
+image::BarPlot_1_BoxSymbolBlackFrame.png[pdfwidth=6cm]
+
+## Balkenbeschriftung auf der X-Achse
+
+Die in den bisherigen Beispieldiagrammen gezeigte X-Achse ist etwas ungewöhnlich für Balkendiagramme. Ohne jetzt auf <<sec:axes>> vorgreifen zu wollen, soll hier doch die für Balkendiagramme typische Anpassung der x-Achse gezeigt werden.
+
+Zunächst wird die Achsenzeichenfunktionalität angepasst, wofür man sich zunächst Zugriff auf die aktuelle Zeichenklassen `QwtScaleDraw` (Header `QwtScaleDraw` bzw. `qwt_scale_draw.h`) mit `QwtPlot::axisScaleDraw()` holt.
+Dann schaltet man die Unterteilungsstriche (_Ticks_) und die Achsenlinie (_Backbone_) ab.
+
+Um die unterschiedlichen Randeinstellungen des Plots besser zu verstehen, werden Balken mit `ScaleSamplesToAxes` und LayoutHint 1 (komplette Breite) gewählt, die Balkendiagrammränder (_margins_) auf 20 und der Zeichenflächenrand (umlaufend) auf 10 Pixel gesetzt.
+
+Schließlich stellen wir noch sicher, dass das Plotlayout die y-Achse nicht direkt über dem x=0 Wert an den linken Rand der Zeichenfläche legt. Dies macht man durch Anpassung des `QwtPlotLayout` (Header `QwtPlotLayout` bzw. `qwt_plot_layout.h`). `QwtPlotLayout::setAlignCanvasToScale()` legt fest, ob die gewählte Achse direkt am Rand der Zeichenfläche liegt und damit die jeweils zugeordnete Achse (hier die x-Achse) eben mit dem 0-Wert direkt am linken Rand der Zeichenfläche liegt.
+
+```c++
+QwtScaleDraw* scaleDraw1 = plot.axisScaleDraw( QwtPlot::xBottom );
+scaleDraw1->enableComponent( QwtScaleDraw::Backbone, false );
+scaleDraw1->enableComponent( QwtScaleDraw::Ticks, false );
+
+curve->setMargin(20); // margin left/right of bars
+plot.plotLayout()->setCanvasMargin( 10 ); // canvas margin all around
+
+// do not fix y-axis at 0 and left edge of canvas
+plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, false ); 
+plot.updateCanvasMargins();
+```
+
+
+Zum Vergleich nochmal das gleiche Diagramm _ohne_ Ränder und mit `setAlignCanvasToScale(yLeft, true)`.
+
+```c++
+QwtScaleDraw* scaleDraw1 = plot.axisScaleDraw( QwtPlot::xBottom );
+scaleDraw1->enableComponent( QwtScaleDraw::Backbone, false );
+scaleDraw1->enableComponent( QwtScaleDraw::Ticks, false );
+
+curve->setMargin(0);
+plot.plotLayout()->setCanvasMargin(0);
+plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, true );
+plot.updateCanvasMargins();
+```
+
+
+.Balkendiagram mit typischer X-Achsenbeschriftung, mit Rändern (links), ohne Ränder und y-Achse schneidet x-Achse bei x=0 direkt am linken Rand
+image:BarPlot_1_xAxis.png[pdfwidth=6cm]
+image:BarPlot_1_xAxis_aligned.png[pdfwidth=6cm]
+
+
+## Balkenbeschriftungen
+
+Möchte man statt der Zahlen am unteren Bildschirmrand Beschriftungen für die einzelnen Balken haben, musst man die Klasse `QwtScaleDraw` ableiten und dann die virtuelle Funktionen `QwtScaleDraw::label()` überladen.
+
+```c++
+class ScaleDraw : public QwtScaleDraw {
+public:
+	ScaleDraw(const QStringList& labels ) : m_labels( labels ) {
+		setTickLength( QwtScaleDiv::MinorTick, 0 );
+		setTickLength( QwtScaleDiv::MediumTick, 0 );
+		setTickLength( QwtScaleDiv::MajorTick, 2 );
+		enableComponent( QwtScaleDraw::Backbone, false );
+		setLabelAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+	}
+
+	virtual QwtText label( double value ) const QWT_OVERRIDE {
+		const int index = qRound( value );
+		if ( index >= 0 && index < m_labels.size() )
+			return m_labels[index];
+		return QwtText();
+	}
+
+	QStringList m_labels;
+};
+```
+
+
+Diese Klassenimplementierung konfiguriert die Darstellung der Unterteilungsstriche und Skalenlinie wie bisher, sorgt für korrekte Ausrichtung der Labels und merkt sich die im Konstruktor übergebenen Texte als indizierte Liste.
+Entscheidend ist die Implementierung der Funktion `QwtScaleDraw::label()`. Diese Funktion hat die Aufgabe, passend zu den übergebenen Zahlenwerten (hier Werte der x-Achse) entsprechende Beschriftungen anzuzeigen. Wie am Anfang dieses Kapitels erwähnt, wird jedem Balken eine fortlaufende Nummer zugeordnet. Wenn die Achse nun also eine Zahl zeichnen will, also z.B. die 4, dann wird in der Funktion der Wert gerundet und als Index benutzt, um den dazugehörigen Text zurückzuliefern.
+
+
+.Balkendiagram mit Textbeschriftung der Balken, rechts hineingezoomed mit fehlerhafter Beschriftung der Balken
+image:BarPlot_1_xAxisWithLabels.png[pdfwidth=6cm]
+image:BarPlot_1_xAxisWithLabels_zoomed.png[pdfwidth=6cm]
+
+Das Problem mit dem hineinzoomen lässt sich durch eine minimale Erweiterung des Codes lösen:
+
+```c++
+	if ( index >= 0 && index < m_labels.size() && qAbs(index-value) < 1e-6 )
+		return m_labels[index];
+```
+
+Trotzdem bleiben noch Achsenticks abseits von Balken stehen. Deshalb schaltet man die besser komplett aus und erhält dann ein ordentliches Diagramm, auch im gezoomten Zustand.
+
+.Hineingezoomt in ein Balkendiagramm mit Textbeschriftung
+image::BarPlot_1_xAxisWithLabels_zoomedFixed.png[pdfwidth=6cm]
+
+
+## Mehrfarbige Balken, Legendeneinträge etc.
+
+Alle weiterführenden Anpassungen des Balkendiagrams sind im <<sec:advancedCurves>> beschrieben.
+
+
+## Gestapelte Balkendiagramme oder Balkendiagramme mit mehreren Balken pro Gruppe
 

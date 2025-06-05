@@ -27,6 +27,7 @@ THE SOFTWARE.
 #include <QApplication>
 #include <QPen>
 #include <QFile>
+#include <QDebug>
 #include <QTextStream>
 
 //#define ORIGINAL_HEADERS
@@ -43,6 +44,8 @@ THE SOFTWARE.
 #include <QwtPlotPanner>
 #include <QwtPlotBarChart>
 #include <QwtColumnSymbol>
+#include <QwtScaleDraw>
+#include <QwtPlotLayout>
 
 #else
 
@@ -58,6 +61,29 @@ THE SOFTWARE.
 
 #endif
 
+
+class ScaleDraw : public QwtScaleDraw {
+public:
+	ScaleDraw(const QStringList& labels ) : m_labels( labels ) {
+		setTickLength( QwtScaleDiv::MinorTick, 0 );
+		setTickLength( QwtScaleDiv::MediumTick, 0 );
+		setTickLength( QwtScaleDiv::MajorTick, 2 );
+		enableComponent( QwtScaleDraw::Ticks, false );
+		enableComponent( QwtScaleDraw::Backbone, false );
+		setLabelAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+	}
+
+	virtual QwtText label( double value ) const QWT_OVERRIDE {
+		const int index = qRound( value );
+		if ( index >= 0 && index < m_labels.size() && qAbs(index-value) < 1e-6)
+			return m_labels[index];
+		return QwtText();
+	}
+
+	QStringList m_labels;
+};
+
+
 int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
 	QwtPlot plot;
@@ -71,31 +97,33 @@ int main(int argc, char *argv[]) {
 
 	// Daten zum Darstellen einlesen
 	QVector<double> y{10,20,15,14,18,12};
-	QwtPlotBarChart * curve = new QwtPlotBarChart();
+	QwtPlotBarChart * curve = new QwtPlotBarChart;
 	curve->setSamples(y);
 //	curve->setLayoutPolicy(QwtPlotBarChart::AutoAdjustSamples);
 //	curve->setLayoutHint(10);
-//	curve->setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
-//	curve->setLayoutHint(1);
-	curve->setLayoutPolicy(QwtPlotBarChart::ScaleSampleToCanvas);
-	curve->setLayoutHint(0.1); // bar width 10% of canvas width
+	curve->setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
+	curve->setLayoutHint(0.8);
+//	curve->setLayoutPolicy(QwtPlotBarChart::ScaleSampleToCanvas);
+//	curve->setLayoutHint(0.1); // bar width 10% of canvas width
 
 //	curve->setSpacing(40);
-//	curve->setMargin(20);
 //	curve->setBaseline(15);
 
-//	QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
-//	symbol->setLineWidth( 2 );
-//	symbol->setFrameStyle( QwtColumnSymbol::Raised );
-//	symbol->setPalette( QPalette( QColor(0xff0040) ) );
-//	curve->setSymbol( symbol );
+	QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+	symbol->setFrameStyle(QwtColumnSymbol::Plain);
+	symbol->setLineWidth(1);
+	QPalette palette(QColor(0xfff194));
+	palette.setBrush(QPalette::Dark, Qt::black); // black frame
+	symbol->setPalette(palette);
+
+	curve->setSymbol( symbol );
 
 	curve->attach(&plot); // Plot takes ownership
 
 //	// Legende anzeigen
 //	QwtLegend * legend = new QwtLegend();
 //	QFont legendFont;
-//	legendFont.setPointSize(8);
+//	legendFont.setPointSize(7);
 //	legend->setFont(legendFont);
 //	plot.insertLegend( legend , QwtPlot::BottomLegend); // plot takes ownership
 
@@ -106,6 +134,25 @@ int main(int argc, char *argv[]) {
 	titleFont.setPointSize(10);
 	text.setFont(titleFont);
 	plot.setTitle(text);
+
+
+//	QwtScaleDraw* scaleDraw1 = plot.axisScaleDraw( QwtPlot::xBottom );
+//	scaleDraw1->enableComponent( QwtScaleDraw::Backbone, false );
+//	scaleDraw1->enableComponent( QwtScaleDraw::Ticks, false );
+
+	QwtScaleDraw * scaleDraw = new ScaleDraw(QStringList() << "Dresden" << "Berlin" << "Leipzig" << "Hamburg" << "Wolgast" << "Saalfeld");
+	QFont f;
+	f.setPointSize(8);
+	f.setBold(true);
+	plot.setAxisFont(QwtPlot::xBottom, f);
+	plot.setAxisScaleDraw(QwtPlot::xBottom, scaleDraw);
+
+	curve->setMargin(10); // margin left/right of bars
+	plot.plotLayout()->setCanvasMargin( 0 ); // canvas margin all around
+	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, false); // do not fix y-axis at 0 and left edge of canvas
+	plot.updateCanvasMargins();
+
+
 
 //	// Haupt- und Nebengitter anzeigen
 //	QwtPlotGrid *grid = new QwtPlotGrid();
