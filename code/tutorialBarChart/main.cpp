@@ -65,9 +65,6 @@ THE SOFTWARE.
 class ScaleDraw : public QwtScaleDraw {
 public:
 	ScaleDraw(const QStringList& labels ) : m_labels( labels ) {
-		setTickLength( QwtScaleDiv::MinorTick, 0 );
-		setTickLength( QwtScaleDiv::MediumTick, 0 );
-		setTickLength( QwtScaleDiv::MajorTick, 2 );
 		enableComponent( QwtScaleDraw::Ticks, false );
 		enableComponent( QwtScaleDraw::Backbone, false );
 		setLabelAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
@@ -142,7 +139,7 @@ int main(int argc, char *argv[]) {
 
 	QwtScaleDraw * scaleDraw = new ScaleDraw(QStringList() << "Dresden" << "Berlin" << "Leipzig" << "Hamburg" << "Wolgast" << "Saalfeld");
 	QFont f;
-	f.setPointSize(8);
+	f.setPointSize(7);
 	f.setBold(true);
 	plot.setAxisFont(QwtPlot::xBottom, f);
 	plot.setAxisScaleDraw(QwtPlot::xBottom, scaleDraw);

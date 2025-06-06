@@ -232,9 +232,7 @@ Möchte man statt der Zahlen am unteren Bildschirmrand Beschriftungen für die e
 class ScaleDraw : public QwtScaleDraw {
 public:
 	ScaleDraw(const QStringList& labels ) : m_labels( labels ) {
-		setTickLength( QwtScaleDiv::MinorTick, 0 );
-		setTickLength( QwtScaleDiv::MediumTick, 0 );
-		setTickLength( QwtScaleDiv::MajorTick, 2 );
+		enableComponent( QwtScaleDraw::Ticks, false );
 		enableComponent( QwtScaleDraw::Backbone, false );
 		setLabelAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
 	}
@@ -259,22 +257,124 @@ Entscheidend ist die Implementierung der Funktion `QwtScaleDraw::label()`. Diese
 image:BarPlot_1_xAxisWithLabels.png[pdfwidth=6cm]
 image:BarPlot_1_xAxisWithLabels_zoomed.png[pdfwidth=6cm]
 
-Das Problem mit dem hineinzoomen lässt sich durch eine minimale Erweiterung des Codes lösen:
+Das Problem mit dem hineinzoomen lässt sich durch eine minimale Erweiterung des Codes lösen (nur Labels dort zeichnen, wo der x-Achsen-Skalenwert gerundet ziemlich exakt einer ganzen Zahl entspricht):
 
 ```c++
 	if ( index >= 0 && index < m_labels.size() && qAbs(index-value) < 1e-6 )
 		return m_labels[index];
 ```
 
-Trotzdem bleiben noch Achsenticks abseits von Balken stehen. Deshalb schaltet man die besser komplett aus und erhält dann ein ordentliches Diagramm, auch im gezoomten Zustand.
-
 .Hineingezoomt in ein Balkendiagramm mit Textbeschriftung
 image::BarPlot_1_xAxisWithLabels_zoomedFixed.png[pdfwidth=6cm]
 
 
-## Mehrfarbige Balken, Legendeneinträge etc.
+## Mehrfarbige Balken
 
-Alle weiterführenden Anpassungen des Balkendiagrams sind im <<sec:advancedCurves>> beschrieben.
+Wenn man die Balken nun auch noch individuell einfärben möchte, so kommt man um eine Re-Implemetierung des `QwtPlotBarChart` Zeichenelements nicht herum. Man muss eigentlich nur die Funktion `QwtPlotBarChart::specialSymbol()` reimplementieren und hier unterschiedlich gefärbte Balkensymbole zurückliefern.
+
+```c++
+class MultiColorBarChart : public  {
+public:
+	MultiColorBarChart() {
+		setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
+		setLayoutHint(0.8);
+	}
+
+	// we want to have individual colors for each bar
+	virtual QwtColumnSymbol* specialSymbol(
+	    int sampleIndex, const QPointF&) const QWT_OVERRIDE 
+	{
+		// generate symbol with color for each bar
+		QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+		symbol->setLineWidth( 2 );
+		symbol->setFrameStyle( QwtColumnSymbol::Raised );
+
+		QColor c( Qt::white );
+		if ( sampleIndex >= 0 && sampleIndex < m_colors.size() )
+			c = m_colors[ sampleIndex ];
+		symbol->setPalette( c );
+
+		return symbol;
+	}
+
+	QList<QColor> m_colors;
+};
+```
+Für jeden Balken im Diagramm speichern wir uns eine Farbe in der Membervariable `m_colors`. In der überladenen Funktion `QwtPlotBarChart::specialSymbol()` erstellen wir nun jeweils ein `QwtColumnSymbol` wie im vorangehenden Kapitel und liefern dieses zurück. Die Funktion übernimmt sowohl den Index des Balkens (oder _samples_) als Argument, wie auch die Plotkoordinaten des Balkens, wobei der x-Wert der Punktes wieder der Balkenindex ist, und der y-Wert dem Funktionswert des Balkens entspricht.
+
+[IMPORTANT]
+====
+Die Funktion `QwtPlotBarChart::specialSymbol()` ist eine _factory function_ und überträgt die Eigentümerschaft des auf dem Heap erstellten Objekts an den Aufrufer. Deshalb _muss_ man hier in jedem Aufruf der Funktion ein neues `QwtColumnSymbol` Objekt mit `new` erstellen. Nachdem der Balken gezeichnet wurde, löscht das Balkendiagrammelement das erzeugte Säulensymbolobjekt wieder.
+====
+
+.Balkendiagramm mit unterschiedlich gefärbten Balken
+image::BarPlot_1_MultiColor.png[pdfwidth=6cm]
+
+
+[TIP]
+====
+Wenn man nur bestimmte Balken einfärben möchte, die anderen aber im Standarddesign zeichnen lassen will, so kann man die Funktion `QwtPlotBarChart::specialSymbol()` auch einfach einen _nullptr_ zurückgeben lassen. Dann verwendet das Balkendiagramm das Standardsymbol.
+====
+
+
+## Legendeneinträge
+
+Für Balkendiagramme kann man zwei Arten von Legendeneinträgen erstellen:
+
+- einen Eintrag für das gesammte Balkendiagramm-Zeichenelement, oder
+- individuelle Einträge für jeden einzelnen Balken
+
+Die erste Variante ist dann sinnvoll, wenn neben dem Balkendiagramm-Zeichenelement noch weitere Zeichenelemente mit Legendeneinträgen angezeigt werden. Im vorliegenden Fall ist eine individuelle Bezeichnung der Balken sinnvoll.
+
+Dafür muss die virtuelle Funktion `QwtPlotBarChart::barTitle()` reimplementiert werden (die Standardimplementierung liefert immer einen leeren Titeltext). Außerdem muss der Legendentyp auf "einzelne Balken" durch Aufruf der Funktion `QwtPlotBarChart::setLegendMode( QwtPlotBarChart::LegendBarTitles )` umgeschaltet werden. Zusätzlich kann man noch mit `QwtPlotBarChart::setLegendIconSize()` die Größe der Legendensymbole anpassen:
+
+```c++
+class MultiColorBarChart : public QwtPlotBarChart {
+public:
+	MultiColorBarChart() {
+		setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
+		setLayoutHint(0.8);
+		// Legende zeigt individuelle Balkentitel
+		setLegendMode( QwtPlotBarChart::LegendBarTitles );
+		setLegendIconSize( QSize( 10, 14 ) );
+	}
+
+	// Individuelle Farben für die einzelnen Balken
+	virtual QwtColumnSymbol* specialSymbol(
+	    int sampleIndex, const QPointF&) const QWT_OVERRIDE 
+	{
+	    // ... wie bisher
+	}
+
+	virtual QwtText barTitle( int sampleIndex ) const QWT_OVERRIDE {
+	 	if ( sampleIndex >= 0 && sampleIndex < m_titles.size() )
+	 		return m_titles[ sampleIndex ];
+	 	return QwtText();
+	}
+
+	QStringList	  m_titles;
+	QList<QColor> m_colors;
+};
+```
+
+Zusätzlich zu den Farben werden nun die Titel der Balken in der Membervariable `m_titles` gehalten und in jedem Aufruf von `barTitle()` zurückgeliefert.
+
+Damit die Legende überhaupt gezeichnet wird, muss man diese für das Plot anzeigen:
+
+```c++
+// Legende anzeigen
+QwtLegend * legend = new QwtLegend();
+QFont legendFont;
+legendFont.setPointSize(7);
+legend->setFont(legendFont);
+plot.insertLegend(legend, QwtPlot::RightLegend); // plot takes ownership
+
+// x-Achse verstecken
+plot.setAxisVisible(QwtPlot::xBottom, false);
+```
+
+.Balkendiagramm mit unterschiedlich gefärbten Balken und Legendeneinträgen
+image::BarPlot_1_MultiColorWithLegend.png[pdfwidth=6cm]
 
 
 ## Gestapelte Balkendiagramme oder Balkendiagramme mit mehreren Balken pro Gruppe
