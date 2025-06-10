@@ -73,3 +73,4 @@ CMakeLists.txt.user*
 *.exe
 
 /Some plot.pdf
+/build/
