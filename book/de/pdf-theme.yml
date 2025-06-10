@@ -48,14 +48,16 @@ image:
 footer:
   height: 0.75in
   line-height: 1
-  recto:
+  verso:
     left:
       content: '_Das Qwt Handbuch {revnumber}, {revdate}_'
     right:
       content: '{section-or-chapter-title} | *{page-number}*'
-  verso:
+  recto:
     left:
       content: '*{page-number}* | {section-or-chapter-title}'
+    right:
+      content: '{author} <{email}>, https://schneggenport.de'
 
 thematic-break:
   margin-bottom: 50

@@ -1,5 +1,6 @@
 :imagesdir: ../images
 
+<<<
 [[sec:barPlots]]
 # Balkendiagramme
 

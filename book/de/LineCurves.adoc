@@ -1,5 +1,6 @@
 :imagesdir: ../images
 
+<<<
 [[sec:linecurves]]
 # Kurvendiagramme
 
@@ -96,7 +97,7 @@ curve->setStyle(QwtPlotCurve::Lines);
 ```
 
 .Liniendiagramm
-image::PlotCurves_StyleLines.png[pdfwidth=5cm]
+image::PlotCurves_StyleLines.png[pdfwidth=8cm]
  
 ## Stäbchen (Sticks)
 
@@ -109,7 +110,7 @@ curve->setOrientation(Qt::Vertical);
 ```
 
 .Vertikale Stäbchen
-image::PlotCurves_StyleSticksVertical.png[pdfwidth=5cm]
+image::PlotCurves_StyleSticksVertical.png[pdfwidth=8cm]
 
 Alternativ kann man die Stäbchen auch horizontal zeichnen. Dazu muss man zusätzlich die Ausrichtung mit `QwtPlotSeriesItem::setOrientation()` setzen:
 
@@ -120,7 +121,7 @@ curve->setOrientation(Qt::Horizontal);
 ```
 
 .Horizontale Stäbchen
-image::PlotCurves_StyleSticksHorizontal.png[pdfwidth=5cm]
+image::PlotCurves_StyleSticksHorizontal.png[pdfwidth=8cm]
 
 
 ## Stufendiagramme
@@ -135,7 +136,7 @@ curve->setCurveAttribute(QwtPlotCurve::Inverted, false);
 ```
 
 .Stufendiagramm (normal)
-image::PlotCurves_StyleSteps.png[pdfwidth=5cm]
+image::PlotCurves_StyleSteps.png[pdfwidth=8cm]
 
 
 Betrachtet man die Eingangsdaten:
@@ -159,7 +160,7 @@ curve->setCurveAttribute(QwtPlotCurve::Inverted, true);
 ```
 
 .Stufendiagramm (invertiert)
-image::PlotCurves_StyleStepsInverted.png[pdfwidth=5cm]
+image::PlotCurves_StyleStepsInverted.png[pdfwidth=8cm]
 
 
 ## Punkte (Dots)
@@ -179,7 +180,7 @@ curve->setPen(QColor(180,40,20), 4); // width of 4 makes points better visible
 ```
 
 .Punktediagramm
-image::PlotCurves_StyleDots.png[pdfwidth=5cm]
+image::PlotCurves_StyleDots.png[pdfwidth=8cm]
 
 [TIP]
 ====
@@ -193,7 +194,7 @@ curve->setPen(QColor(0,40,180,32), 2); // 2 pixels wide, alpha value 32
 ```
 
 .Punktwolke mit halbtransparenten Punkten
-image::PlotCurves_StyleDotsScatter.png[pdfwidth=5cm]
+image::PlotCurves_StyleDotsScatter.png[pdfwidth=8cm]
 
 [TIP]
 ====
@@ -227,7 +228,7 @@ curve->setSymbol(symbol); // Curve takes ownership of symbol
 ```
 
 .Liniendiagramm mit ausgefüllten Kreissymbolen
-image::Symbols_EllipseFilled.png[pdfwidth=5cm]
+image::Symbols_EllipseFilled.png[pdfwidth=8cm]
 
 Zuerst wird das zu verwendende Symbol auf dem Heap mit new erzeugt. Der Konstruktor übernimmt den Typ des Symbols (siehe auch Galerie unten). Man kann das aber auch später über `QwtSymbol::setStyle()` setzen.
 
@@ -297,7 +298,7 @@ curve->setSymbol(symbol); // Curve takes ownership of symbol
 ```
 
 .Eigenes Symbol definiert mittels QPainterPath
-image::Symbols_PainterPath.png[pdfwidth=5cm]
+image::Symbols_PainterPath.png[pdfwidth=8cm]
 
 [CAUTION]
 ====
@@ -327,7 +328,7 @@ Auch hier ist beim Festlegen der Größe wieder auf das Seitenverhältnis zu ach
 Manchmal liegt der Ankerpunkt des SVG-Bildes nicht im Zentrum, wie in obigem Beispiel:
 
 .Zentriertes SVG-Symbol, welches eigentlich aber nach oben verschoben sein sollte
-image::Symbols_SvgCentered.png[pdfwidth=5cm]
+image::Symbols_SvgCentered.png[pdfwidth=8cm]
 
 Man kann den Ankerpunkt bzw. den Zentrierpunkt des Symbols aber mit `QwtSymbol::setPinPoint()` ändern. Die Koordinaten des PinPoint werden dabei von links/oben des SVG-Bildes gemessen:
 
@@ -338,7 +339,7 @@ symbol->setPinPoint(QPointF(br.width()/2-1,br.height()-3));
 ```
 
 .SVG-Symbol mit korrekter Ausrichtung des "Stecknadel"-Punktes
-image::Symbols_SvgWithPinPoint.png[pdfwidth=5cm]
+image::Symbols_SvgWithPinPoint.png[pdfwidth=8cm]
 
 [TIP]
 ====
@@ -362,7 +363,7 @@ curve->setSymbol(symbol); // Curve takes ownership of symbol
 ```
 
 .Pixmap-Symbol, auch mit manuell festgelegtem "Stecknadel"-Punkt
-image::Symbols_Pixmap.png[pdfwidth=5cm]
+image::Symbols_Pixmap.png[pdfwidth=8cm]
 
 
 [[sec:intervalCurves]]
@@ -391,7 +392,7 @@ curve->attach(&plot); // Plot takes ownership
 ```
 
 .Intervallkurve
-image::IntervalCurve.png[pdfwidth=5cm]
+image::IntervalCurve.png[pdfwidth=8cm]
 
 Die Funktion `setSamples()` gibt es in zwei Varianten:
 
@@ -410,7 +411,7 @@ curve->setBrush( QBrush(grad));
 ```
 
 .Intervallkurve mit Gradientenfüllung
-image::IntervalCurve_Gradient.png[pdfwidth=5cm]
+image::IntervalCurve_Gradient.png[pdfwidth=8cm]
 
 [CAUTION]
 ====
@@ -464,5 +465,5 @@ for (int j=0;j<y.count()-1; ++j) {
 
 
 .Diagramm mit gestapelten Kurven/Flächendiagramm
-image::IntervalCurve_StackedCurve.png[pdfwidth=5cm]
+image::IntervalCurve_StackedCurve.png[pdfwidth=8cm]
 

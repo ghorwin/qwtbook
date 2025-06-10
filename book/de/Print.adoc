@@ -1,5 +1,6 @@
 :imagesdir: ../images
 
+<<<
 [[sec:print]]
 # Exportieren und Drucken
 
@@ -21,6 +22,22 @@ QPixmap p = plot.grab();
 p.save("diagramm_screenshot.png");
 ----
 
+Das Diagramm aus dem Tutorial 1 (<<sec:tutorial1>>) sieht exportiert als PNG-Build so aus:
+
+.1-zu-1 Kopie des Plot, exportiert in ein PNG-Bild
+image::Tutorial1_f.png[pdfwidth=8cm]
+
+[TIP]
+====
+Die Funktion `QWidget::grab()` macht bei jedem beliebigen Qt Widget einen Screenshot oder bei Verwendung von `QWidget::grab(QRect(...))` eine Teil-Screenshot des Widgets und alle seiner Kind-Widgets. Das resultierende QPixmap kann dann beliebig weiterverarbeitet werden.
+====
+
+[NOTE]
+====
+Der Widget-Titel wurde mit `QWidget::grab()` nur deshalb mit exportiert, weil das `QwtPlot` das oberste Anwendungswidget war. Ist das `QwtPlot` jedoch in ein Layout eingebettet und wird mit `QWidget::grab()` exportiert, so erhält man auch nur das Plot selbst.
+====
+
+
 ### Kopie in die Zwischenablage
 
 Statt das Pixmap in eine Datei zu speichern, kann man das auch einfach in die Zwischenablage kopieren. Dazu `QClibBoard` und  `QApplication` einbinden und:
@@ -34,6 +51,7 @@ qApp->clipboard()->setImage(p.toImage());
 ----
 
 
+[[sec:pixelExportWithDifferentResulution]]
 ### QwtPlot mit anderer Auflösung abspeichern
 
 Wenn das QwtPlot mit einer anderen Auflösung/Pixelgröße als angezeigt auf dem Bildschirm abgespeichert werden soll, so verwendet man die `QwtPlotRenderer`:
@@ -42,8 +60,6 @@ Wenn das QwtPlot mit einer anderen Auflösung/Pixelgröße als angezeigt auf dem
 ----
 // Render-Objekt erstellen
 QwtPlotRenderer renderer;
-// Statt der versenkten Box wird ein Rahmen mit Skalenstrichen gezeichnen
-renderer.setLayoutFlag(QwtPlotRenderer::FrameWithScales);
 // Zielgröße festlegen
 QRect imageRect( 0.0, 0.0, 1200, 600 );
 // Bildobjekt in der entsprechenden Größe erstellen...
@@ -64,18 +80,124 @@ plotPixmap.save("diagram.png");
 Das Diagramm aus dem Tutorial 1 (<<sec:tutorial1>>) sieht dann z.B. so aus:
 
 .Plot in höherer Auflösung abgespeichert
-image::Tutorial1_h.png[pdfwidth=12cm]
+image::Tutorial1_h.png[pdfwidth=15cm]
+
+[IMPORTANT]
+====
+Wenn man dieses Diagramm und das vorherige der 1-zu-1 Kopie vergleicht, so stellt man fest, dass Fontgrößen, Linienstärken und manche Randabstände (z.B. bei der vertikalen Markierung) gleich geblieben sind. Die Achsenskalierung und damit auch das Gitterraster und Achsenbeschriftungen haben sich jedoch aufgrund der höheren Auflösung verändert. Das kann man sich zu Nutze machen, wenn z.B. Achsenbeschriftungen auf dem Bildschirm nicht komplett ins Diagramm passen und nun aufgrund höherer Auflösung geschrieben werden können. Allerdings birg dies auch die Gefahr, dass die Schriftgrößen im Ausdruck zu klein werden. Das ist aber eher ein Problem beim Vektorexport und wird im nachfolgenden Kapitel thematisiert.
+====
+
+## Exportieren des Plots als Vektorgrafik
+
+Der Export eines Plots als Vektorgrafik erfolgt wiederum mit der `QwtPlotRender`-Klasse, nur diesmal unter Verwendung eines `QPainter`, der von einem Vektorgrafikgerät stammt. Das kann ein Drucker sein, ein PDFWriter, ein SVG-Dokument oder oder oder.
+
+Es gibt aber einige wesentliche Unterschiede und Fallstricke, die es zu beachten gibt.
+
+Wie schon oben im vorangehenden Kapitel beschrieben, wird bei unterschiedlicher Druck-Pixelgröße die Skalierung von Plotelementen neu berechnet. Bei modernen Druckern sind Auflösungen von 600 bzw. 1200 DPI normal, was bei einem A4-Ausdruck zu _sehr hohen_ Pixelgrößen führt und einzelne gedruckte Pixel sind im Ausdruck nicht mehr zu erkennen. 
+
+[CAUTION]
+====
+Bei Ausgabe des Plots als Vektorgrafik, vor allem beim Drucken oder Ausgabe in PDF-Dateien, müssen _alle_ Plotelement mit skalierbaren Größen festgelegt sein. Dies ist insbesondere für alle Definitionen eines `QPen()` notwendig, z.B. bei Linienkurven. Hier dürfen _keine_ kosmetischen Pens mit Linienstärke 0 verwendet werden. Die resultierenden Linien mit Breiten von einem Pixel würden im Ausdruck schlicht nicht sichtbar sein.
+====
+
+Die Skalierung von Schriftgrößen und Linienbreiten wird über die Auflösung (angegeben in DPI) des gewählten Zeichengeräts festgelegt.
+Zusammen mit der Pixel-Größe des Plots ergibt sich dann das finale Erscheinungsbild der Diagramms, welches durchaus von dem Bild auf dem Bildschirm abweichen kann.
 
 
+### Drucken 
 
+Beim Drucken wird das Bild einfach auf eine Druckerzeichenfläche gerendert. Für die Druckunterstützung mit im Qt-Programm zunächst die pro-Datei erweitert werden:
+
+```
+QT += printsupport
+```
+
+Man erstellt und konfiguriert ein Printerobjekt:
+
+```c++
+QPrinter printer( QPrinter::HighResolution );
+printer.setCreator("Ich");          // only for exporting to (PDF) files
+printer.setDocName("Mein Plot");    // only for exporting to (PDF) files
+
+printer.setPageOrientation( QPageLayout::Landscape );
+```
+
+Dann kann der Anwender noch den Drucker auswählen:
+
+```c++
+QPrintDialog dialog( &printer );
+if ( dialog.exec() ) {
+	QwtPlotRenderer renderer;
+	renderer.renderTo( &plot, printer );
+}
+```
+
+Und schon wird das Bild auf den Drucker oder PDF-Drucker geschoben.
+
+[NOTE]
+====
+Die Druckereigenschaften _creator_ und _docName_ werden bei PDF-Druckern als Eigenschaften in der PDF-Datei abgelegt. Für normale Drucker sind die nicht notwendig.
+====
+
+Wichtig bei Druckern ist die zu verwendende Auflösung. Dies wird im Konstruktor der `QPrinter`-Klasse eingestellt:
+
+- `QPrinter::HighResolution` legt die Druckauflösung wie beim eingestellten Drucker fest (bzw. 1200 DPI bei PDFs)
+- `QPrinter::ScreenResolution` legt die Auflösung wie auf dem aktuellen Bildschirm fest, üblicherweise also 72 DPI. Dadurch wird das gedruckte Diagramm ziemlich genau so aussehen, wie auf dem Bildschirm angezeigt
+
+Man kann auch manuell die zu verwendende Auflösung durch Aufruf von `QPrinter::setResolution()` vorgeben.
+
+Das Zusammenspiel von Auflösung und Druckgröße wird in <<sec:exportDPI>> beschrieben.
+
+
+### Anpassen des gerenderten Plots
+
+Zwischen einem auf dem Bildschirm angezeigten Plot und einem Ausdruck gibt häufig diverse Unterschiede. So möchte man bei schwarz-weiß-Ausdrucken wahrscheinlich keinen bunten Hintergrund des Diagramms drucken und auch der Rand des Plots soll nicht in Widget-Farben gedruckt werden. Derartige Anpassungen macht man direkt im `QwtPlotRenderer` über verschiedene Layout-Anpassungsfunktionen.
+
+Man kann den Renderer anweisen, bestimmte Elemente nicht zu zeichnen:
+```c++
+// kein Hintergrund des Widgets
+renderer.setDiscardFlag( QwtPlotRenderer::DiscardBackground );
+// Keinen Zeichenflächenhintergrund
+renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasBackground );
+// keinen Rahmen um die Zeichenfläche
+renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasFrame );
+```
+
+.Plot ohne Widget-Hintergrund (Rand), ohne Zeichenflächenhintergrund und ohne Rahmen
+image::Tutorial1_export1.png[pdfwidth=8cm]
+
+Zusätzlich könnte man noch weitere Dinge ausblenden:
+
+- Titel mit `QwtPlotRenderer::DiscardTitle` (da man häufig Diagrammtitel ja in die Diagrammbeschriftung schreibt)
+- Legende mit `QwtPlotRenderer::DiscardLegend`
+- Footer mit `QwtPlotRenderer::DiscardFooter` (falls das Plot so einen hat, siehe <<sec:plotFooter>>)
+
+Damit kann das Plot gedruckt schon ganz ordentlich aussehen. Man kann das Erscheinungsbild aber für einen Ausdruck noch ändern, indem man einen flachen Rahmen mit angedockten Skalen zeichnet.
+
+```c++
+renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
+```
+
+.Plot gerendert im Layoutmodus _FrameWithScales_
+image::Tutorial1_export2.png[pdfwidth=8cm]
+
+Die linke untere Ecke des Diagramms ist hier nicht direkt am Punkt (0, 0,001). Das kann man erzwingen, wenn man die Zeichenfläche an alle vier Achsen ausrichtet:
+
+```c++
+plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, true );
+plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xBottom, true );
+plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yRight, true );
+plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xTop, true );
+```
+
+.Plot mit ausgerichteten Skalen - typisches Plotlayout für den Export
+image::Tutorial1_export3.png[pdfwidth=8cm]
+
+
+[[sec:exportDPI]]
 ### Diagrammelemente skalieren (DPI ändern)
 
 TODO
 
-## Exportieren des Plots als Vektorgrafik
 
-TODO 
 
-## Drucken 
-
-TODO

@@ -1,12 +1,13 @@
 :imagesdir: ../images
 
+<<<
 [[sec:qwtWigets]]
 # QWT Widgets und Eingabekomponenten
 
 Neben dem `QwtPlot` gibt es in der Qwt-Bibliothek noch eine Reihe anderer Eingabekomponenten, die in diesem Kapitel kurz vorgestellt werden.
 Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissenschafltlich/technischen Geräten nachempfunden.
 
-Für die Anzeige der Skalen verwenden die nachfolgend vorgestellten Komponenten intern zur Darstellung der Skalen die in <<sec::axisScales>> näher beschriebenen Skalenberechnungs- und -zeichenklassen. 
+Für die Anzeige der Skalen verwenden die nachfolgend vorgestellten Komponenten intern zur Darstellung der Skalen die in <<sec:axisScales>> näher beschriebenen Skalenberechnungs- und -zeichenklassen. 
 
 ## Schieberegler (Slider)
 

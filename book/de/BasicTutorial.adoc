@@ -1,5 +1,6 @@
 :imagesdir: ../images
 
+<<<
 [[sec:tutorial1]]
 # Erste Schritte und ein interaktives Diagramm
 
@@ -396,10 +397,15 @@ panner->setMouseButton(Qt::MidButton); // Mittlere Maustaste verschiebt
 Wie beim `QwtPlotZoomer` wird das Objekt als Kindobjekt des Canvas-Widgets hinzugefügt.  Üblich ist das Verschieben von Bildschirminhalten mit gedrückter mittlerer Maustaste, also legt man das mit `setMouseButton()` fest.
 
 
-Damit ist das Einstiegstutorial beendet. Mit dem `QwtPlot` kann man bereits mit wenigen Handgriffen ein voll funktionsfähiges und interaktives Diagramm erstellen.  In diesem Tutorial war das `QwtPlot` gleichzeitig das Anwendungs-Widget. Wenn man das `QwtPlot` aber in bestehende Designer-Formularklassen einfügen will, gibt es verschiedene Techniken:
+---
+
+Damit ist das Einstiegstutorial beendet. Mit dem `QwtPlot` kann man bereits mit wenigen Handgriffen ein voll funktionsfähiges und interaktives Diagramm erstellen.  
+
+In diesem Tutorial war das `QwtPlot` gleichzeitig das Anwendungs-Widget. Wenn man das `QwtPlot` aber in bestehende Designer-Formularklassen einfügen will, gibt es verschiedene Techniken:
 
 - die Verwendung von Platzhalter-Widgets
 - die Einbindung von Qt Designer Plugins für die Qwt Bibliothek
 
 Diese Methoden sind in <<sec:usingQwtPlot>> beschrieben.
 
+Allen Diagrammtypen und weiteren Plot-Eigenschaften sind einzelne Kapitel gewidmet. Beim `QwtPlot` wird dabei zunächst nur auf die mitgelieferte Funktionalität des `QwtPlot` und der dazugehörigen Klassen eingegangen. In späteren Kapiteln wird die Erweiterung der Plot-Funktionalität durch Überladen/Ersetzen der eingebauten Funktionen gezeigt.

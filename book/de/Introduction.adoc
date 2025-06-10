@@ -1,5 +1,6 @@
 :imagesdir: ../images
 
+<<<
 # Überblick über die Qwt Bibliothek
 
 _Qwt - Qt Widgets for Technical Applications_ ist eine Open-Source Bibliothek für technische Anwendungen und stellt
