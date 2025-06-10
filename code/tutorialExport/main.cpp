@@ -28,7 +28,9 @@ THE SOFTWARE.
 #include <QPen>
 #include <QFile>
 #include <QTextStream>
-#include <QPainter>
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QPdfWriter>
 
 #define ORIGINAL_HEADERS
 #ifndef ORIGINAL_HEADERS
@@ -42,7 +44,7 @@ THE SOFTWARE.
 #include <QwtPlotMarker>
 #include <QwtPlotZoomer>
 #include <QwtPlotPanner>
-#include <QwtPlotRenderer>
+#include <QwtPlotLayout>
 #else
 
 #include <qwt_plot.h>
@@ -56,7 +58,6 @@ THE SOFTWARE.
 #include <qwt_scale_engine.h>
 #include <qwt_plot_renderer.h>
 #include <qwt_plot_layout.h>
-
 #endif
 
 int main(int argc, char *argv[]) {
@@ -83,7 +84,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	QwtPlotCurve *curve = new QwtPlotCurve();
-	curve->setPen(QColor(180,40,20), 0);
+	curve->setPen(QColor(180,40,20), 1);
 	curve->setTitle("Gamma-Spektrum");
 	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
 	curve->setSamples(x, y);
@@ -161,36 +162,41 @@ int main(int argc, char *argv[]) {
 	// Panner hinzufügen, wie auch beim PlotZoomer muss das Canvas-Objekt als Argument übergeben werden
 	QwtPlotPanner * panner = new QwtPlotPanner(plot.canvas());  // plot takes ownership
 	panner->setMouseButton(Qt::MidButton); // Mittlere Maustaste verschiebt
-
 	plot.show();
 
-#if 0
-	// Render-Objekt erstellen
-	QwtPlotRenderer renderer;
-	// Zielgröße festlegen
-	QRect imageRect( 0.0, 0.0, 600, 400 );
-	// Bildobjekt in der entsprechenden Größe erstellen...
-	QImage image( imageRect.size(), QImage::Format_ARGB32 );
-	// und mit weißem Hintergrund füllen
-	image.fill(Qt::white);
-	renderer.setDiscardFlag( QwtPlotRenderer::DiscardBackground );
-	renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasBackground );
-	renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasFrame );
-	renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
+	// export the plot
+//	QPdfWriter writer("plot.pdf");
+	QPrinter printer( QPrinter::HighResolution );
 
-	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, true );
-	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xBottom, true );
-	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yRight, true );
-	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xTop, true );
-
-	// Das Diagramm in das QImage zeichnen
-	QPainter painter( &image );
-	renderer.render( &plot, &painter, imageRect );
-	painter.end();
-
-	// QImage zurück in Pixmap konvertieren
-	QPixmap plotPixmap( QPixmap::fromImage(image) );
-	plotPixmap.save("diagram.png");
+	printer.setCreator( "Ich" );
+	printer.setDocName("Some plot");
+#if QT_VERSION >= 0x050300
+	printer.setPageOrientation( QPageLayout::Landscape );
+#else
+	printer.setOrientation( QPrinter::Landscape );
 #endif
+
+	QPrintDialog dialog( &printer );
+	if ( dialog.exec() ) {
+		QwtPlotRenderer renderer;
+
+		if ( printer.colorMode() == QPrinter::GrayScale )
+		{
+			renderer.setDiscardFlag( QwtPlotRenderer::DiscardBackground );
+			renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasBackground );
+			renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasFrame );
+		}
+		renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
+
+		plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, true );
+		plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xBottom, true );
+		plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yRight, true );
+		plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xTop, true );
+
+		renderer.renderTo( &plot, printer );
+	}
+
+
+
 	return a.exec();
 }
