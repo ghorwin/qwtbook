@@ -242,7 +242,6 @@ Schließlich wird das Symbol der Kurve mit `QwtPlotCurve::setSymbol()` gegeben.
 Beim Aufruf von `QwtPlotCurve::setSymbol()` übernimmt die Plot-Kurve die Verantwortung für's Speicheraufräumen.
 ====
 
-
 Die Symbolklasse ist ziemlich mächtig und kann verschiedenste Symbole zeichnen:
 
 - vorgefertigte Formen wie Kreise, Rechtecke, Kreuze, etc. (Stil `QwtSymbol::Ellipse`...`QwtSymbol::Hexagon`
@@ -260,7 +259,22 @@ Es gibt zahlreiche eingebaute Symbolformen (fett gedruckt im Diagrammtitel ist j
 image::Symbols_Gallery.png[pdfwidth=16cm]
 
 
+Symbole müssen nicht immer quadratisch sein. Wenn man die Größe eines Symbols mit
 
+```c++
+symbol->setSize(10);
+```
+
+setzt, wird automatisch `width=height=10` verwendet. Alternativ kann man aber auch ein Rechteck als Größe definieren:
+
+```c++
+symbol->setSize(w,h);
+// oder via QSize
+QSize s(w,h);
+symbol->setSize(s);
+```
+
+Deshalb gibt es auch keine separaten Linienstile für Kreis und Ellipse oder Rechteck und Quadrat.
 
 ### Nutzerdefinierte Formen via QPainterPath
 

@@ -23,7 +23,7 @@ Das Diagramm selbst ist ein kartesisches Diagramm mit maximal 4 Achsen, identifi
 - `QwtPlot::yLeft`
 - `QwtPlot::yRight`
 
-Diese Achsen haben primär die Aufgabe, zwischen den Koordinaten des Plots (x,y) und Bildschirmkoordinaten umzurechnen. Jede der vier Achsen kann individuell konfiguriert werden, welches sich auf die min/max-Werte und die Achsenskalierung auswirkt.
+Diese Achsen haben primär die Aufgabe, zwischen den _Plotkoordinaten_ (x,y) und _Bildschirmkoordinaten_ umzurechnen. Jede der vier Achsen kann individuell konfiguriert werden, welches sich auf die min/max-Werte und die Achsenskalierung auswirkt.
 
 ### Diagrammelemente
 
@@ -47,7 +47,7 @@ In einem Diagramm kann man alle möglichen Elemente kombinieren, also auch Linie
 
 [TIP]
 ====
-Die Zeichenreihenfolge, also welches Zeichenelement ein anderes überdeckt, bestimmt das z-Attribut. Dies wird über die Funktionen `QwtPlotItem::setZ(...)` und `::z()`  kontrolliert.
+Die Zeichenreihenfolge, also welches Zeichenelement ein anderes überdeckt, bestimmt das z-Attribut. Dies wird über die Funktionen `QwtPlotItem::setZ(...)` und `QwtPlotItem::z()`  kontrolliert.
 ====
 
 Die Positionierung der Diagrammelemente erfolgt über die Plotkoordinaten. Die Umrechung in Bildschirmkoordinaten bzw. die konkrete Position auf der Zeichenfläche wird mittels der jeweils zugeordneten x- und y-Achse gemacht.  Da es nun jeweils zwei x- und y-Achsen gibt, braucht man also bei Anzeige eines Diagrammelements an einem bestimmtenx,y-Datenpunkt zwingend eine Zuordnung zu _einer_ x- und _einer_ y-Achse. Diese Eigenschaft setzt man den einzelnen Zeichenelementen, wobei standardmäßig `xBottom` und `yLeft` ausgewählt sind.
@@ -69,7 +69,7 @@ Das `QwtPlotItem` deklariert und implementiert auch die virtuellen Funktionen f�
 [[sec:seriesData]]
 ## Datenhaltung im QwtPlot / QwtSeriesStore
 
-Für die Darstellen von Plotkurven/Balken oder anderen Zeichenelementen werden die Daten für mehrere Datenpunkte (_samples_) benötigt. Es gibt verschiedene Typen von _samples_, je nach Anforderung des Zeichenelements. So brauchen Linienkurven normalerweise x,y-Wertepaare, aber Intervallkurven jeweils x,y1,y2-Tuples.
+Für die Darstellen von Plotkurven/Balken oder anderen Zeichenelementen werden die Daten für mehrere Datenpunkte (_samples_) benötigt. Je nach Anforderung des Zeichenelements gibt es verschiedene Typen von _samples_. So brauchen Linienkurven normalerweise x,y-Wertepaare, aber Intervallkurven jeweils x,y1,y2-Tuples.
 
 Alle Zeichenelemente, welche solche Reihendaten verwenden, sind Kinder der Klasse `QwtPlotSeriesItem`.
 

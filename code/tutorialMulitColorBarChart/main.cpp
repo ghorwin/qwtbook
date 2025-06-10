@@ -119,8 +119,8 @@ int main(int argc, char *argv[]) {
 	}
 	cityPop[] =
 	{
-		{ 10, "Dresden", QColor(0xf19624) },
-		{ 20, "Berlin", QColor(0x0081a6) },
+		{ 20, "Dresden", QColor(0xf19624) },
+		{ 10, "Berlin", QColor(0x0081a6) },
 		{ 15, "Leipzig", QColor(0xdceb54) },
 		{ 14, "Hamburg", QColor(0x00a668) },
 		{ 18, "Wolgast", QColor(0xf72415) },

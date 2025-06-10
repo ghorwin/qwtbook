@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.20">
 <meta name="author" content="Andreas Nicolai">
 <title>Das Qwt Handbuch</title>
 <style>
@@ -121,216 +121,119 @@ table {
 <style>
 pre.rouge table td { padding: 5px; }
 pre.rouge table pre { margin: 0; }
-pre.rouge .cm {
-  color: #999988;
-  font-style: italic;
+pre.rouge, pre.rouge .w {
+  color: #24292f;
+  background-color: #f6f8fa;
 }
-pre.rouge .cp {
-  color: #999999;
-  font-weight: bold;
-}
-pre.rouge .c1 {
-  color: #999988;
-  font-style: italic;
-}
-pre.rouge .cs {
-  color: #999999;
-  font-weight: bold;
-  font-style: italic;
-}
-pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cpf {
-  color: #999988;
-  font-style: italic;
-}
-pre.rouge .err {
-  color: #a61717;
-  background-color: #e3d2d2;
-}
-pre.rouge .gd {
-  color: #000000;
-  background-color: #ffdddd;
-}
-pre.rouge .ge {
-  color: #000000;
-  font-style: italic;
+pre.rouge .k, pre.rouge .kd, pre.rouge .kn, pre.rouge .kp, pre.rouge .kr, pre.rouge .kt, pre.rouge .kv {
+  color: #cf222e;
 }
 pre.rouge .gr {
-  color: #aa0000;
+  color: #f6f8fa;
 }
-pre.rouge .gh {
-  color: #999999;
+pre.rouge .gd {
+  color: #82071e;
+  background-color: #ffebe9;
+}
+pre.rouge .nb {
+  color: #953800;
+}
+pre.rouge .nc {
+  color: #953800;
+}
+pre.rouge .no {
+  color: #953800;
+}
+pre.rouge .nn {
+  color: #953800;
+}
+pre.rouge .sr {
+  color: #116329;
+}
+pre.rouge .na {
+  color: #116329;
+}
+pre.rouge .nt {
+  color: #116329;
 }
 pre.rouge .gi {
-  color: #000000;
-  background-color: #ddffdd;
+  color: #116329;
+  background-color: #dafbe1;
 }
-pre.rouge .go {
-  color: #888888;
+pre.rouge .ges {
+  font-weight: bold;
+  font-style: italic;
 }
-pre.rouge .gp {
-  color: #555555;
+pre.rouge .kc {
+  color: #0550ae;
 }
-pre.rouge .gs {
+pre.rouge .l, pre.rouge .ld, pre.rouge .m, pre.rouge .mb, pre.rouge .mf, pre.rouge .mh, pre.rouge .mi, pre.rouge .il, pre.rouge .mo, pre.rouge .mx {
+  color: #0550ae;
+}
+pre.rouge .sb {
+  color: #0550ae;
+}
+pre.rouge .bp {
+  color: #0550ae;
+}
+pre.rouge .ne {
+  color: #0550ae;
+}
+pre.rouge .nl {
+  color: #0550ae;
+}
+pre.rouge .py {
+  color: #0550ae;
+}
+pre.rouge .nv, pre.rouge .vc, pre.rouge .vg, pre.rouge .vi, pre.rouge .vm {
+  color: #0550ae;
+}
+pre.rouge .o, pre.rouge .ow {
+  color: #0550ae;
+}
+pre.rouge .gh {
+  color: #0550ae;
   font-weight: bold;
 }
 pre.rouge .gu {
-  color: #aaaaaa;
-}
-pre.rouge .gt {
-  color: #aa0000;
-}
-pre.rouge .kc {
-  color: #000000;
+  color: #0550ae;
   font-weight: bold;
 }
-pre.rouge .kd {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kn {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kp {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kr {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kt {
-  color: #445588;
-  font-weight: bold;
-}
-pre.rouge .k, pre.rouge .kv {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .mf {
-  color: #009999;
-}
-pre.rouge .mh {
-  color: #009999;
-}
-pre.rouge .il {
-  color: #009999;
-}
-pre.rouge .mi {
-  color: #009999;
-}
-pre.rouge .mo {
-  color: #009999;
-}
-pre.rouge .m, pre.rouge .mb, pre.rouge .mx {
-  color: #009999;
-}
-pre.rouge .sa {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .sb {
-  color: #d14;
-}
-pre.rouge .sc {
-  color: #d14;
-}
-pre.rouge .sd {
-  color: #d14;
-}
-pre.rouge .s2 {
-  color: #d14;
-}
-pre.rouge .se {
-  color: #d14;
-}
-pre.rouge .sh {
-  color: #d14;
-}
-pre.rouge .si {
-  color: #d14;
-}
-pre.rouge .sx {
-  color: #d14;
-}
-pre.rouge .sr {
-  color: #009926;
-}
-pre.rouge .s1 {
-  color: #d14;
-}
-pre.rouge .ss {
-  color: #990073;
-}
-pre.rouge .s, pre.rouge .dl {
-  color: #d14;
-}
-pre.rouge .na {
-  color: #008080;
-}
-pre.rouge .bp {
-  color: #999999;
-}
-pre.rouge .nb {
-  color: #0086B3;
-}
-pre.rouge .nc {
-  color: #445588;
-  font-weight: bold;
-}
-pre.rouge .no {
-  color: #008080;
+pre.rouge .s, pre.rouge .sa, pre.rouge .sc, pre.rouge .dl, pre.rouge .sd, pre.rouge .s2, pre.rouge .se, pre.rouge .sh, pre.rouge .sx, pre.rouge .s1, pre.rouge .ss {
+  color: #0a3069;
 }
 pre.rouge .nd {
-  color: #3c5d5d;
-  font-weight: bold;
-}
-pre.rouge .ni {
-  color: #800080;
-}
-pre.rouge .ne {
-  color: #990000;
-  font-weight: bold;
+  color: #8250df;
 }
 pre.rouge .nf, pre.rouge .fm {
-  color: #990000;
+  color: #8250df;
+}
+pre.rouge .err {
+  color: #f6f8fa;
+  background-color: #82071e;
+}
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cm, pre.rouge .cp, pre.rouge .cpf, pre.rouge .c1, pre.rouge .cs {
+  color: #6e7781;
+}
+pre.rouge .gl {
+  color: #6e7781;
+}
+pre.rouge .gt {
+  color: #6e7781;
+}
+pre.rouge .ni {
+  color: #24292f;
+}
+pre.rouge .si {
+  color: #24292f;
+}
+pre.rouge .ge {
+  color: #24292f;
+  font-style: italic;
+}
+pre.rouge .gs {
+  color: #24292f;
   font-weight: bold;
-}
-pre.rouge .nl {
-  color: #990000;
-  font-weight: bold;
-}
-pre.rouge .nn {
-  color: #555555;
-}
-pre.rouge .nt {
-  color: #000080;
-}
-pre.rouge .vc {
-  color: #008080;
-}
-pre.rouge .vg {
-  color: #008080;
-}
-pre.rouge .vi {
-  color: #008080;
-}
-pre.rouge .nv, pre.rouge .vm {
-  color: #008080;
-}
-pre.rouge .ow {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .o {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .w {
-  color: #bbbbbb;
-}
-pre.rouge {
-  background-color: #f8f8f8;
 }
 </style>
 </head>
@@ -443,8 +346,9 @@ pre.rouge {
 <li><a href="#_balkenformen_und_farben">6.4. Balkenformen und Farben</a></li>
 <li><a href="#_balkenbeschriftung_auf_der_x_achse">6.5. Balkenbeschriftung auf der X-Achse</a></li>
 <li><a href="#_balkenbeschriftungen">6.6. Balkenbeschriftungen</a></li>
-<li><a href="#_mehrfarbige_balken_legendeneinträge_etc">6.7. Mehrfarbige Balken, Legendeneinträge etc.</a></li>
-<li><a href="#_gestapelte_balkendiagramme_oder_balkendiagramme_mit_mehreren_balken_pro_gruppe">6.8. Gestapelte Balkendiagramme oder Balkendiagramme mit mehreren Balken pro Gruppe</a></li>
+<li><a href="#_mehrfarbige_balken">6.7. Mehrfarbige Balken</a></li>
+<li><a href="#_legendeneinträge">6.8. Legendeneinträge</a></li>
+<li><a href="#_gestapelte_balkendiagramme_oder_balkendiagramme_mit_mehreren_balken_pro_gruppe">6.9. Gestapelte Balkendiagramme oder Balkendiagramme mit mehreren Balken pro Gruppe</a></li>
 </ul>
 </li>
 <li><a href="#sec:legend">7. Legende</a></li>
@@ -881,7 +785,7 @@ Dazu in den Projekteinstellungen, unter "Ausführen", im Abschnitt "Umgebung" di
 		<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">yval</span><span class="p">);</span>
 	<span class="p">}</span>
 
-	<span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotCurve</span><span class="p">();</span>
+	<span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setTitle</span><span class="p">(</span><span class="s">"Gamma-Spektrum"</span><span class="p">);</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span> <span class="p">);</span> <span class="c1">// Antialiasing verwenden</span>
@@ -1395,7 +1299,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </ul>
 </div>
 <div class="paragraph">
-<p>Diese Achsen haben primär die Aufgabe, zwischen den Koordinaten des Plots (x,y) und Bildschirmkoordinaten umzurechnen. Jede der vier Achsen kann individuell konfiguriert werden, welches sich auf die min/max-Werte und die Achsenskalierung auswirkt.</p>
+<p>Diese Achsen haben primär die Aufgabe, zwischen den <em>Plotkoordinaten</em> (x,y) und <em>Bildschirmkoordinaten</em> umzurechnen. Jede der vier Achsen kann individuell konfiguriert werden, welches sich auf die min/max-Werte und die Achsenskalierung auswirkt.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1448,7 +1352,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Die Zeichenreihenfolge, also welches Zeichenelement ein anderes überdeckt, bestimmt das z-Attribut. Dies wird über die Funktionen <code>QwtPlotItem::setZ(...)</code> und <code>::z()</code>  kontrolliert.</p>
+<p>Die Zeichenreihenfolge, also welches Zeichenelement ein anderes überdeckt, bestimmt das z-Attribut. Dies wird über die Funktionen <code>QwtPlotItem::setZ(...)</code> und <code>QwtPlotItem::z()</code>  kontrolliert.</p>
 </div>
 </td>
 </tr>
@@ -1496,7 +1400,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 <div class="sect2">
 <h3 id="sec:seriesData">4.2. Datenhaltung im QwtPlot / QwtSeriesStore</h3>
 <div class="paragraph">
-<p>Für die Darstellen von Plotkurven/Balken oder anderen Zeichenelementen werden die Daten für mehrere Datenpunkte (<em>samples</em>) benötigt. Es gibt verschiedene Typen von <em>samples</em>, je nach Anforderung des Zeichenelements. So brauchen Linienkurven normalerweise x,y-Wertepaare, aber Intervallkurven jeweils x,y1,y2-Tuples.</p>
+<p>Für die Darstellen von Plotkurven/Balken oder anderen Zeichenelementen werden die Daten für mehrere Datenpunkte (<em>samples</em>) benötigt. Je nach Anforderung des Zeichenelements gibt es verschiedene Typen von <em>samples</em>. So brauchen Linienkurven normalerweise x,y-Wertepaare, aber Intervallkurven jeweils x,y1,y2-Tuples.</p>
 </div>
 <div class="paragraph">
 <p>Alle Zeichenelemente, welche solche Reihendaten verwenden, sind Kinder der Klasse <code>QwtPlotSeriesItem</code>.</p>
@@ -1738,6 +1642,35 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Bei sehr großen Datenmengen und begrenztem Hauptspeicher kann es sinnvoll sein, die Daten nicht in das Plot hineinzukopieren, sondern die Plotkurven direkt auf den Speicher zugreifen zu lassen. Dafür gibt es die Funktion <code>QwtPlotCurve::setRawSamples()</code>. Die Syntax ist wie beim vorherigen Beispiel:</p>
+</div>
+<div class="listingblock">
+<div class="title">Direkte Verwendung der im Speicher befindlichen Daten durch as Plot</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span> <span class="n">xdata</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">data</span><span class="p">();</span> <span class="c1">// x ist ein std::vector</span>
+<span class="k">const</span> <span class="kt">double</span> <span class="o">*</span> <span class="n">ydata</span> <span class="o">=</span> <span class="n">y</span><span class="p">.</span><span class="n">data</span><span class="p">();</span> <span class="c1">// y ist ein std::vector</span>
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRawSamples</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">count</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Achtung"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Die Variablen und deren Speicherbereich, welche im Aufruf von <code>setRawSamples()</code> verwendet werden, müssen eine längere Lebensdauer haben, als das Plot bzw. die Plotkurve selbst.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Direkte Änderung der Daten im Speicher wird beim nächsten Rendern des Plots direkt sichtbar. Allerdings müssen das Plot und dessen  Zeichenelemente, die ein Interesse an den Wertebereichen der Plotkurven haben, manuell über eine Änderung der Daten information werden. Dazu einfach <code>QwtPlot::replot()</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2012,6 +1945,28 @@ Das Zusatz-Attribut <code>QwtPlotCurve::Inverted</code> gibt dabei an, ob die St
 </div>
 <div class="title">Abbildung 26. Eingebaute Symboltypen/Stile und deren Enumerationstypen</div>
 </div>
+<div class="paragraph">
+<p>Symbole müssen nicht immer quadratisch sein. Wenn man die Größe eines Symbols mit</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setSize</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>setzt, wird automatisch <code>width=height=10</code> verwendet. Alternativ kann man aber auch ein Rechteck als Größe definieren:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setSize</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">);</span>
+<span class="c1">// oder via QSize</span>
+<span class="n">QSize</span> <span class="nf">s</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">);</span>
+<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setSize</span><span class="p">(</span><span class="n">s</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Deshalb gibt es auch keine separaten Linienstile für Kreis und Ellipse oder Rechteck und Quadrat.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_nutzerdefinierte_formen_via_qpainterpath">5.7.2. Nutzerdefinierte Formen via QPainterPath</h4>
@@ -2170,7 +2125,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
 	<span class="n">intervalSamples</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">QwtIntervalSample</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y2</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
 
-<span class="n">QwtPlotIntervalCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotIntervalCurve</span><span class="p">();</span>
+<span class="n">QwtPlotIntervalCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotIntervalCurve</span><span class="p">();</span>
 <span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotIntervalCurve</span><span class="o">::</span><span class="n">Tube</span><span class="p">);</span>
 <span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">180</span><span class="p">),</span> <span class="mi">2</span><span class="p">);</span>
 <span class="n">curve</span><span class="o">-&gt;</span><span class="n">setBrush</span><span class="p">(</span> <span class="n">QColor</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">);</span>
@@ -2607,18 +2562,16 @@ Dann schaltet man die Unterteilungsstriche (<em>Ticks</em>) und die Achsenlinie 
 <pre class="rouge highlight"><code data-lang="c++"><span class="k">class</span> <span class="nc">ScaleDraw</span> <span class="o">:</span> <span class="k">public</span> <span class="n">QwtScaleDraw</span> <span class="p">{</span>
 <span class="nl">public:</span>
 	<span class="n">ScaleDraw</span><span class="p">(</span><span class="k">const</span> <span class="n">QStringList</span><span class="o">&amp;</span> <span class="n">labels</span> <span class="p">)</span> <span class="o">:</span> <span class="n">m_labels</span><span class="p">(</span> <span class="n">labels</span> <span class="p">)</span> <span class="p">{</span>
-		<span class="n">setTickLength</span><span class="p">(</span> <span class="n">QwtScaleDiv</span><span class="o">::</span><span class="n">MinorTick</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
-		<span class="n">setTickLength</span><span class="p">(</span> <span class="n">QwtScaleDiv</span><span class="o">::</span><span class="n">MediumTick</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
-		<span class="n">setTickLength</span><span class="p">(</span> <span class="n">QwtScaleDiv</span><span class="o">::</span><span class="n">MajorTick</span><span class="p">,</span> <span class="mi">2</span> <span class="p">);</span>
+		<span class="n">enableComponent</span><span class="p">(</span> <span class="n">QwtScaleDraw</span><span class="o">::</span><span class="n">Ticks</span><span class="p">,</span> <span class="nb">false</span> <span class="p">);</span>
 		<span class="n">enableComponent</span><span class="p">(</span> <span class="n">QwtScaleDraw</span><span class="o">::</span><span class="n">Backbone</span><span class="p">,</span> <span class="nb">false</span> <span class="p">);</span>
 		<span class="n">setLabelAlignment</span><span class="p">(</span> <span class="n">Qt</span><span class="o">::</span><span class="n">AlignHCenter</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">::</span><span class="n">AlignVCenter</span> <span class="p">);</span>
 	<span class="p">}</span>
 
-	<span class="k">virtual</span> <span class="n">QwtText</span> <span class="n">label</span><span class="p">(</span> <span class="kt">double</span> <span class="n">value</span> <span class="p">)</span> <span class="k">const</span> <span class="n">QWT_OVERRIDE</span> <span class="p">{</span>
+	<span class="k">virtual</span> <span class="n">QwtText</span> <span class="nf">label</span><span class="p">(</span> <span class="kt">double</span> <span class="n">value</span> <span class="p">)</span> <span class="k">const</span> <span class="n">QWT_OVERRIDE</span> <span class="p">{</span>
 		<span class="k">const</span> <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">qRound</span><span class="p">(</span> <span class="n">value</span> <span class="p">);</span>
 		<span class="k">if</span> <span class="p">(</span> <span class="n">index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">m_labels</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="p">)</span>
 			<span class="k">return</span> <span class="n">m_labels</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
-		<span class="k">return</span> <span class="n">QwtText</span><span class="p">();</span>
+		<span class="k">return</span> <span class="nf">QwtText</span><span class="p">();</span>
 	<span class="p">}</span>
 
 	<span class="n">QStringList</span> <span class="n">m_labels</span><span class="p">;</span>
@@ -2635,16 +2588,13 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 <span class="image"><img src="../images/BarPlot_1_xAxisWithLabels_zoomed.png" alt="BarPlot 1 xAxisWithLabels zoomed"></span></p>
 </div>
 <div class="paragraph">
-<p>Das Problem mit dem hineinzoomen lässt sich durch eine minimale Erweiterung des Codes lösen:</p>
+<p>Das Problem mit dem hineinzoomen lässt sich durch eine minimale Erweiterung des Codes lösen (nur Labels dort zeichnen, wo der x-Achsen-Skalenwert gerundet ziemlich exakt einer ganzen Zahl entspricht):</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="c++">	<span class="k">if</span> <span class="p">(</span> <span class="n">index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">m_labels</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">qAbs</span><span class="p">(</span><span class="n">index</span><span class="o">-</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span> <span class="p">)</span>
 		<span class="k">return</span> <span class="n">m_labels</span><span class="p">[</span><span class="n">index</span><span class="p">];</span></code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Trotzdem bleiben noch Achsenticks abseits von Balken stehen. Deshalb schaltet man die besser komplett aus und erhält dann ein ordentliches Diagramm, auch im gezoomten Zustand.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -2654,13 +2604,157 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 </div>
 </div>
 <div class="sect2">
-<h3 id="_mehrfarbige_balken_legendeneinträge_etc">6.7. Mehrfarbige Balken, Legendeneinträge etc.</h3>
+<h3 id="_mehrfarbige_balken">6.7. Mehrfarbige Balken</h3>
 <div class="paragraph">
-<p>Alle weiterführenden Anpassungen des Balkendiagrams sind im <a href="#sec:advancedCurves">[sec:advancedCurves]</a> beschrieben.</p>
+<p>Wenn man die Balken nun auch noch individuell einfärben möchte, so kommt man um eine Re-Implemetierung des <code>QwtPlotBarChart</code> Zeichenelements nicht herum. Man muss eigentlich nur die Funktion <code>QwtPlotBarChart::specialSymbol()</code> reimplementieren und hier unterschiedlich gefärbte Balkensymbole zurückliefern.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="k">class</span> <span class="nc">MultiColorBarChart</span> <span class="o">:</span> <span class="k">public</span>  <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="n">MultiColorBarChart</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">setLayoutPolicy</span><span class="p">(</span><span class="n">QwtPlotBarChart</span><span class="o">::</span><span class="n">ScaleSamplesToAxes</span><span class="p">);</span>
+		<span class="n">setLayoutHint</span><span class="p">(</span><span class="mf">0.8</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="c1">// we want to have individual colors for each bar</span>
+	<span class="k">virtual</span> <span class="n">QwtColumnSymbol</span><span class="o">*</span> <span class="nf">specialSymbol</span><span class="p">(</span>
+	    <span class="kt">int</span> <span class="n">sampleIndex</span><span class="p">,</span> <span class="k">const</span> <span class="n">QPointF</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">const</span> <span class="n">QWT_OVERRIDE</span>
+	<span class="p">{</span>
+		<span class="c1">// generate symbol with color for each bar</span>
+		<span class="n">QwtColumnSymbol</span><span class="o">*</span> <span class="n">symbol</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtColumnSymbol</span><span class="p">(</span> <span class="n">QwtColumnSymbol</span><span class="o">::</span><span class="n">Box</span> <span class="p">);</span>
+		<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setLineWidth</span><span class="p">(</span> <span class="mi">2</span> <span class="p">);</span>
+		<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setFrameStyle</span><span class="p">(</span> <span class="n">QwtColumnSymbol</span><span class="o">::</span><span class="n">Raised</span> <span class="p">);</span>
+
+		<span class="n">QColor</span> <span class="nf">c</span><span class="p">(</span> <span class="n">Qt</span><span class="o">::</span><span class="n">white</span> <span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span> <span class="n">sampleIndex</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">sampleIndex</span> <span class="o">&lt;</span> <span class="n">m_colors</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="p">)</span>
+			<span class="n">c</span> <span class="o">=</span> <span class="n">m_colors</span><span class="p">[</span> <span class="n">sampleIndex</span> <span class="p">];</span>
+		<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setPalette</span><span class="p">(</span> <span class="n">c</span> <span class="p">);</span>
+
+		<span class="k">return</span> <span class="n">symbol</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">QList</span><span class="o">&lt;</span><span class="n">QColor</span><span class="o">&gt;</span> <span class="n">m_colors</span><span class="p">;</span>
+<span class="p">};</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Für jeden Balken im Diagramm speichern wir uns eine Farbe in der Membervariable <code>m_colors</code>. In der überladenen Funktion <code>QwtPlotBarChart::specialSymbol()</code> erstellen wir nun jeweils ein <code>QwtColumnSymbol</code> wie im vorangehenden Kapitel und liefern dieses zurück. Die Funktion übernimmt sowohl den Index des Balkens (oder <em>samples</em>) als Argument, wie auch die Plotkoordinaten des Balkens, wobei der x-Wert der Punktes wieder der Balkenindex ist, und der y-Wert dem Funktionswert des Balkens entspricht.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Die Funktion <code>QwtPlotBarChart::specialSymbol()</code> ist eine <em>factory function</em> und überträgt die Eigentümerschaft des auf dem Heap erstellten Objekts an den Aufrufer. Deshalb <em>muss</em> man hier in jedem Aufruf der Funktion ein neues <code>QwtColumnSymbol</code> Objekt mit <code>new</code> erstellen. Nachdem der Balken gezeichnet wurde, löscht das Balkendiagrammelement das erzeugte Säulensymbolobjekt wieder.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/BarPlot_1_MultiColor.png" alt="BarPlot 1 MultiColor">
+</div>
+<div class="title">Abbildung 41. Balkendiagramm mit unterschiedlich gefärbten Balken</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Wenn man nur bestimmte Balken einfärben möchte, die anderen aber im Standarddesign zeichnen lassen will, so kann man die Funktion <code>QwtPlotBarChart::specialSymbol()</code> auch einfach einen <em>nullptr</em> zurückgeben lassen. Dann verwendet das Balkendiagramm das Standardsymbol.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_gestapelte_balkendiagramme_oder_balkendiagramme_mit_mehreren_balken_pro_gruppe">6.8. Gestapelte Balkendiagramme oder Balkendiagramme mit mehreren Balken pro Gruppe</h3>
+<h3 id="_legendeneinträge">6.8. Legendeneinträge</h3>
+<div class="paragraph">
+<p>Für Balkendiagramme kann man zwei Arten von Legendeneinträgen erstellen:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>einen Eintrag für das gesammte Balkendiagramm-Zeichenelement, oder</p>
+</li>
+<li>
+<p>individuelle Einträge für jeden einzelnen Balken</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Die erste Variante ist dann sinnvoll, wenn neben dem Balkendiagramm-Zeichenelement noch weitere Zeichenelemente mit Legendeneinträgen angezeigt werden. Im vorliegenden Fall ist eine individuelle Bezeichnung der Balken sinnvoll.</p>
+</div>
+<div class="paragraph">
+<p>Dafür muss die virtuelle Funktion <code>QwtPlotBarChart::barTitle()</code> reimplementiert werden (die Standardimplementierung liefert immer einen leeren Titeltext). Außerdem muss der Legendentyp auf "einzelne Balken" durch Aufruf der Funktion <code>QwtPlotBarChart::setLegendMode( QwtPlotBarChart::LegendBarTitles )</code> umgeschaltet werden. Zusätzlich kann man noch mit <code>QwtPlotBarChart::setLegendIconSize()</code> die Größe der Legendensymbole anpassen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="k">class</span> <span class="nc">MultiColorBarChart</span> <span class="o">:</span> <span class="k">public</span> <span class="n">QwtPlotBarChart</span> <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="n">MultiColorBarChart</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">setLayoutPolicy</span><span class="p">(</span><span class="n">QwtPlotBarChart</span><span class="o">::</span><span class="n">ScaleSamplesToAxes</span><span class="p">);</span>
+		<span class="n">setLayoutHint</span><span class="p">(</span><span class="mf">0.8</span><span class="p">);</span>
+		<span class="c1">// Legende zeigt individuelle Balkentitel</span>
+		<span class="n">setLegendMode</span><span class="p">(</span> <span class="n">QwtPlotBarChart</span><span class="o">::</span><span class="n">LegendBarTitles</span> <span class="p">);</span>
+		<span class="n">setLegendIconSize</span><span class="p">(</span> <span class="n">QSize</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">14</span> <span class="p">)</span> <span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Individuelle Farben für die einzelnen Balken</span>
+	<span class="k">virtual</span> <span class="n">QwtColumnSymbol</span><span class="o">*</span> <span class="n">specialSymbol</span><span class="p">(</span>
+	    <span class="kt">int</span> <span class="n">sampleIndex</span><span class="p">,</span> <span class="k">const</span> <span class="n">QPointF</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">const</span> <span class="n">QWT_OVERRIDE</span>
+	<span class="p">{</span>
+	    <span class="c1">// ... wie bisher</span>
+	<span class="p">}</span>
+
+	<span class="k">virtual</span> <span class="n">QwtText</span> <span class="n">barTitle</span><span class="p">(</span> <span class="kt">int</span> <span class="n">sampleIndex</span> <span class="p">)</span> <span class="k">const</span> <span class="n">QWT_OVERRIDE</span> <span class="p">{</span>
+	 	<span class="k">if</span> <span class="p">(</span> <span class="n">sampleIndex</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">sampleIndex</span> <span class="o">&lt;</span> <span class="n">m_titles</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="p">)</span>
+	 		<span class="k">return</span> <span class="n">m_titles</span><span class="p">[</span> <span class="n">sampleIndex</span> <span class="p">];</span>
+	 	<span class="k">return</span> <span class="n">QwtText</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="n">QStringList</span>	  <span class="n">m_titles</span><span class="p">;</span>
+	<span class="n">QList</span><span class="o">&lt;</span><span class="n">QColor</span><span class="o">&gt;</span> <span class="n">m_colors</span><span class="p">;</span>
+<span class="p">};</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Zusätzlich zu den Farben werden nun die Titel der Balken in der Membervariable <code>m_titles</code> gehalten und in jedem Aufruf von <code>barTitle()</code> zurückgeliefert.</p>
+</div>
+<div class="paragraph">
+<p>Damit die Legende überhaupt gezeichnet wird, muss man diese für das Plot anzeigen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="c1">// Legende anzeigen</span>
+<span class="n">QwtLegend</span> <span class="o">*</span> <span class="n">legend</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtLegend</span><span class="p">();</span>
+<span class="n">QFont</span> <span class="n">legendFont</span><span class="p">;</span>
+<span class="n">legendFont</span><span class="p">.</span><span class="n">setPointSize</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+<span class="n">legend</span><span class="o">-&gt;</span><span class="n">setFont</span><span class="p">(</span><span class="n">legendFont</span><span class="p">);</span>
+<span class="n">plot</span><span class="p">.</span><span class="n">insertLegend</span><span class="p">(</span><span class="n">legend</span><span class="p">,</span> <span class="n">QwtPlot</span><span class="o">::</span><span class="n">RightLegend</span><span class="p">);</span> <span class="c1">// plot takes ownership</span>
+
+<span class="c1">// x-Achse verstecken</span>
+<span class="n">plot</span><span class="p">.</span><span class="n">setAxisVisible</span><span class="p">(</span><span class="n">QwtPlot</span><span class="o">::</span><span class="n">xBottom</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/BarPlot_1_MultiColorWithLegend.png" alt="BarPlot 1 MultiColorWithLegend">
+</div>
+<div class="title">Abbildung 42. Balkendiagramm mit unterschiedlich gefärbten Balken und Legendeneinträgen</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_gestapelte_balkendiagramme_oder_balkendiagramme_mit_mehreren_balken_pro_gruppe">6.9. Gestapelte Balkendiagramme oder Balkendiagramme mit mehreren Balken pro Gruppe</h3>
 
 </div>
 </div>
@@ -2932,7 +3026,7 @@ Und natürlich können die beteiligten Klassen auch abgeleitet und so beliebig m
 <div class="content">
 <img src="../images/Tutorial1_h.png" alt="Tutorial1 h">
 </div>
-<div class="title">Abbildung 41. Plot in höherer Auflösung abgespeichert</div>
+<div class="title">Abbildung 43. Plot in höherer Auflösung abgespeichert</div>
 </div>
 </div>
 <div class="sect3">
@@ -3199,7 +3293,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 <div class="content">
 <img src="../images/Tutorial1_ui1.png" alt="Tutorial1 ui1">
 </div>
-<div class="title">Abbildung 42. Widget mit Platzhalter-Widget für das Diagramm</div>
+<div class="title">Abbildung 44. Widget mit Platzhalter-Widget für das Diagramm</div>
 </div>
 <div class="paragraph">
 <p>Unter der Spinbox wurde ein <code>QWidget</code> eingefügt. Dieses soll nun als Platzhalter für das <code>QwtPlot</code> dienen. Dazu im Kontextmenü des Widgets die Option "Als Platzhalter für benutzerdefinierte Klasse festlegen&#8230;&#8203;" auswählen:</p>
@@ -3260,7 +3354,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0<br>
-Last updated 2025-06-05 15:40:19 +0200
+Last updated 2025-06-05 20:35:53 +0200
 </div>
 </div>
 </body>
