@@ -84,24 +84,8 @@ image::Tutorial1_h.png[pdfwidth=15cm]
 
 [IMPORTANT]
 ====
-Wenn man dieses Diagramm und das vorherige der 1-zu-1 Kopie vergleicht, so stellt man fest, dass Fontgrößen, Linienstärken und manche Randabstände (z.B. bei der vertikalen Markierung) gleich geblieben sind. Die Achsenskalierung und damit auch das Gitterraster und Achsenbeschriftungen haben sich jedoch aufgrund der höheren Auflösung verändert. Das kann man sich zu Nutze machen, wenn z.B. Achsenbeschriftungen auf dem Bildschirm nicht komplett ins Diagramm passen und nun aufgrund höherer Auflösung geschrieben werden können. Allerdings birg dies auch die Gefahr, dass die Schriftgrößen im Ausdruck zu klein werden. Das ist aber eher ein Problem beim Vektorexport und wird im nachfolgenden Kapitel thematisiert.
+Wenn man dieses Diagramm und das vorherige der 1-zu-1 Kopie vergleicht, so stellt man fest, dass Fontgrößen, Linienstärken und manche Randabstände (z.B. bei der vertikalen Markierung) gleich geblieben sind. Die Achsenskalierung und damit auch das Gitterraster und Achsenbeschriftungen haben sich jedoch aufgrund der höheren Auflösung verändert. Das kann man sich zu Nutze machen, wenn z.B. Achsenbeschriftungen auf dem Bildschirm nicht komplett ins Diagramm passen und nun aufgrund höherer Auflösung geschrieben werden können. Allerdings birg dies auch die Gefahr, dass die Schriftgrößen im Ausdruck zu klein werden. Das ist aber eher ein Problem beim Vektorexport und wird im <<sec:exportDPI>> thematisiert.
 ====
-
-## Exportieren des Plots als Vektorgrafik
-
-Der Export eines Plots als Vektorgrafik erfolgt wiederum mit der `QwtPlotRender`-Klasse, nur diesmal unter Verwendung eines `QPainter`, der von einem Vektorgrafikgerät stammt. Das kann ein Drucker sein, ein PDFWriter, ein SVG-Dokument oder oder oder.
-
-Es gibt aber einige wesentliche Unterschiede und Fallstricke, die es zu beachten gibt.
-
-Wie schon oben im vorangehenden Kapitel beschrieben, wird bei unterschiedlicher Druck-Pixelgröße die Skalierung von Plotelementen neu berechnet. Bei modernen Druckern sind Auflösungen von 600 bzw. 1200 DPI normal, was bei einem A4-Ausdruck zu _sehr hohen_ Pixelgrößen führt und einzelne gedruckte Pixel sind im Ausdruck nicht mehr zu erkennen. 
-
-[CAUTION]
-====
-Bei Ausgabe des Plots als Vektorgrafik, vor allem beim Drucken oder Ausgabe in PDF-Dateien, müssen _alle_ Plotelement mit skalierbaren Größen festgelegt sein. Dies ist insbesondere für alle Definitionen eines `QPen()` notwendig, z.B. bei Linienkurven. Hier dürfen _keine_ kosmetischen Pens mit Linienstärke 0 verwendet werden. Die resultierenden Linien mit Breiten von einem Pixel würden im Ausdruck schlicht nicht sichtbar sein.
-====
-
-Die Skalierung von Schriftgrößen und Linienbreiten wird über die Auflösung (angegeben in DPI) des gewählten Zeichengeräts festgelegt.
-Zusammen mit der Pixel-Größe des Plots ergibt sich dann das finale Erscheinungsbild der Diagramms, welches durchaus von dem Bild auf dem Bildschirm abweichen kann.
 
 
 ### Drucken 
@@ -192,7 +176,7 @@ Wendet man obigen Code auf das Diagramm im ersten Tutorial an, so wird im finale
 
 ### Anpassen des gerenderten Plots
 
-Zwischen einem auf dem Bildschirm angezeigten Plot und einem Ausdruck gibt häufig diverse Unterschiede. So möchte man bei schwarz-weiß-Ausdrucken wahrscheinlich keinen bunten Hintergrund des Diagramms drucken und auch der Rand des Plots soll nicht in Widget-Farben gedruckt werden. Derartige Anpassungen macht man direkt im `QwtPlotRenderer` über verschiedene Layout-Anpassungsfunktionen.
+Zwischen einem auf dem Bildschirm angezeigten Plot und einem Ausdruck gibt es häufig diverse Unterschiede. So möchte man bei schwarz-weiß-Ausdrucken wahrscheinlich keinen bunten Hintergrund des Diagramms drucken und auch der Rand des Plots soll nicht in Widget-Farben gedruckt werden. Derartige Anpassungen macht man direkt im `QwtPlotRenderer` über verschiedene Layout-Anpassungsfunktionen.
 
 Man kann den Renderer anweisen, bestimmte Elemente nicht zu zeichnen:
 ```c++
@@ -216,7 +200,7 @@ Zusätzlich könnte man noch weitere Dinge ausblenden:
 Damit kann das Plot gedruckt schon ganz ordentlich aussehen. Man kann das Erscheinungsbild aber für einen Ausdruck noch ändern, indem man einen flachen Rahmen mit angedockten Skalen zeichnet.
 
 ```c++
-renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
+renderer.setLayoutFlag(  );
 ```
 
 .Plot gerendert im Layoutmodus _FrameWithScales_
@@ -238,7 +222,37 @@ image::Tutorial1_export3.png[pdfwidth=8cm]
 [[sec:exportDPI]]
 ### Diagrammelemente skalieren (DPI ändern)
 
-TODO
+Wie schon oben beschrieben, wird bei unterschiedlicher Druck-Pixelgröße die Skalierung von Plotelementen neu berechnet. Bei modernen Druckern sind Auflösungen von 600 bzw. 1200 DPI normal, was bei einem A4-Ausdruck zu _sehr hohen_ Pixelgrößen führt und einzelne gedruckte Pixel sind im Ausdruck nicht mehr zu erkennen. 
+
+[CAUTION]
+====
+Bei Ausgabe des Plots als Vektorgrafik, vor allem beim Drucken oder Ausgabe in PDF-Dateien, müssen _alle_ Plotelement mit skalierbaren Größen festgelegt sein. Dies ist insbesondere für alle Definitionen eines `QPen()` notwendig, z.B. bei Linienkurven. Hier dürfen _keine_ kosmetischen Pens mit Linienstärke 0 verwendet werden. Die resultierenden Linien mit Breiten von einem Pixel würden im Ausdruck schlicht nicht sichtbar sein.
+====
+
+Die Skalierung von Schriftgrößen und Linienbreiten wird über die Auflösung (angegeben in DPI) des gewählten Zeichengeräts festgelegt. Zusammen mit der Pixel-Größe des Plots ergibt sich dann das finale Erscheinungsbild der Diagramms, welches durchaus von dem Bild auf dem Bildschirm abweichen kann.
+
+Beim Export eines Plots als Vektorgrafik (PDF oder SVG-Dokument) sind Schriftgröße und Linienstärke Eigenschaften der exportierten Vektorelemente. Wichtig ist hierbei, dass bei allen Zeichenelementen Stiftbreiten (auch als Dezimalzahl) angegeben werden.
+
+Beim PDF-Export des Diagramms mit der Methode oben, stellt man bei der Anzeige fest, dass die Skalenlinien nur kosmetische Linien mit einem Pixel Breite sind (d.h. beim Hineinzoomen bleiben diese Linien immer exakt ein Pixel breit). Alle anderen Diagrammelemente werden entsprechend skaliert.
 
 
+.Vergrößerung des Vektorexports (PDF), Linien der Skalen werden also kosmetische Linien mit immer einem Pixel Breite gezeichnet
+image::PDF-Export-Detail.png[pdfwidth=6cm]
+
+Auch hier darf man nicht vergessen, den Zeichenstift (`QPen`)  entsprechend zu setzen.
+
+
+```c++
+for  (int i=0; i<4; ++i) {
+	plot.plotLayout()->setAlignCanvasToScale( i, true );
+	plot.axisScaleDraw(i)->setPenWidthF(1);
+}
+```
+
+Bei gewähltem Rendermodus `QwtPlotRenderer::FrameWithScales` verwendet `QwtPlot` die _breiteste_ Zeichenbreite der für die einzelnen _sichtbaren_ Skalen gesetzten Stifte.
+
+[IMPORTANT]
+====
+Bis zur Qwt-Plot Version 6.1.3 werden die Stiftbreiten für das Zeichnen des Rahmens auf Integerwerte (ab-)gerundet. Daher führen Stiftbreiten < 1 stets zu einem kosmetischen Stift für den umliegenden Rahmen. Daher sollte man immer eine Stiftbreite von 1 für den Rahmen verwenden, oder eben auf die Option `QwtPlotRenderer::FrameWithScales` verzichten.
+====
 

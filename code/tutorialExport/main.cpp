@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QPdfWriter>
+#include <QSvgGenerator>
 
 //#define ORIGINAL_HEADERS
 #ifndef ORIGINAL_HEADERS
@@ -46,7 +47,7 @@ THE SOFTWARE.
 #include <QwtPlotPanner>
 #include <QwtPlotLayout>
 #include <QwtPlotRenderer>
-#include <QSvgGenerator>
+#include <QwtScaleDraw>
 #else
 
 #include <qwt_plot.h>
@@ -176,16 +177,16 @@ int main(int argc, char *argv[]) {
 	QwtPlotRenderer renderer;
 	renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
 
-	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, true );
-	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xBottom, true );
-	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yRight, true );
-	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xTop, true );
+	for  (int i=0; i<4; ++i) {
+		plot.plotLayout()->setAlignCanvasToScale( i, true );
+		plot.axisScaleDraw(i)->setPenWidthF(1);
+	}
 
 	renderer.setDiscardFlag( QwtPlotRenderer::DiscardBackground );
 	renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasBackground );
 	renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasFrame );
 
-#if 0
+#if 1
 	QPdfWriter writer("plot.pdf");
 	writer.setTitle("Mein plot");
 	writer.setCreator("Ich");
@@ -195,7 +196,7 @@ int main(int argc, char *argv[]) {
 	renderer.renderTo( &plot, writer);
 #endif
 
-#if 1
+#if 0
 	QSvgGenerator generator;
 	generator.setFileName("plot.svg");
 	generator.setSize(QSize(600, 400));
