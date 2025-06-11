@@ -1,4 +1,4 @@
-# The Qwt Book
+# The Qwt Developers Manual / Das Qwt Entwicklerhandbuch
 
 Dieses Projekt ergänzt die Dokumentation zur Qwt-Bibliothek und bietet sowas wie ein Programmiererhandbuch mit vielen
 Details zu den Internas.
@@ -12,6 +12,8 @@ weitab von fertig. Feedback ist aber immer willkommen, am Besten via E-Mail an _
 
 Webseite mit dem Buchinhalt:  https://ghorwin.github.io/qwtbook
 
+Und schaut Euch auch mal meine anderen Tutorials an, auf _Schneggenport_ (https://schneggenport.de).
+
 
 ----
 
@@ -21,6 +23,7 @@ The book is currently being written in German but webpage-translators do a great
 
 Feedback is welcome, best via e-mail to _andreas.nicolai - AT - gmx.net_.
 
-
 Website with the book content:  https://ghorwin.github.io/qwtbook
 
+
+Please also check out my other tutorials at _Schneggenport_ (https://schneggenport.de)
