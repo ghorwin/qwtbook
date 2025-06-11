@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include <QPrintDialog>
 #include <QPdfWriter>
 
-#define ORIGINAL_HEADERS
+//#define ORIGINAL_HEADERS
 #ifndef ORIGINAL_HEADERS
 
 #include <QwtPlot>
@@ -45,6 +45,8 @@ THE SOFTWARE.
 #include <QwtPlotZoomer>
 #include <QwtPlotPanner>
 #include <QwtPlotLayout>
+#include <QwtPlotRenderer>
+#include <QSvgGenerator>
 #else
 
 #include <qwt_plot.h>
@@ -78,15 +80,17 @@ int main(int argc, char *argv[]) {
 	strm.readLine(); // Kopfzeile überspringen
 	while (!strm.atEnd()) {
 		double xval, yval;
-		strm >> xval >> yval;
-		x.append(xval);
-		y.append(yval);
+		if ( (strm >> xval >> yval).status() == QTextStream::Ok) {
+			x.append(xval);
+			y.append(std::max(1e-4, yval)); // prevent 0 or negative values as we want to plot log values
+		}
 	}
 
 	QwtPlotCurve *curve = new QwtPlotCurve();
 	curve->setPen(QColor(180,40,20), 1);
+	// curve->setBrush(QColor(180,40,20));
 	curve->setTitle("Gamma-Spektrum");
-	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // Antialiasing verwenden
 	curve->setSamples(x, y);
 	curve->attach(&plot); // Plot takes ownership
 
@@ -143,7 +147,11 @@ int main(int argc, char *argv[]) {
 	plot.setAxisScale(QwtPlot::yLeft, 1e-3,1000);
 
 	// Vertikale, gestrichelte Plot-Markierung einfügen
-	QwtPlotMarker * marker = new QwtPlotMarker("207,50 keV");
+	QwtText label("207,50 keV");
+	label.setFont(axisLabelFont);
+
+	QwtPlotMarker * marker = new QwtPlotMarker(label);
+	// marker->setLabel(label);
 	marker->setLabelOrientation(Qt::Vertical); // Vertikale Linie
 	marker->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom); // Label unten und rechts von der Linie
 	marker->setValue(36, 0); // bei vertikalen Linien muss die x-Koordinate festgelegt werden
@@ -151,7 +159,7 @@ int main(int argc, char *argv[]) {
 	markerPen.setStyle(Qt::SolidLine);
 	marker->setLinePen(markerPen);
 	marker->setLineStyle(QwtPlotMarker::VLine);
-	marker->setLabel(QwtText("207,50 keV"));
+	marker->setLabel(label);
 	marker->attach(&plot); // plot takes ownership
 
 	// Zoomer hinzufügen
@@ -161,11 +169,44 @@ int main(int argc, char *argv[]) {
 
 	// Panner hinzufügen, wie auch beim PlotZoomer muss das Canvas-Objekt als Argument übergeben werden
 	QwtPlotPanner * panner = new QwtPlotPanner(plot.canvas());  // plot takes ownership
-	panner->setMouseButton(Qt::MidButton); // Mittlere Maustaste verschiebt
+	panner->setMouseButton(Qt::MiddleButton); // Mittlere Maustaste verschiebt
 	plot.show();
 
 	// export the plot
-//	QPdfWriter writer("plot.pdf");
+	QwtPlotRenderer renderer;
+	renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
+
+	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, true );
+	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xBottom, true );
+	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yRight, true );
+	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xTop, true );
+
+	renderer.setDiscardFlag( QwtPlotRenderer::DiscardBackground );
+	renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasBackground );
+	renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasFrame );
+
+#if 0
+	QPdfWriter writer("plot.pdf");
+	writer.setTitle("Mein plot");
+	writer.setCreator("Ich");
+	writer.setResolution(1200);
+	writer.setPageSize(QPageSize::A4);
+	writer.setPageOrientation(QPageLayout::Landscape);
+	renderer.renderTo( &plot, writer);
+#endif
+
+#if 1
+	QSvgGenerator generator;
+	generator.setFileName("plot.svg");
+	generator.setSize(QSize(600, 400));
+	generator.setViewBox(QRect(0, 0, 600, 400));
+	generator.setTitle("Mein Plot");
+	generator.setResolution(72);
+	generator.setDescription("Ein SVG-Plot");
+	renderer.renderTo( &plot, generator);
+#endif
+
+#if 0
 	QPrinter printer( QPrinter::HighResolution );
 
 	printer.setCreator( "Ich" );
@@ -177,25 +218,10 @@ int main(int argc, char *argv[]) {
 #endif
 
 	QPrintDialog dialog( &printer );
-	if ( dialog.exec() ) {
-		QwtPlotRenderer renderer;
-
-		if ( printer.colorMode() == QPrinter::GrayScale )
-		{
-			renderer.setDiscardFlag( QwtPlotRenderer::DiscardBackground );
-			renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasBackground );
-			renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasFrame );
-		}
-		renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
-
-		plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, true );
-		plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xBottom, true );
-		plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yRight, true );
-		plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xTop, true );
-
+	if (dialog.exec() ) {
 		renderer.renderTo( &plot, printer );
 	}
-
+#endif
 
 
 	return a.exec();

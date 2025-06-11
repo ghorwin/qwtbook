@@ -1,6 +1,6 @@
 TARGET   = Tutorial1
 QT       += core gui widgets
-QT       += printsupport
+QT       += printsupport svg
 CONFIG   += c++11
 
 win32 {
@@ -16,10 +16,17 @@ win32 {
 	LIBS += -LC://qwt-6.3.0/lib -l$$QWTLIB
 }
 else {
-	# Pfad zu den Qwt Headerdateien hinzufügen
-	INCLUDEPATH += /usr/local/qwt-6.3.0/include/
-	# Linkerpfad, unter Linux wird standardmäßig nur die release-Version der Lib gebaut und installiert
-	LIBS += -L/usr/local/qwt-6.3.0/lib -lqwt
+	lessThan(QT_MAJOR_VERSION, 6) {
+		# Pfad zu den Qwt Headerdateien hinzufügen
+		INCLUDEPATH += /usr/local/qwt-6.3.0/include/
+		# Linkerpfad, unter Linux wird standardmäßig nur die release-Version der Lib gebaut und installiert
+		LIBS += -L/usr/local/qwt-6.3.0/lib -lqwt
+	}
+	else {
+		INCLUDEPATH += /home/ghorwin/git/_webpages/qwtbook/code/qwt-6.3.0/src \
+			/home/ghorwin/git/_webpages/qwtbook/code/qwt-6.3.0/classincludes/
+		LIBS += -L/home/ghorwin/git/_webpages/qwtbook/code/qwt-6.3.0/build/Desktop_Qt_6_9_1-Debug/lib/ -lqwt
+	}
 }
 
 

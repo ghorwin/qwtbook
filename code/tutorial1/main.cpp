@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
 	plot.setAxisScale(QwtPlot::yLeft, 1e-3,1000);
 
 	// Vertikale, gestrichelte Plot-Markierung einfügen
-	QwtPlotMarker * marker = new QwtPlotMarker("207,50 keV");
+	QwtPlotMarker * marker = new QwtPlotMarker;
 	marker->setLabelOrientation(Qt::Vertical); // Vertikale Linie
 	marker->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom); // Label unten und rechts von der Linie
 	marker->setValue(36, 0); // bei vertikalen Linien muss die x-Koordinate festgelegt werden
@@ -150,7 +150,11 @@ int main(int argc, char *argv[]) {
 	markerPen.setStyle(Qt::SolidLine);
 	marker->setLinePen(markerPen);
 	marker->setLineStyle(QwtPlotMarker::VLine);
-	marker->setLabel(QwtText("207,50 keV"));
+	QwtText markerLabel("207,50 keV");
+	QFont markerFont;
+	markerFont.setPointSize(8);
+	markerLabel.setFont(markerFont);
+	marker->setLabel(markerLabel);
 	marker->attach(&plot); // plot takes ownership
 
 	// Zoomer hinzufügen
