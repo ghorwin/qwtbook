@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.20">
 <meta name="author" content="Andreas Nicolai">
 <title>Das Qwt Handbuch</title>
 <style>
@@ -121,216 +121,119 @@ table {
 <style>
 pre.rouge table td { padding: 5px; }
 pre.rouge table pre { margin: 0; }
-pre.rouge .cm {
-  color: #999988;
-  font-style: italic;
+pre.rouge, pre.rouge .w {
+  color: #24292f;
+  background-color: #f6f8fa;
 }
-pre.rouge .cp {
-  color: #999999;
-  font-weight: bold;
-}
-pre.rouge .c1 {
-  color: #999988;
-  font-style: italic;
-}
-pre.rouge .cs {
-  color: #999999;
-  font-weight: bold;
-  font-style: italic;
-}
-pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cpf {
-  color: #999988;
-  font-style: italic;
-}
-pre.rouge .err {
-  color: #a61717;
-  background-color: #e3d2d2;
-}
-pre.rouge .gd {
-  color: #000000;
-  background-color: #ffdddd;
-}
-pre.rouge .ge {
-  color: #000000;
-  font-style: italic;
+pre.rouge .k, pre.rouge .kd, pre.rouge .kn, pre.rouge .kp, pre.rouge .kr, pre.rouge .kt, pre.rouge .kv {
+  color: #cf222e;
 }
 pre.rouge .gr {
-  color: #aa0000;
+  color: #f6f8fa;
 }
-pre.rouge .gh {
-  color: #999999;
+pre.rouge .gd {
+  color: #82071e;
+  background-color: #ffebe9;
+}
+pre.rouge .nb {
+  color: #953800;
+}
+pre.rouge .nc {
+  color: #953800;
+}
+pre.rouge .no {
+  color: #953800;
+}
+pre.rouge .nn {
+  color: #953800;
+}
+pre.rouge .sr {
+  color: #116329;
+}
+pre.rouge .na {
+  color: #116329;
+}
+pre.rouge .nt {
+  color: #116329;
 }
 pre.rouge .gi {
-  color: #000000;
-  background-color: #ddffdd;
+  color: #116329;
+  background-color: #dafbe1;
 }
-pre.rouge .go {
-  color: #888888;
+pre.rouge .ges {
+  font-weight: bold;
+  font-style: italic;
 }
-pre.rouge .gp {
-  color: #555555;
+pre.rouge .kc {
+  color: #0550ae;
 }
-pre.rouge .gs {
+pre.rouge .l, pre.rouge .ld, pre.rouge .m, pre.rouge .mb, pre.rouge .mf, pre.rouge .mh, pre.rouge .mi, pre.rouge .il, pre.rouge .mo, pre.rouge .mx {
+  color: #0550ae;
+}
+pre.rouge .sb {
+  color: #0550ae;
+}
+pre.rouge .bp {
+  color: #0550ae;
+}
+pre.rouge .ne {
+  color: #0550ae;
+}
+pre.rouge .nl {
+  color: #0550ae;
+}
+pre.rouge .py {
+  color: #0550ae;
+}
+pre.rouge .nv, pre.rouge .vc, pre.rouge .vg, pre.rouge .vi, pre.rouge .vm {
+  color: #0550ae;
+}
+pre.rouge .o, pre.rouge .ow {
+  color: #0550ae;
+}
+pre.rouge .gh {
+  color: #0550ae;
   font-weight: bold;
 }
 pre.rouge .gu {
-  color: #aaaaaa;
-}
-pre.rouge .gt {
-  color: #aa0000;
-}
-pre.rouge .kc {
-  color: #000000;
+  color: #0550ae;
   font-weight: bold;
 }
-pre.rouge .kd {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kn {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kp {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kr {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kt {
-  color: #445588;
-  font-weight: bold;
-}
-pre.rouge .k, pre.rouge .kv {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .mf {
-  color: #009999;
-}
-pre.rouge .mh {
-  color: #009999;
-}
-pre.rouge .il {
-  color: #009999;
-}
-pre.rouge .mi {
-  color: #009999;
-}
-pre.rouge .mo {
-  color: #009999;
-}
-pre.rouge .m, pre.rouge .mb, pre.rouge .mx {
-  color: #009999;
-}
-pre.rouge .sa {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .sb {
-  color: #d14;
-}
-pre.rouge .sc {
-  color: #d14;
-}
-pre.rouge .sd {
-  color: #d14;
-}
-pre.rouge .s2 {
-  color: #d14;
-}
-pre.rouge .se {
-  color: #d14;
-}
-pre.rouge .sh {
-  color: #d14;
-}
-pre.rouge .si {
-  color: #d14;
-}
-pre.rouge .sx {
-  color: #d14;
-}
-pre.rouge .sr {
-  color: #009926;
-}
-pre.rouge .s1 {
-  color: #d14;
-}
-pre.rouge .ss {
-  color: #990073;
-}
-pre.rouge .s, pre.rouge .dl {
-  color: #d14;
-}
-pre.rouge .na {
-  color: #008080;
-}
-pre.rouge .bp {
-  color: #999999;
-}
-pre.rouge .nb {
-  color: #0086B3;
-}
-pre.rouge .nc {
-  color: #445588;
-  font-weight: bold;
-}
-pre.rouge .no {
-  color: #008080;
+pre.rouge .s, pre.rouge .sa, pre.rouge .sc, pre.rouge .dl, pre.rouge .sd, pre.rouge .s2, pre.rouge .se, pre.rouge .sh, pre.rouge .sx, pre.rouge .s1, pre.rouge .ss {
+  color: #0a3069;
 }
 pre.rouge .nd {
-  color: #3c5d5d;
-  font-weight: bold;
-}
-pre.rouge .ni {
-  color: #800080;
-}
-pre.rouge .ne {
-  color: #990000;
-  font-weight: bold;
+  color: #8250df;
 }
 pre.rouge .nf, pre.rouge .fm {
-  color: #990000;
+  color: #8250df;
+}
+pre.rouge .err {
+  color: #f6f8fa;
+  background-color: #82071e;
+}
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cm, pre.rouge .cp, pre.rouge .cpf, pre.rouge .c1, pre.rouge .cs {
+  color: #6e7781;
+}
+pre.rouge .gl {
+  color: #6e7781;
+}
+pre.rouge .gt {
+  color: #6e7781;
+}
+pre.rouge .ni {
+  color: #24292f;
+}
+pre.rouge .si {
+  color: #24292f;
+}
+pre.rouge .ge {
+  color: #24292f;
+  font-style: italic;
+}
+pre.rouge .gs {
+  color: #24292f;
   font-weight: bold;
-}
-pre.rouge .nl {
-  color: #990000;
-  font-weight: bold;
-}
-pre.rouge .nn {
-  color: #555555;
-}
-pre.rouge .nt {
-  color: #000080;
-}
-pre.rouge .vc {
-  color: #008080;
-}
-pre.rouge .vg {
-  color: #008080;
-}
-pre.rouge .vi {
-  color: #008080;
-}
-pre.rouge .nv, pre.rouge .vm {
-  color: #008080;
-}
-pre.rouge .ow {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .o {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .w {
-  color: #bbbbbb;
-}
-pre.rouge {
-  background-color: #f8f8f8;
 }
 </style>
 </head>
@@ -401,7 +304,8 @@ pre.rouge {
 <li><a href="#_aufbau_und_elemente_der_diagrammkomponente">4.1. Aufbau und Elemente der Diagrammkomponente</a>
 <ul class="sectlevel3">
 <li><a href="#_achsen_und_koordinatensystem">4.1.1. Achsen und Koordinatensystem</a></li>
-<li><a href="#_diagrammelemente">4.1.2. Diagrammelemente</a></li>
+<li><a href="#_diagramm_zeichenelemente">4.1.2. Diagramm-/Zeichenelemente</a></li>
+<li><a href="#_hinzufügenentfernen_von_zeichenelementen">4.1.3. Hinzufügen/Entfernen von Zeichenelementen</a></li>
 </ul>
 </li>
 <li><a href="#sec:seriesData">4.2. Datenhaltung im QwtPlot / QwtSeriesStore</a></li>
@@ -480,13 +384,11 @@ pre.rouge {
 <li><a href="#_erstellen_einer_1_zu_1_kopie_des_plotwidgets">13.1.1. Erstellen einer 1-zu-1 Kopie des Plotwidgets</a></li>
 <li><a href="#_kopie_in_die_zwischenablage">13.1.2. Kopie in die Zwischenablage</a></li>
 <li><a href="#sec:pixelExportWithDifferentResulution">13.1.3. QwtPlot mit anderer Auflösung abspeichern</a></li>
-</ul>
-</li>
-<li><a href="#_exportieren_des_plots_als_vektorgrafik">13.2. Exportieren des Plots als Vektorgrafik</a>
-<ul class="sectlevel3">
-<li><a href="#_drucken">13.2.1. Drucken</a></li>
-<li><a href="#_anpassen_des_gerenderten_plots">13.2.2. Anpassen des gerenderten Plots</a></li>
-<li><a href="#sec:exportDPI">13.2.3. Diagrammelemente skalieren (DPI ändern)</a></li>
+<li><a href="#_drucken">13.1.4. Drucken</a></li>
+<li><a href="#_pdf_export_mittels_qpdfwriter">13.1.5. PDF Export mittels QPdfWriter</a></li>
+<li><a href="#_svg_export_mittels_qsvgdocument">13.1.6. SVG Export mittels QSvgDocument</a></li>
+<li><a href="#_anpassen_des_gerenderten_plots">13.1.7. Anpassen des gerenderten Plots</a></li>
+<li><a href="#sec:exportDPI">13.1.8. Diagrammelemente skalieren (DPI ändern)</a></li>
 </ul>
 </li>
 </ul>
@@ -888,7 +790,7 @@ Dazu in den Projekteinstellungen, unter "Ausführen", im Abschnitt "Umgebung" di
 		<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">yval</span><span class="p">);</span>
 	<span class="p">}</span>
 
-	<span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotCurve</span><span class="p">();</span>
+	<span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setTitle</span><span class="p">(</span><span class="s">"Gamma-Spektrum"</span><span class="p">);</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span> <span class="p">);</span> <span class="c1">// Antialiasing verwenden</span>
@@ -1152,8 +1054,7 @@ Der Font für die Zahlen an den Achsen selbst wird über <code>setAxisFont()</co
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="cpp"><span class="c1">// Vertikale, gestrichelte Plot-Markierung einfügen</span>
-<span class="n">QwtPlotMarker</span> <span class="o">*</span> <span class="n">marker</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotMarker</span><span class="p">(</span><span class="s">"207,50 keV"</span><span class="p">);</span>
+<pre class="rouge highlight"><code data-lang="cpp"><span class="n">QwtPlotMarker</span> <span class="o">*</span> <span class="n">marker</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotMarker</span><span class="p">;</span>
 <span class="n">marker</span><span class="o">-&gt;</span><span class="n">setLabelOrientation</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">Vertical</span><span class="p">);</span> <span class="c1">// Vertikale Linie</span>
 <span class="n">marker</span><span class="o">-&gt;</span><span class="n">setLabelAlignment</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">AlignRight</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">::</span><span class="n">AlignBottom</span><span class="p">);</span> <span class="c1">// Label unten und rechts von der Linie</span>
 <span class="n">marker</span><span class="o">-&gt;</span><span class="n">setValue</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span> <span class="c1">// bei vertikalen Linien muss die x-Koordinate festgelegt werden</span>
@@ -1161,7 +1062,11 @@ Der Font für die Zahlen an den Achsen selbst wird über <code>setAxisFont()</co
 <span class="n">markerPen</span><span class="p">.</span><span class="n">setStyle</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">SolidLine</span><span class="p">);</span>
 <span class="n">marker</span><span class="o">-&gt;</span><span class="n">setLinePen</span><span class="p">(</span><span class="n">markerPen</span><span class="p">);</span>
 <span class="n">marker</span><span class="o">-&gt;</span><span class="n">setLineStyle</span><span class="p">(</span><span class="n">QwtPlotMarker</span><span class="o">::</span><span class="n">VLine</span><span class="p">);</span>
-<span class="n">marker</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="n">QwtText</span><span class="p">(</span><span class="s">"207,50 keV"</span><span class="p">));</span>
+<span class="n">QwtText</span> <span class="nf">markerLabel</span><span class="p">(</span><span class="s">"207,50 keV"</span><span class="p">);</span>
+<span class="n">QFont</span> <span class="n">markerFont</span><span class="p">;</span>
+<span class="n">markerFont</span><span class="p">.</span><span class="n">setPointSize</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+<span class="n">markerLabel</span><span class="p">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">markerFont</span><span class="p">);</span>
+<span class="n">marker</span><span class="o">-&gt;</span><span class="n">setLabel</span><span class="p">(</span><span class="n">markerLabel</span><span class="p">);</span>
 <span class="n">marker</span><span class="o">-&gt;</span><span class="n">attach</span><span class="p">(</span><span class="o">&amp;</span><span class="n">plot</span><span class="p">);</span> <span class="c1">// plot takes ownership</span></code></pre>
 </div>
 </div>
@@ -1415,7 +1320,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </div>
 </div>
 <div class="sect3">
-<h4 id="_diagrammelemente">4.1.2. Diagrammelemente</h4>
+<h4 id="_diagramm_zeichenelemente">4.1.2. Diagramm-/Zeichenelemente</h4>
 <div class="paragraph">
 <p>Innerhalb der Zeichenfläche kann man nun die verschiedensten Elemente zeichen, bspw.:</p>
 </div>
@@ -1488,7 +1393,16 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </table>
 </div>
 <div class="paragraph">
-<p>Alle Zeichenelemente werden <em>grundsätzlich</em> auf dem Heap mit <code>new</code> erstellt und mittels der Memberfunktion <code>QwtPlotItem::attach(...)</code> dem eigentlichen <code>QwtPlot</code> hinzugefügt.</p>
+<p>Das <code>QwtPlotItem</code> deklariert und implementiert auch die virtuellen Funktionen für das Zeichnen sowie Berechnen wichtiger Layoutdaten. Dies wird aber später in den fortgeschrittenen Kapiteln noch genauer erklärt. Nun aber zu den individuellen Zeichenelementen und daraus erstellten Diagrammtypen.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_hinzufügenentfernen_von_zeichenelementen">4.1.3. Hinzufügen/Entfernen von Zeichenelementen</h4>
+<div class="paragraph">
+<p>Alle Zeichenelemente werden <em>grundsätzlich</em> auf dem Heap mit <code>new</code> erstellt und mittels der Memberfunktion <code>QwtPlotItem::attach(plot)</code> dem eigentlichen <code>QwtPlot</code> hinzugefügt.</p>
+</div>
+<div class="paragraph">
+<p>Entfernen kann man Zeichenelemente mittels der Funktion <code>QwtPlotItem::detach()</code>.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -1498,14 +1412,26 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Beim Aufruf von <code>attach()</code> wird das Zeichenelement in die Obhut des <code>QwtPlot</code> übergeben, welches sich dann um das Aufräumen des Speichers kümmert. Möchte man das Zeichenelement wieder zurückerhalten, ruft man die Memberfunktion <code>detach()</code> auf. Damit übernimmt man dann selbst wieder die Verantwortung für das Speicherbereinigen.</p>
+<p>Beim Aufruf von <code>attach()</code> wird das Zeichenelement in die Obhut des <code>QwtPlot</code> übergeben, welches sich dann um das Aufräumen des Speichers kümmert. Solange das <code>QwtPlot</code> noch im Besitz eines PlotElements ist, darf/sollte man das Objekt nicht löschen.</p>
+</div>
+<div class="paragraph">
+<p>Möchte man das Zeichenelement dennoch wieder zurückerhalten, ruft man die Memberfunktion <code>detach()</code> auf. Damit übernimmt man dann selbst wieder die Verantwortung für das Speicherbereinigen.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Das <code>QwtPlotItem</code> deklariert und implementiert auch die virtuellen Funktionen für das Zeichnen sowie Berechnen wichtiger Layoutdaten. Dies wird aber später in den fortgeschrittenen Kapiteln noch genauer erklärt. Nun aber zu den individuellen Zeichenelementen und daraus erstellten Diagrammtypen.</p>
+<p>Man kann auch alle Zeichenelemente eines bestimmten Typs wieder entfernen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="c1">// alle Kurven entfernen und die Kurvenobjekte dabei löschen</span>
+<span class="n">plot</span><span class="p">.</span><span class="n">detachItems</span><span class="p">(</span><span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">Rtti_PlotCurve</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span> <span class="c1">// detach and delete</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Das erste Argument von <code>detachItems()</code> ist der Zeichenelementtyp. Mit dem zweiten Argument gibt man an, ob das Objekt selbst gelöscht werden soll, oder nur aus dem Plot entfernt wird. Im letzteren Fall muss man sich wieder selbst um das Speicheraufräumen kümmern.</p>
 </div>
 </div>
 </div>
@@ -1967,7 +1893,7 @@ Das Zusatz-Attribut <code>QwtPlotCurve::Inverted</code> gibt dabei an, ob die St
 <div class="sect2">
 <h3 id="_keine_linie">5.6. Keine Linie</h3>
 <div class="paragraph">
-<p>Möchte man eine Kurve ausschließlich mit Symbolen zeichnen (siehe nachfolgendes Kapitel), so kann man das Zeichnen des Linienzugs auch komplett ausstellen:</p>
+<p>Möchte man eine Kurve ausschließlich mit Symbolen zeichnen (siehe <a href="#sec:plotSymbols">Kapitel 5.7</a>), so kann man das Zeichnen des Linienzugs auch komplett ausstellen:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2238,7 +2164,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
 	<span class="n">intervalSamples</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">QwtIntervalSample</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y2</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
 
-<span class="n">QwtPlotIntervalCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotIntervalCurve</span><span class="p">();</span>
+<span class="n">QwtPlotIntervalCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotIntervalCurve</span><span class="p">();</span>
 <span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotIntervalCurve</span><span class="o">::</span><span class="n">Tube</span><span class="p">);</span>
 <span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">180</span><span class="p">),</span> <span class="mi">2</span><span class="p">);</span>
 <span class="n">curve</span><span class="o">-&gt;</span><span class="n">setBrush</span><span class="p">(</span> <span class="n">QColor</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">);</span>
@@ -2681,11 +2607,11 @@ Dann schaltet man die Unterteilungsstriche (<em>Ticks</em>) und die Achsenlinie 
 		<span class="n">setLabelAlignment</span><span class="p">(</span> <span class="n">Qt</span><span class="o">::</span><span class="n">AlignHCenter</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">::</span><span class="n">AlignVCenter</span> <span class="p">);</span>
 	<span class="p">}</span>
 
-	<span class="k">virtual</span> <span class="n">QwtText</span> <span class="n">label</span><span class="p">(</span> <span class="kt">double</span> <span class="n">value</span> <span class="p">)</span> <span class="k">const</span> <span class="n">QWT_OVERRIDE</span> <span class="p">{</span>
+	<span class="k">virtual</span> <span class="n">QwtText</span> <span class="nf">label</span><span class="p">(</span> <span class="kt">double</span> <span class="n">value</span> <span class="p">)</span> <span class="k">const</span> <span class="n">QWT_OVERRIDE</span> <span class="p">{</span>
 		<span class="k">const</span> <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">qRound</span><span class="p">(</span> <span class="n">value</span> <span class="p">);</span>
 		<span class="k">if</span> <span class="p">(</span> <span class="n">index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">m_labels</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="p">)</span>
 			<span class="k">return</span> <span class="n">m_labels</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
-		<span class="k">return</span> <span class="n">QwtText</span><span class="p">();</span>
+		<span class="k">return</span> <span class="nf">QwtText</span><span class="p">();</span>
 	<span class="p">}</span>
 
 	<span class="n">QStringList</span> <span class="n">m_labels</span><span class="p">;</span>
@@ -2732,7 +2658,7 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 	<span class="p">}</span>
 
 	<span class="c1">// we want to have individual colors for each bar</span>
-	<span class="k">virtual</span> <span class="n">QwtColumnSymbol</span><span class="o">*</span> <span class="n">specialSymbol</span><span class="p">(</span>
+	<span class="k">virtual</span> <span class="n">QwtColumnSymbol</span><span class="o">*</span> <span class="nf">specialSymbol</span><span class="p">(</span>
 	    <span class="kt">int</span> <span class="n">sampleIndex</span><span class="p">,</span> <span class="k">const</span> <span class="n">QPointF</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">const</span> <span class="n">QWT_OVERRIDE</span>
 	<span class="p">{</span>
 		<span class="c1">// generate symbol with color for each bar</span>
@@ -2740,7 +2666,7 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 		<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setLineWidth</span><span class="p">(</span> <span class="mi">2</span> <span class="p">);</span>
 		<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setFrameStyle</span><span class="p">(</span> <span class="n">QwtColumnSymbol</span><span class="o">::</span><span class="n">Raised</span> <span class="p">);</span>
 
-		<span class="n">QColor</span> <span class="n">c</span><span class="p">(</span> <span class="n">Qt</span><span class="o">::</span><span class="n">white</span> <span class="p">);</span>
+		<span class="n">QColor</span> <span class="nf">c</span><span class="p">(</span> <span class="n">Qt</span><span class="o">::</span><span class="n">white</span> <span class="p">);</span>
 		<span class="k">if</span> <span class="p">(</span> <span class="n">sampleIndex</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">sampleIndex</span> <span class="o">&lt;</span> <span class="n">m_colors</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="p">)</span>
 			<span class="n">c</span> <span class="o">=</span> <span class="n">m_colors</span><span class="p">[</span> <span class="n">sampleIndex</span> <span class="p">];</span>
 		<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setPalette</span><span class="p">(</span> <span class="n">c</span> <span class="p">);</span>
@@ -3186,45 +3112,15 @@ Und natürlich können die beteiligten Klassen auch abgeleitet und so beliebig m
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Wenn man dieses Diagramm und das vorherige der 1-zu-1 Kopie vergleicht, so stellt man fest, dass Fontgrößen, Linienstärken und manche Randabstände (z.B. bei der vertikalen Markierung) gleich geblieben sind. Die Achsenskalierung und damit auch das Gitterraster und Achsenbeschriftungen haben sich jedoch aufgrund der höheren Auflösung verändert. Das kann man sich zu Nutze machen, wenn z.B. Achsenbeschriftungen auf dem Bildschirm nicht komplett ins Diagramm passen und nun aufgrund höherer Auflösung geschrieben werden können. Allerdings birg dies auch die Gefahr, dass die Schriftgrößen im Ausdruck zu klein werden. Das ist aber eher ein Problem beim Vektorexport und wird im nachfolgenden Kapitel thematisiert.</p>
+<p>Wenn man dieses Diagramm und das vorherige der 1-zu-1 Kopie vergleicht, so stellt man fest, dass Fontgrößen, Linienstärken und manche Randabstände (z.B. bei der vertikalen Markierung) gleich geblieben sind. Die Achsenskalierung und damit auch das Gitterraster und Achsenbeschriftungen haben sich jedoch aufgrund der höheren Auflösung verändert. Das kann man sich zu Nutze machen, wenn z.B. Achsenbeschriftungen auf dem Bildschirm nicht komplett ins Diagramm passen und nun aufgrund höherer Auflösung geschrieben werden können. Allerdings birg dies auch die Gefahr, dass die Schriftgrößen im Ausdruck zu klein werden. Das ist aber eher ein Problem beim Vektorexport und wird im <a href="#sec:exportDPI">Kapitel 13.1.8</a> thematisiert.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_exportieren_des_plots_als_vektorgrafik">13.2. Exportieren des Plots als Vektorgrafik</h3>
-<div class="paragraph">
-<p>Der Export eines Plots als Vektorgrafik erfolgt wiederum mit der <code>QwtPlotRender</code>-Klasse, nur diesmal unter Verwendung eines <code>QPainter</code>, der von einem Vektorgrafikgerät stammt. Das kann ein Drucker sein, ein PDFWriter, ein SVG-Dokument oder oder oder.</p>
-</div>
-<div class="paragraph">
-<p>Es gibt aber einige wesentliche Unterschiede und Fallstricke, die es zu beachten gibt.</p>
-</div>
-<div class="paragraph">
-<p>Wie schon oben im vorangehenden Kapitel beschrieben, wird bei unterschiedlicher Druck-Pixelgröße die Skalierung von Plotelementen neu berechnet. Bei modernen Druckern sind Auflösungen von 600 bzw. 1200 DPI normal, was bei einem A4-Ausdruck zu <em>sehr hohen</em> Pixelgrößen führt und einzelne gedruckte Pixel sind im Ausdruck nicht mehr zu erkennen.</p>
-</div>
-<div class="admonitionblock caution">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-caution" title="Achtung"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Bei Ausgabe des Plots als Vektorgrafik, vor allem beim Drucken oder Ausgabe in PDF-Dateien, müssen <em>alle</em> Plotelement mit skalierbaren Größen festgelegt sein. Dies ist insbesondere für alle Definitionen eines <code>QPen()</code> notwendig, z.B. bei Linienkurven. Hier dürfen <em>keine</em> kosmetischen Pens mit Linienstärke 0 verwendet werden. Die resultierenden Linien mit Breiten von einem Pixel würden im Ausdruck schlicht nicht sichtbar sein.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Die Skalierung von Schriftgrößen und Linienbreiten wird über die Auflösung (angegeben in DPI) des gewählten Zeichengeräts festgelegt.
-Zusammen mit der Pixel-Größe des Plots ergibt sich dann das finale Erscheinungsbild der Diagramms, welches durchaus von dem Bild auf dem Bildschirm abweichen kann.</p>
 </div>
 <div class="sect3">
-<h4 id="_drucken">13.2.1. Drucken</h4>
+<h4 id="_drucken">13.1.4. Drucken</h4>
 <div class="paragraph">
 <p>Beim Drucken wird das Bild einfach auf eine Druckerzeichenfläche gerendert. Für die Druckunterstützung mit im Qt-Programm zunächst die pro-Datei erweitert werden:</p>
 </div>
@@ -3283,7 +3179,7 @@ Zusammen mit der Pixel-Größe des Plots ergibt sich dann das finale Erscheinung
 <p><code>QPrinter::HighResolution</code> legt die Druckauflösung wie beim eingestellten Drucker fest (bzw. 1200 DPI bei PDFs)</p>
 </li>
 <li>
-<p><code>QPrinter::ScreenResolution</code> legt die Auflösung wie auf dem aktuellen Bildschirm fest, üblicherweise also 72 DPI. Dadurch wird das gedruckte Diagramm ziemlich genau so aussehen vom Layout, wie auf dem Bildschirm angezeigt.</p>
+<p><code>QPrinter::ScreenResolution</code> legt die Auflösung wie auf dem aktuellen Bildschirm fest, üblicherweise also 72 DPI. Dadurch wird das gedruckte Diagramm ziemlich genau so aussehen, wie auf dem Bildschirm angezeigt</p>
 </li>
 </ul>
 </div>
@@ -3291,16 +3187,73 @@ Zusammen mit der Pixel-Größe des Plots ergibt sich dann das finale Erscheinung
 <p>Man kann auch manuell die zu verwendende Auflösung durch Aufruf von <code>QPrinter::setResolution()</code> vorgeben.</p>
 </div>
 <div class="paragraph">
-<p>Das Zusammenspiel von Auflösung und Druckgröße wird in <a href="#sec:exportDPI">Kapitel 13.2.3</a> beschrieben.</p>
+<p>Das Zusammenspiel von Auflösung und Druckgröße wird in <a href="#sec:exportDPI">Kapitel 13.1.8</a> beschrieben.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_anpassen_des_gerenderten_plots">13.2.2. Anpassen des gerenderten Plots</h4>
+<h4 id="_pdf_export_mittels_qpdfwriter">13.1.5. PDF Export mittels QPdfWriter</h4>
 <div class="paragraph">
-<p>Zwischen einem auf dem Bildschirm angezeigten Plot und einem Ausdruck gibt häufig diverse Unterschiede. So möchte man bei schwarz-weiß-Ausdrucken wahrscheinlich keinen bunten Hintergrund des Diagramms drucken und auch der Rand des Plots soll nicht in Widget-Farben gedruckt werden. Derartige Anpassungen macht man direkt im <code>QwtPlotRenderer</code> über verschiedene Layout-Anpassungsfunktionen.</p>
+<p>Statt PDFs via PDF-Drucker zu erzeugen, kann man auch den durch Qt bereitgestellten <code>QPdfWriter</code> verwenden:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QPdfWriter</span> <span class="nf">writer</span><span class="p">(</span><span class="s">"plot.pdf"</span><span class="p">);</span>
+<span class="n">writer</span><span class="p">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s">"Mein plot"</span><span class="p">);</span>
+<span class="n">writer</span><span class="p">.</span><span class="n">setCreator</span><span class="p">(</span><span class="s">"Ich"</span><span class="p">);</span>
+<span class="n">writer</span><span class="p">.</span><span class="n">setResolution</span><span class="p">(</span><span class="mi">1200</span><span class="p">);</span>
+<span class="n">writer</span><span class="p">.</span><span class="n">setPageSize</span><span class="p">(</span><span class="n">QPageSize</span><span class="o">::</span><span class="n">A4</span><span class="p">);</span>
+<span class="n">writer</span><span class="p">.</span><span class="n">setPageOrientation</span><span class="p">(</span><span class="n">QPageLayout</span><span class="o">::</span><span class="n">Landscape</span><span class="p">);</span>
+<span class="n">renderer</span><span class="p">.</span><span class="n">renderTo</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">plot</span><span class="p">,</span> <span class="n">writer</span><span class="p">);</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_svg_export_mittels_qsvgdocument">13.1.6. SVG Export mittels QSvgDocument</h4>
+<div class="paragraph">
+<p>SVG Export erfolgt mittels der Klasse <code>QSvgGenerator</code>. Für die SVG-Unterstützung muss zunächst die Qt pro-Datei erweitert werden:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code>QT += svg</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Man kann den Renderer anweisen, bestimmte Element nicht zu zeichnen:</p>
+<p>Dann erstellt und konfiguriert man das Generatorobjekt und rendert in das SVG-Generator-Paintdevice.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QSvgGenerator</span> <span class="n">generator</span><span class="p">;</span>
+<span class="n">generator</span><span class="p">.</span><span class="n">setFileName</span><span class="p">(</span><span class="s">"plot.svg"</span><span class="p">);</span>
+<span class="n">generator</span><span class="p">.</span><span class="n">setSize</span><span class="p">(</span><span class="n">QSize</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">400</span><span class="p">));</span>
+<span class="n">generator</span><span class="p">.</span><span class="n">setViewBox</span><span class="p">(</span><span class="n">QRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">400</span><span class="p">));</span>
+<span class="n">generator</span><span class="p">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s">"Mein Plot"</span><span class="p">);</span>
+<span class="n">generator</span><span class="p">.</span><span class="n">setResolution</span><span class="p">(</span><span class="mi">72</span><span class="p">);</span>
+<span class="n">generator</span><span class="p">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s">"Ein SVG-Plot"</span><span class="p">);</span>
+<span class="n">renderer</span><span class="p">.</span><span class="n">renderTo</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">plot</span><span class="p">,</span> <span class="n">generator</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Achtung"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Wendet man obigen Code auf das Diagramm im ersten Tutorial an, so wird im finalen SVG <em>keine</em> Linie angezeigt. Das liegt daran, dass der SVG-Generator im Gegensatz zum Pixel-Renderer oder PDF-Writer nicht mit NAN-Werten umgehen kann. Diese entstehen häufig unbewusst, z.B. in diesem Beispiel beim Logarithmieren von 0-Werten durch Auswahl einer entsprechenden y-Achsenskalierung. Auf dem Bildschirm wird die Linie zwar trotzdem korrekt angezeigt, aber beim SVG Export wird eine Kurve (intern Polylinie) nur bis zum ersten Erscheinen eines NAN-Werts gezeichnet. Ist zufälligerweise der erste Wert bereits ein NAN, so fehlt die Kurve im Export und man sucht dann zumeist sehr lange, bis man den Fehler gefunden hat.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_anpassen_des_gerenderten_plots">13.1.7. Anpassen des gerenderten Plots</h4>
+<div class="paragraph">
+<p>Zwischen einem auf dem Bildschirm angezeigten Plot und einem Ausdruck gibt es häufig diverse Unterschiede. So möchte man bei schwarz-weiß-Ausdrucken wahrscheinlich keinen bunten Hintergrund des Diagramms drucken und auch der Rand des Plots soll nicht in Widget-Farben gedruckt werden. Derartige Anpassungen macht man direkt im <code>QwtPlotRenderer</code> über verschiedene Layout-Anpassungsfunktionen.</p>
+</div>
+<div class="paragraph">
+<p>Man kann den Renderer anweisen, bestimmte Elemente nicht zu zeichnen:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3339,7 +3292,7 @@ Zusammen mit der Pixel-Größe des Plots ergibt sich dann das finale Erscheinung
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="c++"><span class="n">renderer</span><span class="p">.</span><span class="n">setLayoutFlag</span><span class="p">(</span> <span class="n">QwtPlotRenderer</span><span class="o">::</span><span class="n">FrameWithScales</span> <span class="p">);</span></code></pre>
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">renderer</span><span class="p">.</span><span class="n">setLayoutFlag</span><span class="p">(</span>  <span class="p">);</span></code></pre>
 </div>
 </div>
 <div class="imageblock">
@@ -3367,9 +3320,66 @@ Zusammen mit der Pixel-Größe des Plots ergibt sich dann das finale Erscheinung
 </div>
 </div>
 <div class="sect3">
-<h4 id="sec:exportDPI">13.2.3. Diagrammelemente skalieren (DPI ändern)</h4>
+<h4 id="sec:exportDPI">13.1.8. Diagrammelemente skalieren (DPI ändern)</h4>
 <div class="paragraph">
-<p>TODO</p>
+<p>Wie schon oben beschrieben, wird bei unterschiedlicher Druck-Pixelgröße die Skalierung von Plotelementen neu berechnet. Bei modernen Druckern sind Auflösungen von 600 bzw. 1200 DPI normal, was bei einem A4-Ausdruck zu <em>sehr hohen</em> Pixelgrößen führt und einzelne gedruckte Pixel sind im Ausdruck nicht mehr zu erkennen.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Achtung"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Bei Ausgabe des Plots als Vektorgrafik, vor allem beim Drucken oder Ausgabe in PDF-Dateien, müssen <em>alle</em> Plotelement mit skalierbaren Größen festgelegt sein. Dies ist insbesondere für alle Definitionen eines <code>QPen()</code> notwendig, z.B. bei Linienkurven. Hier dürfen <em>keine</em> kosmetischen Pens mit Linienstärke 0 verwendet werden. Die resultierenden Linien mit Breiten von einem Pixel würden im Ausdruck schlicht nicht sichtbar sein.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Die Skalierung von Schriftgrößen und Linienbreiten wird über die Auflösung (angegeben in DPI) des gewählten Zeichengeräts festgelegt. Zusammen mit der Pixel-Größe des Plots ergibt sich dann das finale Erscheinungsbild der Diagramms, welches durchaus von dem Bild auf dem Bildschirm abweichen kann.</p>
+</div>
+<div class="paragraph">
+<p>Beim Export eines Plots als Vektorgrafik (PDF oder SVG-Dokument) sind Schriftgröße und Linienstärke Eigenschaften der exportierten Vektorelemente. Wichtig ist hierbei, dass bei allen Zeichenelementen Stiftbreiten (auch als Dezimalzahl) angegeben werden.</p>
+</div>
+<div class="paragraph">
+<p>Beim PDF-Export des Diagramms mit der Methode oben, stellt man bei der Anzeige fest, dass die Skalenlinien nur kosmetische Linien mit einem Pixel Breite sind (d.h. beim Hineinzoomen bleiben diese Linien immer exakt ein Pixel breit). Alle anderen Diagrammelemente werden entsprechend skaliert.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/PDF-Export-Detail.png" alt="PDF Export Detail">
+</div>
+<div class="title">Abbildung 48. Vergrößerung des Vektorexports (PDF), Linien der Skalen werden also kosmetische Linien mit immer einem Pixel Breite gezeichnet</div>
+</div>
+<div class="paragraph">
+<p>Auch hier darf man nicht vergessen, den Zeichenstift (<code>QPen</code>)  entsprechend zu setzen.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="k">for</span>  <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">plot</span><span class="p">.</span><span class="n">plotLayout</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setAlignCanvasToScale</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="nb">true</span> <span class="p">);</span>
+	<span class="n">plot</span><span class="p">.</span><span class="n">axisScaleDraw</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">setPenWidthF</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Bei gewähltem Rendermodus <code>QwtPlotRenderer::FrameWithScales</code> verwendet <code>QwtPlot</code> die <em>breiteste</em> Zeichenbreite der für die einzelnen <em>sichtbaren</em> Skalen gesetzten Stifte.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Bis zur Qwt-Plot Version 6.1.3 werden die Stiftbreiten für das Zeichnen des Rahmens auf Integerwerte (ab-)gerundet. Daher führen Stiftbreiten &lt; 1 stets zu einem kosmetischen Stift für den umliegenden Rahmen. Daher sollte man immer eine Stiftbreite von 1 für den Rahmen verwenden, oder eben auf die Option <code>QwtPlotRenderer::FrameWithScales</code> verzichten.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -3607,7 +3617,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 <div class="content">
 <img src="../images/Tutorial1_ui1.png" alt="Tutorial1 ui1">
 </div>
-<div class="title">Abbildung 48. Widget mit Platzhalter-Widget für das Diagramm</div>
+<div class="title">Abbildung 49. Widget mit Platzhalter-Widget für das Diagramm</div>
 </div>
 <div class="paragraph">
 <p>Unter der Spinbox wurde ein <code>QWidget</code> eingefügt. Dieses soll nun als Platzhalter für das <code>QwtPlot</code> dienen. Dazu im Kontextmenü des Widgets die Option "Als Platzhalter für benutzerdefinierte Klasse festlegen&#8230;&#8203;" auswählen:</p>
@@ -3668,7 +3678,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 <div id="footer">
 <div id="footer-text">
 Version 2.0<br>
-Last updated 2025-06-10 12:02:30 +0200
+Last updated 2025-06-10 14:35:59 +0200
 </div>
 </div>
 </body>
