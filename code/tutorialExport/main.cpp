@@ -32,6 +32,9 @@ THE SOFTWARE.
 #include <QPrintDialog>
 #include <QPdfWriter>
 #include <QSvgGenerator>
+#include <QBuffer>
+#include <QClipboard>
+#include <QMimeData>
 
 //#define ORIGINAL_HEADERS
 #ifndef ORIGINAL_HEADERS
@@ -199,16 +202,28 @@ int main(int argc, char *argv[]) {
 
 #if 1
 	QSvgGenerator generator;
-	generator.setFileName("plot300.svg");
 	generator.setSize(QSize(600, 400));
 	generator.setViewBox(QRect(0, 0, 600, 400));
 	generator.setTitle("Mein Plot");
-	generator.setResolution(144);
+	// generator.setResolution(144);
 	generator.setDescription("Ein SVG-Plot");
+
+#if 1
+	// Puffer als Ausgabegerät festlegen
+	QBuffer b;
+	generator.setOutputDevice(&b);
+	renderer.renderTo( &plot, generator);
+	// Puffer als MimeData in die Zwischenablage legen
+	QMimeData * d = new QMimeData();
+	d->setData("image/svg+xml",b.buffer());
+	QApplication::clipboard()->setMimeData(d,QClipboard::Clipboard);
+#else
+#endif
+	generator.setFileName("plot.svg");
 	renderer.renderTo( &plot, generator);
 #endif
 
-#if 0
+#if 1
 	QPrinter printer( QPrinter::HighResolution );
 
 	printer.setCreator( "Ich" );
@@ -221,7 +236,6 @@ int main(int argc, char *argv[]) {
 
 	QPrintDialog dialog( &printer );
 	if (dialog.exec() ) {
-		printer.setResolution(300);
 		renderer.renderTo( &plot, printer );
 	}
 #endif
