@@ -141,7 +141,6 @@ Statt PDFs via PDF-Drucker zu erzeugen, kann man auch den durch Qt bereitgestell
 QPdfWriter writer("plot.pdf");
 writer.setTitle("Mein plot");
 writer.setCreator("Ich");
-writer.setResolution(1200);
 writer.setPageSize(QPageSize::A4);
 writer.setPageOrientation(QPageLayout::Landscape);
 renderer.renderTo( &plot, writer);
@@ -158,7 +157,7 @@ QT += svg
 Dann erstellt und konfiguriert man das Generatorobjekt und rendert in das SVG-Generator-Paintdevice.
 
 ```c++
-QSvgGenerator generator;
+ generator;
 generator.setFileName("plot.svg");
 generator.setSize(QSize(600, 400));
 generator.setViewBox(QRect(0, 0, 600, 400));
@@ -173,6 +172,8 @@ renderer.renderTo( &plot, generator);
 Wendet man obigen Code auf das Diagramm im ersten Tutorial an, so wird im finalen SVG _keine_ Linie angezeigt. Das liegt daran, dass der SVG-Generator im Gegensatz zum Pixel-Renderer oder PDF-Writer nicht mit NAN-Werten umgehen kann. Diese entstehen häufig unbewusst, z.B. in diesem Beispiel beim Logarithmieren von 0-Werten durch Auswahl einer entsprechenden y-Achsenskalierung. Auf dem Bildschirm wird die Linie zwar trotzdem korrekt angezeigt, aber beim SVG Export wird eine Kurve (intern Polylinie) nur bis zum ersten Erscheinen eines NAN-Werts gezeichnet. Ist zufälligerweise der erste Wert bereits ein NAN, so fehlt die Kurve im Export und man sucht dann zumeist sehr lange, bis man den Fehler gefunden hat.
 ====
 
+
+Die Angabe der Auflösung mit `QSvgGenerator::setResolution` definiert zusammen mit der gegebenen Größe die finale Auflösung des Bildes. Je höher die Auflösung, umso größer sind Font und Stiftbreiten. In diesem Zusammenhang unterscheidet sich der SVG-Export vom PDF-Export/Drucken.
 
 ### Anpassen des gerenderten Plots
 
@@ -233,20 +234,16 @@ Die Skalierung von Schriftgrößen und Linienbreiten wird über die Auflösung (
 
 Beim Export eines Plots als Vektorgrafik (PDF oder SVG-Dokument) sind Schriftgröße und Linienstärke Eigenschaften der exportierten Vektorelemente. Wichtig ist hierbei, dass bei allen Zeichenelementen Stiftbreiten (auch als Dezimalzahl) angegeben werden.
 
-Beim PDF-Export des Diagramms mit der Methode oben, stellt man bei der Anzeige fest, dass die Skalenlinien nur kosmetische Linien mit einem Pixel Breite sind (d.h. beim Hineinzoomen bleiben diese Linien immer exakt ein Pixel breit). Alle anderen Diagrammelemente werden entsprechend skaliert.
-
+Exportiert man das Diagramm als PDF, werden die Skalenlinien nur als kosmetische Linien mit einem Pixel Breite exportiert (d.h. beim Hineinzoomen bleiben diese Linien immer exakt ein Pixel breit). Alle anderen Diagrammelemente werden entsprechend skaliert.
 
 .Vergrößerung des Vektorexports (PDF), Linien der Skalen werden also kosmetische Linien mit immer einem Pixel Breite gezeichnet
 image::PDF-Export-Detail.png[pdfwidth=6cm]
 
-Auch hier darf man nicht vergessen, den Zeichenstift (`QPen`)  entsprechend zu setzen.
-
+Auch bei den Skalen darf man nicht vergessen, den Zeichenstift (`QPen`)  entsprechend zu setzen.
 
 ```c++
-for  (int i=0; i<4; ++i) {
-	plot.plotLayout()->setAlignCanvasToScale( i, true );
-	plot.axisScaleDraw(i)->setPenWidthF(1);
-}
+plot.axisScaleDraw(QwtPlot::xBottom)->setPenWidthF(1);
+plot.axisScaleDraw(QwtPlot::yLeft)->setPenWidthF(1);
 ```
 
 Bei gewähltem Rendermodus `QwtPlotRenderer::FrameWithScales` verwendet `QwtPlot` die _breiteste_ Zeichenbreite der für die einzelnen _sichtbaren_ Skalen gesetzten Stifte.
@@ -255,4 +252,13 @@ Bei gewähltem Rendermodus `QwtPlotRenderer::FrameWithScales` verwendet `QwtPlot
 ====
 Bis zur Qwt-Plot Version 6.1.3 werden die Stiftbreiten für das Zeichnen des Rahmens auf Integerwerte (ab-)gerundet. Daher führen Stiftbreiten < 1 stets zu einem kosmetischen Stift für den umliegenden Rahmen. Daher sollte man immer eine Stiftbreite von 1 für den Rahmen verwenden, oder eben auf die Option `QwtPlotRenderer::FrameWithScales` verzichten.
 ====
+
+
+Beim SVG-Generator kann man durch Veränderung des DPI-Werts das Diagramm skalieren. 
+Analog gilt das auch, wenn mittels `QwtPlotRenderer` eine Pixelgrafik gerendert wird.
+
+Bei den anderen Exportformaten ist die DPI-Zahl nur eine Zusatzinformation für das Anzeigeprogramm, wie das jeweilige Bild zu skalieren ist. Da aber alle Größen und Abstände relativ in der Datei abgelegt sind, ändert sich das Erscheinungsbild des Diagramms beim PDF-Export/Druck nicht in Abhängigkeit der DPI-Zahl.
+
+
+
 

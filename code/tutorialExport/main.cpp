@@ -177,32 +177,33 @@ int main(int argc, char *argv[]) {
 	QwtPlotRenderer renderer;
 	renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
 
-	for  (int i=0; i<4; ++i) {
+	for  (int i=0; i<4; ++i)
 		plot.plotLayout()->setAlignCanvasToScale( i, true );
-		plot.axisScaleDraw(i)->setPenWidthF(1);
-	}
+
+	plot.axisScaleDraw(QwtPlot::xBottom)->setPenWidthF(1);
+	plot.axisScaleDraw(QwtPlot::yLeft)->setPenWidthF(1);
 
 	renderer.setDiscardFlag( QwtPlotRenderer::DiscardBackground );
 	renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasBackground );
 	renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasFrame );
 
-#if 1
+#if 0
 	QPdfWriter writer("plot.pdf");
 	writer.setTitle("Mein plot");
 	writer.setCreator("Ich");
-	writer.setResolution(1200);
 	writer.setPageSize(QPageSize::A4);
+	writer.setResolution(300);
 	writer.setPageOrientation(QPageLayout::Landscape);
 	renderer.renderTo( &plot, writer);
 #endif
 
-#if 0
+#if 1
 	QSvgGenerator generator;
-	generator.setFileName("plot.svg");
+	generator.setFileName("plot300.svg");
 	generator.setSize(QSize(600, 400));
 	generator.setViewBox(QRect(0, 0, 600, 400));
 	generator.setTitle("Mein Plot");
-	generator.setResolution(72);
+	generator.setResolution(144);
 	generator.setDescription("Ein SVG-Plot");
 	renderer.renderTo( &plot, generator);
 #endif
@@ -220,6 +221,7 @@ int main(int argc, char *argv[]) {
 
 	QPrintDialog dialog( &printer );
 	if (dialog.exec() ) {
+		printer.setResolution(300);
 		renderer.renderTo( &plot, printer );
 	}
 #endif
