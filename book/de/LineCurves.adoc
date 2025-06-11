@@ -203,7 +203,7 @@ Wenn man ein Liniendiagramm mit Visualisierung von Stützstellen erhalten will, 
 
 ## Keine Linie
 
-Möchte man eine Kurve ausschließlich mit Symbolen zeichnen (siehe nachfolgendes Kapitel), so kann man das Zeichnen des Linienzugs auch komplett ausstellen:
+Möchte man eine Kurve ausschließlich mit Symbolen zeichnen (siehe <<sec:plotSymbols>>), so kann man das Zeichnen des Linienzugs auch komplett ausstellen:
 
 ```c++
 curve->setStyle(QwtPlotCurve::NoCurve);

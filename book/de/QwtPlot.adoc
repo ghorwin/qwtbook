@@ -26,7 +26,7 @@ Das Diagramm selbst ist ein kartesisches Diagramm mit maximal 4 Achsen, identifi
 
 Diese Achsen haben primär die Aufgabe, zwischen den _Plotkoordinaten_ (x,y) und _Bildschirmkoordinaten_ umzurechnen. Jede der vier Achsen kann individuell konfiguriert werden, welches sich auf die min/max-Werte und die Achsenskalierung auswirkt.
 
-### Diagrammelemente
+### Diagramm-/Zeichenelemente
 
 Innerhalb der Zeichenfläche kann man nun die verschiedensten Elemente zeichen, bspw.:
 
@@ -41,7 +41,7 @@ Innerhalb der Zeichenfläche kann man nun die verschiedensten Elemente zeichen, 
 Alle diese Objekte sind von der Basisklasse  `QwtPlotItem` abgeleitet und teilen sich dadurch gewisse gemeinsame Eigenschaften.
 
 .Von QwtPlotItem abgeleitete Klassen der verschiedenen Zeichenelemente
-image::ClassDiagrams/QwtPlotItem-class-hierarchy.png[pdfwidth=15cm]
+image::ClassDiagrams/QwtPlotItem-class-hierarchy.png[pdfwidth=12cm]
 
 
 In einem Diagramm kann man alle möglichen Elemente kombinieren, also auch Liniendiagramme mit Balken, Symbolen und Markierungen darstellen.
@@ -58,14 +58,30 @@ Die Positionierung der Diagrammelemente erfolgt über die Plotkoordinaten. Die U
 Die Zuordnung eines Zeichenelements zu einer Achse erfolgt mit den Memberfunktionen `QwtPlotItem::setAxes(...)`, `QwtPlotItem::setXAxis(...)`, `QwtPlotItem::setYAxis(...)`.
 ====
 
-Alle Zeichenelemente werden _grundsätzlich_ auf dem Heap mit `new` erstellt und mittels der Memberfunktion `QwtPlotItem::attach(...)` dem eigentlichen `QwtPlot` hinzugefügt.
+Das `QwtPlotItem` deklariert und implementiert auch die virtuellen Funktionen für das Zeichnen sowie Berechnen wichtiger Layoutdaten. Dies wird aber später in den fortgeschrittenen Kapiteln noch genauer erklärt. Nun aber zu den individuellen Zeichenelementen und daraus erstellten Diagrammtypen.
+
+
+### Hinzufügen/Entfernen von Zeichenelementen
+
+Alle Zeichenelemente werden _grundsätzlich_ auf dem Heap mit `new` erstellt und mittels der Memberfunktion `QwtPlotItem::attach(plot)` dem eigentlichen `QwtPlot` hinzugefügt.
+
+Entfernen kann man Zeichenelemente mittels der Funktion `QwtPlotItem::detach()`.
 
 [IMPORTANT]
 ====
-Beim Aufruf von `attach()` wird das Zeichenelement in die Obhut des `QwtPlot` übergeben, welches sich dann um das Aufräumen des Speichers kümmert. Möchte man das Zeichenelement wieder zurückerhalten, ruft man die Memberfunktion `detach()` auf. Damit übernimmt man dann selbst wieder die Verantwortung für das Speicherbereinigen.
+Beim Aufruf von `attach()` wird das Zeichenelement in die Obhut des `QwtPlot` übergeben, welches sich dann um das Aufräumen des Speichers kümmert. Solange das `QwtPlot` noch im Besitz eines PlotElements ist, darf/sollte man das Objekt nicht löschen. 
+
+Möchte man das Zeichenelement dennoch wieder zurückerhalten, ruft man die Memberfunktion `detach()` auf. Damit übernimmt man dann selbst wieder die Verantwortung für das Speicherbereinigen.
 ====
 
-Das `QwtPlotItem` deklariert und implementiert auch die virtuellen Funktionen für das Zeichnen sowie Berechnen wichtiger Layoutdaten. Dies wird aber später in den fortgeschrittenen Kapiteln noch genauer erklärt. Nun aber zu den individuellen Zeichenelementen und daraus erstellten Diagrammtypen.
+Man kann auch alle Zeichenelemente eines bestimmten Typs wieder entfernen:
+
+```c++
+// alle Kurven entfernen und die Kurvenobjekte dabei löschen
+plot.detachItems(QwtPlotItem::Rtti_PlotCurve, true); // detach and delete
+```
+
+Das erste Argument von `detachItems()` ist der Zeichenelementtyp. Mit dem zweiten Argument gibt man an, ob das Objekt selbst gelöscht werden soll, oder nur aus dem Plot entfernt wird. Im letzteren Fall muss man sich wieder selbst um das Speicheraufräumen kümmern.
 
 [[sec:seriesData]]
 ## Datenhaltung im QwtPlot / QwtSeriesStore
@@ -75,7 +91,7 @@ Für die Darstellen von Plotkurven/Balken oder anderen Zeichenelementen werden d
 Alle Zeichenelemente, welche solche Reihendaten verwenden, sind Kinder der Klasse `QwtPlotSeriesItem`.
 
 .Klasse QwtPlotSeriesItem, Elternklassen und abgeleitete Klassen
-image::ClassDiagrams/QwtPlotSeriesItem-class-hierarchy.png[pdfwidth=15cm]
+image::ClassDiagrams/QwtPlotSeriesItem-class-hierarchy.png[pdfwidth=12cm]
 
 Die Datenhaltung erfolgt in der Template-Klasse `QwtSeriesStore`, welche die abstrakte Schnittstellenklasse `QwtAbstractSeriesStore` implementiert.
 

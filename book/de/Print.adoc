@@ -149,6 +149,47 @@ Man kann auch manuell die zu verwendende Auflösung durch Aufruf von `QPrinter::
 Das Zusammenspiel von Auflösung und Druckgröße wird in <<sec:exportDPI>> beschrieben.
 
 
+### PDF Export mittels QPdfWriter
+
+Statt PDFs via PDF-Drucker zu erzeugen, kann man auch den durch Qt bereitgestellten `QPdfWriter` verwenden:
+
+```c++
+QPdfWriter writer("plot.pdf");
+writer.setTitle("Mein plot");
+writer.setCreator("Ich");
+writer.setResolution(1200);
+writer.setPageSize(QPageSize::A4);
+writer.setPageOrientation(QPageLayout::Landscape);
+renderer.renderTo( &plot, writer);
+```
+
+### SVG Export mittels QSvgDocument
+
+SVG Export erfolgt mittels der Klasse `QSvgGenerator`. Für die SVG-Unterstützung muss zunächst die Qt pro-Datei erweitert werden:
+
+```
+QT += svg
+```
+
+Dann erstellt und konfiguriert man das Generatorobjekt und rendert in das SVG-Generator-Paintdevice.
+
+```c++
+QSvgGenerator generator;
+generator.setFileName("plot.svg");
+generator.setSize(QSize(600, 400));
+generator.setViewBox(QRect(0, 0, 600, 400));
+generator.setTitle("Mein Plot");
+generator.setResolution(72);
+generator.setDescription("Ein SVG-Plot");
+renderer.renderTo( &plot, generator);
+```
+
+[CAUTION]
+====
+Wendet man obigen Code auf das Diagramm im ersten Tutorial an, so wird im finalen SVG _keine_ Linie angezeigt. Das liegt daran, dass der SVG-Generator im Gegensatz zum Pixel-Renderer oder PDF-Writer nicht mit NAN-Werten umgehen kann. Diese entstehen häufig unbewusst, z.B. in diesem Beispiel beim Logarithmieren von 0-Werten durch Auswahl einer entsprechenden y-Achsenskalierung. Auf dem Bildschirm wird die Linie zwar trotzdem korrekt angezeigt, aber beim SVG Export wird eine Kurve (intern Polylinie) nur bis zum ersten Erscheinen eines NAN-Werts gezeichnet. Ist zufälligerweise der erste Wert bereits ein NAN, so fehlt die Kurve im Export und man sucht dann zumeist sehr lange, bis man den Fehler gefunden hat.
+====
+
+
 ### Anpassen des gerenderten Plots
 
 Zwischen einem auf dem Bildschirm angezeigten Plot und einem Ausdruck gibt häufig diverse Unterschiede. So möchte man bei schwarz-weiß-Ausdrucken wahrscheinlich keinen bunten Hintergrund des Diagramms drucken und auch der Rand des Plots soll nicht in Widget-Farben gedruckt werden. Derartige Anpassungen macht man direkt im `QwtPlotRenderer` über verschiedene Layout-Anpassungsfunktionen.

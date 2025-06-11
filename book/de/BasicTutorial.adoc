@@ -323,8 +323,7 @@ Ein weiteres Zeichenelement, das man hin und wieder braucht, sind horizontale od
 
 [source,cpp]
 ----
-// Vertikale, gestrichelte Plot-Markierung einfügen
-QwtPlotMarker * marker = new QwtPlotMarker("207,50 keV");
+QwtPlotMarker * marker = new QwtPlotMarker;
 marker->setLabelOrientation(Qt::Vertical); // Vertikale Linie
 marker->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom); // Label unten und rechts von der Linie
 marker->setValue(36, 0); // bei vertikalen Linien muss die x-Koordinate festgelegt werden
@@ -332,7 +331,11 @@ QPen markerPen(QColor(40,60,255));
 markerPen.setStyle(Qt::SolidLine);
 marker->setLinePen(markerPen);
 marker->setLineStyle(QwtPlotMarker::VLine);
-marker->setLabel(QwtText("207,50 keV"));
+QwtText markerLabel("207,50 keV");
+QFont markerFont;
+markerFont.setPointSize(8);
+markerLabel.setFont(markerFont);
+marker->setLabel(markerLabel);
 marker->attach(&plot); // plot takes ownership
 ----
 
