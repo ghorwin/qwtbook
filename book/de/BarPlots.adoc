@@ -305,7 +305,7 @@ Für jeden Balken im Diagramm speichern wir uns eine Farbe in der Membervariable
 
 [IMPORTANT]
 ====
-Die Funktion `QwtPlotBarChart::specialSymbol()` ist eine _factory function_ und überträgt die Eigentümerschaft des auf dem Heap erstellten Objekts an den Aufrufer. Deshalb _muss_ man hier in jedem Aufruf der Funktion ein neues `QwtColumnSymbol` Objekt mit `new` erstellen. Nachdem der Balken gezeichnet wurde, löscht das Balkendiagrammelement das erzeugte Säulensymbolobjekt wieder.
+Die Funktion `QwtPlotBarChart::specialSymbol()` ist eine _factory function_ und überträgt die Eigentümerschaft des auf dem Heap erstellten Objekts an den Aufrufer. Deshalb _muss_ man hier in jedem Aufruf der Funktion ein neues `QwtColumnSymbol` Objekt mit `new` erstellen. Nachdem der Balken gezeichnet wurde, löscht das Balkendiagrammelement das erzeugte Säulensymbolobjekt automatisch wieder (man muss und darf das generierte Objekt also _nicht_ selbst später löschen).
 ====
 
 .Balkendiagramm mit unterschiedlich gefärbten Balken

@@ -1,5 +1,5 @@
-Das Qwt Handbuch
-================
+Das Qwt Entwicklerhandbuch
+==========================
 Andreas Nicolai <andreas.nicolai@gmx.de>
 v2.0, Mai 2025
 :Author Initials: AN

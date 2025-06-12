@@ -76,10 +76,11 @@ Möchte man das Zeichenelement dennoch wieder zurückerhalten, ruft man die Memb
 
 Man kann auch alle Zeichenelemente eines bestimmten Typs wieder entfernen:
 
-```c++
+[source,cpp]
+----
 // alle Kurven entfernen und die Kurvenobjekte dabei löschen
 plot.detachItems(QwtPlotItem::Rtti_PlotCurve, true); // detach and delete
-```
+----
 
 Das erste Argument von `detachItems()` ist der Zeichenelementtyp. Mit dem zweiten Argument gibt man an, ob das Objekt selbst gelöscht werden soll, oder nur aus dem Plot entfernt wird. Im letzteren Fall muss man sich wieder selbst um das Speicheraufräumen kümmern.
 
@@ -130,10 +131,11 @@ _Zeichnen_ bedeutet hier eigentlich zwei unterschiedliche Arbeitsschritte:
 
 Schritt 1 wird ausgeführt, wenn man `QwtPlot::replot()` aufruft. Standardmäßig wird das immer gemacht, wenn man irgendeine Ploteigenschaft ändert. Diesen automatischen Aufruf kann man mit `QwtPlot::setAutoReplot()` an/ausschalten.
 
-```c++
+[source,cpp]
+----
 // Automatisches Neu-Layouten ausschalten
 plot->setAutoReplot(false);
-```
+----
 
 [NOTE]
 ====

@@ -98,23 +98,25 @@ QT += printsupport
 
 Man erstellt und konfiguriert ein Printerobjekt:
 
-```c++
+[source,cpp]
+----
 QPrinter printer( QPrinter::HighResolution );
 printer.setCreator("Ich");          // only for exporting to (PDF) files
 printer.setDocName("Mein Plot");    // only for exporting to (PDF) files
 
 printer.setPageOrientation( QPageLayout::Landscape );
-```
+----
 
 Dann kann der Anwender noch den Drucker auswählen:
 
-```c++
+[source,cpp]
+----
 QPrintDialog dialog( &printer );
 if ( dialog.exec() ) {
 	QwtPlotRenderer renderer;
 	renderer.renderTo( &plot, printer );
 }
-```
+----
 
 Und schon wird das Bild auf den Drucker oder PDF-Drucker geschoben.
 
@@ -137,14 +139,15 @@ Das Zusammenspiel von Auflösung und Druckgröße wird in <<sec:exportDPI>> besc
 
 Statt PDFs via PDF-Drucker zu erzeugen, kann man auch den durch Qt bereitgestellten `QPdfWriter` verwenden:
 
-```c++
+[source,cpp]
+----
 QPdfWriter writer("plot.pdf");
 writer.setTitle("Mein plot");
 writer.setCreator("Ich");
 writer.setPageSize(QPageSize::A4);
 writer.setPageOrientation(QPageLayout::Landscape);
 renderer.renderTo( &plot, writer);
-```
+----
 
 ### SVG Export mittels QSvgDocument
 
@@ -156,7 +159,8 @@ QT += svg
 
 Dann erstellt und konfiguriert man das Generatorobjekt und rendert in das SVG-Generator-Paintdevice.
 
-```c++
+[source,cpp]
+----
  generator;
 generator.setFileName("plot.svg");
 generator.setSize(QSize(600, 400));
@@ -165,7 +169,7 @@ generator.setTitle("Mein Plot");
 generator.setResolution(72);
 generator.setDescription("Ein SVG-Plot");
 renderer.renderTo( &plot, generator);
-```
+----
 
 [CAUTION]
 ====
@@ -177,7 +181,8 @@ Die Angabe der Auflösung mit `QSvgGenerator::setResolution()` definiert zusamme
 
 Ein generiertes SVG-Dokument kann man auch in die Zwischenablage kopieren. Dazu definiert legt man im `QSvgGenerator` ein alternatives Ausgabegerät an (mit `QSvgGenerator::setOutputDevice()`) und
 
-```c++
+[source,cpp]
+----
 // Puffer als Ausgabegerät festlegen
 QBuffer b;
 generator.setOutputDevice(&b);
@@ -186,7 +191,7 @@ renderer.renderTo( &plot, generator);
 QMimeData * d = new QMimeData();
 d->setData("image/svg+xml",b.buffer());
 QApplication::clipboard()->setMimeData(d,QClipboard::Clipboard);
-```
+----
 
 ### EMF Export unter Windows
 
@@ -201,14 +206,15 @@ Es gibt verschiedene EMF-Generator-Bibliotheken (open-source und kommerzielle), 
 Zwischen einem auf dem Bildschirm angezeigten Plot und einem Ausdruck gibt es häufig diverse Unterschiede. So möchte man bei schwarz-weiß-Ausdrucken wahrscheinlich keinen bunten Hintergrund des Diagramms drucken und auch der Rand des Plots soll nicht in Widget-Farben gedruckt werden. Derartige Anpassungen macht man direkt im `QwtPlotRenderer` über verschiedene Layout-Anpassungsfunktionen.
 
 Man kann den Renderer anweisen, bestimmte Elemente nicht zu zeichnen:
-```c++
+[source,cpp]
+----
 // kein Hintergrund des Widgets
 renderer.setDiscardFlag( QwtPlotRenderer::DiscardBackground );
 // Keinen Zeichenflächenhintergrund
 renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasBackground );
 // keinen Rahmen um die Zeichenfläche
 renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasFrame );
-```
+----
 
 .Plot ohne Widget-Hintergrund (Rand), ohne Zeichenflächenhintergrund und ohne Rahmen
 image::Tutorial1_export1.png[pdfwidth=8cm]
@@ -221,21 +227,23 @@ Zusätzlich könnte man noch weitere Dinge ausblenden:
 
 Damit kann das Plot gedruckt schon ganz ordentlich aussehen. Man kann das Erscheinungsbild aber für einen Ausdruck noch ändern, indem man einen flachen Rahmen mit angedockten Skalen zeichnet.
 
-```c++
+[source,cpp]
+----
 renderer.setLayoutFlag(  );
-```
+----
 
 .Plot gerendert im Layoutmodus _FrameWithScales_
 image::Tutorial1_export2.png[pdfwidth=8cm]
 
 Die linke untere Ecke des Diagramms ist hier nicht direkt am Punkt (0, 0,001). Das kann man erzwingen, wenn man die Zeichenfläche an alle vier Achsen ausrichtet:
 
-```c++
+[source,cpp]
+----
 plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, true );
 plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xBottom, true );
 plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yRight, true );
 plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xTop, true );
-```
+----
 
 .Plot mit ausgerichteten Skalen - typisches Plotlayout für den Export
 image::Tutorial1_export3.png[pdfwidth=8cm]
@@ -262,10 +270,11 @@ image::PDF-Export-Detail.png[pdfwidth=6cm]
 
 Auch bei den Skalen darf man nicht vergessen, den Zeichenstift (`QPen`)  entsprechend zu setzen.
 
-```c++
+[source,cpp]
+----
 plot.axisScaleDraw(QwtPlot::xBottom)->setPenWidthF(1);
 plot.axisScaleDraw(QwtPlot::yLeft)->setPenWidthF(1);
-```
+----
 
 Bei gewähltem Rendermodus `QwtPlotRenderer::FrameWithScales` verwendet `QwtPlot` die _breiteste_ Zeichenbreite der für die einzelnen _sichtbaren_ Skalen gesetzten Stifte.
 
