@@ -59,17 +59,16 @@ int main(int argc, char *argv[]) {
 
 	QwtPlotCurve *curve = new QwtPlotCurve();
 	curve->setStyle(QwtPlotCurve::Lines);
-	QwtText t("QwtPlotCurve::Lines with gaps");
 	curve->setPen(QColor(0,40,180,128), 2);
 	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
 	curve->setSamples(x, y);
-	curve->attach(&plot); // Plot takes ownership
 
-	QFont titleFont(qApp->font());
-	titleFont.setPointSize(10);
-	titleFont.setBold(true);
-	t.setFont(titleFont);
-	plot.setTitle(t);
+	// Kurve ausfüllen
+	curve->setBrush(QColor(0xa0d0ff));
+	// Bezugslinie setzen
+	curve->setBaseline(8);
+
+	curve->attach(&plot); // Plot takes ownership
 
 	plot.show();
 	return a.exec();
