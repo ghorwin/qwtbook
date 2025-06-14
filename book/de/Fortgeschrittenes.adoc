@@ -21,3 +21,24 @@ Bei der Legende geht das so jedoch nicht.
 TODO den entfern-Trick erklären...
 
 
+[[sec:splines]]
+## Splines und Bézier-Kurven
+
+TODO ...
+
+In diesem Fall instanziiert und konfiguriert man eine der Implementierungen und ruft dann die Funktion: `QwtSpline::polygon( const QPolygonF&, double tolerance )` auf. Das erste Argument ist der zu fittende Polygonzug und das zweite Argument die Toleranz, welche die Länge der generierten Liniensegmente definiert. Die Funktion liefert selbst einen Linienzug als `QPolygonF` zurück, welcher dann weiter verwendet werden kann. Die Anzahl der Stützstellen im Polygonzug wird durch die Toleranz so definiert, dass die maximale Abweichung zwischen dem Liniensegment und der originalen Splinekurve diese Toleranz nicht überschreitet. Damit werden in Bereichen stärkerer Krümmung mehr Punkte gesetzt als in eher linearen Abschnitten der Kurve.
+
+Die Stützstellen der Beispielkurve oben werden in einen Polygonzug gesteckt und durch die Spline in einen neuen Polygonzug konvertiert. Die Toleranz von 0.01 erzeugt hier 95 Punkte.
+
+```c++
+QPolygonF poly;
+for (int i=0; i<x.count(); ++i)
+	poly << QPointF(x[i],y[i]);
+QPolygonF splinePoly = spline->polygon(poly, 1e-2);
+```
+
+.Liniensegmentkurve mit Stützstellen generiert aus QwtSplinePleasing
+image::CurveFitterSplinePleasingPolygon.png[pdfwidth=10cm]
+
+Wie man sehen kann, werden die Punkte in den Krümmungsstellen stärker geclustert. 
+

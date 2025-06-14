@@ -334,8 +334,12 @@ pre.rouge .gs {
 </li>
 <li><a href="#_ausgefüllte_kurven">5.4. Ausgefüllte Kurven</a></li>
 <li><a href="#_legendeneinträge">5.5. Legendeneinträge</a></li>
-<li><a href="#_filter_und_kurvenglättung">5.6. Filter und Kurvenglättung</a></li>
-<li><a href="#_optimierung_der_zeichengeschwindigkeit">5.7. Optimierung der Zeichengeschwindigkeit</a></li>
+<li><a href="#_kurvenfilter">5.6. Kurvenfilter</a>
+<ul class="sectlevel3">
+<li><a href="#_kurvenglättungspline_interpolation">5.6.1. Kurvenglättung/Spline-Interpolation</a></li>
+<li><a href="#_datenreduktion_und_optimierung_der_zeichengeschwindigkeit">5.6.2. Datenreduktion und Optimierung der Zeichengeschwindigkeit</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#sec:intervalCurves">6. Intervallkurven</a>
@@ -414,6 +418,7 @@ pre.rouge .gs {
 <li><a href="#sec:advanced">15. Fortgeschrittene Themen</a>
 <ul class="sectlevel2">
 <li><a href="#sec:releasingObjectsFromQwtPlot">15.1. Objekte aus dem QwtPlot loslösen</a></li>
+<li><a href="#sec:splines">15.2. Splines und Bézier-Kurven</a></li>
 </ul>
 </li>
 <li><a href="#sec:building">16. Download/Installation/Erstellung der Qwt Bibliothek</a>
@@ -2266,12 +2271,12 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_filter_und_kurvenglättung">5.6. Filter und Kurvenglättung</h3>
+<h3 id="_kurvenfilter">5.6. Kurvenfilter</h3>
 <div class="paragraph">
-<p>Die <code>QwtPlotCurve</code> kann die übergebenen Rohdaten vor dem eigentlichen Rendern noch an einen Algorithmus übergeben, der die Daten glättet oder ausdünnt. Da diese Operationen vom aktuellen Zoomlevel abhängen, ist diese Funktionalität in das <code>QwtPlot</code> integriert.</p>
+<p>Die <code>QwtPlotCurve</code> kann die übergebenen Rohdaten vor dem eigentlichen Rendern noch an einen Algorithmus übergeben, der die Daten glättet oder eine kontinuierliche Kuve durch die Datenpunkte legt. Diese Operationen hängen vom aktuellen Zoomlevel und der Plotgröße ab, denn je nach Auflösung wird der Verlauf der angepassten Kurve neu berechnet. Dies gibt eine bessere Qualität als beim Vorberechnen der Daten und Plotten eines Linienzugs durch vorberechnete Kurven. Deshalb ist diese Funktionalität direkt in das <code>QwtPlot</code> integriert.</p>
 </div>
 <div class="paragraph">
-<p>Einen solchen Filteralgorithmus übergibt man der Kurven, indem man eine Klasse, abgeleitet von  <code>QwtCurveFitter</code> der Kurve übergibt.</p>
+<p>Einen solchen Filteralgorithmus übergibt man der Kurve, indem man eine Klasse, abgeleitet von  <code>QwtCurveFitter</code> der Kurve übergibt.</p>
 </div>
 <div class="paragraph">
 <p>Es werden verschiedene Implementierungen dieser Schnittstelle mitgeliefert:</p>
@@ -2282,14 +2287,113 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 <div class="title">Abbildung 37. Kind-Klassen der Basisklasse <code>QwtCurveFitter</code></div>
 </div>
+<div class="sect3">
+<h4 id="_kurvenglättungspline_interpolation">5.6.1. Kurvenglättung/Spline-Interpolation</h4>
 <div class="paragraph">
-<p>Zur Demonstration der Funktionalität dieser Fit-Algorithmen</p>
+<p>Schauen wir uns zuerst den <code>QwtSplineCurveFitter</code> an.  Diese Klasse kapselt einen Algorithmus, der aus den gegebenen Stützstellen der Kurve einen weichen Verlauf berechnet. Dafür gibt es verschiedene mathematischen Algorithmen.</p>
+</div>
+<div class="paragraph">
+<p>Jeder dieser Algorithmen ist in einer von <code>QwtSpline</code> abgeleiteten Klasse implementiert.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/ClassDiagrams/QwtSpline-class-hierarchy.png" alt="QwtSpline class hierarchy">
+</div>
+<div class="title">Abbildung 38. Kind-Klassen der Basisklasse <code>QwtSpline</code></div>
+</div>
+<div class="paragraph">
+<p>Das Ergebnis lässt sich am Besten mit einem einfachen parametrischen Datensatz veranschaulichen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">x</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">};</span>
+<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">y</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">};</span>
+<span class="c1">// Kurve hinzufügen</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Lines</span><span class="p">);</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">220</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="mi">2</span><span class="p">);</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span> <span class="p">);</span> <span class="c1">// Antialiasing verwenden</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSamples</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+
+<span class="c1">// SplineFitter-Objekt erstellen</span>
+<span class="n">QwtSplineCurveFitter</span> <span class="o">*</span> <span class="n">splineFitter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtSplineCurveFitter</span><span class="p">;</span>
+<span class="c1">// Spline-Implementierung auswählen, hier QwtSplinePleasing</span>
+<span class="n">QwtSplinePleasing</span> <span class="o">*</span> <span class="n">spline</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtSplinePleasing</span><span class="p">();</span>
+<span class="c1">// Splinealgorithmus setzen</span>
+<span class="n">splineFitter</span><span class="o">-&gt;</span><span class="n">setSpline</span><span class="p">(</span><span class="n">spline</span><span class="p">);</span> <span class="c1">// takes ownership</span>
+<span class="c1">// SplineFitter-Objekt der Kurve geben</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setCurveFitter</span><span class="p">(</span><span class="n">splineFitter</span><span class="p">);</span> <span class="c1">// takes ownership</span>
+<span class="c1">// fitting einschalten</span>
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setCurveAttribute</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Fitted</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+
+<span class="n">curve</span><span class="o">-&gt;</span><span class="n">attach</span><span class="p">(</span><span class="o">&amp;</span><span class="n">plot</span><span class="p">);</span> <span class="c1">// takes ownership</span></code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_optimierung_der_zeichengeschwindigkeit">5.7. Optimierung der Zeichengeschwindigkeit</h3>
+<div class="imageblock">
+<div class="content">
+<img src="../images/CurveFitterSplinePleasing.png" alt="CurveFitterSplinePleasing">
+</div>
+<div class="title">Abbildung 39. QwtSplineCurveFitter mit QwtSplinePleasing</div>
+</div>
 <div class="paragraph">
-<p>Das Zeichnen von Kurven mit vielen Daten kann mitunter länger dauern, was für Echtzeitanwendungen oder Animationen kritisch werden könnte. Das <code>QwtPlot</code> enthält aber gerade für Linienkurven einige wichtige Performanceoptimierungen bereit, die in &lt;&lt;sec:performance&gt; im Detail beschrieben werden (auch durch Anwendung eines Filteralgorthmus).</p>
+<p>Die Qwt-Bibliothek bringt eine ganze Reihe verschiedener Algorithmen und passender Implementierungen mit:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>QwtSplinePleasing</code>: <em>"QwtSplinePleasing is some sort of cardinal spline, with non C1 continuous extra rules for narrow angles. It has a locality of 2.
+The algorithm is the one offered by a popular office package."</em></p>
+</li>
+<li>
+<p><code>QwtSplineLocal</code>: <em>"QwtSplineLocal offers several standard algorithms for interpolating
+a curve with polynomials having C1 continuity at the control points.
+All algorithms are local in a sense, that changing one control point
+only few polynomials."</em></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Cardinal</code>: <em>"The cardinal spline interpolation is a very cheap calculation with a locality of 1"</em></p>
+</li>
+<li>
+<p><code>ParabolicBlending</code>: <em>"Parabolic blending is a cheap calculation with a locality of 1. Sometimes is also called Cubic Bessel interpolation."</em></p>
+</li>
+<li>
+<p><code>Akima</code>: <em>"The algorithm of H.Akima is a calculation with a locality of 2."</em></p>
+</li>
+<li>
+<p><code>PChip</code>: <em>"Piecewise Cubic Hermite Interpolating Polynomial (PCHIP) is an algorithm that is popular because of being offered by MATLAB. It preserves the shape of the data and respects monotonicity. It has a locality of 1."</em></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>QwtSplineCubic</code>: <em>"A cubic spline is a spline with C2 continuity at all control points. It is a non local spline, what means that all polynomials are changing when one control point has changed."</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>TODO : Gallerie mit verschiedenen Spline-Fittern</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Obwohl die verschiedenen Spline-Implementierungen primär für das <em>QwtPlot</em> gedacht sind, spricht nichts dagegen, diese für allgemeine Splineinterpolationsaufgaben einzusetzen. Was die Spline-Klassen in der Qwt-Bibliothek können, ist im Detail im <a href="#sec:splines">Kapitel 15.2</a> beschrieben.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_datenreduktion_und_optimierung_der_zeichengeschwindigkeit">5.6.2. Datenreduktion und Optimierung der Zeichengeschwindigkeit</h4>
+<div class="paragraph">
+<p>TODO QwtWeedingCurveFitter</p>
+</div>
 </div>
 </div>
 </div>
@@ -2327,7 +2431,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 <div class="content">
 <img src="../images/IntervalCurve.png" alt="IntervalCurve">
 </div>
-<div class="title">Abbildung 38. Intervallkurve</div>
+<div class="title">Abbildung 40. Intervallkurve</div>
 </div>
 <div class="paragraph">
 <p>Die Funktion <code>setSamples()</code> gibt es in zwei Varianten:</p>
@@ -2359,7 +2463,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 <div class="content">
 <img src="../images/IntervalCurve_Gradient.png" alt="IntervalCurve Gradient">
 </div>
-<div class="title">Abbildung 39. Intervallkurve mit Gradientenfüllung</div>
+<div class="title">Abbildung 41. Intervallkurve mit Gradientenfüllung</div>
 </div>
 <div class="paragraph">
 <p>Die Colorstops der Gradienten in Qt werden in Pixelkoordinaten angegeben. Wenn man also das Plot-Fenster vergrößert/verkleinert, dann führt das zu witzigen Effekten:</p>
@@ -2438,7 +2542,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 <div class="content">
 <img src="../images/IntervalCurve_StackedCurve.png" alt="IntervalCurve StackedCurve">
 </div>
-<div class="title">Abbildung 40. Diagramm mit gestapelten Kurven/Flächendiagramm</div>
+<div class="title">Abbildung 42. Diagramm mit gestapelten Kurven/Flächendiagramm</div>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -2486,7 +2590,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 <div class="content">
 <img src="../images/BarPlot_1.png" alt="BarPlot 1">
 </div>
-<div class="title">Abbildung 41. Minimalistisches Balkendiagramm</div>
+<div class="title">Abbildung 43. Minimalistisches Balkendiagramm</div>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2519,7 +2623,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 <div class="content">
 <img src="../images/BarPlot_1_baseLine.png" alt="BarPlot 1 baseLine">
 </div>
-<div class="title">Abbildung 42. Balkendiagramm mit Bezugslinie bei y=15</div>
+<div class="title">Abbildung 44. Balkendiagramm mit Bezugslinie bei y=15</div>
 </div>
 </div>
 <div class="sect2">
@@ -2534,7 +2638,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 <div class="content">
 <img src="../images/BarPlot_1_spacingMargin.png" alt="BarPlot 1 spacingMargin">
 </div>
-<div class="title">Abbildung 43. Balkendiagramm mit angepassten Abständen und Rändern</div>
+<div class="title">Abbildung 45. Balkendiagramm mit angepassten Abständen und Rändern</div>
 </div>
 <div class="paragraph">
 <p>Die Breite der Balken selbst wird über Layoutvorgaben und konkret über die Funktionen <code>QwtPlotAbstractBarChart::setLayoutPolicy()</code> und <code>QwtPlotAbstractBarChart::setLayoutHint()</code> kontrolliert.</p>
@@ -2573,7 +2677,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 <div class="content">
 <img src="../images/BarPlot_1_LayoutAutoAdjustSamples_minWidth.png" alt="BarPlot 1 LayoutAutoAdjustSamples minWidth">
 </div>
-<div class="title">Abbildung 44. Durch LayoutHint definierte Mindestbalkenbreite</div>
+<div class="title">Abbildung 46. Durch LayoutHint definierte Mindestbalkenbreite</div>
 </div>
 </div>
 <div class="sect3">
@@ -2668,7 +2772,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 <div class="content">
 <img src="../images/BarPlot_1_BoxSymbol.png" alt="BarPlot 1 BoxSymbol">
 </div>
-<div class="title">Abbildung 45. Balkendiagram mit angepasstem Stil für die Balken</div>
+<div class="title">Abbildung 47. Balkendiagram mit angepasstem Stil für die Balken</div>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -2703,7 +2807,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 <div class="content">
 <img src="../images/BarPlot_1_BoxSymbolBlackFrame.png" alt="BarPlot 1 BoxSymbolBlackFrame">
 </div>
-<div class="title">Abbildung 46. Balkendiagram mit schwarz umrandeten, einfarbigen Balken</div>
+<div class="title">Abbildung 48. Balkendiagram mit schwarz umrandeten, einfarbigen Balken</div>
 </div>
 </div>
 <div class="sect2">
@@ -2804,7 +2908,7 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 <div class="content">
 <img src="../images/BarPlot_1_xAxisWithLabels_zoomedFixed.png" alt="BarPlot 1 xAxisWithLabels zoomedFixed">
 </div>
-<div class="title">Abbildung 47. Hineingezoomt in ein Balkendiagramm mit Textbeschriftung</div>
+<div class="title">Abbildung 49. Hineingezoomt in ein Balkendiagramm mit Textbeschriftung</div>
 </div>
 </div>
 <div class="sect2">
@@ -2863,7 +2967,7 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 <div class="content">
 <img src="../images/BarPlot_1_MultiColor.png" alt="BarPlot 1 MultiColor">
 </div>
-<div class="title">Abbildung 48. Balkendiagramm mit unterschiedlich gefärbten Balken</div>
+<div class="title">Abbildung 50. Balkendiagramm mit unterschiedlich gefärbten Balken</div>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -2954,7 +3058,7 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 <div class="content">
 <img src="../images/BarPlot_1_MultiColorWithLegend.png" alt="BarPlot 1 MultiColorWithLegend">
 </div>
-<div class="title">Abbildung 49. Balkendiagramm mit unterschiedlich gefärbten Balken und Legendeneinträgen</div>
+<div class="title">Abbildung 51. Balkendiagramm mit unterschiedlich gefärbten Balken und Legendeneinträgen</div>
 </div>
 </div>
 <div class="sect2">
@@ -3029,7 +3133,7 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 <div class="content">
 <img src="../images/PlotCurveLegendLinieWithCustomLegendIcon.png" alt="PlotCurveLegendLinieWithCustomLegendIcon">
 </div>
-<div class="title">Abbildung 50. Legende mit eigenem Legendenicon (schwarzumrandete Linien)</div>
+<div class="title">Abbildung 52. Legende mit eigenem Legendenicon (schwarzumrandete Linien)</div>
 </div>
 <div class="paragraph">
 <p>Wenn man eher die Standard-Rechtecke bevorzugt, dann ist folgender Zeichencode ausreichend:</p>
@@ -3051,7 +3155,7 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 <div class="content">
 <img src="../images/PlotCurveLegendLinieWithCustomLegendIcon2.png" alt="PlotCurveLegendLinieWithCustomLegendIcon2">
 </div>
-<div class="title">Abbildung 51. Legende mit eigenem Legendenicon (schwarzumrandete Box)</div>
+<div class="title">Abbildung 53. Legende mit eigenem Legendenicon (schwarzumrandete Box)</div>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -3290,7 +3394,7 @@ Und natürlich können die beteiligten Klassen auch abgeleitet und so beliebig m
 <div class="content">
 <img src="../images/Tutorial1_f.png" alt="Tutorial1 f">
 </div>
-<div class="title">Abbildung 52. 1-zu-1 Kopie des Plot, exportiert in ein PNG-Bild</div>
+<div class="title">Abbildung 54. 1-zu-1 Kopie des Plot, exportiert in ein PNG-Bild</div>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -3368,7 +3472,7 @@ Und natürlich können die beteiligten Klassen auch abgeleitet und so beliebig m
 <div class="content">
 <img src="../images/Tutorial1_h.png" alt="Tutorial1 h">
 </div>
-<div class="title">Abbildung 53. Plot in höherer Auflösung abgespeichert</div>
+<div class="title">Abbildung 55. Plot in höherer Auflösung abgespeichert</div>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -3561,7 +3665,7 @@ Und natürlich können die beteiligten Klassen auch abgeleitet und so beliebig m
 <div class="content">
 <img src="../images/Tutorial1_export1.png" alt="Tutorial1 export1">
 </div>
-<div class="title">Abbildung 54. Plot ohne Widget-Hintergrund (Rand), ohne Zeichenflächenhintergrund und ohne Rahmen</div>
+<div class="title">Abbildung 56. Plot ohne Widget-Hintergrund (Rand), ohne Zeichenflächenhintergrund und ohne Rahmen</div>
 </div>
 <div class="paragraph">
 <p>Zusätzlich könnte man noch weitere Dinge ausblenden:</p>
@@ -3591,7 +3695,7 @@ Und natürlich können die beteiligten Klassen auch abgeleitet und so beliebig m
 <div class="content">
 <img src="../images/Tutorial1_export2.png" alt="Tutorial1 export2">
 </div>
-<div class="title">Abbildung 55. Plot gerendert im Layoutmodus <em>FrameWithScales</em></div>
+<div class="title">Abbildung 57. Plot gerendert im Layoutmodus <em>FrameWithScales</em></div>
 </div>
 <div class="paragraph">
 <p>Die linke untere Ecke des Diagramms ist hier nicht direkt am Punkt (0, 0,001). Das kann man erzwingen, wenn man die Zeichenfläche an alle vier Achsen ausrichtet:</p>
@@ -3608,7 +3712,7 @@ Und natürlich können die beteiligten Klassen auch abgeleitet und so beliebig m
 <div class="content">
 <img src="../images/Tutorial1_export3.png" alt="Tutorial1 export3">
 </div>
-<div class="title">Abbildung 56. Plot mit ausgerichteten Skalen - typisches Plotlayout für den Export</div>
+<div class="title">Abbildung 58. Plot mit ausgerichteten Skalen - typisches Plotlayout für den Export</div>
 </div>
 </div>
 <div class="sect3">
@@ -3643,7 +3747,7 @@ Und natürlich können die beteiligten Klassen auch abgeleitet und so beliebig m
 <div class="content">
 <img src="../images/PDF-Export-Detail.png" alt="PDF Export Detail">
 </div>
-<div class="title">Abbildung 57. Vergrößerung des Vektorexports (PDF), Linien der Skalen werden als kosmetische Linien immer mit einem Pixel Breite gezeichnet</div>
+<div class="title">Abbildung 59. Vergrößerung des Vektorexports (PDF), Linien der Skalen werden als kosmetische Linien immer mit einem Pixel Breite gezeichnet</div>
 </div>
 <div class="paragraph">
 <p>Auch bei den Skalen darf man nicht vergessen, den Zeichenstift (<code>QPen</code>)  entsprechend zu setzen.</p>
@@ -3685,13 +3789,13 @@ Analog gilt das auch, wenn mittels <code>QwtPlotRenderer</code> eine Pixelgrafik
 <div class="content">
 <img src="../images/Export_plotA4.png" alt="Export plotA4">
 </div>
-<div class="title">Abbildung 58. Export in A4 Landscape Format</div>
+<div class="title">Abbildung 60. Export in A4 Landscape Format</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="../images/Export_plotA5.png" alt="Export plotA5">
 </div>
-<div class="title">Abbildung 59. Export in A5 Landscape Format</div>
+<div class="title">Abbildung 61. Export in A5 Landscape Format</div>
 </div>
 <div class="paragraph">
 <p>Wie man gut sieht, sind Zeichenelemente und Schriftgrößen aufgrund der gleichen DPI-Zahl identisch groß. Durch die unterschiedliche Zielgröße wird aber das Diagramm unterschiedlich gelayouted und die Skalen anders berechnet.</p>
@@ -3741,6 +3845,35 @@ Daher sind diese Techniken mit Vorsicht zu genießen!</p>
 </div>
 <div class="paragraph">
 <p>TODO den entfern-Trick erklären&#8230;&#8203;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:splines">15.2. Splines und Bézier-Kurven</h3>
+<div class="paragraph">
+<p>TODO &#8230;&#8203;</p>
+</div>
+<div class="paragraph">
+<p>In diesem Fall instanziiert und konfiguriert man eine der Implementierungen und ruft dann die Funktion: <code>QwtSpline::polygon( const QPolygonF&amp;, double tolerance )</code> auf. Das erste Argument ist der zu fittende Polygonzug und das zweite Argument die Toleranz, welche die Länge der generierten Liniensegmente definiert. Die Funktion liefert selbst einen Linienzug als <code>QPolygonF</code> zurück, welcher dann weiter verwendet werden kann. Die Anzahl der Stützstellen im Polygonzug wird durch die Toleranz so definiert, dass die maximale Abweichung zwischen dem Liniensegment und der originalen Splinekurve diese Toleranz nicht überschreitet. Damit werden in Bereichen stärkerer Krümmung mehr Punkte gesetzt als in eher linearen Abschnitten der Kurve.</p>
+</div>
+<div class="paragraph">
+<p>Die Stützstellen der Beispielkurve oben werden in einen Polygonzug gesteckt und durch die Spline in einen neuen Polygonzug konvertiert. Die Toleranz von 0.01 erzeugt hier 95 Punkte.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QPolygonF</span> <span class="n">poly</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+	<span class="n">poly</span> <span class="o">&lt;&lt;</span> <span class="n">QPointF</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="n">QPolygonF</span> <span class="n">splinePoly</span> <span class="o">=</span> <span class="n">spline</span><span class="o">-&gt;</span><span class="n">polygon</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/CurveFitterSplinePleasingPolygon.png" alt="CurveFitterSplinePleasingPolygon">
+</div>
+<div class="title">Abbildung 62. Liniensegmentkurve mit Stützstellen generiert aus QwtSplinePleasing</div>
+</div>
+<div class="paragraph">
+<p>Wie man sehen kann, werden die Punkte in den Krümmungsstellen stärker geclustert.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -3952,7 +4085,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 <div class="content">
 <img src="../images/Tutorial1_ui1.png" alt="Tutorial1 ui1">
 </div>
-<div class="title">Abbildung 60. Widget mit Platzhalter-Widget für das Diagramm</div>
+<div class="title">Abbildung 63. Widget mit Platzhalter-Widget für das Diagramm</div>
 </div>
 <div class="paragraph">
 <p>Unter der Spinbox wurde ein <code>QWidget</code> eingefügt. Dieses soll nun als Platzhalter für das <code>QwtPlot</code> dienen. Dazu im Kontextmenü des Widgets die Option "Als Platzhalter für benutzerdefinierte Klasse festlegen&#8230;&#8203;" auswählen:</p>

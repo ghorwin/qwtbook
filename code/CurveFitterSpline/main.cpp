@@ -41,6 +41,9 @@ THE SOFTWARE.
 #include <QwtPlotPanner>
 #include <QwtSplineCurveFitter>
 #include <QwtSplinePleasing>
+#include <QwtSplineLocal>
+#include <QwtSplineCubic>
+#include <QwtSymbol>
 
 int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
@@ -54,35 +57,36 @@ int main(int argc, char *argv[]) {
 	plot.setCanvasBackground( Qt::white );
 
 	// Achenskalierung
-	plot.setAxisScale(QwtPlot::yLeft, 2, 10);
+	plot.setAxisScale(QwtPlot::yLeft, 3, 11);
+	plot.setAxisScale(QwtPlot::xBottom, 0, 18);
 
-	QVector<double> x{1,2,5,6,10,12,15,16,17};
-	QVector<double> y{5,4,8,8, 4, 5, 8, 9,7};
+	QVector<double> x{1,2,5,6,10,12,15,16,8};
+	QVector<double> y{5,4,8,8, 4, 5, 8, 9,10};
 
 	// Eine Kurve mit Punkten an den originalen Positionen
-	QwtPlotCurve *curve = new QwtPlotCurve();
-	curve->setStyle(QwtPlotCurve::Dots);
-	curve->setPen(QColor(0,40,180), 4);
-	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
-	curve->setSamples(x, y);
-	curve->attach(&plot); // Plot takes ownership
+	QwtPlotCurve *curveDots = new QwtPlotCurve();
+	curveDots->setStyle(QwtPlotCurve::Dots);
+	curveDots->setPen(QColor(0,40,180), 8);
+	curveDots->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+	curveDots->setSamples(x, y);
+	curveDots->attach(&plot); // Plot takes ownership
 
 	// Eine Kurve mit Linien durch die originalen Positionen
-	curve = new QwtPlotCurve();
-	curve->setStyle(QwtPlotCurve::Lines);
-	curve->setPen(QColor(100,100,255), 1);
-	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
-	curve->setSamples(x, y);
-	curve->attach(&plot); // Plot takes ownership
+	QwtPlotCurve * curveLines = new QwtPlotCurve();
+	curveLines->setStyle(QwtPlotCurve::Lines);
+	curveLines->setPen(QColor(140,140,255), 1);
+	curveLines->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+	curveLines->setSamples(x, y);
+	curveLines->attach(&plot); // Plot takes ownership
 
 	// nun die Kurve mit dem Spline Fitter
-	curve = new QwtPlotCurve();
-	curve->setStyle(QwtPlotCurve::Lines);
-	curve->setPen(QColor(0,220,20), 2);
-	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
-	curve->setSamples(x, y);
-	curve->attach(&plot); // Plot takes ownership
-	curve->setZ(-1);
+	QwtPlotCurve * curveSpline = new QwtPlotCurve();
+	curveSpline->setStyle(QwtPlotCurve::Lines);
+	curveSpline->setPen(QColor(0,220,20), 2);
+	curveSpline->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+	curveSpline->setSamples(x, y);
+	curveSpline->attach(&plot); // Plot takes ownership
+	curveSpline->setZ(-1);
 
 #if 0
 	// Kurve ausfüllen
@@ -93,17 +97,28 @@ int main(int argc, char *argv[]) {
 
 	QwtSplineCurveFitter * splineFitter = new QwtSplineCurveFitter;
 	QwtSplinePleasing * spline = new QwtSplinePleasing();
+	// QwtSplineLocal * spline = new QwtSplineLocal(QwtSplineLocal::PChip);
 	splineFitter->setSpline(spline);
-	curve->setCurveFitter(splineFitter);
+	curveSpline->setCurveFitter(splineFitter);
 	// fitting einschalten
-	curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
+	curveSpline->setCurveAttribute(QwtPlotCurve::Fitted, true);
+#if 0
+	QPolygonF poly;
+	for (int i=0; i<x.count(); ++i)
+		poly << QPointF(x[i],y[i]);
+	QPolygonF splinePoly = spline->polygon(poly, 1e-2);
 
-	QwtText t("QwtSplineCurveFitter: QwtSplinePleasing");
-	QFont f;
-	f.setBold(true);
-	f.setPointSize(10);
-	t.setFont(f);
-	plot.setTitle(t);
+	QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Ellipse);
+	symbol->setSize(4);
+	symbol->setPen(QColor(40,40,200), 0);
+	symbol->setBrush(QColor(140,140,255));
+	curveLines->setSymbol(symbol); // Curve takes ownership of symbol
+	curveLines->setSamples(splinePoly);
+#endif
+
+	QwtPlotZoomer * zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, plot.canvas());  // plot takes ownership
+	zoomer->setTrackerMode( QwtPlotPicker::AlwaysOn ); // Kurvenvwerte unterm Cursor anzeigen
+
 
 	plot.show();
 	return a.exec();

@@ -449,26 +449,90 @@ Alle Informationen zu Legenden und auch spezifische Anpassungen, z.B. wie man ei
 ====
 
 
-## Filter und Kurvenglättung
+## Kurvenfilter
 
-Die `QwtPlotCurve` kann die übergebenen Rohdaten vor dem eigentlichen Rendern noch an einen Algorithmus übergeben, der die Daten glättet oder ausdünnt. Da diese Operationen vom aktuellen Zoomlevel abhängen, ist diese Funktionalität in das `QwtPlot` integriert.
+Die `QwtPlotCurve` kann die übergebenen Rohdaten vor dem eigentlichen Rendern noch an einen Algorithmus übergeben, der die Daten glättet oder eine kontinuierliche Kuve durch die Datenpunkte legt. Diese Operationen hängen vom aktuellen Zoomlevel und der Plotgröße ab, denn je nach Auflösung wird der Verlauf der angepassten Kurve neu berechnet. Dies gibt eine bessere Qualität als beim Vorberechnen der Daten und Plotten eines Linienzugs durch vorberechnete Kurven. Deshalb ist diese Funktionalität direkt in das `QwtPlot` integriert.
 
-Einen solchen Filteralgorithmus übergibt man der Kurven, indem man eine Klasse, abgeleitet von  `QwtCurveFitter` der Kurve übergibt.
+Einen solchen Filteralgorithmus übergibt man der Kurve, indem man eine Klasse, abgeleitet von  `QwtCurveFitter` der Kurve übergibt.
 
 Es werden verschiedene Implementierungen dieser Schnittstelle mitgeliefert:
 
 .Kind-Klassen der Basisklasse `QwtCurveFitter`
-image::ClassDiagrams/QwtCurveFitter-class-hierarchy.png[pdfwidth=8cm]
+image::ClassDiagrams/QwtCurveFitter-class-hierarchy.png[pdfwidth=10cm]
 
-Zur Demonstration der Funktionalität dieser Fit-Algorithmen
+### Kurvenglättung/Spline-Interpolation
+
+Schauen wir uns zuerst den `QwtSplineCurveFitter` an.  Diese Klasse kapselt einen Algorithmus, der aus den gegebenen Stützstellen der Kurve einen weichen Verlauf berechnet. Dafür gibt es verschiedene mathematischen Algorithmen.
+
+Jeder dieser Algorithmen ist in einer von `QwtSpline` abgeleiteten Klasse implementiert.
+
+
+.Kind-Klassen der Basisklasse `QwtSpline`
+image::ClassDiagrams/QwtSpline-class-hierarchy.png[pdfwidth=10cm]
+
+
+Das Ergebnis lässt sich am Besten mit einem einfachen parametrischen Datensatz veranschaulichen:
+
+```c++
+QVector<double> x{1,2,5,6,10,12,15,16,8};
+QVector<double> y{5,4,8,8, 4, 5, 8, 9,10};
+// Kurve hinzufügen
+curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Lines);
+curve->setPen(QColor(0,220,20), 2);
+curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+curve->setSamples(x, y);
+
+// SplineFitter-Objekt erstellen
+QwtSplineCurveFitter * splineFitter = new QwtSplineCurveFitter;
+// Spline-Implementierung auswählen, hier QwtSplinePleasing
+QwtSplinePleasing * spline = new QwtSplinePleasing();
+// Splinealgorithmus setzen
+splineFitter->setSpline(spline); // takes ownership
+// SplineFitter-Objekt der Kurve geben
+curve->setCurveFitter(splineFitter); // takes ownership
+// fitting einschalten
+curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
+
+curve->attach(&plot); // takes ownership
+```
+
+.QwtSplineCurveFitter mit QwtSplinePleasing
+image::CurveFitterSplinePleasing.png[pdfwidth=10cm]
+
+
+Die Qwt-Bibliothek bringt eine ganze Reihe verschiedener Algorithmen und passender Implementierungen mit:
+
+- `QwtSplinePleasing`: _"QwtSplinePleasing is some sort of cardinal spline, with non C1 continuous extra rules for narrow angles. It has a locality of 2.
+   The algorithm is the one offered by a popular office package."_
+
+- `QwtSplineLocal`: _"QwtSplineLocal offers several standard algorithms for interpolating
+   a curve with polynomials having C1 continuity at the control points.
+   All algorithms are local in a sense, that changing one control point
+   only few polynomials."_
+    
+    * `Cardinal`: _"The cardinal spline interpolation is a very cheap calculation with a locality of 1"_
+    * `ParabolicBlending`: _"Parabolic blending is a cheap calculation with a locality of 1. Sometimes is also called Cubic Bessel interpolation."_
+    * `Akima`: _"The algorithm of H.Akima is a calculation with a locality of 2."_
+    * `PChip`: _"Piecewise Cubic Hermite Interpolating Polynomial (PCHIP) is an algorithm that is popular because of being offered by MATLAB. It preserves the shape of the data and respects monotonicity. It has a locality of 1."_
+
+- `QwtSplineCubic`: _"A cubic spline is a spline with C2 continuity at all control points. It is a non local spline, what means that all polynomials are changing when one control point has changed."_
+
+
+TODO : Gallerie mit verschiedenen Spline-Fittern
 
 
 
+[TIP]
+====
+Obwohl die verschiedenen Spline-Implementierungen primär für das _QwtPlot_ gedacht sind, spricht nichts dagegen, diese für allgemeine Splineinterpolationsaufgaben einzusetzen. Was die Spline-Klassen in der Qwt-Bibliothek können, ist im Detail im <<sec:splines>> beschrieben.
+====
 
 
-## Optimierung der Zeichengeschwindigkeit
+### Datenreduktion und Optimierung der Zeichengeschwindigkeit
 
-Das Zeichnen von Kurven mit vielen Daten kann mitunter länger dauern, was für Echtzeitanwendungen oder Animationen kritisch werden könnte. Das `QwtPlot` enthält aber gerade für Linienkurven einige wichtige Performanceoptimierungen bereit, die in <<sec:performance> im Detail beschrieben werden (auch durch Anwendung eines Filteralgorthmus).
+TODO QwtWeedingCurveFitter
+
 
 
 [[sec:intervalCurves]]
