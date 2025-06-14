@@ -227,7 +227,7 @@ image:BarPlot_1_xAxis_aligned.png[pdfwidth=6cm]
 
 ## Balkenbeschriftungen
 
-Möchte man statt der Zahlen am unteren Bildschirmrand Beschriftungen für die einzelnen Balken haben, musst man die Klasse `QwtScaleDraw` ableiten und dann die virtuelle Funktionen `QwtScaleDraw::label()` überladen.
+Möchte man statt der Zahlen am unteren Bildschirmrand Beschriftungen für die einzelnen Balken haben, musst man die Klasse `QwtScaleDraw` ableiten und dann die virtuelle Funktionen `QwtScaleDraw::label()` überschreiben.
 
 ```c++
 class ScaleDraw : public QwtScaleDraw {
@@ -301,7 +301,7 @@ public:
 	QList<QColor> m_colors;
 };
 ```
-Für jeden Balken im Diagramm speichern wir uns eine Farbe in der Membervariable `m_colors`. In der überladenen Funktion `QwtPlotBarChart::specialSymbol()` erstellen wir nun jeweils ein `QwtColumnSymbol` wie im vorangehenden Kapitel und liefern dieses zurück. Die Funktion übernimmt sowohl den Index des Balkens (oder _samples_) als Argument, wie auch die Plotkoordinaten des Balkens, wobei der x-Wert der Punktes wieder der Balkenindex ist, und der y-Wert dem Funktionswert des Balkens entspricht.
+Für jeden Balken im Diagramm speichern wir uns eine Farbe in der Membervariable `m_colors`. In der überschriebenen Funktion `QwtPlotBarChart::specialSymbol()` erstellen wir nun jeweils ein `QwtColumnSymbol` wie im vorangehenden Kapitel und liefern dieses zurück. Die Funktion übernimmt sowohl den Index des Balkens (oder _samples_) als Argument, wie auch die Plotkoordinaten des Balkens, wobei der x-Wert der Punktes wieder der Balkenindex ist, und der y-Wert dem Funktionswert des Balkens entspricht.
 
 [IMPORTANT]
 ====

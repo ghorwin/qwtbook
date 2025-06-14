@@ -3,3 +3,78 @@
 <<<
 [[sec:legend]]
 # Legende
+
+## Außenseitige Legende
+
+...
+
+## Legenden-Zeichenelement
+
+...
+
+## Eigene Legenden-Icons
+
+Manchmal will man aber auch ganz eigene Icons anzeigen. Das kann man machen, wenn man eine der Kindklassen von `QwtPlotItem` ableitet und die virtuelle Funktion `QwtPlotItem::legendIcon()` überschreibt. In dieser kann man dann nach Herzenslust ein Bild malen/generieren und als `QwtGraphic` zurückliefern.
+
+Das `QwtGraphic` Objekt wird wie ein gewöhnliches PaintDevice benutzt, d.h. man erzeugt einen `QPainter` damit und zeichnet drauflos. 
+
+Nachfolgendes Beispiel zeigt so eine Implementierung am Beispiel einer `QwtPlotCurve`:
+
+```c++
+class OwnPlotCurve : public QwtPlotCurve {
+public:
+	QwtGraphic legendIcon(int, const QSizeF & ) const override {
+		QwtGraphic graphic;
+		
+		QSizeF s(30,16); // Icongröße fixieren
+		graphic.setDefaultSize( s );
+		graphic.setRenderHint( QwtGraphic::RenderPensUnscaled, true );
+
+		QPainter painter( &graphic );
+		painter.setRenderHint( QPainter::Antialiasing, false);
+
+		// Mittellinie im Iconrechteck
+		const double y = 0.5 * s.height();
+
+		// Hintergrund zeichnen (für den schwarzen Rahmen)
+		QPen backgroundPen(Qt::black);
+		backgroundPen.setWidth(5);
+		backgroundPen.setCapStyle( Qt::FlatCap );
+		painter.setPen( backgroundPen );
+		QwtPainter::drawLine( &painter, 0.0, y, s.width(), y );
+
+		// Linienfarbe zeichnen)
+		QPen pn = pen();
+		pn.setCapStyle( Qt::FlatCap );
+		pn.setWidth(3);
+		painter.setPen( pn );
+		QwtPainter::drawLine( &painter, 1, y, s.width()-1, y );
+
+		return graphic;
+	}
+};
+```
+
+.Legende mit eigenem Legendenicon (schwarzumrandete Linien)
+image::PlotCurveLegendLinieWithCustomLegendIcon.png[pdfwidth=8cm]
+
+Wenn man eher die Standard-Rechtecke bevorzugt, dann ist folgender Zeichencode ausreichend:
+
+```c++
+// ...
+QRect r(0, 0, s.width(), s.height() );
+painter.setPen(Qt::black);
+painter.setBrush(pen().color());
+painter.drawRect(r);
+return graphic;
+```
+
+was dann auch ganz schick aussieht:
+
+.Legende mit eigenem Legendenicon (schwarzumrandete Box)
+image::PlotCurveLegendLinieWithCustomLegendIcon2.png[pdfwidth=8cm]
+
+[TIP]
+====
+Wenn man eigene Icons zeichnet, kann man auch wie im Beispiel oben die Größe des Icons fixieren. So hat man dann die komplette Kontrolle über das Erscheinungsbild und kann auch DPI-Skalierungen (für Highres-Bildschirme) mit einbeziehen.
+====

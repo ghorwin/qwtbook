@@ -411,4 +411,4 @@ In diesem Tutorial war das `QwtPlot` gleichzeitig das Anwendungs-Widget. Wenn ma
 
 Diese Methoden sind in <<sec:usingQwtPlot>> beschrieben.
 
-Allen Diagrammtypen und weiteren Plot-Eigenschaften sind einzelne Kapitel gewidmet. Beim `QwtPlot` wird dabei zunächst nur auf die mitgelieferte Funktionalität des `QwtPlot` und der dazugehörigen Klassen eingegangen. In späteren Kapiteln wird die Erweiterung der Plot-Funktionalität durch Überladen/Ersetzen der eingebauten Funktionen gezeigt.
+Allen Diagrammtypen und weiteren Plot-Eigenschaften sind einzelne Kapitel gewidmet. Beim `QwtPlot` wird dabei zunächst nur auf die mitgelieferte Funktionalität des `QwtPlot` und der dazugehörigen Klassen eingegangen. In späteren Kapiteln wird die Erweiterung der Plot-Funktionalität durch Überschreiben/Ersetzen der eingebauten Funktionen gezeigt.

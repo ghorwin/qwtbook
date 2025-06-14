@@ -4,26 +4,11 @@
 [[sec:linecurves]]
 # Kurvendiagramme
 
-Die wohl häufiges Diagrammart werden wohl Kurvendiagramme sein. Kurvendiagramme bzw. Liniendiagramme sind parametrische Kurven, bei denen die einzelnen Punkte nacheinander gezeichnet werden, und im Fall von Liniendiagrammen durch Linien verbunden werden. Weder x- noch y-Werte müssen monoton steigen.
+Die wohl häufiges Diagrammart werden wohl Kurvendiagramme sein. Kurvendiagramme bzw. Liniendiagramme oder Reihendiagramme sind parametrische Kurven, bei denen die einzelnen Punkte nacheinander gezeichnet werden, und im Fall von Liniendiagrammen durch Linien verbunden werden. Weder x- noch y-Werte müssen monoton steigen.
 
 Das Zeichenelement `QwtPlotCurve` wird jedoch nicht nur für Liniendiagramme im klassischen Sinn benutzt, sondern auch für Stufen, Stäbchen, Punkt/Symbol-Diagramme und so weiter. Alle diese Varianten haben jedoch gemein, dass sie als Daten einen x- und einen y-Vector mit Daten in Plotkoordinaten erwarten.
 
 Der individuelle Stil der Kurve wird mit der Funktion `QwtPlotCurve::setStyle()` festgelegt. Je nach Stil können/müssen weitere Parameter festgelegt werden. In den folgenden Abschnitten werden die möglichen Diagrammtypen für jeweils die gleichen x/y-Daten im Vergleich gezeigt. 
-
-.Testdaten für die nachfolgenden Diagramme
-[width="35%",options="header", colwidths="10%,10%"]
-|====================
-|  x |  y
-|	1	|	5
-|	2	|	4
-|	5	|	8
-|	6	|	8
-|	10	|	4
-|	12	|	5
-|	15	|	8
-|	16	|	9
-|	17	|	11
-|====================
 
 ## Datenübergabe
 Wie in <<sec:seriesData>> erklärt, wird für die interne Datenhaltung in `QwtPlotCurve` die Klasse `QwtSeriesStore<QPointF>` verwendet.
@@ -85,9 +70,9 @@ Direkte Änderung der Daten im Speicher wird beim nächsten Rendern des Plots di
 
 
 
+## Kurvenarten
 
-
-## Liniendiagramm
+### Liniendiagramm
 
 Konfiguration einer `QwtPlotCurve` als Linie:
 
@@ -99,7 +84,7 @@ curve->setStyle(QwtPlotCurve::Lines);
 .Liniendiagramm
 image::PlotCurves_StyleLines.png[pdfwidth=8cm]
  
-## Stäbchen (Sticks)
+### Stäbchen (Sticks)
 
 Konfiguration einer `QwtPlotCurve` als vertikale Stäbchen:
 
@@ -124,7 +109,7 @@ curve->setOrientation(Qt::Horizontal);
 image::PlotCurves_StyleSticksHorizontal.png[pdfwidth=8cm]
 
 
-## Stufendiagramme
+### Stufendiagramme
 
 Wenn die Daten nicht linear verbunden werden sollen, sondern eher Stufen darstellen, kann man den Linientyp `Steps` verwenden.
 Das Zusatz-Attribut `QwtPlotCurve::Inverted` gibt dabei an, ob die Stufe am Ende des Intervals oder Anfang des Intervals sein soll. Kurvenattribute werden mit `QwtPlotCurve::setCurveAttribute()` gesetzt:
@@ -163,7 +148,7 @@ curve->setCurveAttribute(QwtPlotCurve::Inverted, true);
 image::PlotCurves_StyleStepsInverted.png[pdfwidth=8cm]
 
 
-## Punkte (Dots)
+### Punkte (Dots)
 
 Man kann an den jeweiligen x,y-Koordinaten auch einfach nur Punkte (auch nur einzelne Pixel) zeichnen. Das geht _sehr schnell_ vergleichen mit dem Zeichnen von Symbolen (siehe <<sec:plotSymbols>>) und kann für größere Punktwolken verwendet werden.
 
@@ -198,10 +183,10 @@ image::PlotCurves_StyleDotsScatter.png[pdfwidth=8cm]
 
 [TIP]
 ====
-Wenn man ein Liniendiagramm mit Visualisierung von Stützstellen erhalten will, so kann man natürlich _zwei_ Linien ins Diagramm einfügen: eine mit Stil `QwtPlotCurve::Lines` und die zweite mit Stil `QwtPlotCurve::Dots` darüber, d.h. mit höherem z-Wert, zeichnen. Dann muss man aber auch zwei mal die Daten ins Diagramm geben und man erhält auch zwei Legendeneinträge (die kann man zwar abschalten, siehe <<sec:legend>>, aber trotzdem). Besser ist hier die Verwendung von nur einer Kurve und Symbolen an den Stützstellen (siehe <<sec:plotSymbols>>).
+Wenn man ein Liniendiagramm mit Visualisierung von Stützstellen erhalten will, so kann man natürlich _zwei_ Linien ins Diagramm einfügen: eine mit Stil `QwtPlotCurve::Lines` und die Zweite mit Stil `QwtPlotCurve::Dots` darüber zeichnen, d.h. mit höherem z-Wert. Dann muss man aber auch zwei Mal die Daten ins Diagramm geben und man erhält auch zwei Legendeneinträge (die kann man zwar auch individuell für einzelne Kurven abschalten, siehe <<sec:legend>>), aber zunächst gibt es für jede Kurve je einen Legendeneintrag). Besser ist hier die Verwendung von nur einer Kurve und Symbolen an den Stützstellen (siehe <<sec:plotSymbols>>).
 ====
 
-## Keine Linie
+### Keine Linie
 
 Möchte man eine Kurve ausschließlich mit Symbolen zeichnen (siehe <<sec:plotSymbols>>), so kann man das Zeichnen des Linienzugs auch komplett ausstellen:
 
@@ -367,9 +352,7 @@ curve->setSymbol(symbol); // Curve takes ownership of symbol
 image::Symbols_Pixmap.png[pdfwidth=8cm]
 
 
-## Allgemeine Funktionen
-
-Die Klasse `QwtPlotCurve` bietet noch einige interessante Funktionen, die zumindest für manche Linienkurvenvarianten interessant sind.
+## Ausgefüllte Kurven
 
 Eine Kurve kann neben dem Zeichenstift auch noch einen Brush übernehmen. Dann wird die Kurve bis zur x-Achse gefüllt:
 
@@ -394,16 +377,102 @@ image::PlotCurves_StyleLinesFilledWithBaseline.png[pdfwidth=8cm]
 
 ## Legendeneinträge 
 
-Die verschiedenen Möglichkeiten, Legendeneinträge zu generieren werden in <<sec:legends>> beschrieben.
+Jede `QwtPlotCurve` erstellt ihr eigenes Icon zur Anzeige in der Legende. Der in der Legende angezeigte Text wird mit `QwtPlotItem::setTitle()` gesetzt. Um die Legende anzuzeigen, muss man wie in <<sec:legend>> beschrieben zunächst eine Legende erstellen und ins Plot einfügen.
+
+.Standardlegende für Datenreihen
+image::PlotCurveLegendStandard.png[pdfwidth=8cm]
+
+
+Zusätzlich kann noch mit `QwtPlotCurve::setLegendAttribute()` festgelegt werden, ob ein ausgefülltes Rechteck, eine Line oder das Reihensymbol in der Legende gezeichnet wird. 
+
+Diese Eigenschaften werden für jede `QwtPlotCurve` individuell gesetzt:
+
+```c++
+curve->setTitle("Linie 1");
+curve->setLegendAttribute(QwtPlotCurve::LegendShowLine, true);
+```
+
+.Legende mit Linien als Icons
+image::PlotCurveLegendLinie.png[pdfwidth=8cm]
+
+Bei Linien mit Markierungen kann man auch die Markierungen zeichnen:
+
+```c++
+curve->setTitle("Linie 1");
+curve->setLegendAttribute(QwtPlotCurve::LegendShowLine, true);
+curve->setLegendAttribute(QwtPlotCurve::LegendShowSymbol, true);
+
+QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Rect);
+symbol->setSize(6);
+symbol->setPen(QColor(0,0,160), 1);
+symbol->setBrush(QColor(160,200,255));
+curve->setSymbol(symbol); // Curve takes ownership of symbol
+```
+
+.Legende mit Linien und Symbolen als Legendenicons
+image::PlotCurveLegendLinieWithSymbol.png[pdfwidth=8cm]
+
+[IMPORTANT]
+====
+Wenn man unterschiedliche Liniensymbole verwendet, dann wirkt sich das auf die automatisch bestimmte Legendenicongröße aus. Somit sind dann die Legendentitel manchmal wie im Screenshot oben nicht perfekt ausgerichtet.
+
+Man kann aber die Größe der Legendenicons mit `QwtPlotItem::setLegendIconSize()` einheitlich ändern.
+====
+
+```c++
+curve->setTitle("Linie 1");
+curve->setLegendAttribute(QwtPlotCurve::LegendShowLine, true);
+curve->setLegendAttribute(QwtPlotCurve::LegendShowSymbol, true);
+
+QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Rect);
+symbol->setSize(6);
+symbol->setPen(QColor(0,0,160), 1);
+symbol->setBrush(QColor(160,200,255));
+curve->setSymbol(symbol); // Curve takes ownership of symbol
+
+// einheitliche Legendenicon-Breite unabhängig vom gewählten Symbol
+curve->setLegendIconSize(QSize(30,16));
+```
+
+.Legende mit gleichgroßen Legendenicons
+image::PlotCurveLegendLinieWithSymbolSameWidth.png[pdfwidth=8cm]
+
+[CAUTION]
+====
+Da die Legendenicons beim Setzen von Kurvensymbolen konfiguriert werden, muss die Änderung der Legendenicongrößen stets _nach_ dem Setzen/Anpassen von Kurvensymbolen gemacht werden. Also der Aufruf von `setLegendIconSize()` muss _nach_ `setSymbol()` erfolgen!
+====
+
+
+[TIP]
+====
+Alle Informationen zu Legenden und auch spezifische Anpassungen, z.B. wie man eigene Icons zeichnet, gibt es in <<sec:legend>>.
+====
+
+
+## Filter und Kurvenglättung
+
+Die `QwtPlotCurve` kann die übergebenen Rohdaten vor dem eigentlichen Rendern noch an einen Algorithmus übergeben, der die Daten glättet oder ausdünnt. Da diese Operationen vom aktuellen Zoomlevel abhängen, ist diese Funktionalität in das `QwtPlot` integriert.
+
+Einen solchen Filteralgorithmus übergibt man der Kurven, indem man eine Klasse, abgeleitet von  `QwtCurveFitter` der Kurve übergibt.
+
+Es werden verschiedene Implementierungen dieser Schnittstelle mitgeliefert:
+
+.Kind-Klassen der Basisklasse `QwtCurveFitter`
+image::ClassDiagrams/QwtCurveFitter-class-hierarchy.png[pdfwidth=8cm]
+
+Zur Demonstration der Funktionalität dieser Fit-Algorithmen
+
+
+
 
 
 ## Optimierung der Zeichengeschwindigkeit
 
-Das Zeichnen von Kurven mit vielen Daten kann mitunter länger dauern, was für Echtzeitanwendungen oder Animationen kritisch werden könnte. Das `QwtPlot` enthält aber gerade für Linienkurven einige wichtige Performanceoptimierungen bereit, die in <<sec:performance> im Detail beschrieben werden.
+Das Zeichnen von Kurven mit vielen Daten kann mitunter länger dauern, was für Echtzeitanwendungen oder Animationen kritisch werden könnte. Das `QwtPlot` enthält aber gerade für Linienkurven einige wichtige Performanceoptimierungen bereit, die in <<sec:performance> im Detail beschrieben werden (auch durch Anwendung eines Filteralgorthmus).
 
 
 [[sec:intervalCurves]]
-## Intervallkurven
+# Intervallkurven
 Eine spezielle Kurvenart ist die _Intervallkurve_, bereitgestellt über die Klasse `QwtPlotIntervalCurve`.
 
 Im Prinzip ist das eine Kurve mit zwei y-Werten pro x-Koordinate im Datensatz. Es werden zwei reguläre Kurven gezeichnet und dazwischen wird die Fläche ausgefüllt. Dies kann man auch gut dazu nutzen, um gestackte Liniendiagramme zu zeichnen.
@@ -450,18 +519,40 @@ curve->setBrush( QBrush(grad));
 .Intervallkurve mit Gradientenfüllung
 image::IntervalCurve_Gradient.png[pdfwidth=8cm]
 
-[CAUTION]
-====
-Die Colorstops der Gradienten in Qt werden in Pixelkoordinaten angegeben. Wenn man also das Plot-Fenster vergrößert/verkleinert, dann führt das zu witzigen Effekten.
-Die Lösung ist, das QwtPlot in einer eigenen Klasse abzuleiten und im Resize-Event den Gradienten entsprechend anzupassen. Gleiches gilt auch für das interaktive Verschieben/Zoomen im Plotfenster, also immer wenn ich sich die Pixelkoordinaten der gefüllten Fläche ändern.
-Insgesamt einfacher ist es, die Klasse `QwtPlotIntervalCurve` abzuleiten und die Zeichenfunktion selbst zu implementieren, siehe auch Beispiel in <<sec:advancedCurves>>.
-====
+Die Colorstops der Gradienten in Qt werden in Pixelkoordinaten angegeben. Wenn man also das Plot-Fenster vergrößert/verkleinert, dann führt das zu witzigen Effekten:
 
 .Intervallkurve mit festem Gradienten bei Änderung der Plotgeometrie
 
 image:IntervalCurve_Gradient_200.png[Height200,200,400,pdfwidth=5cm]
 image:IntervalCurve_Gradient_300.png[Height300,200,400,pdfwidth=5cm]
 image:IntervalCurve_Gradient_400.png[Height400,200,400,pdfwidth=5cm]
+
+
+Die Lösung für das Problem besteht darin, die Klasse `QwtPlotIntervalCurve` abzuleiten und die Funktion  je nach aktueller Skal und die Zeichenfunktion selbst zu implementieren.
+
+
+```c++
+class OwnPlotIntervalCurve : public QwtPlotIntervalCurve {
+public:
+	void draw(QPainter * painter, 
+			  const QwtScaleMap & xMap, const QwtScaleMap & yMap, 
+			  const QRectF & canvasRect) const override 
+	{
+		// min/max y-Pixel berechnen
+		QRectF br = boundingRect();
+		double topPixel = yMap.transform(br.top());
+		double bottomPixel = yMap.transform(br.bottom());
+		QLinearGradient grad(0,bottomPixel,0,topPixel);
+		grad.setColorAt(0, QColor(60,200,255));
+		grad.setColorAt(1, QColor(0,60,120));
+		const_cast<OwnPlotIntervalCurve*>(this)->setBrush( QBrush(grad));
+		// originale Zeichenfunktion aufrufen
+		QwtPlotIntervalCurve::draw(painter, xMap, yMap, canvasRect);
+	}
+};
+```
+
+Nun bleibt beim Zoomen, Verschieben oder beim Anpassen der Fenstergröße der Gradient an Ort und Stelle.
 
 
 ## Gestapelte (Intervall-)Kurven/Flächendiagramme
