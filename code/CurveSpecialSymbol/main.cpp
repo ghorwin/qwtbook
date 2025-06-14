@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
 	curve->setSamples(x, y);
 	curve->attach(&plot); // Plot takes ownership
 
-// #define PAINTERPATH
+#define PAINTERPATH
 #ifdef PAINTERPATH
 	// Symbol hinzufügen
 	QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Path);

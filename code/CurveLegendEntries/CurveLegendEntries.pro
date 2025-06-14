@@ -1,4 +1,4 @@
-TARGET   = Tutorial5
+TARGET   = CurveLegendEntries
 QT       += core gui widgets
 CONFIG   += c++11
 

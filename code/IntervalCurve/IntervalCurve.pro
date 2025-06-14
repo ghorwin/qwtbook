@@ -1,4 +1,4 @@
-TARGET   = Tutorial6
+TARGET   = IntervalCurve
 QT       += core gui widgets
 CONFIG   += c++11
 

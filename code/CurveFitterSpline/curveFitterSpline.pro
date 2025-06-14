@@ -1,4 +1,4 @@
-TARGET   = Tutorial1
+TARGET   = CurveFitterSpline
 QT       += core gui widgets
 CONFIG   += c++11
 

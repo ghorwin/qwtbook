@@ -40,11 +40,31 @@ THE SOFTWARE.
 #include <QwtPlotZoomer>
 #include <QwtPlotPanner>
 #include <QwtPlotIntervalCurve>
+#include <QwtScaleMap>
+
+class FixedGradientIntervalCurve : public QwtPlotIntervalCurve {
+public:
+	void draw(QPainter * painter,
+			  const QwtScaleMap & xMap, const QwtScaleMap & yMap,
+			  const QRectF & canvasRect) const override
+	{
+		// min/max y-Pixel berechnen
+		QRectF br = boundingRect();
+		double topPixel = yMap.transform(br.top());
+		double bottomPixel = yMap.transform(br.bottom());
+		QLinearGradient grad(0,bottomPixel,0,topPixel);
+		grad.setColorAt(0, QColor(60,200,255));
+		grad.setColorAt(1, QColor(0,60,120));
+		const_cast<FixedGradientIntervalCurve*>(this)->setBrush( QBrush(grad));
+		// originale Zeichenfunktion aufrufen
+		QwtPlotIntervalCurve::draw(painter, xMap, yMap, canvasRect);
+	}
+};
 
 int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
 	QwtPlot plot;
-	plot.setWindowFlags(Qt::FramelessWindowHint);
+	// plot.setWindowFlags(Qt::FramelessWindowHint);
 	plot.resize(400,400);
 
 	// etwas Abstand zwischen Rand und Achsentiteln
@@ -133,6 +153,9 @@ int main(int argc, char *argv[]) {
 	QwtText t("QwtIntervalSample");
 	t.setFont(titleFont);
 	plot.setTitle(t);
+
+	QwtPlotZoomer * zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, plot.canvas());  // plot takes ownership
+	zoomer->setTrackerMode( QwtPlotPicker::AlwaysOn ); // Kurvenvwerte unterm Cursor anzeigen
 
 	plot.show();
 	return a.exec();
