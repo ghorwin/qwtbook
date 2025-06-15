@@ -35,12 +35,13 @@ Direkt zu verwenden sind die Klassen:
 `QwtSplineLocal`
 `QwtSplineCubic`
 
-Jede dieser Spline-Implementierungen implementiert zwei Funktionen, welche man für das Generieren von Splines aus gegebenen Stützstellen benutzen kann.
+Jede dieser Spline-Implementierungen implementiert zwei Funktionen, welche man für das Generieren von Splines aus gegebenen Stützstellen benutzen kann:
 
-### Bézier-Kurven-Interpolation
+- `QwtSpline::polygon()` - interpoliert das Polygon stückweise mittels Bézier-Kurven und generiert daraus einen Polygonzug als `QPolygonF` mit Punkten, welche die Spline approximieren
+- `QwtSpline::painterPath()`- berechnet die Bézier-Kontrolllinien und berechnet dann stückweise kubische Funktionen zwischen den Stützstellen und fügt diese mittels `QPainterPath::cubicTo()` zum PainterPath hinzu
 
 Die Funktion `QwtSpline::polygon( const QPolygonF&, double tolerance )` generiert eine Bézierkurve, oder genau genommen approximiert diese mittels eines Polygonzugs. 
-Das erste Argument ist das Polygon mit den zu fittende Stützstellen und das zweite Argument die Toleranz. Die Funktion liefert selbst einen Linienzug als `QPolygonF` zurück, welcher dann weiter verwendet werden kann. Die Anzahl der Stützstellen im Polygonzug wird durch die Toleranz so definiert, dass die maximale Abweichung zwischen dem Liniensegment und der originalen Splinekurve diese Toleranz nicht überschreitet. Damit werden in Bereichen stärkerer Krümmung mehr Punkte gesetzt als in eher linearen Abschnitten der Kurve, wie man gut im nachfolgenden Beispiel sieht.
+Das erste Argument ist das Polygon mit den zu fittende Stützstellen und das zweite Argument die Toleranz. Die Funktion liefert selbst einen Linienzug als `QPolygonF` zurück, welcher dann weiter verwendet werden kann. Die Anzahl der Stützstellen im Polygonzug wird durch die Toleranz so definiert, dass die maximale Abweichung zwischen dem Liniensegment und der originalen Splinekurve diese Toleranz nicht überschreitet. Damit werden in Bereichen stärkerer Krümmung mehr Punkte gesetzt als in eher linearen Abschnitten der Kurve, wie man gut im nachfolgenden Beispiel sieht. Je kleiner die Toleranz, umso mehr Punkte werden verwendet.
 
 ```c++
 QVector<double> x{1,2,5,6,10,12,15,16,8};
@@ -56,15 +57,29 @@ QPolygonF splinePoly = spline.polygon(poly, 1e-2);
 
 Die Stützstellen der Beispielkurve oben werden in einen Polygonzug gesteckt und durch die Spline in einen neuen Polygonzug konvertiert. Die Toleranz von 0.01 erzeugt hier 95 Punkte. Plottet man die generierte Kurve im Vergleich zu der mittels `QwtSplineCurveFitter` generierten Kurve, so sehen beide Linien auf den ersten Blick identisch aus. Wie man auch gut sehen kann, werden die Punkte in den Krümmungsstellen stärker geclustert. 
 
-.Liniensegmentkurve mit Stützstellen generiert mittels polygon() aus QwtSplinePleasing und Kurve 
-image::SplinePleasingVsBezier.png[pdfwidth=10cm]
+.SplinePleasing: generiert mittels polygon() und mittels painterPath()
+image::SplinePleasing.png[pdfwidth=10cm]
 
 Hineingezoomt erkennt man jedoch Unterschiede:
 
-.Unterschiede zwischen generierte Kurve und PainterPath der CurveFitter-Spline
-image::SplinePleasingVsBezierZoom.png[pdfwidth=10cm]
+.SplinePleasing: Unterschiede zwischen generierte Spline-Polygon und PainterPath
+image::SplinePleasingZoom.png[pdfwidth=10cm]
 
 
+Auch bei `QwtSplineLocal(QwtSplineLocal::PChip)` mit (testweise veränderten Stützstellen) sieht das so aus:
 
+.SplineLocal: generiert mittels polygon() und mittels painterPath()
+image::SplineLocal.png[pdfwidth=10cm]
+
+Hineingezoomt erkennt man jedoch Unterschiede:
+
+.SplineLocal: Unterschiede zwischen generierte Spline-Polygon und PainterPath
+image::SplineLocalZoom.png[pdfwidth=10cm]
+
+
+[IMPORTANT]
+====
+
+====
 
 

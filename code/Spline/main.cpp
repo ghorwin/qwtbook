@@ -75,6 +75,8 @@ int main(int argc, char *argv[]) {
 
 	QVector<double> x{1,2,5,6,10,12,15,16,8};
 	QVector<double> y{5,4,8,8, 4, 5, 8, 9,10};
+	// QVector<double> x{1,2,5,6,10,12,15,16,17};
+	// QVector<double> y{5,4,8,8, 4, 7, 8, 9,7};
 
 	// Eine Kurve mit Punkten an den originalen Positionen
 	QwtPlotCurve *curveDots = new OwnPlotCurve();
