@@ -59,7 +59,7 @@ include::Zoomer.adoc[leveloffset=+1]
 
 include::Styling.adoc[leveloffset=+1]
 include::Print.adoc[leveloffset=+1]
-include::Fortgeschrittenes.adoc[leveloffset=+1]
+include::Advanced.adoc[leveloffset=+1]
 
 include::Building.adoc[leveloffset=+1]
 

@@ -448,7 +448,7 @@ Da die Legendenicons beim Setzen von Kurvensymbolen konfiguriert werden, muss di
 Alle Informationen zu Legenden und auch spezifische Anpassungen, z.B. wie man eigene Icons zeichnet, gibt es in <<sec:legend>>.
 ====
 
-
+[[sec:curveFitter]]
 ## Kurvenfilter
 
 Die `QwtPlotCurve` kann die übergebenen Rohdaten vor dem eigentlichen Rendern noch an einen Algorithmus übergeben, der die Daten glättet oder eine kontinuierliche Kuve durch die Datenpunkte legt. Diese Operationen hängen vom aktuellen Zoomlevel und der Plotgröße ab, denn je nach Auflösung wird der Verlauf der angepassten Kurve neu berechnet. Dies gibt eine bessere Qualität als beim Vorberechnen der Daten und Plotten eines Linienzugs durch vorberechnete Kurven. Deshalb ist diese Funktionalität direkt in das `QwtPlot` integriert.

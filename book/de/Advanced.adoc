@@ -1,0 +1,70 @@
+:imagesdir: ../images
+
+<<<
+[[sec:advanced]]
+# Fortgeschrittene Themen
+
+Die nachfolgend vorgestellten Themen greifen in die internen Datenstrukturen der Qwt-Bibliotheksklassen ein und diese könnten sich in zukünftigen Bibliotheksversionen sicher nocheinmal deutlich ändern.
+Daher sind diese Techniken mit Vorsicht zu genießen!
+
+
+
+[[sec:releasingObjectsFromQwtPlot]]
+## Objekte aus dem QwtPlot loslösen
+
+Die API des `QwtPlot` geht davon aus, dass Objekt beim Hinzufügen/Ersetzen existierender Plotelemente das Plot als neuen Eigentümer erhalten. Sobald ein Plotelement ein vorheriges Plotelement ersetzt, löscht das `QwtPlot` das alte Objekt automatisch. Es gibt keine _release_-Funktionen, wie man die von _shared pointer_-Implementierungen kennt. Daher kann man einmal hinzugefügte Objekte nicht entfernen, anpassen und wieder neu hinzufügen.
+
+Bei Plotelementen, welche mittels `QwtPlotItem::attach()` hinzugefügt wurden, kann man das Element einfach mit `QwtPlotItem::detach()` wieder entfernen.
+
+Bei der Legende geht das so jedoch nicht. 
+
+TODO den entfern-Trick erklären...
+
+
+[[sec:splines]]
+## Splines und Bézier-Kurven
+
+Die Qwt-Bibliothek bringt eine Reihe von Spline-Interpolationsalgorithmen mit, welche auch abseits der `QwtCurveFitter`-Funktionality (siehe <<sec:curveFitter>>) genutzt werden können. Hier ist nochmal ein Überblick:
+
+.Kind-Klassen der Basisklasse `QwtSpline`
+image::ClassDiagrams/QwtSpline-class-hierarchy.png[pdfwidth=10cm]
+
+Direkt zu verwenden sind die Klassen:
+
+`QwtSplinePleasing`
+`QwtSplineLocal`
+`QwtSplineCubic`
+
+Jede dieser Spline-Implementierungen implementiert zwei Funktionen, welche man für das Generieren von Splines aus gegebenen Stützstellen benutzen kann.
+
+### Bézier-Kurven-Interpolation
+
+Die Funktion `QwtSpline::polygon( const QPolygonF&, double tolerance )` generiert eine Bézierkurve, oder genau genommen approximiert diese mittels eines Polygonzugs. 
+Das erste Argument ist das Polygon mit den zu fittende Stützstellen und das zweite Argument die Toleranz. Die Funktion liefert selbst einen Linienzug als `QPolygonF` zurück, welcher dann weiter verwendet werden kann. Die Anzahl der Stützstellen im Polygonzug wird durch die Toleranz so definiert, dass die maximale Abweichung zwischen dem Liniensegment und der originalen Splinekurve diese Toleranz nicht überschreitet. Damit werden in Bereichen stärkerer Krümmung mehr Punkte gesetzt als in eher linearen Abschnitten der Kurve, wie man gut im nachfolgenden Beispiel sieht.
+
+```c++
+QVector<double> x{1,2,5,6,10,12,15,16,8};
+QVector<double> y{5,4,8,8, 4, 5, 8, 9,10};
+QPolygonF poly;
+for (int i=0; i<x.count(); ++i)
+	poly << QPointF(x[i],y[i]);
+// Spline-Implementierung (hier QwtSplinePleasing) erstellen
+QwtSplinePleasing spline;
+// Polygon generieren
+QPolygonF splinePoly = spline.polygon(poly, 1e-2);
+```
+
+Die Stützstellen der Beispielkurve oben werden in einen Polygonzug gesteckt und durch die Spline in einen neuen Polygonzug konvertiert. Die Toleranz von 0.01 erzeugt hier 95 Punkte. Plottet man die generierte Kurve im Vergleich zu der mittels `QwtSplineCurveFitter` generierten Kurve, so sehen beide Linien auf den ersten Blick identisch aus. Wie man auch gut sehen kann, werden die Punkte in den Krümmungsstellen stärker geclustert. 
+
+.Liniensegmentkurve mit Stützstellen generiert mittels polygon() aus QwtSplinePleasing und Kurve 
+image::SplinePleasingVsBezier.png[pdfwidth=10cm]
+
+Hineingezoomt erkennt man jedoch Unterschiede:
+
+.Unterschiede zwischen generierte Kurve und PainterPath der CurveFitter-Spline
+image::SplinePleasingVsBezierZoom.png[pdfwidth=10cm]
+
+
+
+
+
