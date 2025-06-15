@@ -116,8 +116,8 @@ int main(int argc, char *argv[]) {
 
 
 	QwtSplineCurveFitter * splineFitter = new QwtSplineCurveFitter;
-	QwtSplinePleasing * spline = new QwtSplinePleasing();
-	// QwtSplineLocal * spline = new QwtSplineLocal(QwtSplineLocal::PChip);
+	// QwtSplinePleasing * spline = new QwtSplinePleasing();
+	QwtSplineLocal * spline = new QwtSplineLocal(QwtSplineLocal::PChip);
 	splineFitter->setSpline(spline);
 	curveSpline->setCurveFitter(splineFitter);
 	// fitting einschalten

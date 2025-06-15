@@ -334,7 +334,7 @@ pre.rouge .gs {
 </li>
 <li><a href="#_ausgefüllte_kurven">5.4. Ausgefüllte Kurven</a></li>
 <li><a href="#_legendeneinträge">5.5. Legendeneinträge</a></li>
-<li><a href="#_kurvenfilter">5.6. Kurvenfilter</a>
+<li><a href="#sec:curveFitter">5.6. Kurvenfilter</a>
 <ul class="sectlevel3">
 <li><a href="#_kurvenglättungspline_interpolation">5.6.1. Kurvenglättung/Spline-Interpolation</a></li>
 <li><a href="#_datenreduktion_und_optimierung_der_zeichengeschwindigkeit">5.6.2. Datenreduktion und Optimierung der Zeichengeschwindigkeit</a></li>
@@ -2271,7 +2271,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_kurvenfilter">5.6. Kurvenfilter</h3>
+<h3 id="sec:curveFitter">5.6. Kurvenfilter</h3>
 <div class="paragraph">
 <p>Die <code>QwtPlotCurve</code> kann die übergebenen Rohdaten vor dem eigentlichen Rendern noch an einen Algorithmus übergeben, der die Daten glättet oder eine kontinuierliche Kuve durch die Datenpunkte legt. Diese Operationen hängen vom aktuellen Zoomlevel und der Plotgröße ab, denn je nach Auflösung wird der Verlauf der angepassten Kurve neu berechnet. Dies gibt eine bessere Qualität als beim Vorberechnen der Daten und Plotten eines Linienzugs durch vorberechnete Kurven. Deshalb ist diese Funktionalität direkt in das <code>QwtPlot</code> integriert.</p>
 </div>
@@ -3850,30 +3850,101 @@ Daher sind diese Techniken mit Vorsicht zu genießen!</p>
 <div class="sect2">
 <h3 id="sec:splines">15.2. Splines und Bézier-Kurven</h3>
 <div class="paragraph">
-<p>TODO &#8230;&#8203;</p>
-</div>
-<div class="paragraph">
-<p>In diesem Fall instanziiert und konfiguriert man eine der Implementierungen und ruft dann die Funktion: <code>QwtSpline::polygon( const QPolygonF&amp;, double tolerance )</code> auf. Das erste Argument ist der zu fittende Polygonzug und das zweite Argument die Toleranz, welche die Länge der generierten Liniensegmente definiert. Die Funktion liefert selbst einen Linienzug als <code>QPolygonF</code> zurück, welcher dann weiter verwendet werden kann. Die Anzahl der Stützstellen im Polygonzug wird durch die Toleranz so definiert, dass die maximale Abweichung zwischen dem Liniensegment und der originalen Splinekurve diese Toleranz nicht überschreitet. Damit werden in Bereichen stärkerer Krümmung mehr Punkte gesetzt als in eher linearen Abschnitten der Kurve.</p>
-</div>
-<div class="paragraph">
-<p>Die Stützstellen der Beispielkurve oben werden in einen Polygonzug gesteckt und durch die Spline in einen neuen Polygonzug konvertiert. Die Toleranz von 0.01 erzeugt hier 95 Punkte.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="c++"><span class="n">QPolygonF</span> <span class="n">poly</span><span class="p">;</span>
-<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-	<span class="n">poly</span> <span class="o">&lt;&lt;</span> <span class="n">QPointF</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-<span class="n">QPolygonF</span> <span class="n">splinePoly</span> <span class="o">=</span> <span class="n">spline</span><span class="o">-&gt;</span><span class="n">polygon</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">);</span></code></pre>
-</div>
+<p>Die Qwt-Bibliothek bringt eine Reihe von Spline-Interpolationsalgorithmen mit, welche auch abseits der <code>QwtCurveFitter</code>-Funktionality (siehe <a href="#sec:curveFitter">Kapitel 5.6</a>) genutzt werden können. Hier ist nochmal ein Überblick:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/CurveFitterSplinePleasingPolygon.png" alt="CurveFitterSplinePleasingPolygon">
+<img src="../images/ClassDiagrams/QwtSpline-class-hierarchy.png" alt="QwtSpline class hierarchy">
 </div>
-<div class="title">Abbildung 62. Liniensegmentkurve mit Stützstellen generiert aus QwtSplinePleasing</div>
+<div class="title">Abbildung 62. Kind-Klassen der Basisklasse <code>QwtSpline</code></div>
 </div>
 <div class="paragraph">
-<p>Wie man sehen kann, werden die Punkte in den Krümmungsstellen stärker geclustert.</p>
+<p>Direkt zu verwenden sind die Klassen:</p>
+</div>
+<div class="paragraph">
+<p><code>QwtSplinePleasing</code>
+<code>QwtSplineLocal</code>
+<code>QwtSplineCubic</code></p>
+</div>
+<div class="paragraph">
+<p>Jede dieser Spline-Implementierungen implementiert zwei Funktionen, welche man für das Generieren von Splines aus gegebenen Stützstellen benutzen kann:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>QwtSpline::polygon()</code> - interpoliert das Polygon stückweise mittels Bézier-Kurven und generiert daraus einen Polygonzug als <code>QPolygonF</code> mit Punkten, welche die Spline approximieren</p>
+</li>
+<li>
+<p><code>QwtSpline::painterPath()</code>- berechnet die Bézier-Kontrolllinien und berechnet dann stückweise kubische Funktionen zwischen den Stützstellen und fügt diese mittels <code>QPainterPath::cubicTo()</code> zum PainterPath hinzu</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Die Funktion <code>QwtSpline::polygon( const QPolygonF&amp;, double tolerance )</code> generiert eine Bézierkurve, oder genau genommen approximiert diese mittels eines Polygonzugs.
+Das erste Argument ist das Polygon mit den zu fittende Stützstellen und das zweite Argument die Toleranz. Die Funktion liefert selbst einen Linienzug als <code>QPolygonF</code> zurück, welcher dann weiter verwendet werden kann. Die Anzahl der Stützstellen im Polygonzug wird durch die Toleranz so definiert, dass die maximale Abweichung zwischen dem Liniensegment und der originalen Splinekurve diese Toleranz nicht überschreitet. Damit werden in Bereichen stärkerer Krümmung mehr Punkte gesetzt als in eher linearen Abschnitten der Kurve, wie man gut im nachfolgenden Beispiel sieht. Je kleiner die Toleranz, umso mehr Punkte werden verwendet.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">x</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">};</span>
+<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">y</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">};</span>
+<span class="n">QPolygonF</span> <span class="n">poly</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+	<span class="n">poly</span> <span class="o">&lt;&lt;</span> <span class="n">QPointF</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="c1">// Spline-Implementierung (hier QwtSplinePleasing) erstellen</span>
+<span class="n">QwtSplinePleasing</span> <span class="n">spline</span><span class="p">;</span>
+<span class="c1">// Polygon generieren</span>
+<span class="n">QPolygonF</span> <span class="n">splinePoly</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">polygon</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Die Stützstellen der Beispielkurve oben werden in einen Polygonzug gesteckt und durch die Spline in einen neuen Polygonzug konvertiert. Die Toleranz von 0.01 erzeugt hier 95 Punkte. Plottet man die generierte Kurve im Vergleich zu der mittels <code>QwtSplineCurveFitter</code> generierten Kurve, so sehen beide Linien auf den ersten Blick identisch aus. Wie man auch gut sehen kann, werden die Punkte in den Krümmungsstellen stärker geclustert.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/SplinePleasing.png" alt="SplinePleasing">
+</div>
+<div class="title">Abbildung 63. SplinePleasing: generiert mittels polygon() und mittels painterPath()</div>
+</div>
+<div class="paragraph">
+<p>Hineingezoomt erkennt man jedoch Unterschiede:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/SplinePleasingZoom.png" alt="SplinePleasingZoom">
+</div>
+<div class="title">Abbildung 64. SplinePleasing: Unterschiede zwischen generierte Spline-Polygon und PainterPath</div>
+</div>
+<div class="paragraph">
+<p>Auch bei <code>QwtSplineLocal(QwtSplineLocal::PChip)</code> mit (testweise veränderten Stützstellen) sieht das so aus:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/SplineLocal.png" alt="SplineLocal">
+</div>
+<div class="title">Abbildung 65. SplineLocal: generiert mittels polygon() und mittels painterPath()</div>
+</div>
+<div class="paragraph">
+<p>Hineingezoomt erkennt man jedoch Unterschiede:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/SplineLocalZoom.png" alt="SplineLocalZoom">
+</div>
+<div class="title">Abbildung 66. SplineLocal: Unterschiede zwischen generierte Spline-Polygon und PainterPath</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Die Generierung der Spline als Polygonzug mittels <code>QwtSpline::polygon()</code> liefert eine genaue Approximation der jeweiligen Spline im Rahmen der geforderten Genauigkeit. Für die Visualisierung der Spline reicht häufig die Variante als PainterPath aus, wobei hier der Verlauf der Kurve zwischen den Stützstellen durch ein kubisches Polynom abgebildet wird. Qt zeichnet solche Polygonzüge sehr effizient, daher ist das für die Verwendung im Diagramm auch die optimale Variante. Aufgrund der unterschiedlichen Generierungsalgorithmen sind beide Varianten aber <em>nicht</em> identisch.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -4085,7 +4156,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 <div class="content">
 <img src="../images/Tutorial1_ui1.png" alt="Tutorial1 ui1">
 </div>
-<div class="title">Abbildung 63. Widget mit Platzhalter-Widget für das Diagramm</div>
+<div class="title">Abbildung 67. Widget mit Platzhalter-Widget für das Diagramm</div>
 </div>
 <div class="paragraph">
 <p>Unter der Spinbox wurde ein <code>QWidget</code> eingefügt. Dieses soll nun als Platzhalter für das <code>QwtPlot</code> dienen. Dazu im Kontextmenü des Widgets die Option "Als Platzhalter für benutzerdefinierte Klasse festlegen&#8230;&#8203;" auswählen:</p>
@@ -4146,7 +4217,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 <div id="footer">
 <div id="footer-text">
 Version 2.0<br>
-Last updated 2025-06-12 10:50:12 +0200
+Last updated 2025-06-15 08:06:56 +0200
 </div>
 </div>
 </body>

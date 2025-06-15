@@ -79,7 +79,7 @@ image::SplineLocalZoom.png[pdfwidth=10cm]
 
 [IMPORTANT]
 ====
-
+Die Generierung der Spline als Polygonzug mittels `QwtSpline::polygon()` liefert eine genaue Approximation der jeweiligen Spline im Rahmen der geforderten Genauigkeit. Für die Visualisierung der Spline reicht häufig die Variante als PainterPath aus, wobei hier der Verlauf der Kurve zwischen den Stützstellen durch ein kubisches Polynom abgebildet wird. Qt zeichnet solche Polygonzüge sehr effizient, daher ist das für die Verwendung im Diagramm auch die optimale Variante. Aufgrund der unterschiedlichen Generierungsalgorithmen sind beide Varianten aber _nicht_ identisch.
 ====
 
 
