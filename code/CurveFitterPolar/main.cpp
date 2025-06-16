@@ -43,18 +43,14 @@ THE SOFTWARE.
 #include <QwtSplinePleasing>
 #include <QwtSplineLocal>
 #include <QwtSplineCubic>
+#include <QwtPolarFitter>
 #include <QwtSymbol>
-
-QVector<double> x{1,2,5,6,10,12,15,16,8};
-QVector<double> y{5,4,8,8, 4, 5, 8, 9,10};
-
-void addSplineFitter(QwtPlot * plot, QwtSpline * spline, QString title, QColor col);
 
 int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
 	QwtPlot plot;
 	plot.setWindowFlags(Qt::FramelessWindowHint);
-	plot.resize(800,500);
+	plot.resize(600,400);
 
 	// etwas Abstand zwischen Rand und Achsentiteln
 	plot.setContentsMargins(8,8,8,8);
@@ -65,30 +61,45 @@ int main(int argc, char *argv[]) {
 	plot.setAxisScale(QwtPlot::yLeft, 3, 11);
 	plot.setAxisScale(QwtPlot::xBottom, 0, 18);
 
+	QVector<double> x{1,2,5,6,10,12,15,16,8};
+	QVector<double> y{5,4,8,8, 4, 5, 8, 9,10};
+
 	// Eine Kurve mit Punkten an den originalen Positionen
 	QwtPlotCurve *curveDots = new QwtPlotCurve();
 	curveDots->setStyle(QwtPlotCurve::Dots);
 	curveDots->setPen(QColor(0,40,180), 8);
 	curveDots->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
 	curveDots->setSamples(x, y);
-	curveDots->setTitle("Original points");
 	curveDots->attach(&plot); // Plot takes ownership
 
+	// Eine Kurve mit Linien durch die originalen Positionen
+	QwtPlotCurve * curveLines = new QwtPlotCurve();
+	curveLines->setStyle(QwtPlotCurve::Lines);
+	curveLines->setPen(QColor(140,140,255), 1);
+	curveLines->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+	curveLines->setSamples(x, y);
+	curveLines->attach(&plot); // Plot takes ownership
+
+	// nun die Kurve mit dem Spline Fitter
+	QwtPlotCurve * curveSpline = new QwtPlotCurve();
+	curveSpline->setStyle(QwtPlotCurve::Lines);
+	curveSpline->setPen(QColor(0,220,20), 2);
+	curveSpline->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+	curveSpline->setSamples(x, y);
+	curveSpline->attach(&plot); // Plot takes ownership
+	curveSpline->setZ(-1);
+
 #if 0
-	addSplineFitter(&plot, new QwtSplinePleasing, "QwtSplinePleasing", QColor(0xddaa00));
-	addSplineFitter(&plot, new QwtSplineCubic, "QwtSplineCubic", QColor(0x00b21e));
-	addSplineFitter(&plot, new QwtSplineLocal(QwtSplineLocal::PChip), "QwtSplineLocal(PChip)", QColor(0xb20000));
-#else
-	addSplineFitter(&plot, new QwtSplineLocal(QwtSplineLocal::ParabolicBlending), "QwtSplineLocal(ParabolicBlending)", QColor(0x1c88f6));
-	addSplineFitter(&plot, new QwtSplineLocal(QwtSplineLocal::Akima), "QwtSplineLocal(Akima)", QColor(0xb2ad40));
-	addSplineFitter(&plot, new QwtSplineLocal(QwtSplineLocal::Cardinal), "QwtSplineLocal(Cardinal)", QColor(0xdd00d5));
+	// Kurve ausfüllen
+	curve->setBrush(QColor(0xa0d0ff));
+	// Bezugslinie setzen
+	curve->setBaseline(8);
 #endif
-	// Legende anzeigen
-	QwtLegend * legend = new QwtLegend();
-	QFont legendFont;
-	legendFont.setPointSize(8);
-	legend->setFont(legendFont);
-	plot.insertLegend( legend , QwtPlot::RightLegend); // plot takes ownership
+
+	QwtPolarFitter * polarFitter = new QwtPolarFitter;
+	curveSpline->setCurveFitter(polarFitter);
+	// fitting einschalten
+	curveSpline->setCurveAttribute(QwtPlotCurve::Fitted, true);
 
 	QwtPlotZoomer * zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, plot.canvas());  // plot takes ownership
 	zoomer->setTrackerMode( QwtPlotPicker::AlwaysOn ); // Kurvenvwerte unterm Cursor anzeigen
@@ -96,24 +107,4 @@ int main(int argc, char *argv[]) {
 
 	plot.show();
 	return a.exec();
-}
-
-
-void addSplineFitter(QwtPlot * plot, QwtSpline * spline, QString title, QColor col) {
-	// nun die Kurve mit dem Spline Fitter
-	QwtPlotCurve * curveSpline = new QwtPlotCurve();
-	curveSpline->setStyle(QwtPlotCurve::Lines);
-	curveSpline->setPen(col, 2);
-	curveSpline->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
-	curveSpline->setSamples(x, y);
-	curveSpline->attach(plot); // Plot takes ownership
-	curveSpline->setTitle(title);
-	curveSpline->setZ(-1);
-
-	QwtSplineCurveFitter * splineFitter = new QwtSplineCurveFitter;
-	splineFitter->setSpline(spline);
-	curveSpline->setCurveFitter(splineFitter);
-	// fitting einschalten
-	curveSpline->setCurveAttribute(QwtPlotCurve::Fitted, true);
-
 }

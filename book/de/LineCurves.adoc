@@ -518,9 +518,15 @@ Die Qwt-Bibliothek bringt eine ganze Reihe verschiedener Algorithmen und passend
 
 - `QwtSplineCubic`: _"A cubic spline is a spline with C2 continuity at all control points. It is a non local spline, what means that all polynomials are changing when one control point has changed."_
 
+[IMPORTANT]
+====
+Nur `QwtSplinePleasing` funktioniert für wirklich parametrische Kurven mit nicht monoton steigenden x-Werten.
+====
 
-TODO : Gallerie mit verschiedenen Spline-Fittern
+Zum Vergleich sind die verschiedenen Spline-Algorithmen dargestellt:
 
+image::CurveFitterSpline1.png[pdfwidth=10cm]
+image::CurveFitterSpline2.png[pdfwidth=10cm]
 
 
 [TIP]
@@ -529,11 +535,18 @@ Obwohl die verschiedenen Spline-Implementierungen primär für das _QwtPlot_ ged
 ====
 
 
+### PolarCurveFitter
+
+Dieser Kurvenfilter ist für Kreisdiagramme gedacht, siehe <<sec:polarPlots>>.
+
+
 ### Datenreduktion und Optimierung der Zeichengeschwindigkeit
 
-TODO QwtWeedingCurveFitter
+Man kann die Zeichengeschwindigkeit des `QwtPlot` erhöhen, wenn man bei sehr großen Reihendaten nur die Daten wirklich zeichnet, die sich auf das Diagramm auswirken. Wenn bspw. 100 Datenpunkte auf dem gleichen Pixel landen, braucht man die nicht alle zeichnen. Das Ausfilter nicht sichtbarer Punkte und Liniensegmente hängt natürlich von der Zoomstufe ab und ist daher auch als Kurvenfilter implementiert.
 
+Die Basisklasse für solche Filter ist die Klasse `QwtWeedingCurveFitter`.
 
+TODO
 
 [[sec:intervalCurves]]
 # Intervallkurven
