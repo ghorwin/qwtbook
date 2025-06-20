@@ -419,7 +419,8 @@ Wenn man unterschiedliche Liniensymbole verwendet, dann wirkt sich das auf die a
 Man kann aber die Größe der Legendenicons mit `QwtPlotItem::setLegendIconSize()` einheitlich ändern.
 ====
 
-```c++
+[source,c++]
+----
 curve->setTitle("Linie 1");
 curve->setLegendAttribute(QwtPlotCurve::LegendShowLine, true);
 curve->setLegendAttribute(QwtPlotCurve::LegendShowSymbol, true);
@@ -432,7 +433,7 @@ curve->setSymbol(symbol); // Curve takes ownership of symbol
 
 // einheitliche Legendenicon-Breite unabhängig vom gewählten Symbol
 curve->setLegendIconSize(QSize(30,16));
-```
+----
 
 .Legende mit gleichgroßen Legendenicons
 image::PlotCurveLegendLinieWithSymbolSameWidth.png[pdfwidth=8cm]
@@ -473,7 +474,8 @@ image::ClassDiagrams/QwtSpline-class-hierarchy.png[pdfwidth=10cm]
 
 Das Ergebnis lässt sich am Besten mit einem einfachen parametrischen Datensatz veranschaulichen:
 
-```c++
+[source,c++]
+----
 QVector<double> x{1,2,5,6,10,12,15,16,8};
 QVector<double> y{5,4,8,8, 4, 5, 8, 9,10};
 // Kurve hinzufügen
@@ -495,7 +497,7 @@ curve->setCurveFitter(splineFitter); // takes ownership
 curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
 
 curve->attach(&plot); // takes ownership
-```
+----
 
 .QwtSplineCurveFitter mit QwtSplinePleasing
 image::CurveFitterSplinePleasing.png[pdfwidth=10cm]
@@ -540,135 +542,119 @@ Obwohl die verschiedenen Spline-Implementierungen primär für das _QwtPlot_ ged
 Dieser Kurvenfilter ist für Kreisdiagramme gedacht, siehe <<sec:polarPlots>>.
 
 
-### Datenreduktion und Optimierung der Zeichengeschwindigkeit
+### Datenreduktionsfilter
 
-Man kann die Zeichengeschwindigkeit des `QwtPlot` erhöhen, wenn man bei sehr großen Reihendaten nur die Daten wirklich zeichnet, die sich auf das Diagramm auswirken. Wenn bspw. 100 Datenpunkte auf dem gleichen Pixel landen, braucht man die nicht alle zeichnen. Das Ausfilter nicht sichtbarer Punkte und Liniensegmente hängt natürlich von der Zoomstufe ab und ist daher auch als Kurvenfilter implementiert.
+Durch Verwendung eines Datenfiltes kann man bei sehr großen Reihendaten nur die Daten wirklich zeichnen, die sich auf das Diagramm auswirken. Wenn bspw. 100 Datenpunkte auf dem gleichen Pixel landen, braucht man die nicht alle zeichnen. Das Ausfiltern nicht sichtbarer Punkte und Liniensegmente hängt natürlich von der Zoomstufe ab und ist daher auch als Kurvenfilter implementiert. Ein solcher Datenreduktionsfilter ist in der Klasse `QwtWeedingCurveFitter` implementiert.
 
-Die Basisklasse für solche Filter ist die Klasse `QwtWeedingCurveFitter`.
+Nachfolgendes Beispiel zeigt eine mit _sehr_ vielen Punkten generierte Sinuskurve. Das Zeichnen dieser Kurve geht zwar selbst bei 2K Auflösung noch sehr schnell (ca. 300 ms für das komplette Neuzeichnen des Plots), aber die meisten Punkte liegen übereinander und man kann sich daher das Zeichnen dieser Punkte sparen. Hier kommt der `QwtWeedingCurveFitter` ins Spiel. Verwendet wird dieser Kurvenfilteralgorithmus wie auch die Spline-Filter, jedoch generiert dieser Filter keine neue Kurve, sondern entfernt lediglich redundante und nicht notwendige Punkte. Im Rahmen der konfigurierten Genauigkeit dieses Filters sehen dann die originale und die gefilterte Kurve nahezu identisch aus, obwohl viel weniger Punkte verwendet werden.
 
-TODO
-
-[[sec:intervalCurves]]
-# Intervallkurven
-Eine spezielle Kurvenart ist die _Intervallkurve_, bereitgestellt über die Klasse `QwtPlotIntervalCurve`.
-
-Im Prinzip ist das eine Kurve mit zwei y-Werten pro x-Koordinate im Datensatz. Es werden zwei reguläre Kurven gezeichnet und dazwischen wird die Fläche ausgefüllt. Dies kann man auch gut dazu nutzen, um gestackte Liniendiagramme zu zeichnen.
-
-.Beispiel für eine Intervallkurve
+.Testprogramm für den Filteralgorithmus
 [source,c++]
 ----
-QVector<double> x{1,2,5,6,10,12,15,16,17};
-QVector<double> y1{2,2,3,4, 2, 4, 4, 5,11};
-QVector<double> y2{6,4.4,9,10, 5.5, 5.7, 9, 11,12};
+#include <QApplication>
+#include <QPen>
+#include <QElapsedTimer>
+#include <QDebug>
+#include <QTimer>
 
-QVector<QwtIntervalSample> intervalSamples;
-for (int i=0; i<x.count(); ++i) 
-	intervalSamples.append(QwtIntervalSample(x[i],y1[i],y2[i]));
+#include <cmath>
 
-QwtPlotIntervalCurve *curve = new QwtPlotIntervalCurve();
-curve->setStyle(QwtPlotIntervalCurve::Tube);
-curve->setPen(QColor(0,40,180), 2);
-curve->setBrush( QColor(60,200,255) );
-curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
-curve->setSamples(intervalSamples);
-curve->attach(&plot); // Plot takes ownership
-----
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_weeding_curve_fitter.h>
+#include <qwt_plot_canvas.h>
 
-.Intervallkurve
-image::IntervalCurve.png[pdfwidth=8cm]
+class BenchmarkedPlotCanvas : public QwtPlotCanvas {
+public slots:
+	void resizePlot() {
+		((QWidget*)parent())->resize(2000,1000);
+	}
 
-Die Funktion `setSamples()` gibt es in zwei Varianten:
-
-- `QwtPlotIntervalCurve::setSamples( const QVector< QwtIntervalSample >& )` : erwartet einen Vektor mit Interval-Samples, bestehend aus x-Koordinate, unterem und oberen y-Wert
-- `QwtPlotIntervalCurve::setSamples( QwtSeriesData< QwtIntervalSample >* )` : erwartet ein `QwtSeriesData` Objekt (siehe <<sec:seriesData>>) welches Eigentum der Intervallkurve wird. Diese Funktion entspricht der Funktion `setData()` der Elternklasse `QwtSeriesStore`.
-
-Man kann das Erscheinungsbild noch etwas Aufwerten, wenn man für die Füllung der Kurve einen Gradienten verwendet. Dafür gibt man der Kurve einfach einen `QBrush`, der mit einem Gradienten erstellt wurde.
-
-```c++
-...
-QLinearGradient grad(0,90,0,220);
-grad.setColorAt(0, QColor(60,200,255));
-grad.setColorAt(1, QColor(0,60,120));
-curve->setBrush( QBrush(grad));
-...
-```
-
-.Intervallkurve mit Gradientenfüllung
-image::IntervalCurve_Gradient.png[pdfwidth=8cm]
-
-Die Colorstops der Gradienten in Qt werden in Pixelkoordinaten angegeben. Wenn man also das Plot-Fenster vergrößert/verkleinert, dann führt das zu witzigen Effekten:
-
-.Intervallkurve mit festem Gradienten bei Änderung der Plotgeometrie
-
-image:IntervalCurve_Gradient_200.png[Height200,200,400,pdfwidth=5cm]
-image:IntervalCurve_Gradient_300.png[Height300,200,400,pdfwidth=5cm]
-image:IntervalCurve_Gradient_400.png[Height400,200,400,pdfwidth=5cm]
-
-
-Die Lösung für das Problem besteht darin, die Klasse `QwtPlotIntervalCurve` abzuleiten und die Funktion  je nach aktueller Skal und die Zeichenfunktion selbst zu implementieren.
-
-
-```c++
-class OwnPlotIntervalCurve : public QwtPlotIntervalCurve {
-public:
-	void draw(QPainter * painter, 
-			  const QwtScaleMap & xMap, const QwtScaleMap & yMap, 
-			  const QRectF & canvasRect) const override 
-	{
-		// min/max y-Pixel berechnen
-		QRectF br = boundingRect();
-		double topPixel = yMap.transform(br.top());
-		double bottomPixel = yMap.transform(br.bottom());
-		QLinearGradient grad(0,bottomPixel,0,topPixel);
-		grad.setColorAt(0, QColor(60,200,255));
-		grad.setColorAt(1, QColor(0,60,120));
-		const_cast<OwnPlotIntervalCurve*>(this)->setBrush( QBrush(grad));
-		// originale Zeichenfunktion aufrufen
-		QwtPlotIntervalCurve::draw(painter, xMap, yMap, canvasRect);
+protected:
+	void paintEvent(QPaintEvent * event) override {
+		QElapsedTimer timer;
+		timer.start();
+		QwtPlotCanvas::paintEvent(event);
+		qDebug() << "QwtPlotCanvas::paintEvent(): " << timer.elapsed() << "ms";
 	}
 };
-```
-
-Nun bleibt beim Zoomen, Verschieben oder beim Anpassen der Fenstergröße der Gradient an Ort und Stelle.
 
 
-## Gestapelte (Intervall-)Kurven/Flächendiagramme
+class BenchmarkedWeedingCurveFitter : public QwtWeedingCurveFitter {
+public:
+	QPolygonF fitCurve(const QPolygonF & polygon) const override {
+		QElapsedTimer timer;
+		timer.start();
+		const QPolygonF & stripped = QwtWeedingCurveFitter::fitCurve(polygon);
+		qDebug() << "QwtWeedingCurveFitter::fitCurve() ->" << stripped.count() 
+				 << "points: " << timer.elapsed() << "ms";
+		return stripped;
+	}
+};
 
-Man kann die Intervallkurven auch nutzen, um gestapelte, ausgefüllte Kurven bzw. Flächendiagramme zu erstellen. Dazu erstellt man einfach mehrere `QwtPlotIntervalCurve` Zeichenelemente, die sich jeweils die gleichen Y-Werte teilen.
+
+int main(int argc, char *argv[]) {
+	QApplication a(argc, argv);
+	QwtPlot plot;
+
+	plot.setContentsMargins(8,8,8,8);
+	// eigene Canvas-Klasse mit Benchmark-Wrapper einsetzen
+	BenchmarkedPlotCanvas * canvas = new BenchmarkedPlotCanvas;
+	plot.setCanvas(canvas);
+	plot.setCanvasBackground( Qt::white );
+
+	// Daten zum Darstellen generieren
+	QVector<double> x, y;
+	for (unsigned int i=0; i<10000000; ++i) {
+		x.append(i);
+		y.append(std::sin(i*0.00001));
+	}
+
+	QwtPlotCurve *curve = new QwtPlotCurve();
+	curve->setPen(QColor(180,40,20), 1);
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // Antialiasing verwenden
+	curve->setSamples(x, y);
+	curve->attach(&plot); // Plot takes ownership
+
+	// WeedingCurveFitter mit Benchmark-Wrapper einsetzen
+	QwtWeedingCurveFitter * weedingFitter = new BenchmarkedWeedingCurveFitter;
+	curve->setCurveFitter(weedingFitter);
+	curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
+
+	plot.show();
+	plot.resize(1000,800);
+
+	QTimer::singleShot(1000, canvas, &BenchmarkedPlotCanvas::resizePlot);
+	QTimer::singleShot(2000, &plot, &BenchmarkedPlotCanvas::close);
+
+	return a.exec();
+}
+----
+
+Wenn man das Programm ausführt, wird das Plot kurz angezeigt, dann vergrößert und wieder geschlossen. Damit lässt sich die Zeit für das Zeichnen des Plots benchmarken.
+
+Wenn man den `QwtWeedingCurveFitter` im Quelltext deaktiviert, z.B. durch setzen von 
 
 ```c++
-QVector<double> x{1,2,5,6,10,12,15,16,17};
-QVector<QVector<double> >  y;
-// 3 curves, 4 lines
-y.append( QVector<double>{0,  0, 0, 0,  0,  0, 0,  0,  0} );
-y.append( QVector<double>{2,  2, 3, 4,  2,  4, 4,  5, 11} );
-y.append( QVector<double>{6,4.4, 9, 8,5.5,5.7, 9, 11, 12} );
-y.append( QVector<double>{7,6.6,12,10,  9, 11,12, 12, 13} );
-
-const QColor cols[] = { QColor(96,60,20),
-						QColor(156,39,6),
-						QColor(212,91,18),
-						QColor(242,188,43)
-					  };
-
-for (int j=0;j<y.count()-1; ++j) {
-	QwtPlotIntervalCurve *curve = new QwtPlotIntervalCurve();
-	// generate intervals for current curve
-	QVector<QwtIntervalSample> intervalSamples;
-	for (int i=0; i<x.count(); ++i) 
-		intervalSamples.append(QwtIntervalSample(x[i],y[j][i],y[j+1][i]));
-	curve->setStyle(QwtPlotIntervalCurve::Tube);
-	curve->setPen(QColor(96,60,20), 1);
-	curve->setBrush(cols[j+1]);
-	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
-	curve->setSamples(intervalSamples);
-	curve->attach(&plot); // Plot takes ownership
-}
+curve->setCurveAttribute(QwtPlotCurve::Fitted, false);
 ```
 
+dann gibt das Programm aus:
 
+	QwtPlotCanvas::paintEvent():  308 ms
+	QwtPlotCanvas::paintEvent():  298 ms
 
+Wenn man mit eingeschaltetem Kurvefitter arbeitet:
 
-.Diagramm mit gestapelten Kurven/Flächendiagramm
-image::IntervalCurve_StackedCurve.png[pdfwidth=8cm]
+	QwtWeedingCurveFitter::fitCurve() -> 162 points:  635 ms
+	QwtPlotCanvas::paintEvent():  1202 ms
+	QwtWeedingCurveFitter::fitCurve() -> 284 points:  666 ms
+	QwtPlotCanvas::paintEvent():  1225 ms
 
+Zunächst mal ist es interessant, dass der `QwtWeedingCurveFitter` aus den ursprünglich 10000000 Punkten nur gerade mal 162 Punkte bei der 1000x800 Plotgröße und 284 Punkte beim größeren Plot macht. Und tatsächlich sehen beide Diagramme fast identisch aus.
+Natürlich wird für die Datenreduktion Zeit benötigt. Bei der niedrigen Auflösung sind das 635 ms. Eigentlich müsste aber nun aufgrund der kleineren Anzahl der Punkte das Zeichnen der Linien dafür umso schneller gehen, aber tatsächlich ist die Zeichenzeit deutlich länger: 1202 - 635 = **567 ms** für das Zeichnen des 1000x800 Pixel großen Plots gegenüber **308 ms** _ohne_ `QwtWeedingCurveFitter`.
+
+[WARNING]
+====
+Der `QwtWeedingCurveFitter` reduziert wirkungsvoll die Anzahl der gezeichneten Punkte im Diagramm, welches vor allem beim Export von Daten in ein Vektorformat (svg, pdf, siehe <<sec:print>>) zur Reduktion der Datengröße beiträgt. Entgegen der Erwartungshaltung _verlangsamt_ der Filteralgorithmus aber das Zeichnen auf dem Bildschirm. 
+====

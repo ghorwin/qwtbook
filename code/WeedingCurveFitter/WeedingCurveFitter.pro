@@ -19,7 +19,7 @@ win32 {
 	LIBS += -LC://qwt-6.3.0/lib -l$$QWTLIB
 }
 else {
-	lessThan(QT_MAJOR_VERSION, 5) {
+	lessThan(QT_MAJOR_VERSION, 6) {
 		# Pfad zu den Qwt Headerdateien hinzufügen
 		INCLUDEPATH += /usr/local/qwt-6.3.0/include/
 		# Linkerpfad, unter Linux wird standardmäßig nur die release-Version der Lib gebaut und installiert
@@ -28,7 +28,7 @@ else {
 	else {
 		INCLUDEPATH += /home/ghorwin/git/_webpages/qwtbook/code/qwt-6.3.0/src \
 			/home/ghorwin/git/_webpages/qwtbook/code/qwt-6.3.0/classincludes/
-		LIBS += -L/home/ghorwin/git/_webpages/qwtbook/code/qwt-6.3.0/build/Desktop-Debug/lib -lqwt
+		LIBS += -L/home/ghorwin/git/_webpages/qwtbook/code/qwt-6.3.0/build/Desktop-Profile/lib -lqwt
 	}
 }
 

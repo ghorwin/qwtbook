@@ -337,7 +337,8 @@ pre.rouge .gs {
 <li><a href="#sec:curveFitter">5.6. Kurvenfilter</a>
 <ul class="sectlevel3">
 <li><a href="#_kurvenglättungspline_interpolation">5.6.1. Kurvenglättung/Spline-Interpolation</a></li>
-<li><a href="#_datenreduktion_und_optimierung_der_zeichengeschwindigkeit">5.6.2. Datenreduktion und Optimierung der Zeichengeschwindigkeit</a></li>
+<li><a href="#_polarcurvefitter">5.6.2. PolarCurveFitter</a></li>
+<li><a href="#_datenreduktionsfilter">5.6.3. Datenreduktionsfilter</a></li>
 </ul>
 </li>
 </ul>
@@ -2371,8 +2372,32 @@ only few polynomials."</em></p>
 </li>
 </ul>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>TODO : Gallerie mit verschiedenen Spline-Fittern</p>
+<p>Nur <code>QwtSplinePleasing</code> funktioniert für wirklich parametrische Kurven mit nicht monoton steigenden x-Werten.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Zum Vergleich sind die verschiedenen Spline-Algorithmen dargestellt:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/CurveFitterSpline1.png" alt="CurveFitterSpline1">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/CurveFitterSpline2.png" alt="CurveFitterSpline2">
+</div>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -2390,10 +2415,152 @@ only few polynomials."</em></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_datenreduktion_und_optimierung_der_zeichengeschwindigkeit">5.6.2. Datenreduktion und Optimierung der Zeichengeschwindigkeit</h4>
+<h4 id="_polarcurvefitter">5.6.2. PolarCurveFitter</h4>
 <div class="paragraph">
-<p>TODO QwtWeedingCurveFitter</p>
+<p>Dieser Kurvenfilter ist für Kreisdiagramme gedacht, siehe <a href="#sec:polarPlots">[sec:polarPlots]</a>.</p>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_datenreduktionsfilter">5.6.3. Datenreduktionsfilter</h4>
+<div class="paragraph">
+<p>Durch Verwendung eines Datenfiltes kann man bei sehr großen Reihendaten nur die Daten wirklich zeichnen, die sich auf das Diagramm auswirken. Wenn bspw. 100 Datenpunkte auf dem gleichen Pixel landen, braucht man die nicht alle zeichnen. Das Ausfiltern nicht sichtbarer Punkte und Liniensegmente hängt natürlich von der Zoomstufe ab und ist daher auch als Kurvenfilter implementiert. Ein solcher Datenreduktionsfilter ist in der Klasse <code>QwtWeedingCurveFitter</code> implementiert.</p>
+</div>
+<div class="paragraph">
+<p>Nachfolgendes Beispiel zeigt eine mit <em>sehr</em> vielen Punkten generierte Sinuskurve. Das Zeichnen dieser Kurve geht zwar selbst bei 2K Auflösung noch sehr schnell (ca. 300 ms für das komplette Neuzeichnen des Plots), aber die meisten Punkte liegen übereinander und man kann sich daher das Zeichnen dieser Punkte sparen. Hier kommt der <code>QwtWeedingCurveFitter</code> ins Spiel. Verwendet wird dieser Kurvenfilteralgorithmus wie auch die Spline-Filter, jedoch generiert dieser Filter keine neue Kurve, sondern entfernt lediglich redundante und nicht notwendige Punkte. Im Rahmen der konfigurierten Genauigkeit dieses Filters sehen dann die originale und die gefilterte Kurve nahezu identisch aus, obwohl viel weniger Punkte verwendet werden.</p>
+</div>
+<div class="listingblock">
+<div class="title">Testprogramm für den Filteralgorithmus</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="cp">#include</span> <span class="cpf">&lt;QApplication&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;QPen&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;QElapsedTimer&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;QDebug&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;QTimer&gt;</span><span class="cp">
+</span>
+<span class="cp">#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp">
+</span>
+<span class="cp">#include</span> <span class="cpf">&lt;qwt_plot.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qwt_plot_curve.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qwt_weeding_curve_fitter.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qwt_plot_canvas.h&gt;</span><span class="cp">
+</span>
+<span class="k">class</span> <span class="nc">BenchmarkedPlotCanvas</span> <span class="o">:</span> <span class="k">public</span> <span class="n">QwtPlotCanvas</span> <span class="p">{</span>
+<span class="k">public</span> <span class="n">slots</span><span class="o">:</span>
+	<span class="kt">void</span> <span class="n">resizePlot</span><span class="p">()</span> <span class="p">{</span>
+		<span class="p">((</span><span class="n">QWidget</span><span class="o">*</span><span class="p">)</span><span class="n">parent</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">resize</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span><span class="mi">1000</span><span class="p">);</span>
+	<span class="p">}</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="kt">void</span> <span class="n">paintEvent</span><span class="p">(</span><span class="n">QPaintEvent</span> <span class="o">*</span> <span class="n">event</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+		<span class="n">QElapsedTimer</span> <span class="n">timer</span><span class="p">;</span>
+		<span class="n">timer</span><span class="p">.</span><span class="n">start</span><span class="p">();</span>
+		<span class="n">QwtPlotCanvas</span><span class="o">::</span><span class="n">paintEvent</span><span class="p">(</span><span class="n">event</span><span class="p">);</span>
+		<span class="n">qDebug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"QwtPlotCanvas::paintEvent(): "</span> <span class="o">&lt;&lt;</span> <span class="n">timer</span><span class="p">.</span><span class="n">elapsed</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"ms"</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="k">class</span> <span class="nc">BenchmarkedWeedingCurveFitter</span> <span class="o">:</span> <span class="k">public</span> <span class="n">QwtWeedingCurveFitter</span> <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="n">QPolygonF</span> <span class="n">fitCurve</span><span class="p">(</span><span class="k">const</span> <span class="n">QPolygonF</span> <span class="o">&amp;</span> <span class="n">polygon</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+		<span class="n">QElapsedTimer</span> <span class="n">timer</span><span class="p">;</span>
+		<span class="n">timer</span><span class="p">.</span><span class="n">start</span><span class="p">();</span>
+		<span class="k">const</span> <span class="n">QPolygonF</span> <span class="o">&amp;</span> <span class="n">stripped</span> <span class="o">=</span> <span class="n">QwtWeedingCurveFitter</span><span class="o">::</span><span class="n">fitCurve</span><span class="p">(</span><span class="n">polygon</span><span class="p">);</span>
+		<span class="n">qDebug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"QwtWeedingCurveFitter::fitCurve() -&gt;"</span> <span class="o">&lt;&lt;</span> <span class="n">stripped</span><span class="p">.</span><span class="n">count</span><span class="p">()</span>
+				 <span class="o">&lt;&lt;</span> <span class="s">"points: "</span> <span class="o">&lt;&lt;</span> <span class="n">timer</span><span class="p">.</span><span class="n">elapsed</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"ms"</span><span class="p">;</span>
+		<span class="k">return</span> <span class="n">stripped</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+	<span class="n">QApplication</span> <span class="n">a</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+	<span class="n">QwtPlot</span> <span class="n">plot</span><span class="p">;</span>
+
+	<span class="n">plot</span><span class="p">.</span><span class="n">setContentsMargins</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">);</span>
+	<span class="c1">// eigene Canvas-Klasse mit Benchmark-Wrapper einsetzen</span>
+	<span class="n">BenchmarkedPlotCanvas</span> <span class="o">*</span> <span class="n">canvas</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BenchmarkedPlotCanvas</span><span class="p">;</span>
+	<span class="n">plot</span><span class="p">.</span><span class="n">setCanvas</span><span class="p">(</span><span class="n">canvas</span><span class="p">);</span>
+	<span class="n">plot</span><span class="p">.</span><span class="n">setCanvasBackground</span><span class="p">(</span> <span class="n">Qt</span><span class="o">::</span><span class="n">white</span> <span class="p">);</span>
+
+	<span class="c1">// Daten zum Darstellen generieren</span>
+	<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">10000000</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">x</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+		<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mf">0.00001</span><span class="p">));</span>
+	<span class="p">}</span>
+
+	<span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span> <span class="c1">// Antialiasing verwenden</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSamples</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">attach</span><span class="p">(</span><span class="o">&amp;</span><span class="n">plot</span><span class="p">);</span> <span class="c1">// Plot takes ownership</span>
+
+	<span class="c1">// WeedingCurveFitter mit Benchmark-Wrapper einsetzen</span>
+	<span class="n">QwtWeedingCurveFitter</span> <span class="o">*</span> <span class="n">weedingFitter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BenchmarkedWeedingCurveFitter</span><span class="p">;</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setCurveFitter</span><span class="p">(</span><span class="n">weedingFitter</span><span class="p">);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setCurveAttribute</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Fitted</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+
+	<span class="n">plot</span><span class="p">.</span><span class="n">show</span><span class="p">();</span>
+	<span class="n">plot</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">800</span><span class="p">);</span>
+
+	<span class="n">QTimer</span><span class="o">::</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">canvas</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">BenchmarkedPlotCanvas</span><span class="o">::</span><span class="n">resizePlot</span><span class="p">);</span>
+	<span class="n">QTimer</span><span class="o">::</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">plot</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">BenchmarkedPlotCanvas</span><span class="o">::</span><span class="n">close</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">exec</span><span class="p">();</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wenn man das Programm ausführt, wird das Plot kurz angezeigt, dann vergrößert und wieder geschlossen. Damit lässt sich die Zeit für das Zeichnen des Plots benchmarken.</p>
+</div>
+<div class="paragraph">
+<p>Wenn man den <code>QwtWeedingCurveFitter</code> im Quelltext deaktiviert, z.B. durch setzen von</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="n">curve</span><span class="o">-&gt;</span><span class="n">setCurveAttribute</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Fitted</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>dann gibt das Programm aus:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>QwtPlotCanvas::paintEvent():  308 ms
+QwtPlotCanvas::paintEvent():  298 ms</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wenn man mit eingeschaltetem Kurvefitter arbeitet:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>QwtWeedingCurveFitter::fitCurve() -&gt; 162 points:  635 ms
+QwtPlotCanvas::paintEvent():  1202 ms
+QwtWeedingCurveFitter::fitCurve() -&gt; 284 points:  666 ms
+QwtPlotCanvas::paintEvent():  1225 ms</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Zunächst mal ist es interessant, dass der <code>QwtWeedingCurveFitter</code> aus den ursprünglich 10000000 Punkten nur gerade mal 162 Punkte bei der 1000x800 Plotgröße und 284 Punkte beim größeren Plot macht. Und tatsächlich sehen beide Diagramme fast identisch aus.
+Natürlich wird für die Datenreduktion Zeit benötigt. Bei der niedrigen Auflösung sind das 635 ms. Eigentlich müsste aber nun aufgrund der kleineren Anzahl der Punkte das Zeichnen der Linien dafür umso schneller gehen, aber tatsächlich ist die Zeichenzeit deutlich länger: 1202 - 635 = <strong>567 ms</strong> für das Zeichnen des 1000x800 Pixel großen Plots gegenüber <strong>308 ms</strong> <em>ohne</em> <code>QwtWeedingCurveFitter</code>.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Der <code>QwtWeedingCurveFitter</code> reduziert wirkungsvoll die Anzahl der gezeichneten Punkte im Diagramm, welches vor allem beim Export von Daten in ein Vektorformat (svg, pdf, siehe <a href="#sec:print">Kapitel 14</a>) zur Reduktion der Datengröße beiträgt. Entgegen der Erwartungshaltung <em>verlangsamt</em> der Filteralgorithmus aber das Zeichnen auf dem Bildschirm.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div style="page-break-after: always;"></div>
 </div>
 </div>
 </div>
@@ -4217,7 +4384,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 <div id="footer">
 <div id="footer-text">
 Version 2.0<br>
-Last updated 2025-06-15 08:06:56 +0200
+Last updated 2025-06-20 08:05:52 +0200
 </div>
 </div>
 </body>
