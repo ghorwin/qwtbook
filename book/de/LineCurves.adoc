@@ -443,11 +443,125 @@ image::PlotCurveLegendLinieWithSymbolSameWidth.png[pdfwidth=8cm]
 Da die Legendenicons beim Setzen von Kurvensymbolen konfiguriert werden, muss die Änderung der Legendenicongrößen stets _nach_ dem Setzen/Anpassen von Kurvensymbolen gemacht werden. Also der Aufruf von `setLegendIconSize()` muss _nach_ `setSymbol()` erfolgen!
 ====
 
-
 [TIP]
 ====
 Alle Informationen zu Legenden und auch spezifische Anpassungen, z.B. wie man eigene Icons zeichnet, gibt es in <<sec:legend>>.
 ====
+
+[[sec:curvePerformance]]
+## Zeichenattribute, Zeichengeschwindigkeit und Performanceoptimierung bei großen Datenreihen
+
+Das Zeichnen großer Datenreihen kann mitunter einige Zeit beanspruchen. Vor allem beim Größenändern des Plotfensters wirkt sich das dann durch merkliche Verzögerung beim Bildschirmaufbau aus. Je größer die Datenreihen sind, d.h. umsomehr Punkte enthalten sind, umso länger dauert im Allgemeinen das Zeichnen des Plots. In diesem Abschnitt soll es um verschiedene Eigenschaften und Fähigkeiten der `QwtPlotCurve` gehen, die sich direkt auf die Zeichengeschwindigkeit auswirken.
+
+### Zeichenattribute (PaintAttribute / PaintAttributes)
+
+Die Klasse `QwtPlotCurve` hat verschiedene Zeichenattribute, die verwendete Algorithmen näher konfigurieren. Hier ist zunächst eine kurze Liste, wobei die individuelle Attribute und deren Auswirkung später näher beschrieben werden:
+
+- `ClipPolygons` - damit werden zu zeichnende Datenreihen ausgedünnt, sodass nur im aktuellen Zoomfenster sichtbare Kurventeile gezeichnet werden. Ist standardmäßig aktiv und kann in bestimmten Situationen die Renderperformance verbessern, bzw. ist z.B. für SVG-Export notwendig, führt aber in den meisten Standardanwendungsfällen zu einer minimalen Verlangsamung des Renders.
+- `FilterPoints` - damit werden Punkte aus den Datenreihen herausgefiltert, die sowieso nicht gezeichnet werden würden.
+- `FilterPointsAggressive` - Nur für Linienkurven, ersetzt viele kurze übereinanderliegende Polygonstücke durch einzelne Liniensegmente
+- `MinimizeMemory` - Verhindert wenn eingeschaltet und _nur_ beim Linientyp `QwtPlotCurve::Dots`, dass bei der Transformation der Datenreihe von Plotkoordinaten zu Renderkoordinaten eine eventuell große Polygon-Kopie erstellt wird. Stattdessen werden alle Punktkoordinaten einzeln transformiert, geclippt und gezeichnet. Da hierbei für jeden Punkt ein gewisser Extraaufwand benötigt wird, ist dies in der Regel etwas langsamer.
+- `ImageBuffer` - Eine sehr spezielle Optimierung _nur_ beim Linientyp `QwtPlotCurve::Dots`, wobei die Punkte (jeweils nur ein Pixel pro Punkt) in ein Bild gezeichnet werden. Dies erfolgt parallelisiert und kann daher sehr schnell sein, ist allerdings nur effektiv bei sehr großen Punktmengen.
+
+[IMPORTANT]
+====
+Das Zeichenattribut `FilterPointsAggressive` wirkt sich nur auf Linientyp `QwtPlotCurve::Lines` aus. Die Attribute `MinimizeMemory` und `ImageBuffer` sind sehr spezielle Optimierungen für den Linientyp `QwtPlotCurve::Dots`.
+====
+
+### Punktfilter
+
+Durch Verwendung des Datenfiltes `FilterPoints` kann man bei sehr großen Reihendaten nur die Daten wirklich zeichnen, die sich auf das Diagramm auswirken. Wenn bspw. 100 Datenpunkte auf dem gleichen Pixel landen, braucht man die nicht alle zeichnen. Das Ausfiltern nicht sichtbarer Punkte und Liniensegmente hängt natürlich von der Zoomstufe ab und ist deshalb in die Zeichenroutine der `QwtPlotCurve` integriert.
+
+[NOTE]
+====
+Neben dem Filtern überflüssiger Punkte durch Setzen des Zeichenattributs `FilterPoints` gibt es auch noch die Möglichkeit, den `QwtWeedingCurveFitter` (siehe <<sec:weedingCurveFitter>>) zu verwenden. Dieser ist aber eigentlich für die Datenreduktion beim Export gedacht und verlangsamt das Zeichnen auf dem Bildschirm in der Regel.
+====
+
+Das Zeichenattribut `QwtPlotCurve::FilterPoints` ist standardmäßig gesetzt und führt dazu, dass beim Transformieren der Datenreihenkoordinaten in Bildschirmkoordinaten bereits doppelte Punkte herausgefiltert werden (dies macht die Klasse `QwtPointMapper`). Enthält eine Datenreihe bspw. 100000 gleichverteilte Punkte entlang der x-Achse und wird auf einem 1000 Pixel breiten Plot gezeichnet, so teilen sich jeweils 100 Punkte eine x-Pixelkoordinate. Wenn nach der Umrechnung der Koordinaten zwei aufeinanderfolgende Punkte identische Pixelkoordinaten haben, werden die doppelten Punkte entfernt. Diese standardmäßig eingeschaltete Funktion macht bereits einen großen Unterschied bei der Zeichengeschwindigkeit. 
+
+Um das mal zu verdeutlichen, ist hier ein kleines Testprogramm für die Filterfunktionen:
+
+.Testprogramm für den Filteralgorithmus mit 10 Millionen Punkten in der Datenreihe
+[source,c++]
+----
+#include <QApplication>
+#include <QElapsedTimer>
+#include <QDebug>
+
+#include <cmath>
+
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_weeding_curve_fitter.h>
+
+// Spezialisierte QwtPlotCurve mit Zeitmessung um drawCurve()
+class BenchmarkedPlotCurve : public QwtPlotCurve {
+protected:
+	void drawCurve(QPainter *p, int style, 
+		const QwtScaleMap & xMap, const QwtScaleMap & yMap, 
+		const QRectF & canvasRect, int from, int to) const override 
+	{
+		QElapsedTimer timer;
+		timer.start();
+		QwtPlotCurve::drawCurve(p, style, xMap, yMap, canvasRect, from, to);
+		qDebug() << "QwtPlotCurve::drawCurve(): " << timer.elapsed() << "ms";
+	}
+};
+
+
+int main(int argc, char *argv[]) {
+	QApplication a(argc, argv);
+	QwtPlot plot;
+	plot.setContentsMargins(8,8,8,8);
+	plot.setCanvasBackground( Qt::white );
+
+	// Daten zum Darstellen generieren
+	QVector<double> x, y;
+	for (unsigned int i=0; i<10000000; ++i) {
+		x.append(i);
+		y.append(std::sin(i*0.00001));
+	}
+
+	QwtPlotCurve *curve = new BenchmarkedPlotCurve();
+	curve->setPen(QColor(180,40,20), 1);
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // Antialiasing verwenden
+	curve->setPaintAttribute(QwtPlotCurve::FilterPoints, false); // Punktefilter ausschalten
+	curve->setSamples(x, y);
+	curve->attach(&plot); // Plot takes ownership
+
+	plot.resize(1000,800);
+	plot.show();
+
+	return a.exec();
+}
+----
+
+Das Testprogramm generiert 10 Millionen Datenpunkte (mehrere Sinuswellen) und zeichet diese dann in ein 1000x800 Pixel großes Diagramm, zunächst _ohne_ Punktefilter. Dazu wird in Zeile
+
+```c++
+curve->setPaintAttribute(QwtPlotCurve::FilterPoints, false);
+```
+
+das Zeichenattribut `FilterPoints` ausgeschaltet. Die Zeichenzeit für die Kurve einschließlich der Zeit für die Datenfilterung wird in der abgeleiteten `QwtPlotCurve` und dem kleinen Wrapper um die zentrale `drawCurve()`-Funktion gemessen.
+
+Auf meinem Rechner gibt das Programm im Release-Build **1110 ms** aus. Dabei werden wirklich alle 10 Millionen Punkte in den zu zeichnenden Polygonzug übernommen und auf dem Painter gezeichnet (der natürlich Liniensegmente mit Länge 0 verwirft, aber dafür etwas Zeit braucht). 
+
+Außerdem wird der Polygonzug auch am sichtbaren Bildschirmausschnitt geclippt, was bei den 10 Millionen Punkten durchaus auch noch Zeit braucht. Wenn man das Clipping aussschaltet, wiederum durch Abschalten eines Zeichenattributs:
+
+```c++
+curve->setPaintAttribute(QwtPlotCurve::ClipPolygons, false);
+```
+
+reduziert sich die Zeichenzeit um immerhin 25% auf ca. **730 ms**.
+
+[TIP]
+====
+Man kann das standardmäßig gesetzte Zeichenattribut `QwtPlotCurve::ClipPolygons` beim Rendern auf dem Bildschirm abschalten, um so die Zeichengeschwindigkeit zu erhöhen. Da das Zeichnen sowieso auf die Canvas-Fläche begrenzt ist, braucht man das vorherige Ausdünnen des Polyogons nicht wirklich. Sinnvoll ist die `ClipPolygons`-Funktion unter Umständen bei der Verwendung von Kurvenfilter-Algorithmen, bzw. beim SVG-Export.
+====
+
+
+
+
 
 [[sec:curveFitter]]
 ## Kurvenfilter
@@ -542,94 +656,18 @@ Obwohl die verschiedenen Spline-Implementierungen primär für das _QwtPlot_ ged
 Dieser Kurvenfilter ist für Kreisdiagramme gedacht, siehe <<sec:polarPlots>>.
 
 
+[[sec:weedingCurveFitter]]
 ### Datenreduktionsfilter
 
-Durch Verwendung eines Datenfiltes kann man bei sehr großen Reihendaten nur die Daten wirklich zeichnen, die sich auf das Diagramm auswirken. Wenn bspw. 100 Datenpunkte auf dem gleichen Pixel landen, braucht man die nicht alle zeichnen. Das Ausfiltern nicht sichtbarer Punkte und Liniensegmente hängt natürlich von der Zoomstufe ab und ist daher auch als Kurvenfilter implementiert. Ein solcher Datenreduktionsfilter ist in der Klasse `QwtWeedingCurveFitter` implementiert.
-
-Nachfolgendes Beispiel zeigt eine mit _sehr_ vielen Punkten generierte Sinuskurve. Das Zeichnen dieser Kurve geht zwar selbst bei 2K Auflösung noch sehr schnell (ca. 300 ms für das komplette Neuzeichnen des Plots), aber die meisten Punkte liegen übereinander und man kann sich daher das Zeichnen dieser Punkte sparen. Hier kommt der `QwtWeedingCurveFitter` ins Spiel. Verwendet wird dieser Kurvenfilteralgorithmus wie auch die Spline-Filter, jedoch generiert dieser Filter keine neue Kurve, sondern entfernt lediglich redundante und nicht notwendige Punkte. Im Rahmen der konfigurierten Genauigkeit dieses Filters sehen dann die originale und die gefilterte Kurve nahezu identisch aus, obwohl viel weniger Punkte verwendet werden.
-
-.Testprogramm für den Filteralgorithmus
-[source,c++]
-----
-#include <QApplication>
-#include <QPen>
-#include <QElapsedTimer>
-#include <QDebug>
-#include <QTimer>
-
-#include <cmath>
-
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
-#include <qwt_weeding_curve_fitter.h>
-#include <qwt_plot_canvas.h>
-
-class BenchmarkedPlotCanvas : public QwtPlotCanvas {
-public slots:
-	void resizePlot() {
-		((QWidget*)parent())->resize(2000,1000);
-	}
-
-protected:
-	void paintEvent(QPaintEvent * event) override {
-		QElapsedTimer timer;
-		timer.start();
-		QwtPlotCanvas::paintEvent(event);
-		qDebug() << "QwtPlotCanvas::paintEvent(): " << timer.elapsed() << "ms";
-	}
-};
 
 
-class BenchmarkedWeedingCurveFitter : public QwtWeedingCurveFitter {
-public:
-	QPolygonF fitCurve(const QPolygonF & polygon) const override {
-		QElapsedTimer timer;
-		timer.start();
-		const QPolygonF & stripped = QwtWeedingCurveFitter::fitCurve(polygon);
-		qDebug() << "QwtWeedingCurveFitter::fitCurve() ->" << stripped.count() 
-				 << "points: " << timer.elapsed() << "ms";
-		return stripped;
-	}
-};
 
 
-int main(int argc, char *argv[]) {
-	QApplication a(argc, argv);
-	QwtPlot plot;
+Grundsätzlich muss hier zwischen 
+ und ist daher auch als Kurvenfilter implementiert. Ein solcher Datenreduktionsfilter ist in der Klasse `QwtWeedingCurveFitter` implementiert.
 
-	plot.setContentsMargins(8,8,8,8);
-	// eigene Canvas-Klasse mit Benchmark-Wrapper einsetzen
-	BenchmarkedPlotCanvas * canvas = new BenchmarkedPlotCanvas;
-	plot.setCanvas(canvas);
-	plot.setCanvasBackground( Qt::white );
+Nachfolgendes Beispiel zeigt eine mit _sehr_ vielen Punkten generierte Sinuskurve. Das Zeichnen dieser Kurve geht zwar selbst bei 2K Auflösung noch sehr schnell (ca. 300 ms für das komplette Neuzeichnen des Plots), denn die meisten Punkte liegen übereinander und man kann sich daher das Zeichnen dieser Punkte sparen. Hier kommt der `QwtWeedingCurveFitter` ins Spiel. Verwendet wird dieser Kurvenfilteralgorithmus wie auch die Spline-Filter, jedoch generiert dieser Filter keine neue Kurve, sondern entfernt lediglich redundante und nicht notwendige Punkte. Im Rahmen der konfigurierten Genauigkeit dieses Filters sehen dann die originale und die gefilterte Kurve nahezu identisch aus, obwohl viel weniger Punkte verwendet werden.
 
-	// Daten zum Darstellen generieren
-	QVector<double> x, y;
-	for (unsigned int i=0; i<10000000; ++i) {
-		x.append(i);
-		y.append(std::sin(i*0.00001));
-	}
-
-	QwtPlotCurve *curve = new QwtPlotCurve();
-	curve->setPen(QColor(180,40,20), 1);
-	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // Antialiasing verwenden
-	curve->setSamples(x, y);
-	curve->attach(&plot); // Plot takes ownership
-
-	// WeedingCurveFitter mit Benchmark-Wrapper einsetzen
-	QwtWeedingCurveFitter * weedingFitter = new BenchmarkedWeedingCurveFitter;
-	curve->setCurveFitter(weedingFitter);
-	curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
-
-	plot.show();
-	plot.resize(1000,800);
-
-	QTimer::singleShot(1000, canvas, &BenchmarkedPlotCanvas::resizePlot);
-	QTimer::singleShot(2000, &plot, &BenchmarkedPlotCanvas::close);
-
-	return a.exec();
-}
-----
 
 Wenn man das Programm ausführt, wird das Plot kurz angezeigt, dann vergrößert und wieder geschlossen. Damit lässt sich die Zeit für das Zeichnen des Plots benchmarken.
 

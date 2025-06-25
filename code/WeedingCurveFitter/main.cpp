@@ -25,32 +25,31 @@ THE SOFTWARE.
 */
 
 #include <QApplication>
-#include <QPen>
 #include <QElapsedTimer>
 #include <QDebug>
-#include <QTimer>
+#include <QRandomGenerator64>
 
 #include <cmath>
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 #include <qwt_weeding_curve_fitter.h>
-#include <qwt_plot_canvas.h>
+#include <qwt_plot_zoomer.h>
 
-class BenchmarkedPlotCanvas : public QwtPlotCanvas {
-public slots:
-	void resizePlot() {
-		((QWidget*)parent())->resize(2400,1200);
-	}
-
+// Spezialisierte QwtPlotCurve mit Zeitmessung um drawCurve()
+class BenchmarkedPlotCurve : public QwtPlotCurve {
 protected:
-	void paintEvent(QPaintEvent * event) override {
+	void drawCurve(QPainter *p, int style,
+		const QwtScaleMap & xMap, const QwtScaleMap & yMap,
+		const QRectF & canvasRect, int from, int to) const override
+	{
 		QElapsedTimer timer;
 		timer.start();
-		QwtPlotCanvas::paintEvent(event);
-		qDebug() << "QwtPlotCanvas::paintEvent(): " << timer.elapsed() << "ms";
+		QwtPlotCurve::drawCurve(p, style, xMap, yMap, canvasRect, from, to);
+		qDebug() << "QwtPlotCurve::drawCurve(): " << timer.elapsed() << "ms";
 	}
 };
+
 
 
 class BenchmarkedWeedingCurveFitter : public QwtWeedingCurveFitter {
@@ -71,34 +70,36 @@ int main(int argc, char *argv[]) {
 	QwtPlot plot;
 
 	plot.setContentsMargins(8,8,8,8);
-	// eigene Canvas-Klasse mit Benchmark-Wrapper einsetzen
-	BenchmarkedPlotCanvas * canvas = new BenchmarkedPlotCanvas;
-	plot.setCanvas(canvas);
 	plot.setCanvasBackground( Qt::white );
 
 	// Daten zum Darstellen generieren
 	QVector<double> x, y;
 	for (unsigned int i=0; i<10000000; ++i) {
 		x.append(i);
+#if 1
 		y.append(std::sin(i*0.00001));
+#else
+		y.append((QRandomGenerator64::global()->generateDouble()-0.5)*2);
+#endif
 	}
 
-	QwtPlotCurve *curve = new QwtPlotCurve();
+	QwtPlotCurve *curve = new BenchmarkedPlotCurve();
 	curve->setPen(QColor(180,40,20), 1);
 	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // Antialiasing verwenden
+	curve->setPaintAttribute(QwtPlotCurve::FilterPoints, false); // Punktefilter ausschalten
+	curve->setPaintAttribute(QwtPlotCurve::ClipPolygons, false);
 	curve->setSamples(x, y);
 	curve->attach(&plot); // Plot takes ownership
 
 	// WeedingCurveFitter mit Benchmark-Wrapper einsetzen
-	QwtWeedingCurveFitter * weedingFitter = new BenchmarkedWeedingCurveFitter;
+	QwtWeedingCurveFitter * weedingFitter = new QwtWeedingCurveFitter;
 	curve->setCurveFitter(weedingFitter);
 	curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
 
-	plot.show();
 	plot.resize(1000,800);
+	plot.show();
 
-	QTimer::singleShot(1000, canvas, &BenchmarkedPlotCanvas::resizePlot);
-	QTimer::singleShot(2000, &plot, &BenchmarkedPlotCanvas::close);
+	QwtPlotZoomer * zoomer = new QwtPlotZoomer(plot.canvas());
 
 	return a.exec();
 }
