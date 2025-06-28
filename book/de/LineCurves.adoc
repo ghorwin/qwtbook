@@ -544,23 +544,24 @@ curve->setPaintAttribute(QwtPlotCurve::FilterPoints, false);
 
 das Zeichenattribut `FilterPoints` ausgeschaltet. Die Zeichenzeit für die Kurve einschließlich der Zeit für die Datenfilterung wird in der abgeleiteten `QwtPlotCurve` und dem kleinen Wrapper um die zentrale `drawCurve()`-Funktion gemessen.
 
-Auf meinem Rechner gibt das Programm im Release-Build **1110 ms** aus. Dabei werden wirklich alle 10 Millionen Punkte in den zu zeichnenden Polygonzug übernommen und auf dem Painter gezeichnet (der natürlich Liniensegmente mit Länge 0 verwirft, aber dafür etwas Zeit braucht). 
+Auf meinem Rechner gibt das Programm im Release-Build ca. **650 ms** aus. Dabei werden wirklich alle 10 Millionen Punkte in den zu zeichnenden Polygonzug übernommen und auf dem Painter gezeichnet (der natürlich Liniensegmente mit Länge 0 verwirft, aber dafür etwas Zeit braucht). 
 
-Schaltet man nun das Attribut `FilterPoints` wieder ein, so enthält das Polygon _nach_ dem Filtern nur noch ca. 24500 Punkte und das Zeichnen dauert ca **300 ms**.
+Schaltet man nun das Attribut `FilterPoints` wieder ein, so enthält das Polygon _nach_ dem Filtern nur noch ca. 24500 Punkte und das Zeichnen dauert ca. **300 ms**.
 
 
-[NOTE]
+[TIP]
 ====
-Mit dem Zeichenattribut `FilterPoints` werden unsichtbare/sich überlappende Liniensegmente herausgefiltert, was bei sehr großen Datenreihen eine deutliche Zeichenbeschleunigung bewirkt.
+Mit dem Zeichenattribut `FilterPoints` werden Liniensegmente mit Länge 0 herausgefiltert, was bei sehr großen Datenreihen eine merkliche Zeichenbeschleunigung bewirkt.
 ====
 
 
 ### Aggressives Punktefiltern
 
-Wenn Datenreihen sehr stark rauschen dann überlagern sich Liniensegmente mitunter. Zum Beispiel werden dann mehrere Linien mit der gleichen x-Bildschirmkoordinate übereinander gezeichnet, obwohl ja eine Linie gezeichnet zwischen minimaler und maximaler y-Koordinate ausreichen würde. 
-Das Zeichenattribut `FilterPointsAggressive` schaltet eine Vorberechnung ein, die genau diese Art der Optimierung durchführt und aus mehreren sich überlagernden, vertikalen Liniensegmenten nur eine einzige Linie macht (deswegen ist diese Optimierung auch nur für den Linientyp `QwtPlotCurve::Linien` sinnvoll).
+Wenn Datenreihen sehr stark rauschen und gleichzeitig sehr große Datenmengen enthalten, dann können sich mehrere Liniensegmente überlagern. Zum Beispiel werden dann mehrere Linien mit der gleichen x-Bildschirmkoordinate übereinander gezeichnet, obwohl ja eine Linie gezeichnet zwischen minimaler und maximaler y-Koordinate ausreichen würde.
 
-Um das mal zu testen wandeln wir das Programm oben ab und generieren eine stark rauschende Kurve:
+Das Zeichenattribut `FilterPointsAggressive` schaltet eine Vorberechnung ein, die genau diese Art der Optimierung durchführt (ebenfalls in Klasse `QwtPointMapper` implementiert) und aus mehreren sich überlagernden, vertikalen Liniensegmenten nur eine einzige Linie macht (deswegen ist diese Optimierung auch nur für den Linientyp `QwtPlotCurve::Lines` sinnvoll).
+
+Um das mal zu testen, wandeln wir das Programm oben ab und generieren eine stark rauschende Kurve:
 
 
 [source,c++]
@@ -572,6 +573,73 @@ for (unsigned int i=0; i<1000000; ++i) {
 }
 ----
 
+Ohne `FilterPointsAggressive` dauert das Zeichnen ca. **1500 ms**. Obwohl die Datenreihe "nur" aus 1 Mio Punkte besteht, sind die Liniensegmente deutlich länger als bei der Sinuswelle und es dauert länger, diese zu zeichnen. Das Zeichenattribut `FilterPoints` kann auch wegen der stark schwankenden y-Werte kaum Punkte rausschmeißen (die Liniensegmente haben fast nie eine Länge von 0).
+
+Wenn man nun das Attribut mit
+
+```c++
+curve->setPaintAttribute(QwtPlotCurve::FilterPointsAggressive, true);
+```
+
+einschaltet, verkürzt sich die Zeichenzeit auf ca. **32 ms** !!!! Nach dem Filtern hat das zu zeichnende Polygon nur noch 3670 Punkte.
+
+[TIP]
+====
+Die Verwendung des Zeichenattributs `FilterPointsAggressive` beschleunigt die Darstellung drastisch, vor allem beim Kurven mit vielen Datenpunkten und stark rauschenden Werten.
+====
+
+Wenn man sich die Diagramme mit und ohne `FilterPointsAggressive` im Vergleich anschaut, so sieht man kleinere Unterschiede.
+
+.Ausgabe mit `FilterPoints`, Antialiasing eingeschaltet
+image::CurveFilterPoints_Antialias.png[pdfwidth=8cm]
+
+.Ausgabe `FilterPointsAggressive`, Antialiasing eingeschaltet
+image::CurveFilterPointsAggressive_Antialias.png[pdfwidth=8cm]
+
+Mit Antialiasing sieht man Unterschiede in den teiltransparenten Segmenten.
+Ohne Antialiasing muss man schon sehr genau hinsehen, um die kleinen Unterschiede zu sehen.
+
+.Ausgabe mit `FilterPoints`, Antialiasing ausgeschaltet
+image::CurveFilterPoints.png[pdfwidth=8cm]
+
+.Ausgabe `FilterPointsAggressive`, Antialiasing ausgeschaltet
+image::CurveFilterPointsAggressive.png[pdfwidth=8cm]
+
+Zum Vergleich beide Bilder herunterladen und im Bildbetrachter abwechselnd anzeigen, dann sieht man die kleinen Unterschiede.
+
+
+[CAUTION]
+====
+Im Gegensatz zu `FilterPoints` ist das Ergebnis des `FilterPointsAggressive` aber eine leicht veränderte Darstellung. Das liegt an der Art, wie Liniensegmente zusammengefasst werden.
+
+Nach der Skalierung von Plotkoordinaten zu Bildschirmkoordinaten liegt beispielsweise folgendes Polygon zum Filtern vor:
+
+    x      y
+    6      230
+    6      379
+    6      602
+    7      304
+    7      602
+    7       81
+    7      155
+    8      424 
+    ...
+
+so enthält das Polygon _nach_ dem Filtern nur noch die Punkte:
+
+    x      y
+    6      230
+    6      602
+    7      304
+    7      602
+    7      81
+    8      424
+    ...
+
+Die Liniensegmente auf den x-Zeichenkoordinaten 6 und 7 wurden hier zusammengefasst. 
+
+Aber während vorher eine von (7,155) -> (8,424) gezeichnet wurde, wird nun eine Linie von (7,81) -> (8,424) gezeichnet, welches im Detail ein minimal anderes Erscheinungsbild gibt. Die Unterschiede in der Ausgabe sind aber so minimal, dass man für die relevanten Anwendungsfälle, also größere Datenreihen und stark schwankende Werte, das Einschalten des Zeichenattributs `FilterPointsAggressive` durchaus als allgemeine Empfehlung geben kann.
+====
 
 
 ### Polygon-Clipping
