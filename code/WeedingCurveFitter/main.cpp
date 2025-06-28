@@ -74,20 +74,21 @@ int main(int argc, char *argv[]) {
 
 	// Daten zum Darstellen generieren
 	QVector<double> x, y;
-	for (unsigned int i=0; i<10000000; ++i) {
+	for (unsigned int i=0; i<1000000; ++i) {
 		x.append(i);
-#if 1
+#if 0
 		y.append(std::sin(i*0.00001));
 #else
-		y.append((QRandomGenerator64::global()->generateDouble()-0.5)*2);
+		y.append(QRandomGenerator64::global()->generateDouble());
 #endif
 	}
 
 	QwtPlotCurve *curve = new BenchmarkedPlotCurve();
 	curve->setPen(QColor(180,40,20), 1);
 	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // Antialiasing verwenden
-	curve->setPaintAttribute(QwtPlotCurve::FilterPoints, false); // Punktefilter ausschalten
-	curve->setPaintAttribute(QwtPlotCurve::ClipPolygons, false);
+	curve->setPaintAttribute(QwtPlotCurve::FilterPoints, true); // Punktefilter ausschalten
+	curve->setPaintAttribute(QwtPlotCurve::FilterPointsAggressive, false); // Punktefilter ausschalten
+	// curve->setPaintAttribute(QwtPlotCurve::ClipPolygons, true);
 	curve->setSamples(x, y);
 	curve->attach(&plot); // Plot takes ownership
 
@@ -96,10 +97,14 @@ int main(int argc, char *argv[]) {
 	curve->setCurveFitter(weedingFitter);
 	curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
 
-	plot.resize(1000,800);
-	plot.show();
-
 	QwtPlotZoomer * zoomer = new QwtPlotZoomer(plot.canvas());
+
+	// plot.setAxisScale(QwtPlot::yLeft, -2, 2);
+	// plot.setAxisScale(QwtPlot::xBottom, 522000, 532000);
+	// plot.setAxisScale(QwtPlot::xBottom, 0, 1000000);
+	plot.resize(1000,800);
+
+	plot.show();
 
 	return a.exec();
 }

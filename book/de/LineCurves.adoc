@@ -455,13 +455,13 @@ Das Zeichnen großer Datenreihen kann mitunter einige Zeit beanspruchen. Vor all
 
 ### Zeichenattribute (PaintAttribute / PaintAttributes)
 
-Die Klasse `QwtPlotCurve` hat verschiedene Zeichenattribute, die verwendete Algorithmen näher konfigurieren. Hier ist zunächst eine kurze Liste, wobei die individuelle Attribute und deren Auswirkung später näher beschrieben werden:
+Die Klasse `QwtPlotCurve` hat verschiedene Zeichenattribute, die verwendete Algorithmen näher konfigurieren. Hier ist zunächst eine kurze Liste, wobei die individuellen Attribute und deren Auswirkung später näher beschrieben werden:
 
-- `ClipPolygons` - damit werden zu zeichnende Datenreihen ausgedünnt, sodass nur im aktuellen Zoomfenster sichtbare Kurventeile gezeichnet werden. Ist standardmäßig aktiv und kann in bestimmten Situationen die Renderperformance verbessern, bzw. ist z.B. für SVG-Export notwendig, führt aber in den meisten Standardanwendungsfällen zu einer minimalen Verlangsamung des Renders.
-- `FilterPoints` - damit werden Punkte aus den Datenreihen herausgefiltert, die sowieso nicht gezeichnet werden würden.
-- `FilterPointsAggressive` - Nur für Linienkurven, ersetzt viele kurze übereinanderliegende Polygonstücke durch einzelne Liniensegmente
-- `MinimizeMemory` - Verhindert wenn eingeschaltet und _nur_ beim Linientyp `QwtPlotCurve::Dots`, dass bei der Transformation der Datenreihe von Plotkoordinaten zu Renderkoordinaten eine eventuell große Polygon-Kopie erstellt wird. Stattdessen werden alle Punktkoordinaten einzeln transformiert, geclippt und gezeichnet. Da hierbei für jeden Punkt ein gewisser Extraaufwand benötigt wird, ist dies in der Regel etwas langsamer.
-- `ImageBuffer` - Eine sehr spezielle Optimierung _nur_ beim Linientyp `QwtPlotCurve::Dots`, wobei die Punkte (jeweils nur ein Pixel pro Punkt) in ein Bild gezeichnet werden. Dies erfolgt parallelisiert und kann daher sehr schnell sein, ist allerdings nur effektiv bei sehr großen Punktmengen.
+- `ClipPolygons` - damit werden zu zeichnende Datenreihen ausgedünnt, sodass nur im aktuellen Zoomfenster sichtbare Kurventeile gezeichnet werden. Ist standardmäßig aktiv und ist für den SVG-Export notwendig. Sonst ist dieses Herausfiltern außerhalb liegender Punkte vor allem beim Hineinzoomen wirkungsvoll.
+- `FilterPoints` - damit werden Punkte/Liniensegmente aus den Datenreihen herausgefiltert, die sowieso nicht gezeichnet werden würden, weil sie übereinander liegen.
+- `FilterPointsAggressive` - _Nur_ für Linientyp `QwtPlotCurve::Linien`: Ersetzt viele kurze übereinanderliegende Polygonstücke durch einzelne Liniensegmente
+- `MinimizeMemory` - _Nur_ beim Linientyp `QwtPlotCurve::Dots`: Verhindert wenn eingeschaltet, dass bei der Transformation der Datenreihe von Plotkoordinaten zu Renderkoordinaten eine eventuell große Polygon-Kopie erstellt wird. Stattdessen werden alle Punktkoordinaten einzeln transformiert, geclippt und gezeichnet. Da hierbei für jeden Punkt ein gewisser Extraaufwand benötigt wird, ist dies in der Regel etwas langsamer.
+- `ImageBuffer` - _Nur_ beim Linientyp `QwtPlotCurve::Dots`: Eine sehr spezielle Optimierung, wobei die Punkte (jeweils nur ein Pixel pro Punkt) erst in ein `QImage` gezeichnet werden. Dies erfolgt parallelisiert und kann daher sehr schnell sein, ist allerdings nur effektiv bei sehr großen Punktmengen.
 
 [IMPORTANT]
 ====
@@ -474,7 +474,7 @@ Durch Verwendung des Datenfiltes `FilterPoints` kann man bei sehr großen Reihen
 
 [NOTE]
 ====
-Neben dem Filtern überflüssiger Punkte durch Setzen des Zeichenattributs `FilterPoints` gibt es auch noch die Möglichkeit, den `QwtWeedingCurveFitter` (siehe <<sec:weedingCurveFitter>>) zu verwenden. Dieser ist aber eigentlich für die Datenreduktion beim Export gedacht und verlangsamt das Zeichnen auf dem Bildschirm in der Regel.
+Neben dem Filtern überflüssiger Punkte durch Setzen des Zeichenattributs `FilterPoints` gibt es auch noch die Möglichkeit, den `QwtWeedingCurveFitter` (siehe <<sec:weedingCurveFitter>>) zu verwenden. Dieser ist aber eigentlich für die Datenreduktion beim Export gedacht und wegen des zusätzlichen Berechnungsaufwands dauert das Zeichnen auf dem Bildschirm in der Regel länger.
 ====
 
 Das Zeichenattribut `QwtPlotCurve::FilterPoints` ist standardmäßig gesetzt und führt dazu, dass beim Transformieren der Datenreihenkoordinaten in Bildschirmkoordinaten bereits doppelte Punkte herausgefiltert werden (dies macht die Klasse `QwtPointMapper`). Enthält eine Datenreihe bspw. 100000 gleichverteilte Punkte entlang der x-Achse und wird auf einem 1000 Pixel breiten Plot gezeichnet, so teilen sich jeweils 100 Punkte eine x-Pixelkoordinate. Wenn nach der Umrechnung der Koordinaten zwei aufeinanderfolgende Punkte identische Pixelkoordinaten haben, werden die doppelten Punkte entfernt. Diese standardmäßig eingeschaltete Funktion macht bereits einen großen Unterschied bei der Zeichengeschwindigkeit. 
@@ -546,18 +546,59 @@ das Zeichenattribut `FilterPoints` ausgeschaltet. Die Zeichenzeit für die Kurve
 
 Auf meinem Rechner gibt das Programm im Release-Build **1110 ms** aus. Dabei werden wirklich alle 10 Millionen Punkte in den zu zeichnenden Polygonzug übernommen und auf dem Painter gezeichnet (der natürlich Liniensegmente mit Länge 0 verwirft, aber dafür etwas Zeit braucht). 
 
+Schaltet man nun das Attribut `FilterPoints` wieder ein, so enthält das Polygon _nach_ dem Filtern nur noch ca. 24500 Punkte und das Zeichnen dauert ca **300 ms**.
+
+
+[NOTE]
+====
+Mit dem Zeichenattribut `FilterPoints` werden unsichtbare/sich überlappende Liniensegmente herausgefiltert, was bei sehr großen Datenreihen eine deutliche Zeichenbeschleunigung bewirkt.
+====
+
+
+### Aggressives Punktefiltern
+
+Wenn Datenreihen sehr stark rauschen dann überlagern sich Liniensegmente mitunter. Zum Beispiel werden dann mehrere Linien mit der gleichen x-Bildschirmkoordinate übereinander gezeichnet, obwohl ja eine Linie gezeichnet zwischen minimaler und maximaler y-Koordinate ausreichen würde. 
+Das Zeichenattribut `FilterPointsAggressive` schaltet eine Vorberechnung ein, die genau diese Art der Optimierung durchführt und aus mehreren sich überlagernden, vertikalen Liniensegmenten nur eine einzige Linie macht (deswegen ist diese Optimierung auch nur für den Linientyp `QwtPlotCurve::Linien` sinnvoll).
+
+Um das mal zu testen wandeln wir das Programm oben ab und generieren eine stark rauschende Kurve:
+
+
+[source,c++]
+----
+QVector<double> x, y;
+for (unsigned int i=0; i<1000000; ++i) {
+	x.append(i);
+	y.append(QRandomGenerator64::global()->generateDouble());
+}
+----
+
+
+
+### Polygon-Clipping
+
+
 Außerdem wird der Polygonzug auch am sichtbaren Bildschirmausschnitt geclippt, was bei den 10 Millionen Punkten durchaus auch noch Zeit braucht. Wenn man das Clipping aussschaltet, wiederum durch Abschalten eines Zeichenattributs:
 
 ```c++
 curve->setPaintAttribute(QwtPlotCurve::ClipPolygons, false);
 ```
 
-reduziert sich die Zeichenzeit um immerhin 25% auf ca. **730 ms**.
+reduziert sich die Zeichenzeit um immerhin 25% auf ca. **730 ms**. Wenn man aber nun in das Diagramm hineinzoomt, bspw. auf der X-Achse in das Interval [0,1000000] (also 10% des Gesamtbereichs), dann liegt die Zeichenzeit ohne Clipping weiterhin bei ca. **1000 ms** aber mit Clipping nur bei **500 ms**.
 
 [TIP]
 ====
-Man kann das standardmäßig gesetzte Zeichenattribut `QwtPlotCurve::ClipPolygons` beim Rendern auf dem Bildschirm abschalten, um so die Zeichengeschwindigkeit zu erhöhen. Da das Zeichnen sowieso auf die Canvas-Fläche begrenzt ist, braucht man das vorherige Ausdünnen des Polyogons nicht wirklich. Sinnvoll ist die `ClipPolygons`-Funktion unter Umständen bei der Verwendung von Kurvenfilter-Algorithmen, bzw. beim SVG-Export.
+Man kann das standardmäßig gesetzte Zeichenattribut `QwtPlotCurve::ClipPolygons` beim Rendern auf dem Bildschirm abschalten. Da das Zeichnen sowieso auf die Canvas-Fläche begrenzt ist, braucht man das vorherige Ausdünnen des Polyogons nicht. Dadurch, dass der Clipping-Algorithmus dann wegfällt, kann sich die Zeichengeschwindigkeit eines _nicht gezoomten_ Plots erhöhen.  
+
+Sobald man aber in ein Diagramm hineinzoomt, reduziert das Clipping den Zeichenaufwand deutlich.  Daher ist es in der Regel empfehlenswert, das Zeichenattribut `QwtPlotCurve::ClipPolygons` eingeschaltet zu lassen. Beim SVG-Export ist dies sogar notwendig, da hier auf den ViewPort nicht geclippt wird.
 ====
+
+Der Overhead beim Einschalten des Zeichenattributs `QwtPlotCurve::ClipPolygons` geht im vollständig herausgezoomten Bildausschnitt in der Variabilität der Messwerte unter.
+
+Zusammenfassend kann man sagen, dass das Einschalten des Zeichenattributs `FilterPoints` die Zeichengeschwindigkeit bei großen Datenreihen deutlich beschleunigen kann.
+
+
+
+
 
 
 
