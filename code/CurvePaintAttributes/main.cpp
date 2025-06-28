@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
 
 	// Daten zum Darstellen generieren
 	QVector<double> x, y;
-#if 0
+#if 1
 	for (unsigned int i=0; i<10000000; ++i) {
 		x.append(i);
 		y.append(std::sin(i*0.00001));
@@ -105,22 +105,26 @@ int main(int argc, char *argv[]) {
 	// y[4] = 0.2;
 	// y[5] = 0.9;
 	// y[6] = 0.8;
-	plot.setAxisScale(QwtPlot::yLeft, -1, 2);
-	plot.setAxisScale(QwtPlot::xBottom, 0, 4000);
-	plot.resize(600,400);
+	// plot.setAxisScale(QwtPlot::yLeft, -1, 2);
+	// plot.setAxisScale(QwtPlot::xBottom, 0, 4000);
+	// plot.resize(600,400);
+	// plot.setAxisScale(QwtPlot::yLeft, -1, 2);
+	// plot.setAxisScale(QwtPlot::xBottom, 0, 4000);
 #endif
 
 	QwtPlotCurve *curve = new BenchmarkedPlotCurve();
 	curve->setPen(QColor(180,40,20), 0);
-	curve->setRenderHint( QwtPlotItem::RenderAntialiased, false); // Antialiasing verwenden
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // Antialiasing verwenden
 	curve->setPaintAttribute(QwtPlotCurve::FilterPoints, true); // Punktefilter ausschalten
-	curve->setPaintAttribute(QwtPlotCurve::FilterPointsAggressive, true); // Punktefilter ausschalten
-	// curve->setPaintAttribute(QwtPlotCurve::ClipPolygons, true);
+	curve->setPaintAttribute(QwtPlotCurve::FilterPointsAggressive, false); // Punktefilter ausschalten
+	curve->setPaintAttribute(QwtPlotCurve::ClipPolygons, true); // TODO : Profile mit und ohne clipping
 	curve->setSamples(x, y);
 	curve->attach(&plot); // Plot takes ownership
 
 	QwtPlotZoomer * zoomer = new QwtPlotZoomer(plot.canvas());
 
+	plot.setAxisScale(QwtPlot::xBottom, 150000, 160000);
+	plot.setAxisScale(QwtPlot::yLeft, 0.99, 1);
 
 	plot.show();
 

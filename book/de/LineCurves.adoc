@@ -573,7 +573,7 @@ for (unsigned int i=0; i<1000000; ++i) {
 }
 ----
 
-Ohne `FilterPointsAggressive` dauert das Zeichnen ca. **1500 ms**. Obwohl die Datenreihe "nur" aus 1 Mio Punkte besteht, sind die Liniensegmente deutlich länger als bei der Sinuswelle und es dauert länger, diese zu zeichnen. Das Zeichenattribut `FilterPoints` kann auch wegen der stark schwankenden y-Werte kaum Punkte rausschmeißen (die Liniensegmente haben fast nie eine Länge von 0).
+Ohne `FilterPointsAggressive` dauert das Zeichnen ca. **1500 ms**. Obwohl die Datenreihe "nur" aus 1 Mio Punkten besteht, sind die Liniensegmente deutlich länger als bei der Sinuswelle und es dauert länger, diese zu zeichnen. Das Zeichenattribut `FilterPoints` kann auch wegen der stark schwankenden y-Werte kaum Punkte rausschmeißen (die Liniensegmente haben fast nie eine Länge von 0).
 
 Wenn man nun das Attribut mit
 
@@ -581,7 +581,7 @@ Wenn man nun das Attribut mit
 curve->setPaintAttribute(QwtPlotCurve::FilterPointsAggressive, true);
 ```
 
-einschaltet, verkürzt sich die Zeichenzeit auf ca. **32 ms** !!!! Nach dem Filtern hat das zu zeichnende Polygon nur noch 3670 Punkte.
+einschaltet, verkürzt sich die Zeichenzeit auf ca. **32 ms** !!!! Nach dem Filtern hat das zu zeichnende Polygon nur noch ca. 3670 Punkte.
 
 [TIP]
 ====
@@ -605,16 +605,17 @@ image::CurveFilterPoints.png[pdfwidth=8cm]
 .Ausgabe `FilterPointsAggressive`, Antialiasing ausgeschaltet
 image::CurveFilterPointsAggressive.png[pdfwidth=8cm]
 
-Zum Vergleich beide Bilder herunterladen und im Bildbetrachter abwechselnd anzeigen, dann sieht man die kleinen Unterschiede.
+(Zum Vergleich beide Bilder herunterladen und im Bildbetrachter abwechselnd anzeigen, dann sieht man die kleinen Unterschiede.)
 
 
-[CAUTION]
+[NOTE]
 ====
 Im Gegensatz zu `FilterPoints` ist das Ergebnis des `FilterPointsAggressive` aber eine leicht veränderte Darstellung. Das liegt an der Art, wie Liniensegmente zusammengefasst werden.
 
 Nach der Skalierung von Plotkoordinaten zu Bildschirmkoordinaten liegt beispielsweise folgendes Polygon zum Filtern vor:
 
     x      y
+    ----------
     6      230
     6      379
     6      602
@@ -628,6 +629,7 @@ Nach der Skalierung von Plotkoordinaten zu Bildschirmkoordinaten liegt beispiels
 so enthält das Polygon _nach_ dem Filtern nur noch die Punkte:
 
     x      y
+    ----------
     6      230
     6      602
     7      304
@@ -638,37 +640,50 @@ so enthält das Polygon _nach_ dem Filtern nur noch die Punkte:
 
 Die Liniensegmente auf den x-Zeichenkoordinaten 6 und 7 wurden hier zusammengefasst. 
 
-Aber während vorher eine von (7,155) -> (8,424) gezeichnet wurde, wird nun eine Linie von (7,81) -> (8,424) gezeichnet, welches im Detail ein minimal anderes Erscheinungsbild gibt. Die Unterschiede in der Ausgabe sind aber so minimal, dass man für die relevanten Anwendungsfälle, also größere Datenreihen und stark schwankende Werte, das Einschalten des Zeichenattributs `FilterPointsAggressive` durchaus als allgemeine Empfehlung geben kann.
+Aber während vorher eine Linie von (7,155) -> (8,424) gezeichnet wurde, wird nun eine Linie von (7,81) -> (8,424) gezeichnet, welches im Detail ein minimal anderes Erscheinungsbild gibt. Die Unterschiede in der Ausgabe sind aber so klein, dass man für die relevanten Anwendungsfälle, also größere Datenreihen und stark schwankende Werte, das Einschalten des Zeichenattributs `FilterPointsAggressive` durchaus generell empfehlen kann.
 ====
 
 
 ### Polygon-Clipping
 
+Je nach Wahl des Plotausschnitts, festzulegen über Achsenskalierung (siehe <<sec:axes>>) oder interaktiv durch den Plotzoomer (siehe <<sec:zoomer>>), werden mitunter nur Teile von Kurven gezeichnet. In diesem Fall ist es sinnvoll, das Polygon nur auf die sichtbaren Bereiche zu begrenzen. Diese Funktionalität bietet die Klasse `QwtPlotCurve` durch Einschalten des Zeichenattributs `QwtPlotCurve::ClipPolygons`.
 
-Außerdem wird der Polygonzug auch am sichtbaren Bildschirmausschnitt geclippt, was bei den 10 Millionen Punkten durchaus auch noch Zeit braucht. Wenn man das Clipping aussschaltet, wiederum durch Abschalten eines Zeichenattributs:
+[NOTE]
+====
+Beim Zeichnen des Plots auf dem Bildschirm könnte man das Polygon-Clipping auch weglassen, da der Qt-Painter selbst ein Clipping durchführt. Beim Datenexport in eine SVG-Datei (siehe <<sec:print>>) ist das Clipping aber zwingend notwendig. 
+====
+
+Standardmäßig ist das Attribut `QwtPlotCurve::ClipPolygons` eingeschaltet. Das Clipping wird übrigends erst _nach_ dem Punktfilteralgorithmus angewendet, sodass eine Datenreduktion in diesem Schritt sich positiv auf die Zeit für das Clipping auswirkt.
+
+Interessanterweise wirkt sich das Polygon-Clipping beim Rendern auf den Bildschirm nur unmerklich auf die Renderperformance aus.
+
+Beim 10 Mio Sinuskurvenplot oben (Antialiasing an, FilterPoints an, FilterPointsAggressive aus, ClipPolygons an) ist die Zeichenzeit für das komplette Diagramm ca. **300 ms**. Hineingezoomt mit
 
 ```c++
-curve->setPaintAttribute(QwtPlotCurve::ClipPolygons, false);
+plot.setAxisScale(QwtPlot::xBottom, 150000, 160000);
+plot.setAxisScale(QwtPlot::yLeft, 0.99, 1);
 ```
 
-reduziert sich die Zeichenzeit um immerhin 25% auf ca. **730 ms**. Wenn man aber nun in das Diagramm hineinzoomt, bspw. auf der X-Achse in das Interval [0,1000000] (also 10% des Gesamtbereichs), dann liegt die Zeichenzeit ohne Clipping weiterhin bei ca. **1000 ms** aber mit Clipping nur bei **500 ms**.
+erhöht sich die Renderzeit auf ca. **370 ms**. Wenn man nun `ClipPolygons` ausschaltet, so dauert das **290 ms** beim vollständigen Plot und **410 ms** beim hineingezoomten Plot. 
 
-[TIP]
+[NOTE]
 ====
-Man kann das standardmäßig gesetzte Zeichenattribut `QwtPlotCurve::ClipPolygons` beim Rendern auf dem Bildschirm abschalten. Da das Zeichnen sowieso auf die Canvas-Fläche begrenzt ist, braucht man das vorherige Ausdünnen des Polyogons nicht. Dadurch, dass der Clipping-Algorithmus dann wegfällt, kann sich die Zeichengeschwindigkeit eines _nicht gezoomten_ Plots erhöhen.  
-
-Sobald man aber in ein Diagramm hineinzoomt, reduziert das Clipping den Zeichenaufwand deutlich.  Daher ist es in der Regel empfehlenswert, das Zeichenattribut `QwtPlotCurve::ClipPolygons` eingeschaltet zu lassen. Beim SVG-Export ist dies sogar notwendig, da hier auf den ViewPort nicht geclippt wird.
+Im hineingezoomten Zustand dauert der Clipping-Algorithmus länger, dafür ist das Zeichnen etwas schneller. Beide Effekte arbeiten gegeneinander aber im Ergebnis ist es bei meinem Testfall minimal langsamer als im herausgezoomten Zustand).
 ====
 
-Der Overhead beim Einschalten des Zeichenattributs `QwtPlotCurve::ClipPolygons` geht im vollständig herausgezoomten Bildausschnitt in der Variabilität der Messwerte unter.
+Der Unterschied zwischen **300 ms** und **290 ms** beim vollständigen Plot liegt an dem Oberhead für die Polygon-Clipping-Funktion, die natürlich beim vollständig sichtparen Plot keine Wirkung hat. 
 
-Zusammenfassend kann man sagen, dass das Einschalten des Zeichenattributs `FilterPoints` die Zeichengeschwindigkeit bei großen Datenreihen deutlich beschleunigen kann.
+Im stark hineingezoomten Zustand zeichnet das Plot mit eingeschaltetem Polygon-Clipping immerhin ca. **40 ms** schneller, was aber selten signifikant sein sollte.
 
+[NOTE]
+====
+Dein Einfluss des Attributs `ClipPolygons` auf die Zeichenperformance ist marginal, sodass man dieses Attribut getrost immer eingeschaltet lassen kann.
 
+Lediglich beim Ausschalten des `FilterPoints`-Attributs und sehr großen Datenmengen könnte das `ClipPolygons` im hineingezoomten Zustand etwas bewirken. 
+Zum Beispiel rendert das Plot _ohne_ `FilterPoints` und _ohne_ `ClipPolygons` im hineingezoomten Zustand (siehe oben) in **550 ms**, gegenüber **360 ms** _mit_ `ClipPolygons`. Aber selbst in diesem eher unrealistischen Szenario ist die Auswirkung des Attributs klein. 
 
-
-
-
+Fazit: `ClipPolygons` eingeschaltet lassen!
+====
 
 
 
