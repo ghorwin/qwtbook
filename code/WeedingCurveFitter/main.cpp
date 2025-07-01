@@ -64,7 +64,7 @@ public:
 		QElapsedTimer timer;
 		timer.start();
 		const QPolygonF & stripped = QwtWeedingCurveFitter::fitCurve(polygon);
-		qDebug() << "QwtWeedingCurveFitter::fitCurve() ->" << stripped.count()
+		qDebug() << "QwtWeedingCurveFitter::fitCurve():" << polygon.count() << "->" << stripped.count()
 				 << "points: " << timer.elapsed() << "ms";
 		return stripped;
 	}
@@ -80,10 +80,10 @@ int main(int argc, char *argv[]) {
 
 	// Daten zum Darstellen generieren
 	QVector<double> x, y;
-	for (unsigned int i=0; i<1000000; ++i) {
+	for (unsigned int i=0; i<10000000; ++i) {
 		x.append(i);
 #if 1
-		y.append(std::sin(i*0.00001));
+		y.append(std::sin(i*0.000001)*330);
 #else
 		y.append(QRandomGenerator64::global()->generateDouble());
 #endif
@@ -103,29 +103,32 @@ int main(int argc, char *argv[]) {
 	curve->setCurveFitter(weedingFitter);
 	curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
 
-	curve = new BenchmarkedPlotCurve();
-	curve->setStyle(QwtPlotCurve::NoCurve);
-	curve->setPen(QColor(0,80,220), 1);
-	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // Antialiasing verwenden
-	curve->setPaintAttribute(QwtPlotCurve::FilterPoints, true); // Punktefilter ausschalten
-	QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Rect);
-	symbol->setSize(8);
-	symbol->setPen(QColor(0,0,160), 2);
-	symbol->setBrush(QColor(160,200,255));
-	curve->setSymbol(symbol); // Curve takes ownership of symbol
-	curve->attach(&plot); // Plot takes ownership
+	// curve = new BenchmarkedPlotCurve();
+	// curve->setStyle(QwtPlotCurve::NoCurve);
+	// curve->setPen(QColor(0,80,220), 1);
+	// curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // Antialiasing verwenden
+	// curve->setPaintAttribute(QwtPlotCurve::FilterPoints, true); // Punktefilter ausschalten
+	// QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Rect);
+	// symbol->setSize(8);
+	// symbol->setPen(QColor(0,0,160), 2);
+	// symbol->setBrush(QColor(160,200,255));
+	// curve->setSymbol(symbol); // Curve takes ownership of symbol
+	// curve->attach(&plot); // Plot takes ownership
 
 	// use curve fitter to fit the curve
-	QPolygonF poly;
-	for (int i=0; i<x.count(); ++i)
-		poly << QPointF(x[i],y[i]);
-	poly = weedingFitter->fitCurve(poly);
-	curve->setSamples(poly);
+	// QPolygonF poly;
+	// for (int i=0; i<x.count(); ++i)
+	// 	poly << QPointF(x[i],y[i]);
+	// weedingFitter->setTolerance(1);
+	// weedingFitter->setChunkSize(100000);
+	// poly = weedingFitter->fitCurve(poly);
+	// curve->setSamples(poly);
+	// weedingFitter->setTolerance(1);
 
 
 	QwtPlotZoomer * zoomer = new QwtPlotZoomer(plot.canvas());
 
-#if 1
+#if 0
 	// export the plot
 	QwtPlotRenderer renderer;
 	renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
@@ -152,7 +155,7 @@ int main(int argc, char *argv[]) {
 	// plot.setAxisScale(QwtPlot::yLeft, -2, 2);
 	// plot.setAxisScale(QwtPlot::xBottom, 522000, 532000);
 	// plot.setAxisScale(QwtPlot::xBottom, 0, 1000000);
-	// plot.resize(1000,800);
+	plot.resize(1000,800);
 
 	plot.show();
 
