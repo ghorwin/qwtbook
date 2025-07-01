@@ -592,19 +592,19 @@ Die Verwendung des Zeichenattributs `FilterPointsAggressive` beschleunigt die Da
 Wenn man sich die Diagramme mit und ohne `FilterPointsAggressive` im Vergleich anschaut, so sieht man kleinere Unterschiede.
 
 .Ausgabe mit `FilterPoints`, Antialiasing eingeschaltet
-image::CurveFilterPoints_Antialias.png[pdfwidth=8cm]
+image::CurveFilterPoints_Antialias.png[width=400,pdfwidth=8cm]
 
 .Ausgabe `FilterPointsAggressive`, Antialiasing eingeschaltet
-image::CurveFilterPointsAggressive_Antialias.png[pdfwidth=8cm]
+image::CurveFilterPointsAggressive_Antialias.png[width=400,pdfwidth=8cm]
 
 Mit Antialiasing sieht man Unterschiede in den teiltransparenten Segmenten.
 Ohne Antialiasing muss man schon sehr genau hinsehen, um die kleinen Unterschiede zu sehen.
 
 .Ausgabe mit `FilterPoints`, Antialiasing ausgeschaltet
-image::CurveFilterPoints.png[pdfwidth=8cm]
+image::CurveFilterPoints.png[width=400,pdfwidth=8cm]
 
 .Ausgabe `FilterPointsAggressive`, Antialiasing ausgeschaltet
-image::CurveFilterPointsAggressive.png[pdfwidth=8cm]
+image::CurveFilterPointsAggressive.png[width=400,pdfwidth=8cm]
 
 (Zum Vergleich beide Bilder herunterladen und im Bildbetrachter abwechselnd anzeigen, dann sieht man die kleinen Unterschiede.)
 
@@ -738,9 +738,17 @@ curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
 curve->attach(&plot); // takes ownership
 ----
 
+Wichtig ist, dass die Verwendung des Kurvenanpassers/Filters explizit mit
+
+[source,cpp]
+----
+curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
+----
+
+eingeschaltet wird.
+
 .QwtSplineCurveFitter mit QwtSplinePleasing
 image::CurveFitterSplinePleasing.png[pdfwidth=10cm]
-
 
 Die Qwt-Bibliothek bringt eine ganze Reihe verschiedener Algorithmen und passender Implementierungen mit:
 
@@ -790,14 +798,25 @@ Bei der Ausgabe in Vektorformate (PDF/SVG) werden die Zeichenattributsfilter `Qw
 
 [IMPORTANT]
 ====
-Die Datenreduktionsmethoden durch Setzen der Zeichenattribute `QwtPlotCurve::FilterPoints` oder `QwtPlotCurve::FilterPointsAggressive` wirken sich nur bei Rasterplots wirklich aus. Beim Rendern in Vektorformate (PDF/SVG) werden bei `QwtPlotCurve::FilterPoints` _nur wirklich identische_ Punkte im originalen Datensatz herausgefiltert.
+Die Datenreduktionsmethoden durch Setzen der Zeichenattribute `QwtPlotCurve::FilterPoints` oder `QwtPlotCurve::FilterPointsAggressive` wirken sich nur bei Rasterplots aus. Beim Rendern in Vektorformate (PDF/SVG) werden bei `QwtPlotCurve::FilterPoints` _nur wirklich identische_ Punkte im originalen Datensatz herausgefiltert.
 ====
 
-Stattdessen kann man zur Datenreduktion bei Vektorexporten einen alternativen Punktfilteralgorithmus verwenden, um nicht notwendige Punkte zu entfernen. Ein solcher Datenreduktionsfilter ist in der Klasse `QwtWeedingCurveFitter` implementiert. Dieser ist wirklich ein _Filter_ und entfernt Datenpunkte nach gewissen Regeln.
+Man kann aber zur Datenreduktion bei Vektorexporten einen alternativen Punktfilteralgorithmus verwenden, um nicht notwendige Punkte zu entfernen. Ein solcher Datenreduktionsfilter ist in der Klasse `QwtWeedingCurveFitter` implementiert. Dieser ist wirklich ein _Filter_ und entfernt Datenpunkte nach gewissen Regeln.
 
-Konkret versucht der Algorithmus alle Punkte zu entfernen, die bereits bei linearer Interpolation zwischen den benachbarten Punkten hinreichend gut approximiert werden. Das _hinreichend gut_ wird durch einen Toleranzparameter beschrieben.
+Konkret versucht der Algorithmus alle Punkte zu entfernen, die bereits bei linearer Interpolation zwischen den benachbarten Punkten hinreichend gut approximiert werden. 
 
-Verwendet wird dieser Kurvenfilter wie die bisherigen Kurvenfilter, wobei man auch hier nicht vergessen darf, das Kurvenattribut `QwtPlotCurve::Fitted` zu setzen.
+Testweise wird wieder eine Sinuswelle generiert:
+
+[source,c++]
+----
+QVector<double> x, y;
+for (unsigned int i=0; i<10000000; ++i) {
+	x.append(i);
+	y.append(std::sin(i*0.000001)*330);
+}
+----
+
+Das Beispiel aus <<sec:curvePerformance>> wird nun um den `QwtWeedingCurveFitter` erweitert:
 
 [source,c++]
 ----
@@ -806,12 +825,149 @@ curve->setCurveFitter(weedingFitter);
 curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
 ----
 
+Verwendet wird dieser Kurvenfilter wie die bisherigen Kurvenfilter, wobei man auch hier nicht vergessen darf, das Kurvenattribut `QwtPlotCurve::Fitted` zu setzen.
 
+.Datenreduktion mit dem QwtWeedingCurveFitter
+image::CurveFitterWeeding_tol1.png[pdfwidth=10cm]
 
+Der WeedingCurveFitter reduziert die Anzahl der Datenpunkte wie hier bei eher weichen Kurven deutlich. Im Beispiel oben bleiben von den ursprünglich 10 Mio Punkten gerade mal 78 übrig. Zur Visualisierung der resultierenden Stützstellen wurde eine zweite Datenreihe erzeugt, wobei aus den Datenpunkten mit der `QwtWeedingCurveFitter`-Klasse direkt die Daten vorab reduziert wurden:
 
+[source,c++]
+----
+// use curve fitter to fit the curve
+QPolygonF poly;
+for (int i=0; i<x.count(); ++i)
+	poly << QPointF(x[i],y[i]);
+poly = weedingFitter->fitCurve(poly);
+symbolCurve->setSamples(poly);
+----
 
+Die Funktion `QwtWeedingCurveFitter::fitCurve(QPolygonF)` liefert das entsprechend reduzierte Polynom zurück.
 
-[WARNING]
+Ein wichtiger Parameter ist die erlaubte Toleranz, zu setzen im Konstruktor oder mittels `QwtWeedingCurveFitter::setTolerance(double)`. Diese Toleranz ist ein _Absolutwert_ basierend auf den y-Koordinaten im übergebenen Polygon. Je nach Größenordnung der y-Werte der Punkte werden die Punkte anders gefiltert. Dies bewirkt, dass bei größeren Plots mit entsprechend größerer Pixelauflösung in y-Richtung auch mehr Stütztstellen generiert werden und die Qualität des Diagramms nicht leidet.
+
+Der Parameter `tolerance` wirkt sich dabei grob wie folgt aus, wenn die y-Werte in der Größenordnung 100 vorliegen (wie im obigen Beispiel).
+
+.Toleranz beim QwtWeedingCurveFitter 10, resultierende Punktzahl 21
+image::CurveFitterWeeding_tol10.png[width=400,pdfwidth=10cm]
+.Toleranz beim QwtWeedingCurveFitter 1, resultierende Punktzahl 78
+image::CurveFitterWeeding_tol1.png[width=400,pdfwidth=10cm]
+.Toleranz beim QwtWeedingCurveFitter 0.1, resultierende Punktzahl 194
+image::CurveFitterWeeding_tol01.png[width=400,pdfwidth=10cm]
+.Toleranz beim QwtWeedingCurveFitter 0.01, resultierende Punktzahl 684
+image::CurveFitterWeeding_tol001.png[width=400,pdfwidth=10cm]
+
+Der zweite Parameter der `QwtWeedingCurveFitter`-Klasse ist die _chunk size_, gesetzt mit `QwtWeedingCurveFitter::setChunkSize(int)`.
+
+Das Originalpolynom wird dabei in Stücke mit der gegebenen Brockengröße zerteilt und der Algorithmus wird auf die einzelnen Stücke individuel angewendet. Dabei wird dann pro Brocken aber _mindestens ein Punkt_ generiert. Würde man also beim Beispiel oben eine Chunksize von 10000 wählen, so erhält man 200 Punkte (selbst bei Toleranz 10). Der Algorithmus hat dafür etwas weniger zu tun und ist nach ca. **50 ms** fertig, statt wie bisher nach ca. **270 ms**. Wenn man aber bedenkt, dass hier aus 10 Millionen Punkten sehr kleine Polynome mit wenigen 100 Punkten gemacht werden, ohne dass die Datenqualität sichtbar leidet, dann ist der Algorithmus (auf heutiger Hardware) dennoch sehr schnell.
+
+[IMPORTANT]
 ====
 Der `QwtWeedingCurveFitter` reduziert wirkungsvoll die Anzahl der gezeichneten Punkte im Diagramm, welches vor allem beim Export von Daten in ein Vektorformat (svg, pdf, siehe <<sec:print>>) zur Reduktion der Datengröße beiträgt.
 ====
+
+Man könnte nun auf die Idee kommen, und den `QwtWeedingCurveFitter` zur Beschleunigung der Bildschirmdarstellung einsetzen - immerhin sind ja weniger Punkte zu zeichnen. Das kann man mit einem kleinen Benchmarkprogramm testen:
+
+[source,c++]
+----
+#include <QApplication>
+#include <QPen>
+#include <QElapsedTimer>
+#include <QDebug>
+#include <QTimer>
+
+#include <cmath>
+
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_weeding_curve_fitter.h>
+#include <qwt_plot_canvas.h>
+
+class BenchmarkedPlotCanvas : public QwtPlotCanvas {
+public slots:
+	// slot, when called, resizes parent QwtPlot window
+	void resizePlot() {
+		((QWidget*)parent())->resize(2400,1200);
+	}
+
+protected:
+	void paintEvent(QPaintEvent * event) override {
+		QElapsedTimer timer;
+		timer.start();
+		QwtPlotCanvas::paintEvent(event);
+		qDebug() << "QwtPlotCanvas::paintEvent(): " << timer.elapsed() << "ms";
+	}
+};
+
+
+class BenchmarkedWeedingCurveFitter : public QwtWeedingCurveFitter {
+public:
+	QPolygonF fitCurve(const QPolygonF & polygon) const override {
+		QElapsedTimer timer;
+		timer.start();
+		const QPolygonF & stripped = QwtWeedingCurveFitter::fitCurve(polygon);
+		qDebug() << "QwtWeedingCurveFitter::fitCurve():" 
+		         << polygon.count() << "->" << stripped.count()
+				 << "points: " << timer.elapsed() << "ms";
+		return stripped;
+	}
+};
+
+
+int main(int argc, char *argv[]) {
+	QApplication a(argc, argv);
+	QwtPlot plot;
+
+	plot.setContentsMargins(8,8,8,8);
+	// eigene Canvas-Klasse mit Benchmark-Wrapper einsetzen
+	BenchmarkedPlotCanvas * canvas = new BenchmarkedPlotCanvas;
+	plot.setCanvas(canvas);
+	plot.setCanvasBackground( Qt::white );
+
+	// Daten zum Darstellen generieren
+	QVector<double> x, y;
+	for (unsigned int i=0; i<10000000; ++i) {
+		x.append(i);
+		y.append(std::sin(i*0.00001));
+	}
+
+	QwtPlotCurve *curve = new QwtPlotCurve();
+	curve->setPen(QColor(180,40,20), 1);
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // Antialiasing verwenden
+	curve->setSamples(x, y);
+	curve->attach(&plot); // Plot takes ownership
+
+	// WeedingCurveFitter mit Benchmark-Wrapper einsetzen
+	QwtWeedingCurveFitter * weedingFitter = new BenchmarkedWeedingCurveFitter;
+	curve->setCurveFitter(weedingFitter);
+	curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
+
+	plot.show();
+	plot.resize(1000,800);
+
+	QTimer::singleShot(1000, canvas, &BenchmarkedPlotCanvas::resizePlot);
+	QTimer::singleShot(4000, &plot, &BenchmarkedPlotCanvas::close);
+
+	return a.exec();
+}
+----
+
+
+
+- wenn man `FilterPoints` (siehe <<sec:curvePerformance>>) eingeschaltet hat, so werden die Punkte bereits von 10 Mio Punkten auf ca. 2900 Punkte reduziert
+- der `QwtWeedingCurveFitter` ist mit dem Herausfiltern auf finale 212 Punkte extrem schnell fertig
+- das Zeichnen von 212 Punkten oder 2900 Punkten (ohne `QwtWeedingCurveFitter`) ist dann minimal schneller
+- das Beispiel mit der Sinuswelle und 10 Mio Punkten dauert mit `QwtWeedingCurveFitter` und `FilterPoints` an und `ClipPolygons` an) ca. **290 ms**, ohne `QwtWeedingCurveFitter` dauert es ca. **300 ms**
+
+Wenn man nun `FilterPoints` ausschaltet (aber `ClipPolygons` an bleibt), dann sieht das anders aus:
+
+- mit `QwtWeedingCurveFitter` dauert ca. **845 ms**
+- ohne `QwtWeedingCurveFitter` dauert es ca. **845 ms**
+
+
+[IMPORTANT]
+====
+Wenn man das Kurvenattribut `QwtPlotCurve::Fitted` einschaltet, werden automatisch die Zeichenattribute `FilterPoints` und `FilterPointsAggressive` unwirksam, da intern das Runden auf ganzzahlige Bildschirmkoordinaten abgeschaltet wird. Da man die Punktefilter aber häufig nur auf Datenreihen mit geringerer Punktzahl anwendet (auch aus Performancegründen), ist das selten ein Problem. Lediglich bei großen Datenreihen in Verbindung mit 
+====
+
+
