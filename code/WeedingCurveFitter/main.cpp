@@ -103,28 +103,29 @@ int main(int argc, char *argv[]) {
 	curve->setCurveFitter(weedingFitter);
 	curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
 
-	// curve = new BenchmarkedPlotCurve();
-	// curve->setStyle(QwtPlotCurve::NoCurve);
-	// curve->setPen(QColor(0,80,220), 1);
-	// curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // Antialiasing verwenden
-	// curve->setPaintAttribute(QwtPlotCurve::FilterPoints, true); // Punktefilter ausschalten
-	// QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Rect);
-	// symbol->setSize(8);
-	// symbol->setPen(QColor(0,0,160), 2);
-	// symbol->setBrush(QColor(160,200,255));
-	// curve->setSymbol(symbol); // Curve takes ownership of symbol
-	// curve->attach(&plot); // Plot takes ownership
+#if 1
+	curve = new BenchmarkedPlotCurve();
+	curve->setStyle(QwtPlotCurve::NoCurve);
+	curve->setPen(QColor(0,80,220), 1);
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // Antialiasing verwenden
+	curve->setPaintAttribute(QwtPlotCurve::FilterPoints, true); // Punktefilter ausschalten
+	QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Rect);
+	symbol->setSize(8);
+	symbol->setPen(QColor(0,0,160), 2);
+	symbol->setBrush(QColor(160,200,255));
+	curve->setSymbol(symbol); // Curve takes ownership of symbol
+	curve->attach(&plot); // Plot takes ownership
 
 	// use curve fitter to fit the curve
-	// QPolygonF poly;
-	// for (int i=0; i<x.count(); ++i)
-	// 	poly << QPointF(x[i],y[i]);
-	// weedingFitter->setTolerance(1);
-	// weedingFitter->setChunkSize(100000);
-	// poly = weedingFitter->fitCurve(poly);
-	// curve->setSamples(poly);
-	// weedingFitter->setTolerance(1);
-
+	QPolygonF poly;
+	for (int i=0; i<x.count(); ++i)
+		poly << QPointF(x[i],y[i]);
+	weedingFitter->setTolerance(1);
+	weedingFitter->setChunkSize(100000);
+	poly = weedingFitter->fitCurve(poly);
+	curve->setSamples(poly);
+	weedingFitter->setTolerance(1);
+#endif
 
 	QwtPlotZoomer * zoomer = new QwtPlotZoomer(plot.canvas());
 

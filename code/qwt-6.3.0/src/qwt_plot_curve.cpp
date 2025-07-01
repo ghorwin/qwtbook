@@ -486,7 +486,8 @@ void QwtPlotCurve::drawLines( QPainter* painter,
     const bool doFit = ( m_data->attributes & Fitted ) && m_data->curveFitter;
     // original Qwt 6.3.0
     const bool doAlign = !doFit && QwtPainter::roundingAlignment( painter );
-    // const bool doAlign = QwtPainter::roundingAlignment( painter ); // optimized variant
+    // new: alignment depends only on paint device
+    //const bool doAlign = QwtPainter::roundingAlignment( painter );
     const bool doFill = ( m_data->brush.style() != Qt::NoBrush )
         && ( m_data->brush.color().alpha() > 0 );
 

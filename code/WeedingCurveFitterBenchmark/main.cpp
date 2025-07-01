@@ -89,13 +89,25 @@ int main(int argc, char *argv[]) {
 	QwtPlotCurve *curve = new QwtPlotCurve();
 	curve->setPen(QColor(180,40,20), 1);
 	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // Antialiasing verwenden
-	curve->setSamples(x, y);
+	curve->setPaintAttribute(QwtPlotCurve::FilterPoints, true); // Punktefilter
+	curve->setPaintAttribute(QwtPlotCurve::ClipPolygons, true); // Punktefilter
+	curve->setSamples(x,y);
 	curve->attach(&plot); // Plot takes ownership
 
 	// WeedingCurveFitter mit Benchmark-Wrapper einsetzen
 	QwtWeedingCurveFitter * weedingFitter = new BenchmarkedWeedingCurveFitter;
 	curve->setCurveFitter(weedingFitter);
-	curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
+	curve->setCurveAttribute(QwtPlotCurve::Fitted, false);
+
+#if 1
+	// use curve fitter to reduce data to plot
+	QPolygonF poly;
+	for (int i=0; i<x.count(); ++i)
+		poly << QPointF(x[i],y[i]);
+	QwtWeedingCurveFitter weedingAlgorithm(0.001);
+	poly = weedingAlgorithm.fitCurve(poly);
+	curve->setSamples(poly);
+#endif
 
 	plot.show();
 	plot.resize(1000,800);

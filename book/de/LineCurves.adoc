@@ -859,15 +859,18 @@ image::CurveFitterWeeding_tol001.png[width=400,pdfwidth=10cm]
 
 Der zweite Parameter der `QwtWeedingCurveFitter`-Klasse ist die _chunk size_, gesetzt mit `QwtWeedingCurveFitter::setChunkSize(int)`.
 
-Das Originalpolynom wird dabei in Stücke mit der gegebenen Brockengröße zerteilt und der Algorithmus wird auf die einzelnen Stücke individuel angewendet. Dabei wird dann pro Brocken aber _mindestens ein Punkt_ generiert. Würde man also beim Beispiel oben eine Chunksize von 10000 wählen, so erhält man 200 Punkte (selbst bei Toleranz 10). Der Algorithmus hat dafür etwas weniger zu tun und ist nach ca. **50 ms** fertig, statt wie bisher nach ca. **270 ms**. Wenn man aber bedenkt, dass hier aus 10 Millionen Punkten sehr kleine Polynome mit wenigen 100 Punkten gemacht werden, ohne dass die Datenqualität sichtbar leidet, dann ist der Algorithmus (auf heutiger Hardware) dennoch sehr schnell.
+Das Originalpolynom wird dabei in Stücke mit der gegebenen Brockengröße zerteilt und der Algorithmus wird auf die einzelnen Stücke individuel angewendet. Dabei wird dann pro Brocken aber _mindestens ein Punkt_ generiert. Würde man also beim Beispiel oben eine Chunksize von 100000 wählen, so erhält man 200 Punkte (selbst bei Toleranz 10). Der Algorithmus hat dafür etwas weniger zu tun und ist nach ca. **50 ms** fertig, statt wie bisher nach ca. **270 ms**. Wenn man aber bedenkt, dass hier aus 10 Millionen Punkten ein sehr kleines Polynom mit weniger als 100 Punkten gemacht wird, ohne dass die Datenqualität sichtbar leidet, dann ist der Algorithmus (vor allem auf heutiger Hardware) insgesamt sehr schnell.
 
 [IMPORTANT]
 ====
 Der `QwtWeedingCurveFitter` reduziert wirkungsvoll die Anzahl der gezeichneten Punkte im Diagramm, welches vor allem beim Export von Daten in ein Vektorformat (svg, pdf, siehe <<sec:print>>) zur Reduktion der Datengröße beiträgt.
 ====
 
+#### Optimierung der Zeichengeschwindigkeit mit `QwtWeedingCurveFitter`
+
 Man könnte nun auf die Idee kommen, und den `QwtWeedingCurveFitter` zur Beschleunigung der Bildschirmdarstellung einsetzen - immerhin sind ja weniger Punkte zu zeichnen. Das kann man mit einem kleinen Benchmarkprogramm testen:
 
+.Beispielquelltext für das Messen der Zeichengeschwindigkeit auf dem Bildschirm bei verschiedenen Auflösungen mit und ohne QwtWeedingCurveFitter
 [source,c++]
 ----
 #include <QApplication>
@@ -900,7 +903,7 @@ protected:
 };
 
 
-class BenchmarkedWeedingCurveFitter : public QwtWeedingCurveFitter {
+class BenchmarkedWeedingCurveFitter : public  {
 public:
 	QPolygonF fitCurve(const QPolygonF & polygon) const override {
 		QElapsedTimer timer;
@@ -952,22 +955,89 @@ int main(int argc, char *argv[]) {
 }
 ----
 
+Im obigen Benchmarkprogramm sind die Klassen `QwtPlotCanvas` und `QwtWeedingCurveFitter` abgeleitet und die relevanten Zeichenroutinen mit Zeitmessung umgeben.
 
+Wichtig zu vermerken ist, dass die Zeichenattribute `FilterPoints` und `ClipPolygons` (siehe <<>>) standardmäßig eingeschaltet sind.
 
-- wenn man `FilterPoints` (siehe <<sec:curvePerformance>>) eingeschaltet hat, so werden die Punkte bereits von 10 Mio Punkten auf ca. 2900 Punkte reduziert
-- der `QwtWeedingCurveFitter` ist mit dem Herausfiltern auf finale 212 Punkte extrem schnell fertig
-- das Zeichnen von 212 Punkten oder 2900 Punkten (ohne `QwtWeedingCurveFitter`) ist dann minimal schneller
-- das Beispiel mit der Sinuswelle und 10 Mio Punkten dauert mit `QwtWeedingCurveFitter` und `FilterPoints` an und `ClipPolygons` an) ca. **290 ms**, ohne `QwtWeedingCurveFitter` dauert es ca. **300 ms**
+Führt man das Programm aus, so sieht man beim großen Plot mit Auflösung 2400x1200, dass aus den 10 Mio Punkten durch den `QwtWeedingCurveFitter` nur noch 284 Punkte übrig bleiben. Das müsste dann doch zu einem deutlich schneller gezeichneten Plot führen, oder?
 
-Wenn man nun `FilterPoints` ausschaltet (aber `ClipPolygons` an bleibt), dann sieht das anders aus:
+.Geschwindigkeitsvergleich mit/ohne QwtWeedingCurveFitter
+[width="100%",options="header"]
+|====================
+| CurveFitter | FilterPoints | ClipPolygons | Fitter-Algorithmus [ms] |  Zeichnen insgesamt [ms]
+| an | an | an | 670 | 1260
+| an | aus | an | 660 | 1200
+| an | an | aus | 660 | 860
+| an | aus | aus | 660 | 820
+| aus | an | an | --- | 320
+| aus | aus | an | --- | 870
+| aus | an | aus | --- | 320
+| aus | aus | aus | --- | 550
+|====================
 
-- mit `QwtWeedingCurveFitter` dauert ca. **845 ms**
-- ohne `QwtWeedingCurveFitter` dauert es ca. **845 ms**
+In keiner Variante ist die Option _mit_  schneller. Außerdem fällt auf, dass unabhängig von der Option `FilterPoints` der CurveFitter immer alle 10 Mio Punkte übergeben bekommt, so wie auch der Polygon-Clipping-Algorithmus. 
 
-
+.Qwt 6.3.x Einschränkung
 [IMPORTANT]
 ====
-Wenn man das Kurvenattribut `QwtPlotCurve::Fitted` einschaltet, werden automatisch die Zeichenattribute `FilterPoints` und `FilterPointsAggressive` unwirksam, da intern das Runden auf ganzzahlige Bildschirmkoordinaten abgeschaltet wird. Da man die Punktefilter aber häufig nur auf Datenreihen mit geringerer Punktzahl anwendet (auch aus Performancegründen), ist das selten ein Problem. Lediglich bei großen Datenreihen in Verbindung mit 
+Wenn man das Kurvenattribut `QwtPlotCurve::Fitted` einschaltet, werden automatisch die Zeichenattribute `FilterPoints` und `FilterPointsAggressive` unwirksam, da intern _das Runden auf ganzzahlige Bildschirmkoordinaten abgeschaltet wird_. Dadurch werden natürlich die Polygone nicht mehr sinnvoll ausgedünnt (siehe <<sec:curvePerformance>>) und die nachfolgenden Algorithmen müssen mit sehr sehr viel mehr Datenpunkten arbeiten.
 ====
 
+Auch wenn der `QwtWeedingCurveFitter` letztlich das Polygon sehr stark verkleinert, ist der Mehraufwand in den Algorithmen durch den Wegfall des Punktefilterns enorm.
+
+.Inside Qwt
+[TIP]
+====
+Wenn man das _Rounding-Alignment_ direkt im Qwt-Quelltext trotz eingeschaltetem `Fitted` Attribut wieder aktiviert, und zwar in `qwt_plot_curve.cpp:487`:
+
+[source,c++]
+----
+const bool doFit = ( m_data->attributes & Fitted ) && m_data->curveFitter;
+// original Qwt 6.3.0
+// const bool doAlign = !doFit && QwtPainter::roundingAlignment( painter );
+// new: alignment depends only on paint device
+const bool doAlign = QwtPainter::roundingAlignment( painter );
+----
+
+sieht man den wirklichen Einfluss des `QwtWeedingCurveFitter` (`QwtWeedingCurveFitter` an, `FilterPoints` an, `ClipPolygons` an):
+
+- `FilterPoints` reduziert die 10 Mio Punkte zu 38666
+- `QwtWeedingCurveFitter` benötigt nur noch **1 ms** für die weitere Reduktion auf 200 Punkte
+- Gesamtzeichenzeit liegt bei **300 ms**
+
+Das ist marginal schneller als die Variante _ohne_ `QwtWeedingCurveFitter`.
+====
+
+Wie man sieht, bringt selbst ein Patchen des Qwt-Quelltextes keine signifikante Verbesserung. Daher lautet das finale Fazit: der `QwtWeedingCurveFitter` ist sinnvoll als Datenreduktionsfilter für Vektorplot-Datenexporte. 
+
+#### Verwendung zur Datenreduktion vorab
+
+Man kann die Klasse `QwtWeedingCurveFitter` jedoch auch zu Datenreduktion _außerhalb_ der QwtPlotCurve verwenden, d.h. man reduziert die der Kurve übergebenen Daten vorab. Und hier liegt das wirkliche Performancesteigerungspotential.
+
+In diesem Fall benutzt man den `QwtWeedingCurveFitter`-Algorithmus, um damit die originale Datenreihe auszudünnen und der PlotCurve bereits ein kleineres Polygon zu übergeben. Folgende Quelltext nimmt die Punkte der originalen Datenreihe und überträgt sie in ein Polygon, welches dann dem `QwtWeedingCurveFitter` übergeben wird.
+
+.Verwendung des `QwtWeedingCurveFitter` zur Datenreduktion außerhalb des QwtPlot
+[source,c++]
+----
+// use curve fitter to reduce data to plot
+QPolygonF poly;
+for (int i=0; i<x.count(); ++i)
+	poly << QPointF(x[i],y[i]);
+QwtWeedingCurveFitter weedingAlgorithm(0.001);
+poly = weedingAlgorithm.fitCurve(poly);
+// set weeeded-out polygon in curve
+curve->setSamples(poly);
+----
+
+[WARNING]
+====
+Wenn man den `QwtWeedingCurveFitter` nur als Utilityklasse benutzt und nicht als Objekt der `QwtPlotCurve` übergibt (und damit das Objekt in das Eigentum der PlotCurve überträgt), sollte man das Objekt auf dem Stack erstellen oder sich selbst um das Speicheraufräumen kümmern.
+====
+
+Nun benötigt der Algorithmus einmalig ca. **800 ms**, aber das Zeichnen auf dem Bildschirm und Aktualisieren des Plots beim Plot-Größenänderungen dauert minimale **2 ms**, und _das_ ist eine wahrhaftige Performancesteigerung.
+
+[TIP]
+====
+Eine wirklich enorme Performancesteigerung ist mit dem `QwtWeedingCurveFitter` möglich, wenn man ihn _vorab_ zur Datenreduktion der Datenreihendaten verwendet, _bevor_ man diese der Plotkurve übergibt.
+====
 

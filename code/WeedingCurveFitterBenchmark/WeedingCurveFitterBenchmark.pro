@@ -32,8 +32,8 @@ else {
 			LIBS += -L/home/ghorwin/git/_webpages/qwtbook/code/qwt-6.3.0/build/Desktop-Debug/lib -lqwt
 		}
 		else {
-			LIBS += -L/usr/local/qwt-6.3.0/lib -lqwt
-			#LIBS += -L/home/ghorwin/git/_webpages/qwtbook/code/qwt-6.3.0/build/Desktop-Release/lib -lqwt
+			#LIBS += -L/usr/local/qwt-6.3.0/lib -lqwt
+			LIBS += -L/home/ghorwin/git/_webpages/qwtbook/code/qwt-6.3.0/build/Desktop-Release/lib -lqwt
 		}
 	}
 }
