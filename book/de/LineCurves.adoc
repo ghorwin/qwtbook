@@ -453,6 +453,7 @@ Alle Informationen zu Legenden und auch spezifische Anpassungen, z.B. wie man ei
 
 Das Zeichnen großer Datenreihen kann mitunter einige Zeit beanspruchen. Vor allem beim Größenändern des Plotfensters wirkt sich das dann durch merkliche Verzögerung beim Bildschirmaufbau aus. Je größer die Datenreihen sind, d.h. umsomehr Punkte enthalten sind, umso länger dauert im Allgemeinen das Zeichnen des Plots. In diesem Abschnitt soll es um verschiedene Eigenschaften und Fähigkeiten der `QwtPlotCurve` gehen, die sich direkt auf die Zeichengeschwindigkeit auswirken.
 
+
 ### Zeichenattribute (PaintAttribute / PaintAttributes)
 
 Die Klasse `QwtPlotCurve` hat verschiedene Zeichenattribute, die verwendete Algorithmen näher konfigurieren. Hier ist zunächst eine kurze Liste, wobei die individuellen Attribute und deren Auswirkung später näher beschrieben werden:
@@ -688,11 +689,11 @@ Fazit: `ClipPolygons` eingeschaltet lassen!
 
 
 [[sec:curveFitter]]
-## Kurvenfilter
+## Kurvenfilter/Kurvenanpasser
 
 Die `QwtPlotCurve` kann die übergebenen Rohdaten vor dem eigentlichen Rendern noch an einen Algorithmus übergeben, der die Daten glättet oder eine kontinuierliche Kuve durch die Datenpunkte legt. Diese Operationen hängen vom aktuellen Zoomlevel und der Plotgröße ab, denn je nach Auflösung wird der Verlauf der angepassten Kurve neu berechnet. Dies gibt eine bessere Qualität als beim Vorberechnen der Daten und Plotten eines Linienzugs durch vorberechnete Kurven. Deshalb ist diese Funktionalität direkt in das `QwtPlot` integriert.
 
-Einen solchen Filteralgorithmus übergibt man der Kurve, indem man eine Klasse, abgeleitet von  `QwtCurveFitter` der Kurve übergibt.
+Einen solchen Anpass-/Filteralgorithmus übergibt man der Kurve, indem man eine Klasse, abgeleitet von  `QwtCurveFitter` der Kurve übergibt.
 
 Es werden verschiedene Implementierungen dieser Schnittstelle mitgeliefert:
 
@@ -760,7 +761,7 @@ Die Qwt-Bibliothek bringt eine ganze Reihe verschiedener Algorithmen und passend
 
 [IMPORTANT]
 ====
-Nur `QwtSplinePleasing` funktioniert für wirklich parametrische Kurven mit nicht monoton steigenden x-Werten.
+Nur `QwtSplinePleasing` funktioniert für wirklich parametrische Kurven, auch wenn die x-Werte nicht monoton steigen.
 ====
 
 Zum Vergleich sind die verschiedenen Spline-Algorithmen dargestellt:
@@ -783,40 +784,34 @@ Dieser Kurvenfilter ist für Kreisdiagramme gedacht, siehe <<sec:polarPlots>>.
 [[sec:weedingCurveFitter]]
 ### Datenreduktionsfilter
 
+Wie ja schon in <<sec:curvePerformance>> beschrieben, bringt die Klasse `QwtPlotCurve` bereits eine Reihe eigener Funktionen mit, um unnötige Punkte und Liniensegmente hinauszufiltern. Diese sind aber primär für Rasterausgaben sinnvoll, also auf dem Bildschirm.
+
+Bei der Ausgabe in Vektorformate (PDF/SVG) werden die Zeichenattributsfilter `QwtPlotCurve::FilterPoints` oder `QwtPlotCurve::FilterPointsAggressive` nicht verwendet, da sie nur bei gerundeten Koordinaten funktionieren. 
+
+[IMPORTANT]
+====
+Die Datenreduktionsmethoden durch Setzen der Zeichenattribute `QwtPlotCurve::FilterPoints` oder `QwtPlotCurve::FilterPointsAggressive` wirken sich nur bei Rasterplots wirklich aus. Beim Rendern in Vektorformate (PDF/SVG) werden bei `QwtPlotCurve::FilterPoints` _nur wirklich identische_ Punkte im originalen Datensatz herausgefiltert.
+====
+
+Stattdessen kann man zur Datenreduktion bei Vektorexporten einen alternativen Punktfilteralgorithmus verwenden, um nicht notwendige Punkte zu entfernen. Ein solcher Datenreduktionsfilter ist in der Klasse `QwtWeedingCurveFitter` implementiert. Dieser ist wirklich ein _Filter_ und entfernt Datenpunkte nach gewissen Regeln.
+
+Konkret versucht der Algorithmus alle Punkte zu entfernen, die bereits bei linearer Interpolation zwischen den benachbarten Punkten hinreichend gut approximiert werden. Das _hinreichend gut_ wird durch einen Toleranzparameter beschrieben.
+
+Verwendet wird dieser Kurvenfilter wie die bisherigen Kurvenfilter, wobei man auch hier nicht vergessen darf, das Kurvenattribut `QwtPlotCurve::Fitted` zu setzen.
+
+[source,c++]
+----
+QwtWeedingCurveFitter * weedingFitter = new QwtWeedingCurveFitter;
+curve->setCurveFitter(weedingFitter);
+curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
+----
 
 
 
 
-Grundsätzlich muss hier zwischen 
- und ist daher auch als Kurvenfilter implementiert. Ein solcher Datenreduktionsfilter ist in der Klasse `QwtWeedingCurveFitter` implementiert.
 
-Nachfolgendes Beispiel zeigt eine mit _sehr_ vielen Punkten generierte Sinuskurve. Das Zeichnen dieser Kurve geht zwar selbst bei 2K Auflösung noch sehr schnell (ca. 300 ms für das komplette Neuzeichnen des Plots), denn die meisten Punkte liegen übereinander und man kann sich daher das Zeichnen dieser Punkte sparen. Hier kommt der `QwtWeedingCurveFitter` ins Spiel. Verwendet wird dieser Kurvenfilteralgorithmus wie auch die Spline-Filter, jedoch generiert dieser Filter keine neue Kurve, sondern entfernt lediglich redundante und nicht notwendige Punkte. Im Rahmen der konfigurierten Genauigkeit dieses Filters sehen dann die originale und die gefilterte Kurve nahezu identisch aus, obwohl viel weniger Punkte verwendet werden.
-
-
-Wenn man das Programm ausführt, wird das Plot kurz angezeigt, dann vergrößert und wieder geschlossen. Damit lässt sich die Zeit für das Zeichnen des Plots benchmarken.
-
-Wenn man den `QwtWeedingCurveFitter` im Quelltext deaktiviert, z.B. durch setzen von 
-
-```c++
-curve->setCurveAttribute(QwtPlotCurve::Fitted, false);
-```
-
-dann gibt das Programm aus:
-
-	QwtPlotCanvas::paintEvent():  308 ms
-	QwtPlotCanvas::paintEvent():  298 ms
-
-Wenn man mit eingeschaltetem Kurvefitter arbeitet:
-
-	QwtWeedingCurveFitter::fitCurve() -> 162 points:  635 ms
-	QwtPlotCanvas::paintEvent():  1202 ms
-	QwtWeedingCurveFitter::fitCurve() -> 284 points:  666 ms
-	QwtPlotCanvas::paintEvent():  1225 ms
-
-Zunächst mal ist es interessant, dass der `QwtWeedingCurveFitter` aus den ursprünglich 10000000 Punkten nur gerade mal 162 Punkte bei der 1000x800 Plotgröße und 284 Punkte beim größeren Plot macht. Und tatsächlich sehen beide Diagramme fast identisch aus.
-Natürlich wird für die Datenreduktion Zeit benötigt. Bei der niedrigen Auflösung sind das 635 ms. Eigentlich müsste aber nun aufgrund der kleineren Anzahl der Punkte das Zeichnen der Linien dafür umso schneller gehen, aber tatsächlich ist die Zeichenzeit deutlich länger: 1202 - 635 = **567 ms** für das Zeichnen des 1000x800 Pixel großen Plots gegenüber **308 ms** _ohne_ `QwtWeedingCurveFitter`.
 
 [WARNING]
 ====
-Der `QwtWeedingCurveFitter` reduziert wirkungsvoll die Anzahl der gezeichneten Punkte im Diagramm, welches vor allem beim Export von Daten in ein Vektorformat (svg, pdf, siehe <<sec:print>>) zur Reduktion der Datengröße beiträgt. Entgegen der Erwartungshaltung _verlangsamt_ der Filteralgorithmus aber das Zeichnen auf dem Bildschirm. 
+Der `QwtWeedingCurveFitter` reduziert wirkungsvoll die Anzahl der gezeichneten Punkte im Diagramm, welches vor allem beim Export von Daten in ein Vektorformat (svg, pdf, siehe <<sec:print>>) zur Reduktion der Datengröße beiträgt.
 ====

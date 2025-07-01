@@ -28,14 +28,18 @@ THE SOFTWARE.
 #include <QElapsedTimer>
 #include <QDebug>
 #include <QRandomGenerator64>
+#include <QPdfWriter>
 
 #include <cmath>
 #include <fstream>
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
-#include <qwt_weeding_curve_fitter.h>
 #include <qwt_plot_zoomer.h>
+#include <QwtPlotRenderer>
+#include <QwtPlotLayout>
+#include <QwtPlotRenderer>
+#include <QwtScaleDraw>
 
 // Spezialisierte QwtPlotCurve mit Zeitmessung um drawCurve()
 class BenchmarkedPlotCurve : public QwtPlotCurve {
@@ -51,19 +55,6 @@ protected:
 	}
 };
 
-
-
-class BenchmarkedWeedingCurveFitter : public QwtWeedingCurveFitter {
-public:
-	QPolygonF fitCurve(const QPolygonF & polygon) const override {
-		QElapsedTimer timer;
-		timer.start();
-		const QPolygonF & stripped = QwtWeedingCurveFitter::fitCurve(polygon);
-		qDebug() << "QwtWeedingCurveFitter::fitCurve() ->" << stripped.count()
-				 << "points: " << timer.elapsed() << "ms";
-		return stripped;
-	}
-};
 
 
 int main(int argc, char *argv[]) {
@@ -123,8 +114,32 @@ int main(int argc, char *argv[]) {
 
 	QwtPlotZoomer * zoomer = new QwtPlotZoomer(plot.canvas());
 
-	plot.setAxisScale(QwtPlot::xBottom, 150000, 160000);
-	plot.setAxisScale(QwtPlot::yLeft, 0.99, 1);
+	// plot.setAxisScale(QwtPlot::xBottom, 150000, 160000);
+	// plot.setAxisScale(QwtPlot::yLeft, 0.99, 1);
+
+#if 0
+	// export the plot
+	QwtPlotRenderer renderer;
+	renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
+
+	for  (int i=0; i<4; ++i)
+		plot.plotLayout()->setAlignCanvasToScale( i, true );
+
+	plot.axisScaleDraw(QwtPlot::xBottom)->setPenWidthF(1);
+	plot.axisScaleDraw(QwtPlot::yLeft)->setPenWidthF(1);
+
+	renderer.setDiscardFlag( QwtPlotRenderer::DiscardBackground );
+	renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasBackground );
+	renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasFrame );
+
+	QPdfWriter writer("plot.pdf");
+	writer.setTitle("Mein plot");
+	writer.setCreator("Ich");
+	writer.setPageSize(QPageSize(QPageSize::A4));
+	writer.setResolution(300);
+	writer.setPageOrientation(QPageLayout::Landscape);
+	renderer.renderTo( &plot, writer);
+#endif
 
 	plot.show();
 
