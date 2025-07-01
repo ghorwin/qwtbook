@@ -394,7 +394,7 @@ Wenn man Ausschnitt eines hineingezoomten Plots interaktiv verschieben möchte, 
 ----
 // Panner hinzufügen, wie auch beim PlotZoomer muss das Canvas-Objekt als Argument übergeben werden
 QwtPlotPanner * panner = new QwtPlotPanner(plot.canvas());  // plot takes ownership
-panner->setMouseButton(Qt::MidButton); // Mittlere Maustaste verschiebt
+panner->setMouseButton(Qt::MiddleButton); // Mittlere Maustaste verschiebt
 ----
 
 Wie beim `QwtPlotZoomer` wird das Objekt als Kindobjekt des Canvas-Widgets hinzugefügt.  Üblich ist das Verschieben von Bildschirminhalten mit gedrückter mittlerer Maustaste, also legt man das mit `setMouseButton()` fest.
