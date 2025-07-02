@@ -2872,23 +2872,10 @@ only few polynomials."</em></p>
 <div class="title">Abbildung 44. Datenreduktion mit dem QwtWeedingCurveFitter</div>
 </div>
 <div class="paragraph">
-<p>Der WeedingCurveFitter reduziert die Anzahl der Datenpunkte wie hier bei eher weichen Kurven deutlich. Im Beispiel oben bleiben von den ursprünglich 10 Mio Punkten gerade mal 78 übrig. Zur Visualisierung der resultierenden Stützstellen wurde eine zweite Datenreihe erzeugt, wobei aus den Datenpunkten mit der <code>QwtWeedingCurveFitter</code>-Klasse direkt die Daten vorab reduziert wurden:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="c++"><span class="c1">// use curve fitter to fit the curve</span>
-<span class="n">QPolygonF</span> <span class="n">poly</span><span class="p">;</span>
-<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-	<span class="n">poly</span> <span class="o">&lt;&lt;</span> <span class="n">QPointF</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-<span class="n">poly</span> <span class="o">=</span> <span class="n">weedingFitter</span><span class="o">-&gt;</span><span class="n">fitCurve</span><span class="p">(</span><span class="n">poly</span><span class="p">);</span>
-<span class="n">symbolCurve</span><span class="o">-&gt;</span><span class="n">setSamples</span><span class="p">(</span><span class="n">poly</span><span class="p">);</span></code></pre>
-</div>
+<p>Der WeedingCurveFitter reduziert die Anzahl der Datenpunkte wie hier bei eher weichen Kurven deutlich. Im Beispiel oben bleiben von den ursprünglich 10 Mio Punkten gerade mal 78 übrig. Zur Visualisierung der resultierenden Stützstellen wurde eine zweite Datenreihe erzeugt, wobei aus den Datenpunkten mit der <code>QwtWeedingCurveFitter</code>-Klasse direkt die Daten vorab reduziert wurden (siehe auch <a href="#sec:weedingBeforePlot">Kapitel 5.7.3.2</a>).</p>
 </div>
 <div class="paragraph">
-<p>Die Funktion <code>QwtWeedingCurveFitter::fitCurve(QPolygonF)</code> liefert das entsprechend reduzierte Polynom zurück.</p>
-</div>
-<div class="paragraph">
-<p>Ein wichtiger Parameter ist die erlaubte Toleranz, zu setzen im Konstruktor oder mittels <code>QwtWeedingCurveFitter::setTolerance(double)</code>. Diese Toleranz ist ein <em>Absolutwert</em> basierend auf den y-Koordinaten im übergebenen Polygon. Je nach Größenordnung der y-Werte der Punkte werden die Punkte anders gefiltert. Dies bewirkt, dass bei größeren Plots mit entsprechend größerer Pixelauflösung in y-Richtung auch mehr Stütztstellen generiert werden und die Qualität des Diagramms nicht leidet.</p>
+<p>Ein wichtiger Parameter für den Algorithmus ist die erlaubte Toleranz, zu setzen im Konstruktor oder mittels <code>QwtWeedingCurveFitter::setTolerance(double)</code>. Diese Toleranz ist ein <em>Absolutwert</em> basierend auf den y-Koordinaten im übergebenen Polygon. Je nach Größenordnung der y-Werte der Punkte werden die Punkte anders gefiltert. Dies bewirkt, dass bei größeren Plots mit entsprechend größerer Pixelauflösung in y-Richtung auch mehr Stütztstellen generiert werden und die Qualität des Diagramms nicht leidet.</p>
 </div>
 <div class="paragraph">
 <p>Der Parameter <code>tolerance</code> wirkt sich dabei grob wie folgt aus, wenn die y-Werte in der Größenordnung 100 vorliegen (wie im obigen Beispiel).</p>
@@ -3031,7 +3018,7 @@ only few polynomials."</em></p>
 <p>Im obigen Benchmarkprogramm sind die Klassen <code>QwtPlotCanvas</code> und <code>QwtWeedingCurveFitter</code> abgeleitet und die relevanten Zeichenroutinen mit Zeitmessung umgeben.</p>
 </div>
 <div class="paragraph">
-<p>Wichtig zu vermerken ist, dass die Zeichenattribute <code>FilterPoints</code> und <code>ClipPolygons</code> (siehe &lt;&lt;&gt;&gt;) standardmäßig eingeschaltet sind.</p>
+<p>Wichtig zu vermerken ist, dass die Zeichenattribute <code>FilterPoints</code> und <code>ClipPolygons</code> (siehe <a href="#sec:curvePerformance">Kapitel 5.6</a>) standardmäßig eingeschaltet sind.</p>
 </div>
 <div class="paragraph">
 <p>Führt man das Programm aus, so sieht man beim großen Plot mit Auflösung 2400x1200, dass aus den 10 Mio Punkten durch den <code>QwtWeedingCurveFitter</code> nur noch 284 Punkte übrig bleiben. Das müsste dann doch zu einem deutlich schneller gezeichneten Plot führen, oder?</p>
@@ -3114,34 +3101,22 @@ only few polynomials."</em></p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>In keiner Variante ist die Option <em>mit</em>  schneller. Außerdem fällt auf, dass unabhängig von der Option <code>FilterPoints</code> der CurveFitter immer alle 10 Mio Punkte übergeben bekommt, so wie auch der Polygon-Clipping-Algorithmus.</p>
+<p>In keiner Variante ist die Option <em>mit</em>  WeedingFitter schneller. In der Ausgabe in <code>fitCurve()</code> fällt auf, dass unabhängig von der Option <code>FilterPoints</code> der WeedingFitter immer alle 10 Mio Punkte übergeben bekommt. Und auch der Polygon-Clipping-Algorithmus bekommt das originale Polygon übergeben.</p>
 </div>
-<div class="admonitionblock important">
+<div class="paragraph">
+<p>Das führt dann dazu, dass obwohl der <code>QwtWeedingCurveFitter</code> letztlich das Polygon sehr stark verkleinert, der Mehraufwand in den Algorithmen durch den Wegfall des Punktefilterns enorm ist.</p>
+</div>
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-important" title="Important"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<div class="title">Qwt 6.3.x Einschränkung</div>
+<div class="title">Qwt Interna</div>
 <div class="paragraph">
 <p>Wenn man das Kurvenattribut <code>QwtPlotCurve::Fitted</code> einschaltet, werden automatisch die Zeichenattribute <code>FilterPoints</code> und <code>FilterPointsAggressive</code> unwirksam, da intern <em>das Runden auf ganzzahlige Bildschirmkoordinaten abgeschaltet wird</em>. Dadurch werden natürlich die Polygone nicht mehr sinnvoll ausgedünnt (siehe <a href="#sec:curvePerformance">Kapitel 5.6</a>) und die nachfolgenden Algorithmen müssen mit sehr sehr viel mehr Datenpunkten arbeiten.</p>
 </div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Auch wenn der <code>QwtWeedingCurveFitter</code> letztlich das Polygon sehr stark verkleinert, ist der Mehraufwand in den Algorithmen durch den Wegfall des Punktefilterns enorm.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="title">Inside Qwt</div>
 <div class="paragraph">
 <p>Wenn man das <em>Rounding-Alignment</em> direkt im Qwt-Quelltext trotz eingeschaltetem <code>Fitted</code> Attribut wieder aktiviert, und zwar in <code>qwt_plot_curve.cpp:487</code>:</p>
 </div>
@@ -3155,7 +3130,7 @@ only few polynomials."</em></p>
 </div>
 </div>
 <div class="paragraph">
-<p>sieht man den wirklichen Einfluss des <code>QwtWeedingCurveFitter</code> (<code>QwtWeedingCurveFitter</code> an, <code>FilterPoints</code> an, <code>ClipPolygons</code> an):</p>
+<p>sieht man den wirklichen Einfluss des <code>QwtWeedingCurveFitter</code>. Getestet mit <code>QwtWeedingCurveFitter</code> an, <code>FilterPoints</code> an, <code>ClipPolygons</code> an:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3178,11 +3153,11 @@ only few polynomials."</em></p>
 </table>
 </div>
 <div class="paragraph">
-<p>Wie man sieht, bringt selbst ein Patchen des Qwt-Quelltextes keine signifikante Verbesserung. Daher lautet das finale Fazit: der <code>QwtWeedingCurveFitter</code> ist sinnvoll als Datenreduktionsfilter für Vektorplot-Datenexporte.</p>
+<p>Wie man sieht, bringt selbst ein Patchen des Qwt-Quelltextes keine signifikante Verbesserung. Daher lautet das finale Fazit: der <code>QwtWeedingCurveFitter</code> ist primär sinnvoll als Datenreduktionsfilter für Vektorplot-Datenexporte.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_verwendung_zur_datenreduktion_vorab">Verwendung zur Datenreduktion vorab</h5>
+<h5 id="sec:weedingBeforePlot">Verwendung zur Datenreduktion vorab</h5>
 <div class="paragraph">
 <p>Man kann die Klasse <code>QwtWeedingCurveFitter</code> jedoch auch zu Datenreduktion <em>außerhalb</em> der QwtPlotCurve verwenden, d.h. man reduziert die der Kurve übergebenen Daten vorab. Und hier liegt das wirkliche Performancesteigerungspotential.</p>
 </div>
@@ -3201,6 +3176,9 @@ only few polynomials."</em></p>
 <span class="c1">// set weeeded-out polygon in curve</span>
 <span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSamples</span><span class="p">(</span><span class="n">poly</span><span class="p">);</span></code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Die Funktion <code>QwtWeedingCurveFitter::fitCurve(QPolygonF)</code> liefert das entsprechend reduzierte Polynom zurück.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
