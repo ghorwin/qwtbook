@@ -207,7 +207,7 @@ int main(int argc, char *argv[]) {
 
 //	// Panner hinzufügen, wie auch beim PlotZoomer muss das Canvas-Objekt als Argument übergeben werden
 //	QwtPlotPanner * panner = new QwtPlotPanner(plot.canvas());  // plot takes ownership
-//	panner->setMouseButton(Qt::MidButton); // Mittlere Maustaste verschiebt
+//	panner->setMouseButton(Qt::MiddleButton); // Mittlere Maustaste verschiebt
 
 	plot.show();
 	return a.exec();
