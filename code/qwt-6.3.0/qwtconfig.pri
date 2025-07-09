@@ -137,7 +137,7 @@ win32 {
 # Otherwise you have to build them from the examples directory.
 ######################################################################
 
-# QWT_CONFIG     += QwtExamples
+QWT_CONFIG     += QwtExamples
 
 ######################################################################
 # The playground is primarily intended for the Qwt development
@@ -148,7 +148,7 @@ win32 {
 # Otherwise you have to build them from the playground directory.
 ######################################################################
 
-# QWT_CONFIG     += QwtPlayground
+QWT_CONFIG     += QwtPlayground
 
 ######################################################################
 # If you want to auto build the tests, enable the line below
