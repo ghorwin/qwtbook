@@ -32,82 +32,94 @@ THE SOFTWARE.
 
 #include <QwtPlot>
 #include <QwtPlotSpectroCurve>
+#include <QwtLinearColorMap>
 #include <QwtPlotSpectrogram>
+#include <QwtScaleWidget>
+#include <QwtPlotLayout>
+
+class SpectrogramData : public QwtRasterData {
+public:
+	SpectrogramData() {
+		// some minor performance improvements when the spectrogram item
+		// does not need to check for NaN values
+
+		setAttribute(QwtRasterData::WithoutGaps, true);
+
+		m_intervals[Qt::XAxis] = QwtInterval(-1.5, 1.5);
+		m_intervals[Qt::YAxis] = QwtInterval(-1.5, 1.5);
+		m_intervals[Qt::ZAxis] = QwtInterval(0.0, 8.0);
+	}
+
+	virtual QwtInterval interval(Qt::Axis axis) const override {
+		if (axis >= 0 && axis <= 2)
+			return m_intervals[axis];
+
+		return QwtInterval();
+	}
+
+	virtual double value(double x, double y) const override {
+		double z = (x - 1) * (x - 1) + (y - 2) * (y - 1);
+		return z;
+	}
+
+private:
+	QwtInterval m_intervals[3];
+};
+
+
+class LinearColorMap : public QwtLinearColorMap {
+public:
+	LinearColorMap( int formatType )
+		: QwtLinearColorMap( Qt::darkCyan, Qt::red )
+	{
+		setFormat( ( QwtColorMap::Format ) formatType );
+
+		addColorStop( 0.1, Qt::cyan );
+		addColorStop( 0.6, Qt::green );
+		addColorStop( 0.95, Qt::yellow );
+	}
+};
+
 
 int main(int argc, char *argv[]) {
-    QApplication a(argc, argv);
-    QwtPlot plot;
-    plot.setWindowFlags(Qt::FramelessWindowHint);
-    plot.resize(400,300);
+	QApplication a(argc, argv);
+	QwtPlot plot;
+	plot.setWindowFlags(Qt::FramelessWindowHint);
+	plot.resize(400,300);
 
-    // etwas Abstand zwischen Rand und Achsentiteln
-    plot.setContentsMargins(8,8,8,8);
-    // Hintergrund der Zeichenfläche soll weiß sein
-    plot.setCanvasBackground( Qt::white );
+	// etwas Abstand zwischen Rand und Achsentiteln
+	plot.setContentsMargins(8, 8, 8, 8);
+	// Hintergrund der Zeichenfläche soll weiß sein
+	plot.setCanvasBackground(Qt::white);
 
-    // Achenskalierung
-    plot.setAxisScale(QwtPlot::yLeft, 0, 20);
+	QwtPlotSpectrogram * spectro = new QwtPlotSpectrogram("Some spectrogram");
+	spectro->setRenderThreadCount( 0 ); // use system specific thread count
+	spectro->setCachePolicy( QwtPlotRasterItem::PaintCache );
+	spectro->attach(&plot);
 
-    QVector<double> x{1,2,5,6,10,12,15,16,17};
-    QVector<double> y{5,4,8,8, 4, 5, 8, 9,11};
+	QList< double > contourLevels;
+	for ( double level = 0.5; level < 10.0; level += 1.0 )
+		contourLevels += level;
+	spectro->setContourLevels( contourLevels );
 
-    QwtPlotCurve *curve = new QwtPlotCurve();
-    curve->setStyle(QwtPlotCurve::NoCurve);
-    curve->setPen(QColor(0,40,180,128), 2);
-    curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
-    curve->setSamples(x, y);
-    curve->attach(&plot); // Plot takes ownership
+	spectro->setData( new SpectrogramData() );
 
-#define PAINTERPATH
-#ifdef PAINTERPATH
-    // Symbol hinzufügen
-    QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Path);
-    QwtText t("QwtSymbol::Path");
-    QPainterPath p;
-    p.addEllipse(QRectF(-10,-10,20,20));
-    p.moveTo(-7,-7);
-    p.lineTo(7,7);
-    p.moveTo(7,-7);
-    p.lineTo(-7,7);
-    symbol->setPath(p);
-    symbol->setPen(QColor(0,0,120), 2);
-    symbol->setBrush(QColor(160,200,255));
-    curve->setSymbol(symbol); // Curve takes ownership of symbol
-#endif
-
-// #define SVG
-#ifdef SVG
-    QwtSymbol * symbol = new QwtSymbol(QwtSymbol::SvgDocument);
-    QwtText t("QwtSymbol::SvgDocument");
-    QFile f("symbol.svg");
-    f.open(QFile::ReadOnly);
-    QTextStream strm(&f);
-    QByteArray svgDoc = strm.readAll().toLatin1();
-    symbol->setSvgDocument(svgDoc);
-    QRect br = symbol->boundingRect(); // size of symbol
-    symbol->setPinPoint(QPointF(br.width()/2-1,br.height()-3));
-    curve->setSymbol(symbol); // Curve takes ownership of symbol
-#endif
-
-// #define PNG
-#ifdef PNG
-    QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Pixmap);
-    QwtText t("QwtSymbol::Pixmap");
-    QPixmap pixmap;
-    pixmap.load("symbol.png");
-    symbol->setPixmap(pixmap);
-    QRect br = symbol->boundingRect(); // size of symbol
-    symbol->setPinPoint(QPointF(br.width()/2,br.height()-1));
-    curve->setSymbol(symbol); // Curve takes ownership of symbol
-#endif
+	const QwtInterval zInterval = spectro->data()->interval( Qt::ZAxis );
 
 
-    QFont titleFont(qApp->font());
-    titleFont.setPointSize(10);
-    titleFont.setBold(true);
-    t.setFont(titleFont);
-    plot.setTitle(t);
+	plot.setAxisScale( QwtAxis::YRight, zInterval.minValue(), zInterval.maxValue() );
+	plot.setAxisVisible( QwtAxis::YRight );
 
-    plot.show();
-    return a.exec();
+	plot.plotLayout()->setAlignCanvasToScales( true );
+
+	spectro->setColorMap( new LinearColorMap( QwtColorMap::RGB ) );
+
+	// A color bar on the right axis
+	QwtScaleWidget* rightAxis = plot.axisWidget( QwtAxis::YRight );
+	rightAxis->setTitle( "Intensity" );
+	rightAxis->setColorBarEnabled( true );
+	rightAxis->setColorMap( zInterval, new LinearColorMap( QwtColorMap::RGB ) );
+
+	plot.show();
+	return a.exec();
 }

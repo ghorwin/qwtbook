@@ -1,0 +1,16 @@
+# clang-format
+# See http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+# Tested with: clang-format version 3.7.1
+#
+# This is my (Andreas Nicolai's) IBK-standard format, basically Tabs (4 spaces wide)
+
+TabWidth: 4
+IndentWidth: 4
+UseTab: Always
+Language: Cpp
+Standard: Cpp11
+PointerAlignment: Middle
+AccessModifierOffset: -4
+AlignOperands: false
+AlignTrailingComments: true
+AllowShortBlocksOnASingleLine: false
