@@ -21,3 +21,58 @@ Die wichtigsten Klassen in Bezug auf die Achsen sind:
 [[sec:axisScales]]
 ## Skalen
 
+
+
+### Fonts
+
+Für das Zeichnen der Skalenbeschriftugn (Zahlen) und des Titels werden unterschiedliche Fonts verwendet.
+
+Den Font für die Skalen muss man für jede sichtbare Skale individuell setzen, mit
+
+[source,c++]
+====
+// via QwtScaleWidget::setFont()
+plot->axisWidget(QwtPlot::xBottom)->setFont(f);
+// oder via QwtPlot::setAxisFont(), was letztlich obige Funktion aufruft
+plot->setAxisFont(QwtPlot::xBottom, f);
+====
+
+Für den Titel einer Achse ist es etwas komplizierter, da es verschiedene Möglichkeiten gibt, den Text zu setzen.
+Einerseits kann man ein `QwtText` Objekt erstellen, diesen individuell konfigurieren und dann dem `QwtScaleWidget` geben:
+
+[source,c++]
+====
+QwtText title("Intensity");
+QFont f;
+f.setPointSize(8);
+f.setBold(true);
+title.setFont(f);
+
+// via QwtScaleWidget::setTitle()
+plot->axisWidget( QwtAxis::YLeft )->setTitle( title );
+
+// oder via QwtPlot::setAxisTitle()
+plot->setAxisTitle( QwtAxis::YLeft, title );
+====
+
+Das ist allerdings häufig ziemlich viel Tipparbeit und man muss das Setzen des Fonts überall konsistent durchführen. Da man aber in der Regel den Achsentitel sowieso fett gedruckt haben will, kommt man da kaum drum herum.
+
+Man kann auch einfach den Achsentext direkt setzen:
+
+[source,c++]
+====
+// direkt als QString-Argument in setAxisTitle(const QString &)
+plot->setAxisTitle( QwtAxis::YLeft, "Intensity" );
+// oder explizit in ein QwtText gewandelt in setAxisTitle(const QwtText &)
+plot->setAxisTitle( QwtAxis::YLeft, QwtText("Intensity") );
+====
+
+[CAUTION]
+====
+Aber Vorsicht: diese sehr ähnlich ausseheden Aufrufe führen _nicht_ zum gleichen Ergebnis. Im ersten Fall wird ein bereits im QwtScaleWidget vorhandenes `QwtText`-Objekt nachgenutzt und nur der Text selbst geändert. Das Objekt behält sein standardmäßig gesetztes Zeichenattribut `QwtText::PaintUsingTextFont` bei, und verwendet dafür den zur Erstellungszeit gültigen globalen Anwendungsfont. Das ist aber zumeinst nicht der, den man für die Konfiguration des Plots im Sinn hat. Daher sollte diese Syntax mit Übergabe eines Strings selbst in der Regel nicht verwendet werden.
+
+Bei der 2. Variante wird ein nagelneues `QwtText`-Objekt ohne gesetzte Zeichenattribute verwendet, und als solches wird zum Zeichnen auf den Font des übergeordneten Widgets zurückgegriffen. Somit wird der gleiche Font wir für die Achsenskalenbeschriftungen benutzt.
+====
+
+
+

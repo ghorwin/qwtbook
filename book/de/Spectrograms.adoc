@@ -1,0 +1,6 @@
+:imagesdir: ../images
+
+<<<
+[[sec:spectrograms]]
+# Spektrogramm- und Farbverlaufsdiagramme
+

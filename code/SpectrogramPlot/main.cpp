@@ -87,6 +87,10 @@ int main(int argc, char *argv[]) {
 	plot.setWindowFlags(Qt::FramelessWindowHint);
 	plot.resize(400,300);
 
+	QFont f;
+	f.setPointSize(4);
+	plot.setFont(f);
+
 	// etwas Abstand zwischen Rand und Achsentiteln
 	plot.setContentsMargins(8, 8, 8, 8);
 	// Hintergrund der Zeichenfläche soll weiß sein
@@ -106,7 +110,6 @@ int main(int argc, char *argv[]) {
 
 	const QwtInterval zInterval = spectro->data()->interval( Qt::ZAxis );
 
-
 	plot.setAxisScale( QwtAxis::YRight, zInterval.minValue(), zInterval.maxValue() );
 	plot.setAxisVisible( QwtAxis::YRight );
 
@@ -114,11 +117,25 @@ int main(int argc, char *argv[]) {
 
 	spectro->setColorMap( new LinearColorMap( QwtColorMap::RGB ) );
 
+	// plot.axisWidget(QwtPlot::xBottom)->setFont(f);
+	plot.setAxisFont(QwtPlot::xBottom, f);
+
+	plot.axisWidget(QwtPlot::yLeft)->setFont(f);
+	plot.axisWidget(QwtPlot::yRight)->setFont(f);
+
 	// A color bar on the right axis
 	QwtScaleWidget* rightAxis = plot.axisWidget( QwtAxis::YRight );
+	QwtText title("Intensity");
+	// title.setPaintAttribute(QwtText::PaintUsingTextFont, false);
+	// f.setBold(true);
+	// title.setFont(f);
 	rightAxis->setTitle( "Intensity" );
+	rightAxis->setTitle( title );
+	rightAxis->setTitle( QwtText("Intensity"));
 	rightAxis->setColorBarEnabled( true );
 	rightAxis->setColorMap( zInterval, new LinearColorMap( QwtColorMap::RGB ) );
+
+	// plot.setFont(f);
 
 	plot.show();
 	return a.exec();
