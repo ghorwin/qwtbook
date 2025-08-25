@@ -4,3 +4,261 @@
 [[sec:spectrograms]]
 # Spektrogramm- und Farbverlaufsdiagramme
 
+image::Spectrogram_2D_with_gaps.png[pdfwidth=8cm]
+
+_Spektrogramm_ ist in der Qwt Bibliothek die Bezeichnung für Farbverlaufsdiagramme, wobei der Pixelfarbe vom Zahlenwert abhängt. Es handelt sich um Visualisierungen von 3D-Daten, also x, y, z-Tuplen. x und y werden für die X- und Y-Achse verwendet, während der z-Wert an der jeweiligen Koordinate mittels Farbtabelle in einen Farbwert umgerechnet wird.
+
+Grundsätzlich benötigt man für die Darstellung eines solchen Diagramms drei Komponenten:
+
+- Umrechnung der Bildkoordinaten zu Plotkoordinaten x,y. Diese Umrechnung wird durch die Achsenskalen realisiert (`QwtScaleEngine`).
+- Berechnung des z-Werts für diese x,y-Plotkoordinaten. Diese Funktionalität muss der Anwender beisteuern.
+- Berechnung eineszum z-Wert passenden Farbwerts. Dies kann mittels vorgefertigter Farbtabellen (`QwtColorMap`, bzw.  `QwtAlphaColorMap` oder `QwtLinearColorMap`) passieren, oder durch nutzerdefinierte Umrechnung.
+
+
+## Grundlagen des Spectrogram Plotelements
+
+Das eigentliche Zeichnen übernimmt das Plotelement `QwtPlotSpectrogram`. Dies wird wie folgt konfiguriert:
+
+[source,c++]
+----
+QwtPlotSpectrogram * spectro = new QwtPlotSpectrogram("Some spectrogram");
+spectro->setRenderThreadCount( 0 ); // Parallisierung je nach Systemstand verwenden
+spectro->setCachePolicy( QwtPlotRasterItem::PaintCache ); // Bild nur neu rendern, wenn notwendig
+spectro->attach(&plot);
+
+// Datenhalteobjekt setzen, dieses liefert für jeden Bildpunkt einen z-Wert zurück.
+spectro->setData( new SpectrogramData() );
+----
+
+Die eigentlichen Daten werden mittels `setData()` gesetzt, wobei die Klasse `SpectrogramData` eine eigen geschrieben Klasse ist, welche von `QwtRasterData` ableitet:
+
+
+[source,c++]
+----
+class SpectrogramData : public QwtRasterData {
+public:
+	SpectrogramData() {
+        // kleine Optimierung, spart extra Aufwand beim Prüfen auf Lücken
+		setAttribute(QwtRasterData::WithoutGaps, true);
+
+        // Wertebereiche definieren
+		m_intervals[Qt::XAxis] = QwtInterval(-1.5, 3);
+		m_intervals[Qt::YAxis] = QwtInterval(-1.5, 1.5);
+		m_intervals[Qt::ZAxis] = QwtInterval(0.0, 8.0);
+	}
+
+    // Diese Funktion liefert die Wertebereiche zurück und muss implementiert werden
+	virtual QwtInterval interval(Qt::Axis axis) const override {
+		if (axis >= 0 && axis <= 2)
+			return m_intervals[axis];
+
+		return QwtInterval();
+	}
+
+    // Dies ist die eigentliche Berechnungsfunktion, welche für eine x,y-Plotkoordinate den
+    // entsprechenden z-Wert zurückliefert.
+	virtual double value(double x, double y) const override {
+		double z = (x - 1) * (x - 1) + (y - 2) * (y - 1);
+		return z;
+	}
+
+private:
+	QwtInterval m_intervals[3];
+};
+----
+
+Das ergibt dann ein Spektrogramm, welches mittels Standard-Farbtabelle eingefährt wird:
+
+.Spektrogramm einer analytischen Funktion unter Verwendung der Standard-Farbpalette für die Umrechnung der generierten z-Werte in eine Farbe
+image::Spectrogram_1.png[pdfwidth=6cm]
+
+Der Farbwert ergibt sich aus dem von der Funktion `value()` zurückgelieferten Wert. Unter Verwendung des z-Wertebereichs, zurückgeliefert von `QwtRasterData::interval(Qt::ZAxis)`, wird dieser Wert normalisiert (0 = min-z-Wert, 1 = max-z-Wert). Mittels dieses normalisierten Wertes wird dann aus der Farbtabelle die dazu passende Farbe gewählt.
+
+
+### Geschwindigkeitsoptimierungen
+
+Das Spektrogramm berechnet jeden einzelnen Bildpunkt des Diagramms individuell und ruft dabei die Funktion `QwtRasterData::value()` auf. Die Auswertung dieser Funktion sollte komplett unabhängig von der Reihenfolge der berechneten Pixel sein, schon alleine, da es sich um eine `const`-Funktion handelt. Daher kann das perfekt parallelisiert werden. 
+
+Die  `QwtPlotSpectrogram`-Klasse enthält eine parallelisierte Berechnungsfunktion und verwendet dabei standardmäßig alle verfügbaren CPUs/Threads. Die Anzahl der zu verwendenden Threads wird mittels `QwtPlotSpectrogram::setRenderThreadCount(numThreads)` festgelegt, wobei ein Wert von 0 die Standardanzahl der Threads festlegt.
+
+[TIP]
+====
+Zum Debuggen der `value()` Funktion kann diese Parallelisierung nervig sein. Daher kann man das während der Entwicklung mittels
+
+```
+spectro->setRenderThreadCount( 1 ); // nur ein Renderthread verwenden
+```
+
+ausschalten.
+====
+
+Ungeachtet der parallelen Auswertung der Funktion, dauert die Aktualisierung des Bildes einiges an Zeit, vor allem bei hohen Auflösungen. Um nicht bei jedem Anzeigen des Diagramms (ohne Größen- oder Datenänderungen) das Spektrogramm neu zu berechnen, kann man das generierte Pixmap cachen. Das wird mittels `QwtPlotSpectrogram::setCachePolicy( QwtPlotRasterItem::PaintCache )` eingeschaltet. Sobald man aber die Daten ändert, d.h. `QwtPlotSpectrogram::setData()` aufruft, oder sonst irgendwelche Einstellungen des Plots ändert, wird das gecachte Bild neu berechnet.
+
+[IMPORTANT]
+====
+Wenn man die im Spektrogramm intern gespeicherten Daten ändert, sodass sich bei Auswertung der Funktion `value()` andere Werte ergeben, erkennt das Plot nicht automatisch, dass das gecachte Bild erneuert werden muss. In diesem Fall muss man das Neurendern des gecachten Bildes mittels `QwtPlotSpectrogram::invalidateCache()` erzwingen.
+====
+
+
+### Spektrogramme/Farbverlaufsdiagramme mit Löchern
+
+Grundsätzlich kann ein Spektrogramme auch Löcher haben. Das wird dadurch erreicht, dass man für die betreffenden Plotkoordinaten einen NAN-Wert als z-Wert zurückgibt:
+
+[source,c++]
+----
+// Angepasste value() Funktion, welche eine Lücke im Bereich 0 < x < 0.5, 0 < y < 0.5 enthält
+virtual double value(double x, double y) const override {
+	if ((x > 0.) &&	(x < 0.5) && (y > 0.) && (y < 0.5))
+		return qQNaN(); // NAN-z-Werte werden nicht gezeichnet
+		
+	double z = (x - 1) * (x - 1) + (y - 2) * (y - 1);
+	return z;
+}
+----
+
+Zusätzlich muss man den Rasterdaten noch die Information mitgeben, dass Lücken zu berücksichtigen sind:
+
+[source,c++]
+----
+SpectrogramData() {
+	// Lücken berücksichtigen - dies ist die Standardeinstellung und müsste daher
+	// nicht explizit gesetzt werden
+	setAttribute(QwtRasterData::WithoutGaps, false);
+	
+	...
+}
+----
+
+[TIP]
+====
+Bei Spektrogrammen ohne Lücken beschleunigt das Setzen des Attributs `QwtRasterData::WithoutGaps` wie im anfänglichen Beispielquelltext die Rendergeschwindigkeit.
+====
+
+
+## Farbverläufe anpassen
+
+Wesentlich für das Erscheinungsbild des Spektrogramms ist die Zuordnung von Farben zu Zahlenwerten. Dies wird durch die Qwt-Hilfsklasse `QwtColorMap` realisiert (siehe detaillierte Beschreibung im Abschnitt <<sec:QwtColorMap>>). 
+
+Am Einfachsten ist die Verwendung der speziellen Implementierung `QwtLinearColorMap`, welche beispielsweise wie folgt konfiguriert wird:
+
+
+[source,c++]
+----
+LinearColorMap * cm = new LinearColorMap( QwtColorMap::RGB );
+cm->setColorInterval(QColor(0x000080), QColor(0x800000));
+cm->addColorStop(0.2, QColor(0x0080ff));
+cm->addColorStop(0.5, QColor(0x00ff00));
+cm->addColorStop(0.7, QColor(0xffff00));
+
+// Colormap im Spektrogramm ersetzen
+spectro->setColorMap( cm ); // takes ownershipt
+----
+
+
+Die vielfältigen Anpassungsmöglichkeiten der Farbtabellenerstellen sind im Abschnitt <<sec:QwtColorMap>> beschrieben.
+
+
+## Spektrogramme basierend auf Datentabellen
+
+Im anfänglichen Beispiel wurde der z-Wert basierend auf x und y Plotkoordinaten berechnet. Ein sehr viel häufigerer Anwendungsfall ist die Visualisierung von Messdaten. Nachfolgende ist ein Beispiel gezeigt, wie man dies sinnvoll implementiert.
+
+
+.Beispiel für eine Rasterdatenimplementierung, bei der je Element/Zellen ein Zahlenwert gegeben ist
+[source,c++]
+----
+class SpectrogramDataTable : public QwtRasterData {
+public:
+
+	// Stützstellen x-Raster (Anzahl Zellen/Elemente entlang x-Achse + 1)
+	std::vector<double> m_xvalues;
+	// Stützstellen y-Raster (Anzahl Zellen/Elemente entlang y-Achse + 1)
+	std::vector<double> m_yvalues;
+	// Werte in den Zellen, m_zvalues[yIndex][xIndex]
+	std::vector<std::vector<double> > m_zvalues;
+
+	void updateIntervals() {
+		double minVal = std::numeric_limits<double>::max();
+		double maxVal = -std::numeric_limits<double>::max();
+		for (unsigned int j=0; j<m_zvalues.size(); ++j)
+			for (unsigned int i=0; i<m_zvalues[j].size(); ++i) {
+				double v = m_zvalues[j][i];
+				minVal = std::min(minVal, v);
+				maxVal = std::max(maxVal, v);
+			}
+		m_intervals[0].setInterval(m_xvalues.front(), m_xvalues.back());
+		m_intervals[1].setInterval(m_yvalues.front(), m_yvalues.back());
+		m_intervals[2].setInterval(minVal, maxVal);
+	}
+
+	// Diese Funktion liefert die Wertebereiche zurück und muss implementiert werden
+	virtual QwtInterval interval(Qt::Axis axis) const override {
+		if (axis >= 0 && axis <= 2)
+			return m_intervals[axis];
+
+		return QwtInterval();
+	}
+
+
+	// Diese Funktion sucht die zu den x,y-Koordinaten passende Zelle heraus und liefert den Wert zurück
+	virtual double value(double x, double y) const override {
+		// Außerhalb des Wertebereichs?
+		if ((x < m_xvalues.front())  || (y < m_yvalues.front()) ||
+			(x > m_xvalues.back()) || (y > m_yvalues.back()))
+		{
+			return qQNaN();
+		}
+
+		// Index mittels std::lower_bound() suchen
+		std::vector<double>::const_iterator it = std::lower_bound(m_xvalues.begin(), m_xvalues.end(), x);
+		unsigned int xIdx = it - m_xvalues.begin();
+		it = std::lower_bound(m_yvalues.begin(), m_yvalues.end(), y);
+		unsigned int yIdx = it - m_yvalues.begin();
+
+		// Spezialbehandlung:
+		//   x = xMin -> xIdx == 0
+		//   x > xMin -> xIdx == xIdx - 1 (da im ersten Interval)
+		//   x == xMax -> xIdx == xIdx - 1 (da im letzten Interval)
+
+		if (xIdx > 0)
+			--xIdx;
+
+		if (yIdx > 0)
+			--yIdx;
+
+		Q_ASSERT(xIdx < m_xvalues.size()-1);
+		Q_ASSERT(yIdx < m_yvalues.size()-1);
+
+		return m_zvalues[yIdx][xIdx];
+	}
+
+private:
+	QwtInterval m_intervals[3];
+};
+----
+
+Das Spektrogramm kann dann wie folgt konfiguriert werden:
+
+
+[source,c++]
+----
+// Datenhalteobjekt/Rasterdatenobjekt instanziieren
+SpectrogramDataTable * data = new SpectrogramDataTable();
+// 4 x 5 Zellen/Elemente
+data->m_xvalues = {0,1,2,5,6};
+data->m_yvalues = {0,0.1,0.2,0.3,0.4,0.5};
+data->m_zvalues.push_back( { 1, 2, 3, 4} );
+data->m_zvalues.push_back( { 1, 2.2, 3.5, 4} );
+data->m_zvalues.push_back( { 1.4, 2.4, 3.7, 4.6} );
+data->m_zvalues.push_back( { 1.5, 2.5, 3.9, 5.1} );
+data->m_zvalues.push_back( { 1.5, 2.6, 4.2, 5.2} );
+data->updateIntervals();
+spectro->setData( data ); // takes ownership
+----
+
+
+Die Vektoren mit den Stützstellen/Gitterlinien haben jeweils ein Element mehr, da es bei 4 Elementen eben 5 Gitterlinien/Elementbegrenzungskoordinaten gibt.
+
+
+.Spektrogramm einer Datentabelle ohne Interpolation (je Element ein Wert)
+image::Spectrogram_Datatable_ElementBased.png[pdfwidth=6cm]
+

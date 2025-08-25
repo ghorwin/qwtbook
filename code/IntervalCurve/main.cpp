@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
 
 #endif
 
-#if 1
+#if 0
 	QVector<double> x{1,2,5,6,10,12,15,16,17};
 	QVector<double> y1{2,2,3,4, 2, 4, 4, 5,11};
 	QVector<double> y2{6,4.4,9,10, 5.5, 5.7, 9, 11,12};
@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
 	curve->attach(&plot); // Plot takes ownership
 #endif
 
-#if 0
+#if 1
 	// stacked plot
 	QVector<double> x{1,2,5,6,10,12,15,16,17};
 	QVector<QVector<double> >  y;
@@ -138,8 +138,9 @@ int main(int argc, char *argv[]) {
 		for (int i=0; i<x.count(); ++i)
 			intervalSamples.append(QwtIntervalSample(x[i],y[j][i],y[j+1][i]));
 		curve->setStyle(QwtPlotIntervalCurve::Tube);
-		curve->setPen(QColor(96,60,20), 1);
-		curve->setBrush(cols[j+1]);
+		curve->setPen(cols[j+1], 2);
+		curve->setBrush(cols[j+1].darker(200));
+		curve->setZ(y.count()-j);
 		curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
 		curve->setSamples(intervalSamples);
 		curve->attach(&plot); // Plot takes ownership

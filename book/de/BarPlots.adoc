@@ -4,6 +4,9 @@
 [[sec:barPlots]]
 # Balkendiagramme
 
+image::BarPlot_1_MultiColor.png[pdfwidth=6cm]
+
+
 Balkendiagramme sind mit `QwtPlot` ebenfalls einfach möglich. Dabei gibt es verschiedene Varianten, je nach Datenlage:
 
 - ein Balken pro Intervall, nebeneinander oder gestapelt
@@ -380,3 +383,4 @@ image::BarPlot_1_MultiColorWithLegend.png[pdfwidth=6cm]
 
 ## Gestapelte Balkendiagramme oder Balkendiagramme mit mehreren Balken pro Gruppe
 
+TODO 

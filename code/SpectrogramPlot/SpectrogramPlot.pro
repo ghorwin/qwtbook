@@ -35,4 +35,4 @@ else {
 
 
 SOURCES += \
-	main.cpp
+	main_data_simple.cpp

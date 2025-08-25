@@ -40,16 +40,16 @@ THE SOFTWARE.
 class SpectrogramData : public QwtRasterData {
 public:
 	SpectrogramData() {
-		// some minor performance improvements when the spectrogram item
-		// does not need to check for NaN values
+		// kleine Optimierung, spart extra Aufwand beim Prüfen auf Lücken
+		setAttribute(QwtRasterData::WithoutGaps, false);
 
-		setAttribute(QwtRasterData::WithoutGaps, true);
-
-		m_intervals[Qt::XAxis] = QwtInterval(-1.5, 1.5);
+		// Wertebereiche definieren
+		m_intervals[Qt::XAxis] = QwtInterval(-1.5, 3);
 		m_intervals[Qt::YAxis] = QwtInterval(-1.5, 1.5);
 		m_intervals[Qt::ZAxis] = QwtInterval(0.0, 8.0);
 	}
 
+	// Diese Funktion liefert die Wertebereiche zurück und muss implementiert werden
 	virtual QwtInterval interval(Qt::Axis axis) const override {
 		if (axis >= 0 && axis <= 2)
 			return m_intervals[axis];
@@ -57,7 +57,11 @@ public:
 		return QwtInterval();
 	}
 
+	// Dies ist die eigentliche Berechnungsfunktion, welche für eine x,y-Plotkoordinate den
+	// entsprechenden z-Wert zurückliefert.
 	virtual double value(double x, double y) const override {
+		if ((x > 0.) &&	(x < 0.5) && (y > 0.) && (y < 0.5))
+			return qQNaN();
 		double z = (x - 1) * (x - 1) + (y - 2) * (y - 1);
 		return z;
 	}
@@ -97,16 +101,19 @@ int main(int argc, char *argv[]) {
 	plot.setCanvasBackground(Qt::white);
 
 	QwtPlotSpectrogram * spectro = new QwtPlotSpectrogram("Some spectrogram");
-	spectro->setRenderThreadCount( 0 ); // use system specific thread count
-	spectro->setCachePolicy( QwtPlotRasterItem::PaintCache );
+	spectro->setRenderThreadCount( 0 ); // Parallisierung je nach Systemstand verwenden
+	spectro->setCachePolicy( QwtPlotRasterItem::PaintCache ); // Bild nur neu rendern, wenn notwendig
 	spectro->attach(&plot);
 
+	// Datenhalteobjekt setzen, dieses liefert für jeden Bildpunkt einen z-Wert zurück.
+	spectro->setData( new SpectrogramData() );
+
+#if 0
 	QList< double > contourLevels;
 	for ( double level = 0.5; level < 10.0; level += 1.0 )
 		contourLevels += level;
 	spectro->setContourLevels( contourLevels );
 
-	spectro->setData( new SpectrogramData() );
 
 	const QwtInterval zInterval = spectro->data()->interval( Qt::ZAxis );
 
@@ -136,7 +143,7 @@ int main(int argc, char *argv[]) {
 	rightAxis->setColorMap( zInterval, new LinearColorMap( QwtColorMap::RGB ) );
 
 	// plot.setFont(f);
-
+#endif
 	plot.show();
 	return a.exec();
 }
