@@ -56,7 +56,7 @@ public:
 ```
 
 .Legende mit eigenem Legendenicon (schwarzumrandete Linien)
-image::PlotCurveLegendLinieWithCustomLegendIcon.png[pdfwidth=8cm]
+image::Legend/PlotCurveLegendLinieWithCustomLegendIcon.png[pdfwidth=8cm]
 
 Wenn man eher die Standard-Rechtecke bevorzugt, dann ist folgender Zeichencode ausreichend:
 
@@ -72,7 +72,7 @@ return graphic;
 was dann auch ganz schick aussieht:
 
 .Legende mit eigenem Legendenicon (schwarzumrandete Box)
-image::PlotCurveLegendLinieWithCustomLegendIcon2.png[pdfwidth=8cm]
+image::Legend/PlotCurveLegendLinieWithCustomLegendIcon2.png[pdfwidth=8cm]
 
 [TIP]
 ====

@@ -8,7 +8,7 @@ bestimmte Widgets für Anzeigen und Kontrollkomponenten bereit. Die wohl wichtig
 eine sehr flexible und mächtige Diagrammkomponente.
 
 .Beispiel für die QwtPlot-Komponente
-image::exBode.png[pdfwidth=12cm]
+image::Introduction/exBode.png[pdfwidth=12cm]
 
 Die Qwt Bibliothek steht unter einer Open-Source-Lizenz, wurde und wird aktiv vom Entwickler _Uwe Rathmann_ gepflegt und wird auf SourceForge.net gehostet:
 
@@ -35,7 +35,7 @@ Die Qwt Bibliothek kann von der https://sourceforge.net/projects/qwt[Qwt SourceF
 Die Qwt Bibliothek liefert Komponenten, welche analog zu den normalen Qt-Widgets in Desktopanwendungen verwendet werden können. Die Komponenten verwenden die Qt Palette, sodass die Qwt-Widgets in die jeweilige Oberfläche passen. Dadurch integrieren sich die Widgets nahtlos in Programmoberflächen. Einzelne Komponenten des `QwtPlot` unterstützen auch Styles. So ermöglichen z.B. Abrundungseffekte beim Plot-Widget das Immitieren klassischer Anzeigen.
 
 .QwtPlot mit abgerundeten Ecken
-image::styledDialsAndPlot.png[pdfwidth=12cm]
+image::Introduction/styledDialsAndPlot.png[pdfwidth=12cm]
 
 Details zum Styling und zur Anpassung des Erscheinungsbildes sind im <<sec:styling>> zu finden.
 

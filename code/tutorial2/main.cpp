@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
 	QwtPlot plot;
 	plot.setWindowFlags(Qt::FramelessWindowHint);
-	plot.resize(400,300);
+	plot.resize(400,400);
 
 	// etwas Abstand zwischen Rand und Achsentiteln
 	plot.setContentsMargins(8,8,8,8);
@@ -52,21 +52,21 @@ int main(int argc, char *argv[]) {
 	plot.setCanvasBackground( Qt::white );
 
 	// Achenskalierung
-	plot.setAxisScale(QwtPlot::yLeft, 0, 20);
+	plot.setAxisScale(QwtPlot::yLeft, -10, 20);
 
 	QVector<double> x{1,2,5,6,10,12,15,16,17};
-	QVector<double> y{5,4,8,8, 4, 5, 8, 9,11};
+	QVector<double> y{2,  -2, -3, 4,  2,  4, -4,  5, 11 };
 
 	QwtPlotCurve *curve = new QwtPlotCurve();
 	curve->setStyle(QwtPlotCurve::Lines);
-	curve->setPen(QColor(0,40,180,128), 2);
+	curve->setPen(QColor(156,39,6), 2);
 	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
 	curve->setSamples(x, y);
 
 	// Kurve ausfüllen
-	curve->setBrush(QColor(0xa0d0ff));
+	curve->setBrush(QColor(212,91,18));
 	// Bezugslinie setzen
-	curve->setBaseline(8);
+	curve->setBaseline(0);
 
 	curve->attach(&plot); // Plot takes ownership
 

@@ -4,7 +4,7 @@
 [[sec:spectrograms]]
 # Spektrogramm- und Farbverlaufsdiagramme
 
-image::Spectrogram_2D_with_gaps.png[pdfwidth=8cm]
+image::Spectrograms/Spectrogram_2D_with_gaps.png[pdfwidth=8cm]
 
 _Spektrogramm_ ist in der Qwt Bibliothek die Bezeichnung für Farbverlaufsdiagramme, wobei der Pixelfarbe vom Zahlenwert abhängt. Es handelt sich um Visualisierungen von 3D-Daten, also x, y, z-Tuplen. x und y werden für die X- und Y-Achse verwendet, während der z-Wert an der jeweiligen Koordinate mittels Farbtabelle in einen Farbwert umgerechnet wird.
 
@@ -70,7 +70,7 @@ private:
 Das ergibt dann ein Spektrogramm, welches mittels Standard-Farbtabelle eingefährt wird:
 
 .Spektrogramm einer analytischen Funktion unter Verwendung der Standard-Farbpalette für die Umrechnung der generierten z-Werte in eine Farbe
-image::Spectrogram_1.png[pdfwidth=6cm]
+image::Spectrograms/Spectrogram_1.png[pdfwidth=6cm]
 
 Der Farbwert ergibt sich aus dem von der Funktion `value()` zurückgelieferten Wert. Unter Verwendung des z-Wertebereichs, zurückgeliefert von `QwtRasterData::interval(Qt::ZAxis)`, wird dieser Wert normalisiert (0 = min-z-Wert, 1 = max-z-Wert). Mittels dieses normalisierten Wertes wird dann aus der Farbtabelle die dazu passende Farbe gewählt.
 
@@ -260,5 +260,5 @@ Die Vektoren mit den Stützstellen/Gitterlinien haben jeweils ein Element mehr, 
 
 
 .Spektrogramm einer Datentabelle ohne Interpolation (je Element ein Wert)
-image::Spectrogram_Datatable_ElementBased.png[pdfwidth=6cm]
+image::Spectrograms/Spectrogram_Datatable_ElementBased.png[pdfwidth=6cm]
 

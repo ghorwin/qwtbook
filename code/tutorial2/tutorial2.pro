@@ -1,4 +1,3 @@
-TARGET   = Tutorial2
 QT       += core gui widgets
 CONFIG   += c++11
 

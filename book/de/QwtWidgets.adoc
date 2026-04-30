@@ -14,7 +14,7 @@ Für die Anzeige der Skalen verwenden die nachfolgend vorgestellten Komponenten 
 Die Klasse `QwtSlider` erlaubt die Darstellung verschiedener Schieberegler, welche mit der Maus oder Tastatur (Cursortasten) bedient werden können. Im Gegensatz zur  `QSlider` Klasse können die Skalen viel flexibler und auch nichtlinear definiert werden.
 
 .Beispiele für `QwtSlider`
-image::controlsSlider.png[pdfwidth=8cm]
+image::QwtWidgets/controlsSlider.png[pdfwidth=8cm]
 
 Das Beispiel im Screenshot oben ist in der Qwt-Bibliothek als Beispiel `controls` enthalten.
 
@@ -26,7 +26,7 @@ Die Klasse `QwtWheel` zeigt ein horizontales oder vertikales Einstellrad. Die Kl
 Qt selbst bietet für eine Balkenanzeige die Klasse `QProgressBar` an, welches sich aber im Erscheinungsbild an den jeweiligen Plattformstil für Fortschrittsbalken orientiert und auch keine Skalen bietet.
 
 .Beispiele für `QwtWheel` und  `QwtThermo`
-image::controlsWheelThermo.png[pdfwidth=8cm]
+image::QwtWidgets/controlsWheelThermo.png[pdfwidth=8cm]
 
 Das Beispiel im Screenshot oben ist in der Qwt-Bibliothek als Beispiel `controls` enthalten.
 
@@ -36,7 +36,7 @@ Das Beispiel im Screenshot oben ist in der Qwt-Bibliothek als Beispiel `controls
 Die Klasse `QwtKnob` zeigt einen Drehknopf, mit ebenso flexibel konfigurierbaren Skaleneinheiten. Die Qt-Klasse `QDial` bietet ebenso ein Einstellrad, jedoch wiederum viel simpler und mit weniger Einstellungsmöglichkeiten hinsichtlich der Skalendarstellung und -skalierung.
 
 .Beispiele für `QwtKnob`
-image::controlsKnob.png[pdfwidth=8cm]
+image::QwtWidgets/controlsKnob.png[pdfwidth=8cm]
 
 Das Beispiel im Screenshot oben ist in der Qwt-Bibliothek als Beispiel `controls` enthalten.
 
@@ -46,7 +46,7 @@ Das Beispiel im Screenshot oben ist in der Qwt-Bibliothek als Beispiel `controls
 Die Klasse `QwtDial` zeichnet analoge Zeigeranzeigen, die aber auch mit der Maus/Tastatur verändert werden können (wenn man das aktiviert). Die Anzeigen lassen sich farblich sehr individuell konfigurieren.
 
 .Beispiele für `QwtDial`
-image::controlsDials.png[pdfwidth=8cm]
+image::QwtWidgets/controlsDials.png[pdfwidth=8cm]
 
 Das Beispiel im Screenshot oben ist in der Qwt-Bibliothek als Beispiel `controls` enthalten.
 

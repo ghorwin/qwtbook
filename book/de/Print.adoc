@@ -25,7 +25,7 @@ p.save("diagramm_screenshot.png");
 Das Diagramm aus dem Tutorial 1 (<<sec:tutorial1>>) sieht exportiert als PNG-Build so aus:
 
 .1-zu-1 Kopie des Plot, exportiert in ein PNG-Bild
-image::Tutorial1_f.png[pdfwidth=8cm]
+image::Print/Tutorial1_f.png[pdfwidth=8cm]
 
 [TIP]
 ====
@@ -80,7 +80,7 @@ plotPixmap.save("diagram.png");
 Das Diagramm aus dem Tutorial 1 (<<sec:tutorial1>>) sieht dann z.B. so aus:
 
 .Plot in höherer Auflösung abgespeichert
-image::Tutorial1_h.png[pdfwidth=15cm]
+image::Print/Tutorial1_h.png[pdfwidth=15cm]
 
 [IMPORTANT]
 ====
@@ -217,7 +217,7 @@ renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasFrame );
 ----
 
 .Plot ohne Widget-Hintergrund (Rand), ohne Zeichenflächenhintergrund und ohne Rahmen
-image::Tutorial1_export1.png[pdfwidth=8cm]
+image::Print/Tutorial1_export1.png[pdfwidth=8cm]
 
 Zusätzlich könnte man noch weitere Dinge ausblenden:
 
@@ -233,7 +233,7 @@ renderer.setLayoutFlag(  );
 ----
 
 .Plot gerendert im Layoutmodus _FrameWithScales_
-image::Tutorial1_export2.png[pdfwidth=8cm]
+image::Print/Tutorial1_export2.png[pdfwidth=8cm]
 
 Die linke untere Ecke des Diagramms ist hier nicht direkt am Punkt (0, 0,001). Das kann man erzwingen, wenn man die Zeichenfläche an alle vier Achsen ausrichtet:
 
@@ -246,7 +246,7 @@ plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xTop, true );
 ----
 
 .Plot mit ausgerichteten Skalen - typisches Plotlayout für den Export
-image::Tutorial1_export3.png[pdfwidth=8cm]
+image::Print/Tutorial1_export3.png[pdfwidth=8cm]
 
 
 [[sec:exportDPI]]
@@ -266,7 +266,7 @@ Beim Export eines Plots als Vektorgrafik (PDF oder SVG-Dokument) sind Schriftgr�
 Exportiert man das Diagramm als PDF, werden die Skalenlinien nur als kosmetische Linien mit einem Pixel Breite exportiert (d.h. beim Hineinzoomen bleiben diese Linien immer exakt ein Pixel breit). Alle anderen Diagrammelemente werden entsprechend skaliert.
 
 .Vergrößerung des Vektorexports (PDF), Linien der Skalen werden als kosmetische Linien immer mit einem Pixel Breite gezeichnet
-image::PDF-Export-Detail.png[pdfwidth=6cm]
+image::Print/PDF-Export-Detail.png[pdfwidth=6cm]
 
 Auch bei den Skalen darf man nicht vergessen, den Zeichenstift (`QPen`)  entsprechend zu setzen.
 
@@ -293,10 +293,10 @@ Beim Ausdruck/Export in PDF ist aber die Zielgröße entscheident für das final
 
 
 .Export in A4 Landscape Format
-image::Export_plotA4.png[pdfwidth=11.3cm]
+image::Print/Export_plotA4.png[pdfwidth=11.3cm]
 
 .Export in A5 Landscape Format
-image::Export_plotA5.png[pdfwidth=8cm]
+image::Print/Export_plotA5.png[pdfwidth=8cm]
 
 
 Wie man gut sieht, sind Zeichenelemente und Schriftgrößen aufgrund der gleichen DPI-Zahl identisch groß. Durch die unterschiedliche Zielgröße wird aber das Diagramm unterschiedlich gelayouted und die Skalen anders berechnet.

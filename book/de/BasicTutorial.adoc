@@ -78,7 +78,7 @@ Dazu in den Projekteinstellungen, unter "Ausführen", im Abschnitt "Umgebung" di
 Das Programm zeigt ein ziemlich langweiliges (und hässliches) Diagrammfenster (später wird das noch ansehnlicher gestaltet).
 
 .Das nackte Plotwidget
-image::Tutorial1_a.png[pdfwidth=6cm]
+image::BasicTutorial/Tutorial1_a.png[pdfwidth=6cm]
 
 [NOTE]
 ====
@@ -179,7 +179,7 @@ Zusätzlich zu dem Code, welcher die Linie hinzufügt, wurden noch 2 kleine Anpa
 Das Ergebnis sieht schon eher nach Diagramm aus.
 
 .Diagramm mit Linie
-image::Tutorial1_b.png[pdfwidth=6cm]
+image::BasicTutorial/Tutorial1_b.png[pdfwidth=6cm]
 
 ### Legende hinzufügen
 
@@ -248,7 +248,7 @@ Ein Raster wird standardmäßig an eine x- und y-Achse gebunden, wobei man aber 
 Inzwischen sieht das Diagramm schon ganz ansehnlich aus.
 
 .Diagramm mit Linie, Legende, Titel und Gitterlinien
-image::Tutorial1_c.png[pdfwidth=6cm]
+image::BasicTutorial/Tutorial1_c.png[pdfwidth=6cm]
 
 
 ### Achsenkonfiguration
@@ -291,7 +291,7 @@ Der Font für die Zahlen an den Achsen selbst wird über `setAxisFont()` geände
 Die Achsen selbst lassen sich vielfältig anpassen, siehe <<sec:axes>>.
 
 .Vollständig formatiertes Diagramm
-image::Tutorial1_d.png[pdfwidth=6cm]
+image::BasicTutorial/Tutorial1_d.png[pdfwidth=6cm]
 
 Die Achsen passen sich standardmäßig automatisch an den Wertebereich der angezeigten Kurven an. Das kann man natürlich auch ändern, siehe <<sec:axes>>.
 
@@ -314,7 +314,7 @@ Beim Aufruf von `setAxisScaleEngine()` nimmt das Plot wiederum das Objekt in Bes
 <<sec:axes>> beschreibt die Details der _ScaleEngine_ und gibt weitere Beispiele.
 
 .Diagramm mit logarithmischer Y-Achse
-image::Tutorial1_e.png[pdfwidth=6cm]
+image::BasicTutorial/Tutorial1_e.png[pdfwidth=6cm]
 
 
 ### Markierungslinien
@@ -342,7 +342,7 @@ marker->attach(&plot); // plot takes ownership
 Auch bei den Markern gibt es vielfältige Einstellungsmöglichkeiten, siehe <<sec:marker>>.
 
 .Diagramm mit logarithmischer Y-Achse und vertikaler Peak-Markierung
-image::Tutorial1_f.png[pdfwidth=6cm]
+image::BasicTutorial/Tutorial1_f.png[pdfwidth=6cm]
 
 Nun ist das Diagramm selbst fertig und wir widmen uns der Nutzerinteraktion.
 
@@ -383,7 +383,7 @@ Im Konstruktor der `QwtPlotZoomer` Klasse registriert sich das Objekt als Kind d
 Damit der Zoomer weiß, welche Achsen beim Zoom manipuliert werden sollen, muss man die x- und y-Achse im Konstruktor angeben. Möchte man z.B. beide y-Achsen gleichzeitig zoomen, braucht man zwei `QwtPlotZoomer`-Objekte.
 
 .Diagramm mit aufgezogenem Zoom-Rechteck
-image::Tutorial1_g.png[pdfwidth=6cm]
+image::BasicTutorial/Tutorial1_g.png[pdfwidth=6cm]
 
 
 ### Plotausschnitt verschieben mit QwtPlotPanner

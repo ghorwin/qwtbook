@@ -7,7 +7,7 @@
 Das `QwtPlot` ist sicher die nützlichste und am weitesten bekannte Komponente der Qwt Bibliothek. Im Gegensatz zu vielen anderen Qt-Diagrammkomponenten, kann man mit dem `QwtPlot` wirklich sehr flexibel (und effizient) alle möglichen Diagrammtypen erstellen und anzeigen.
 
 .Beispiel für ein typisches `QwtPlot` mit zwei y-Achsen und innenliegender Legende.
-image::2D_time_plot_2axes.png[pdfwidth=10cm]
+image::QwtPlot/2D_time_plot_2axes.png[pdfwidth=10cm]
 
 Bevor ab <<sec:linecurves>> die einzelnen Diagrammtypen vorgestellt werden, geht es in diesem Kapitel um die wesentlichen Grundlagen.
 
@@ -41,7 +41,7 @@ Innerhalb der Zeichenfläche kann man nun die verschiedensten Elemente zeichen, 
 Alle diese Objekte sind von der Basisklasse  `QwtPlotItem` abgeleitet und teilen sich dadurch gewisse gemeinsame Eigenschaften.
 
 .Von QwtPlotItem abgeleitete Klassen der verschiedenen Zeichenelemente
-image::ClassDiagrams/QwtPlotItem-class-hierarchy.png[pdfwidth=12cm]
+image::QwtPlot/QwtPlotItem-class-hierarchy.png[pdfwidth=12cm]
 
 
 In einem Diagramm kann man alle möglichen Elemente kombinieren, also auch Liniendiagramme mit Balken, Symbolen und Markierungen darstellen.
@@ -92,7 +92,7 @@ Für die Darstellen von Plotkurven/Balken oder anderen Zeichenelementen werden d
 Alle Zeichenelemente, welche solche Reihendaten verwenden, sind Kinder der Klasse `QwtPlotSeriesItem`.
 
 .Klasse QwtPlotSeriesItem, Elternklassen und abgeleitete Klassen
-image::ClassDiagrams/QwtPlotSeriesItem-class-hierarchy.png[pdfwidth=12cm]
+image::QwtPlot/QwtPlotSeriesItem-class-hierarchy.png[pdfwidth=12cm]
 
 Die Datenhaltung erfolgt in der Template-Klasse `QwtSeriesStore`, welche die abstrakte Schnittstellenklasse `QwtAbstractSeriesStore` implementiert.
 
@@ -113,7 +113,7 @@ Je nach Anforderung des individuellen Zeichenelements/Diagrammtyps werden unters
 
 
 .Abstrakte Klasse QwtAbstractSeriesStore und abgeleitete Klassen
-image::ClassDiagrams/QwtAbstractSeriesStore-class-hierarchy.png[pdfwidth=15cm]
+image::QwtPlot/QwtAbstractSeriesStore-class-hierarchy.png[pdfwidth=15cm]
 
 [TIP]
 ====

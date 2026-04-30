@@ -31,7 +31,6 @@ THE SOFTWARE.
 #include <QPdfWriter>
 
 #include <cmath>
-#include <fstream>
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>

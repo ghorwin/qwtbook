@@ -132,19 +132,19 @@ b. die Qwt-Designer-Plugins verwenden.
 Zur Erklärung wird im Qt Designer ein einfaches Widget entworfen:
 
 .Widget mit Platzhalter-Widget für das Diagramm
-image::Tutorial1_ui1.png[pdfwidth=8cm]
+image::Building/Tutorial1_ui1.png[pdfwidth=8cm]
 
 Unter der Spinbox wurde ein `QWidget` eingefügt. Dieses soll nun als Platzhalter für das `QwtPlot` dienen. Dazu im Kontextmenü des Widgets die Option "Als Platzhalter für benutzerdefinierte Klasse festlegen..." auswählen:
 
-image::Tutorial1_ui2.png[pdfwidth=6cm]
+image::Building/Tutorial1_ui2.png[pdfwidth=6cm]
 
 Und im Dialog eine neue Platzhalterklasse wie folgt definieren:
 
-image::Tutorial1_ui3.png[pdfwidth=6cm]
+image::Building/Tutorial1_ui3.png[pdfwidth=6cm]
 
 Die Eingabe mit "Hinzufügen" bestätigen und dann auf "Anwenden" klicken, um das Platzhalter-Widget in das `QwtPlot` zu wandeln. Wir benennen das noch in _plot_ um, und füge das horizontale Layout und das Plotwidget in ein vertikales Layout ein:
 
-image::Tutorial1_ui4.png[pdfwidth=8cm]
+image::Building/Tutorial1_ui4.png[pdfwidth=8cm]
 
 Damit sich das Plotwidget den ganzen vertikalen Platz schnappt, wählt man das Top-Level Widget aus und scrollt in der Eigenschaftsleiste bis nach unten zu den Einstellungen für das vertikale Layout. Dort gibt man bei den Stretch-Faktoren "0,1" ein, wodurch sich das 2. Widget im Layout (das Plot) komplett ausdehnt.
 

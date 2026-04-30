@@ -27,7 +27,7 @@ TODO den entfern-Trick erklären...
 Die Qwt-Bibliothek bringt eine Reihe von Spline-Interpolationsalgorithmen mit, welche auch abseits der `QwtCurveFitter`-Funktionality (siehe <<sec:curveFitter>>) genutzt werden können. Hier ist nochmal ein Überblick:
 
 .Kind-Klassen der Basisklasse `QwtSpline`
-image::ClassDiagrams/QwtSpline-class-hierarchy.png[pdfwidth=10cm]
+image::Advanced/QwtSpline-class-hierarchy.png[pdfwidth=10cm]
 
 Direkt zu verwenden sind die Klassen:
 
@@ -58,23 +58,23 @@ QPolygonF splinePoly = spline.polygon(poly, 1e-2);
 Die Stützstellen der Beispielkurve oben werden in einen Polygonzug gesteckt und durch die Spline in einen neuen Polygonzug konvertiert. Die Toleranz von 0.01 erzeugt hier 95 Punkte. Plottet man die generierte Kurve im Vergleich zu der mittels `QwtSplineCurveFitter` generierten Kurve, so sehen beide Linien auf den ersten Blick identisch aus. Wie man auch gut sehen kann, werden die Punkte in den Krümmungsstellen stärker geclustert. 
 
 .SplinePleasing: generiert mittels polygon() und mittels painterPath()
-image::SplinePleasing.png[pdfwidth=10cm]
+image::Advanced/SplinePleasing.png[pdfwidth=10cm]
 
 Hineingezoomt erkennt man jedoch Unterschiede:
 
 .SplinePleasing: Unterschiede zwischen generierte Spline-Polygon und PainterPath
-image::SplinePleasingZoom.png[pdfwidth=10cm]
+image::Advanced/SplinePleasingZoom.png[pdfwidth=10cm]
 
 
 Auch bei `QwtSplineLocal(QwtSplineLocal::PChip)` mit (testweise veränderten Stützstellen) sieht das so aus:
 
 .SplineLocal: generiert mittels polygon() und mittels painterPath()
-image::SplineLocal.png[pdfwidth=10cm]
+image::Advanced/SplineLocal.png[pdfwidth=10cm]
 
 Hineingezoomt erkennt man jedoch Unterschiede:
 
 .SplineLocal: Unterschiede zwischen generierte Spline-Polygon und PainterPath
-image::SplineLocalZoom.png[pdfwidth=10cm]
+image::Advanced/SplineLocalZoom.png[pdfwidth=10cm]
 
 
 [IMPORTANT]

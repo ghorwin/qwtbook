@@ -4,7 +4,7 @@
 [[sec:barPlots]]
 # Balkendiagramme
 
-image::BarPlot_1_MultiColor.png[pdfwidth=6cm]
+image::BarPlots/BarPlot_1_MultiColor.png[pdfwidth=6cm]
 
 
 Balkendiagramme sind mit `QwtPlot` ebenfalls einfach möglich. Dabei gibt es verschiedene Varianten, je nach Datenlage:
@@ -29,7 +29,7 @@ curve->attach(&plot); // Plot takes ownership
 Ohne weitere Anpassung sieht das Diagramm noch recht langweilig aus.
 
 .Minimalistisches Balkendiagramm
-image::BarPlot_1.png[pdfwidth=6cm]
+image::BarPlots/BarPlot_1.png[pdfwidth=6cm]
 
 [NOTE]
 ====
@@ -48,7 +48,7 @@ curve->setBaseLine(15);
 ```
 
 .Balkendiagramm mit Bezugslinie bei y=15 
-image::BarPlot_1_baseLine.png[pdfwidth=6cm]
+image::BarPlots/BarPlot_1_baseLine.png[pdfwidth=6cm]
 
 
 ## Layout und Abstände
@@ -58,7 +58,7 @@ Das Erscheinungsbild des Diagramms lässt sich vielfältig anpassen. Wenn man da
 In der Standardeinstellung werden die Balken mit minimalem Abstand zueinander und vom Rand gezeichnet. Den Randabstand kann man mit `setMargin(pixels)` ändern und den Abstand zwischen den einzelnen Balken definiert man mit `setSpacing(pixels)`.
 
 .Balkendiagramm mit angepassten Abständen und Rändern
-image::BarPlot_1_spacingMargin.png[pdfwidth=6cm]
+image::BarPlots/BarPlot_1_spacingMargin.png[pdfwidth=6cm]
 
 
 Die Breite der Balken selbst wird über Layoutvorgaben und konkret über die Funktionen `QwtPlotAbstractBarChart::setLayoutPolicy()` und `QwtPlotAbstractBarChart::setLayoutHint()` kontrolliert.
@@ -89,7 +89,7 @@ curve->setLayoutHint(100);  // minimum width of bars is 100 pixels
 
 
 .Durch LayoutHint definierte Mindestbalkenbreite
-image::BarPlot_1_LayoutAutoAdjustSamples_minWidth.png[pdfwidth=6cm]
+image::BarPlots/BarPlot_1_LayoutAutoAdjustSamples_minWidth.png[pdfwidth=6cm]
 
 
 ### ScaleSamplesToAxes
@@ -159,7 +159,7 @@ curve->setSymbol( symbol );
 Angepasst werden können die Form des Rechteckrahmens (`Raised`, `Plain`, `NoFrame`), die Füllfarbe und Linienfarbe.
 
 .Balkendiagram mit angepasstem Stil für die Balken
-image::BarPlot_1_BoxSymbol.png[pdfwidth=6cm]
+image::BarPlots/BarPlot_1_BoxSymbol.png[pdfwidth=6cm]
 
 
 [TIP]
@@ -182,7 +182,7 @@ curve->setSymbol( symbol );
 
 
 .Balkendiagram mit schwarz umrandeten, einfarbigen Balken
-image::BarPlot_1_BoxSymbolBlackFrame.png[pdfwidth=6cm]
+image::BarPlots/BarPlot_1_BoxSymbolBlackFrame.png[pdfwidth=6cm]
 
 ## Balkenbeschriftung auf der X-Achse
 
@@ -269,7 +269,7 @@ Das Problem mit dem hineinzoomen lässt sich durch eine minimale Erweiterung des
 ```
 
 .Hineingezoomt in ein Balkendiagramm mit Textbeschriftung
-image::BarPlot_1_xAxisWithLabels_zoomedFixed.png[pdfwidth=6cm]
+image::BarPlots/BarPlot_1_xAxisWithLabels_zoomedFixed.png[pdfwidth=6cm]
 
 
 ## Mehrfarbige Balken
@@ -312,7 +312,7 @@ Die Funktion `QwtPlotBarChart::specialSymbol()` ist eine _factory function_ und 
 ====
 
 .Balkendiagramm mit unterschiedlich gefärbten Balken
-image::BarPlot_1_MultiColor.png[pdfwidth=6cm]
+image::BarPlots/BarPlot_1_MultiColor.png[pdfwidth=6cm]
 
 
 [TIP]
@@ -378,7 +378,7 @@ plot.setAxisVisible(QwtPlot::xBottom, false);
 ```
 
 .Balkendiagramm mit unterschiedlich gefärbten Balken und Legendeneinträgen
-image::BarPlot_1_MultiColorWithLegend.png[pdfwidth=6cm]
+image::BarPlots/BarPlot_1_MultiColorWithLegend.png[pdfwidth=6cm]
 
 
 ## Gestapelte Balkendiagramme oder Balkendiagramme mit mehreren Balken pro Gruppe
