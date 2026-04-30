@@ -1,0 +1,9 @@
+Makefile
+/examples/bin/
+/playground/bin/
+*.o
+moc_*
+qrc_*
+.qmake.stash
+
+
