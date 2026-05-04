@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make -n all)",
+      "Bash(make all *)",
+      "Read(//home/claudette/git/qwtbook/book/**)",
+      "Bash(ruby -e \"require '../rouge_theme.rb'\")",
+      "Bash(gem list *)"
+    ]
+  }
+}
