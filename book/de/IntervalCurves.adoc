@@ -89,6 +89,7 @@ Nun bleibt beim Zoomen, Verschieben oder beim Anpassen der Fenstergröße der Gr
 
 Man kann die Intervallkurven auch nutzen, um gestapelte, ausgefüllte Kurven bzw. Flächendiagramme zu erstellen. Dazu erstellt man einfach mehrere `QwtPlotIntervalCurve` Zeichenelemente, die sich jeweils die gleichen Y-Werte teilen.
 
+.Gestapelte Kurven
 ```c++
 QVector<double> x{1,2,5,6,10,12,15,16,17};
 QVector<QVector<double> >  y;
@@ -120,77 +121,34 @@ for (int j=0;j<y.count()-1; ++j) {
 ```
 
 .Diagramm mit gestapelten Kurven/Flächendiagrammen
-image::IntervalCurves/IntervalCurve_StackedCurve.png[pdfwidth=8cm]
+image::IntervalCurves/StackedCurveByIntervalCurve.png[pdfwidth=8cm]
 
+[TIP]
+====
+Gestapelte Kurven kann man klassisch auch mit gefüllten Linienkurven machen (siehe <<sec:filledCurves>>), welche übereinander gezeichnet werden. Dazu müssen die Linen einen Brush erhalten und von hinten nach vorne gezeichnet werden.
+====
 
-## Berechnung von Intervalkurven aus Datensätzen mit Nulldurchgängen
-
-In den Beispielen oben waren einzelnen Summenkurvenlinien bereits bekannt. Häufig jedoch hat man einzelne Datensätze, die man akkumuliert, also gestapelt darstellen will. Haben alle Kurven ausschließlich positive oder negative Werte, so kann man die Datenpunkte einfach addieren und so die Summenkurvenlinien berechnen, wie in folgendem Beispiel:
-
+.Gestapelte Kurven unter Verwendung ausgefüllter QwtPlotCurves
 ```c++
-...
-
-y.append( QVector<double>{0,  0, 0, 0,  0,  0, 0,  0,  0} );
-y.append( QVector<double>{2,  2, 3, 4,  2,  4, 4,  5, 11} );
-y.append( QVector<double>{6,4.4, 9, 8,5.5,5.7, 9, 11, 12} );
-y.append( QVector<double>{7,6.6,12,10,  9, 11,12, 12, 13} );
-
-computeStackedLines(y);
-
-...
-```
-
-mit der Funktion `computeStackedLines()`:
-
-```c++
-void computeStackedLines(QVector<QVector<double> > &y) {
-	for (int i = 1; i < y.count(); ++i)
-		for (int j = 0; j < y[i].count(); ++j)
-			y[i][j] += y[i-1][j];
+// Variablendeklarationen und Initialisierung wie oben
+for (int j=y.count()-1;j>0; --j) {
+	QwtPlotCurve *curve = new QwtPlotCurve();
+	curve->setPen(cols[j].darker(150), 2);
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+	curve->setSamples(x, y[j]);
+	curve->setBrush(cols[j]);
+	curve->setZ(y.count()-j); // Zeichenreihenfolge über z-Wert setzen
+	curve->attach(&plot);
 }
 ```
 
+Das Ergebnis ist fast das gleiche wie oben:
 
-.Diagramm mit gestapelten Flächenkurven, die aus Einzeldatensätzen mit ausschließlich positiven Werten berechnet wurden
-image::IntervalCurves/IntervalCurve_StackedDataSets_all_positive.png[pdfwidth=8cm]
-
-Wenn man aber Kurven hat, die sowohl negative als auch positive Werte haben, und daraus durch einfache Addition die Summenkurven berechnet, dann klappt das nicht. Nimmt man beispielsweise folgende Datenreihen:
-
-```c++
-y.append( QVector<double>{0,    0,   0,  0,   0,   0,  0,   0,  0} ); // die Grundlinie
-y.append( QVector<double>{2,   -2,  -3,  4,   2,   4, -4,   5,  4} );
-y.append( QVector<double>{6,  4.4,   9,  8, 5.5, 5.7, -9, -11, -7} );
-y.append( QVector<double>{7, -6.6, -12, 10,   9,  11, 12,  12, 13} );
-```
-
-dann sieht das falsch aus:
-
-.Diagramm mit gestapelten Kurven/Flächendiagramm
-image::IntervalCurves/IntervalCurve_StackedDataSets_wrong.png[pdfwidth=8cm]
-
-Beim Addieren der Linien heben sich positive und negative Linienabschnitte weg. Besser ist es, jeweils die positiven Werte zu addieren und die negativen Werte zu subtrahieren, und so eine nach oben und eine nach unten gestapelte Liniereihe zu trennen. Das lässt sich einfach ein folgender Wertetabelle erläutern:
-
-```c++
-// Die Datenreihe 
-2,  -2, -3, 4,  2,  4, -4,  5, 11 
-
-// wird in folgende Reihen aufgeteilt
-
-2,  0,  0, 4, 2, 4,  0, 5, 11
-0, -2, -3, 0, 0, 0, -4, 0,  0
-```
-
-Nun kann man zwei Linien zeichnen, die jeweils bis zur 0-Achse gehen, was aber immer noch komisch aussieht.
-
-.Diagramm mit einer nach unten und oben aufgeteilten Kurven/Flächendiagramm
-image::IntervalCurves/IntervalCurve_StackedDataSets_plusminus.png[pdfwidth=8cm]
+.Diagramm mit gestapelten Kurven/Flächendiagrammen, diesmal erzeugt durch ausgefüllte Flächen
+image::IntervalCurves/StackedCurveByFilledCurves.png[pdfwidth=8cm]
 
 
-Vergleicht man das mit der Darstellung einer gefüllten Kurve, siehe <<sec:filledCurves>> was aber bei gestapelt, so müsste es eigentlich so aussehen:
+## Berechnung von gestapelten Intervalkurven aus Datenreihen
 
-
-.Diagramm mit einer nach unten und oben aufgeteilten Kurven/Flächendiagramm
-image::IntervalCurves/IntervalCurve_StackedDataSets_plusminus_correct.png[pdfwidth=8cm]
-
-Die Variante mit der ausgefüllte Kurve funktioniert aber nicht bei bei ausgefüllten Kurven, also muss der Algorithmus für die Berechnung der gestapelten Linien angepasst werden. 
+Häufig hat man die Daten der einzelnen
 

@@ -1,0 +1,95 @@
+/*
+
+The MIT License (MIT)
+
+Copyright (c) 2025 Andreas Nicolai
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/
+
+#include <QApplication>
+#include <QPen>
+#include <QFile>
+#include <QTextStream>
+#include <QPainterPath>
+
+#include <QwtPlot>
+#include <QwtPlotCurve>
+#include <QwtLegend>
+#include <QwtText>
+#include <QwtPlotGrid>
+#include <QwtLogScaleEngine>
+#include <QwtPlotMarker>
+#include <QwtPlotZoomer>
+#include <QwtPlotPanner>
+#include <QwtPlotIntervalCurve>
+#include <QwtScaleMap>
+
+int main(int argc, char *argv[]) {
+	QApplication a(argc, argv);
+	QwtPlot plot;
+	plot.setWindowFlags(Qt::FramelessWindowHint);
+	plot.resize(600,300);
+
+	// etwas Abstand zwischen Rand und Achsentiteln
+	plot.setContentsMargins(8,8,8,8);
+	// Hintergrund der Zeichenfläche soll weiß sein
+	plot.setCanvasBackground( Qt::white );
+
+	// Achenskalierung
+	plot.setAxisScale(QwtPlot::yLeft, 0, 20);
+
+	// stacked plot
+	QVector<double> x{1,2,5,6,10,12,15,16,17};
+	QVector<QVector<double> >  y;
+	y.append( QVector<double>{0,  0, 0, 0,  0,  0, 0,  0,  0} );
+	y.append( QVector<double>{2,  2, 3, 4,  2,  4, 4,  5, 11} );
+	y.append( QVector<double>{6,4.4, 9, 8,5.5,5.7, 9, 11, 12} );
+	y.append( QVector<double>{7,6.6,12,10,  9, 11,12, 12, 13} );
+
+	const QColor cols[] = { QColor(96,60,20),
+							QColor(156,39,6),
+							QColor(212,91,18),
+							QColor(242,188,43)
+						  };
+
+	for (int j=y.count()-1;j>0; --j) {
+		QwtPlotCurve *curve = new QwtPlotCurve();
+		curve->setPen(cols[j].darker(150), 2);
+		curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+		curve->setSamples(x, y[j]);
+		curve->setBrush(cols[j]);
+		curve->setZ(y.count()-j); // largest at back
+		curve->attach(&plot); // Plot takes ownership
+	}
+
+	QFont titleFont(qApp->font());
+	titleFont.setPointSize(10);
+	titleFont.setBold(true);
+	QwtText t("Stacked curves by filled QwtPlotCurve");
+	t.setFont(titleFont);
+	plot.setTitle(t);
+
+	QwtPlotZoomer * zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, plot.canvas());  // plot takes ownership
+	zoomer->setTrackerMode( QwtPlotPicker::AlwaysOn ); // Kurvenvwerte unterm Cursor anzeigen
+
+	plot.show();
+	return a.exec();
+}
