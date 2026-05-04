@@ -29,6 +29,8 @@ THE SOFTWARE.
 #include <QFile>
 #include <QTextStream>
 #include <QPainterPath>
+#include <QDateTime>
+#include <QTimeZone>
 
 #include <QwtPlot>
 #include <QwtPlotCurve>
@@ -169,6 +171,49 @@ void mergeCoordinates(const QVector<QVector<double> > & x, QVector<QVector<doubl
 }
 
 
+void computeStackedLinesWithNegative(const QVector<QVector<double> > &y, QVector<QVector<double> > &yPos, QVector<QVector<double> > &yNeg) {
+	// y[0] ist die Grundlinie (alles Nullen), y[1..n] sind die Rohdaten der Datenreihen.
+	// Ausgabe: y wird ersetzt durch 2*n Einträge — Paare von (unten,oben) pro Datenreihe.
+	// Positive Werte stapeln sich nach oben
+	// Negative Werte stapeln sich nach unten
+	int numSeries = y.count();
+	int numPoints = y[0].count();
+
+	QVector<double> posAccum(numPoints, 0.0);
+	QVector<double> negAccum(numPoints, 0.0);
+
+	// add base line
+	yPos.append(posAccum);
+	yNeg.append(posAccum);
+	QVector<QVector<double> > result;
+	for (int j = 0; j < numSeries; ++j) {
+		QVector<double> lower(numPoints), upper(numPoints);
+		for (int i = 0; i < numPoints; ++i) {
+			double v = y[j][i];
+			// Positive Werte in posAccum akkumulieren, negative in negAccum
+			if (v >= 0.0)
+				posAccum[i] += v;
+			else
+				negAccum[i] += v;
+			upper[i] = posAccum[i];
+			lower[i] = negAccum[i];
+		}
+		yNeg.append(lower);
+		yPos.append(upper);
+	}
+}
+
+bool checkMonotonic(const QVector<double> & x) {
+	bool failed = false;
+	for (int i=1; i<x.count(); ++i) {
+		if (x[i-1] >= x[i]) {
+			qDebug() << "not monotonic at i=" << i;
+			failed = true;
+		}
+	}
+	return !failed;
+}
+
 void fullAlgorithm(QwtPlot * plot) {
 #define VAR 4
 	// Originale Daten
@@ -182,19 +227,72 @@ void fullAlgorithm(QwtPlot * plot) {
 		QColor(0x20b000), // #208000
 		QColor(0x2000b0)  // #200080
 	};
+
+#if 0
+	// lade Testdaten aus der Datei
+	QFile f("testdata.tsv");
+	f.open(QFile::ReadOnly);
+	QTextStream strm(&f);
+	QStringList header = strm.readLine().split('\t');
+	y = QVector<QVector<double> >(header.count()-1);
+	x_initial.clear();
+	QString l;
+	QString lLast;
+	l = strm.readLine();
+	QDateTime year;
+	while (!strm.atEnd()) {
+		if (l.isEmpty())
+			continue;
+		QTextStream st(&l);
+		QString t,t2;
+		st >> t >> t2;
+		QDate d = QDate::fromString(t, "yyyy-MM-dd");
+		QTime tim = QTime::fromString(t2, "hh:mm:ss");
+		QDateTime dt(d,tim,QTimeZone::utc());
+		// QDateTime dt = QDateTime::fromString(t + " " + t2, "yyyy-MM-dd hh:mm:ss", QTimeZone::utc());
+		if (!year.isValid())
+			year = dt;
+		double xval = year.secsTo(dt)/365.0;
+		if (!x_initial.empty() && x_initial.last() >= xval) {
+			qDebug() << "Not monotinic, skipped:" << x_initial.last() << xval;
+		}
+		else {
+			x_initial.append(xval);
+			for (int i=0; i<y.count(); ++i) {
+				double yval;
+				st >> yval;
+				y[i].append(yval);
+			}
+		}
+		lLast = l;
+		l = strm.readLine();
+	}
+	cols = {
+		"#8C564B",
+		"#BCBD22",
+		"#E377C2",
+		"#1F77B4",
+		"#D62728",
+		"#FF7F0E",
+		"#2CA02C",
+		"#7F7F7F",
+		"#17BECF"
+	};
+#endif
+
 	// Achenskalierung
-	plot->resize(600,400);
+	plot->resize(1600,1000);
 
 #if VAR==1
 	QwtText t("Originale Datenreihen");
-	plot->setAxisScale(QwtPlot::yLeft, -8, 8);
+	// plot->setAxisScale(QwtPlot::yLeft, -8, 8);
 
 	for (int i=0; i<y.count(); ++i)
 		addCurve(plot, x_initial, y[i], cols[i]);
 #elif VAR==2
 	// step 1 : compute individual x vectors by interpolating y values
 	QwtText t("Datenreihen mit Null-Durchgangspunkten (interpoliert)");
-	plot->setAxisScale(QwtPlot::yLeft, -8, 8);
+	// plot->setAxisScale(QwtPlot::yLeft, -8, 8);
 
 	// jede Datenreihe braucht einen eigenen X-Vector
 	QVector<QVector<double> >  x(y.count());
@@ -206,8 +304,11 @@ void fullAlgorithm(QwtPlot * plot) {
 		addCurve(plot, x[i], y[i], cols[i]);
 #elif VAR==3
 	QwtText t("Datenreihen mit vereinheitlichtem X-Raster (interpoliert)");
-	plot->setAxisScale(QwtPlot::yLeft, -8, 8);
+	// plot->setAxisScale(QwtPlot::yLeft, -8, 8);
 
+	if (!checkMonotonic(x_initial)) {
+		qDebug() << "data not monotonic";
+	}
 
 	// jede Datenreihe braucht einen eigenen X-Vector
 	QVector<QVector<double> >  x(y.count());
@@ -215,9 +316,18 @@ void fullAlgorithm(QwtPlot * plot) {
 		x[i] = x_initial;
 		addZeroCrossings(x[i], y[i]); // in-place operation
 	}
+	for (int i=0; i<y.size(); ++i) {
+		if (!checkMonotonic(x[i])) {
+			qDebug() << "series " << i;
+		}
+	}
 	// step 2 : merge x-coordinates and interpolate y values
 	QVector<double> unifiedX;
 	mergeCoordinates(x, y, unifiedX); // inplace operation
+	for (int i=0; i<y.size(); ++i) {
+		qDebug() << *std::max_element(y[i].begin(), y[i].end());
+	}
+	double lastX = unifiedX.last();
 
 	for (int i=0; i<y.count(); ++i) {
 		x[i] = unifiedX;
@@ -226,7 +336,7 @@ void fullAlgorithm(QwtPlot * plot) {
 
 #else
 	QwtText t("Positiv und negative akkumulierte Kurven");
-	plot->setAxisScale(QwtPlot::yLeft, -10, 18);
+	// plot->setAxisScale(QwtPlot::yLeft, -10, 18);
 
 	QVector<QVector<double> >  x(y.count());
 	for (int i=0; i<y.count(); ++i) {
@@ -235,6 +345,18 @@ void fullAlgorithm(QwtPlot * plot) {
 	}
 	QVector<double> unifiedX;
 	mergeCoordinates(x, y, unifiedX); // inplace operation
+
+	// clear all but last
+	for (unsigned int i=0;i<unifiedX.count(); ++i) {
+		y[0][i] = 0;
+		y[1][i] = 0;
+		y[2][i] = 0;
+		y[3][i] = 0;
+		y[4][i] = 0;
+		y[5][i] = 0;
+		y[6][i] = 0;
+		y[8][i] = 0;
+	}
 
 	// Datenreihen addieren
 	QVector<QVector<double> > yPos;
