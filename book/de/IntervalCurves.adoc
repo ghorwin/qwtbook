@@ -87,7 +87,7 @@ Nun bleibt beim Zoomen, Verschieben oder beim Anpassen der Fenstergröße der Gr
 
 ## Gestapelte (Intervall-)Kurven/Flächendiagramme
 
-Man kann die Intervallkurven auch nutzen, um gestapelte, ausgefüllte Kurven bzw. Flächendiagramme zu erstellen. Dazu erstellt man einfach mehrere `QwtPlotIntervalCurve` Zeichenelemente, die sich jeweils die gleichen Y-Werte teilen.
+Man kann die Intervallkurven auch nutzen, um gestapelte, ausgefüllte Kurven bzw. Flächendiagramme zu erstellen. Dazu erstellt man einfach mehrere `QwtPlotIntervalCurve` Zeichenelemente, die sich jeweils die gleichen X-Werte teilen, aber unterschiedliche Y-Werte haben.
 
 .Gestapelte Kurven
 ```c++
@@ -124,7 +124,7 @@ image::IntervalCurves/StackedCurveByIntervalCurve.png[pdfwidth=8cm]
 
 [TIP]
 ====
-Gestapelte Kurven kann man klassisch auch mit gefüllten Linienkurven machen (siehe <<sec:filledCurves>>), welche übereinander gezeichnet werden. Dazu müssen die Linen einen Brush erhalten und von hinten nach vorne gezeichnet werden. Mittels `QwtPlotItem::setZ()` kann man den Tiefenwert setzen - je höher der Wert, umso weiter vorne ist das Zeichenelement.
+Gestapelte Kurven kann man klassisch auch mit gefüllten Linienkurven erzeugen (siehe <<sec:filledCurves>>), welche übereinander gezeichnet werden. Dazu müssen die Linien einen Brush erhalten und von hinten nach vorne gezeichnet werden. Mittels `QwtPlotItem::setZ()` kann man den Tiefenwert setzen - je höher der Wert, umso weiter vorne ist das Zeichenelement.
 ====
 
 .Gestapelte Kurven unter Verwendung ausgefüllter QwtPlotCurves
@@ -151,7 +151,7 @@ image::IntervalCurves/StackedCurveByFilledCurves.png[pdfwidth=10cm]
 
 ## Berechnung von gestapelten Kurven aus Datenreihen
 
-Gestapelte Kurven entstehen ja durch as _Stapeln_ normaler Dateireihen. Diese müssen nicht zwingend die gleichen X-Werte pro Datenreihe verwenden und können positive und negative Zahlen haben. Um solche Daten korrekt zu Stapeln und Anzuzeigen ist etwas Vorbereitungsarbeit notwendig.
+Gestapelte Kurven entstehen ja durch das _Stapeln_ normaler Dateireihen. Diese müssen nicht zwingend die gleichen X-Werte pro Datenreihe verwenden und können positive und negative Zahlen haben. Um solche Daten korrekt zu stapeln und anzuzeigen ist etwas Vorbereitungsarbeit notwendig.
 
 Beginnen wir mal mit drei einfachen Datenreihen, die direkt darstellt so aussehen:
 
@@ -170,12 +170,12 @@ QVector<QColor> cols = {
 };
 ```
 
-.Drei Datenreihen mit positive und negativen Zahlenwerten
+.Drei Datenreihen mit positiven und negativen Zahlenwerten
 image::IntervalCurves/StackedCurve_originalDataSeries.png[pdfwidth=10cm]
 
 ### Nulldurchgänge bestimmen
 
-Als erstes muss man die Nulldurchgänge der Kurven bestimmen und an diesen Stellen neue Stützstellen mit y=0 einfügen. Das macht eine Funktion `addZeroCrossings()`:
+Als Erstes muss man die Nulldurchgänge der Kurven bestimmen und an diesen Stellen neue Stützstellen mit y=0 einfügen. Das macht die Funktion `addZeroCrossings()`:
 
 ```c++
 ... // wie bisher
@@ -210,7 +210,7 @@ void addZeroCrossings(QVector<double> & x, QVector<double> & y) {
 		if (i + 1 < n) {
 			double y0 = y[i], y1 = y[i + 1];
 			if ((y0 > 0.0 && y1 < 0.0) || (y0 < 0.0 && y1 > 0.0)) {
-				double denom = y0 - y1; // may never become 0
+				double denom = y0 - y1; // wird niemals 0
 				// X Wert interpolieren 0 = x_0 + (y1-y0)/(x1-x0)*x_0
 				newX.append(x[i] + (y0 / denom) * (x[i + 1] - x[i]));
 				newY.append(0);
@@ -228,7 +228,7 @@ image::IntervalCurves/StackedCurve_withZeroCrossings.png[pdfwidth=10cm]
 
 ### Einheitliche Stützstellen berechnen
 
-Um die Datenwerte addieren zu können, müssen die Stützstellen übereinstimmen. Also wird ein einheitliches X-Werte-Raster bestimmt und die jeweiligen fehlenden Werte interpoliert.
+Um die Datenwerte addieren zu können, müssen die Stützstellen übereinstimmen. Also wird ein einheitliches X-Werte-Raster bestimmt und die jeweiligen fehlenden Werte werden interpoliert.
 
 
 ```c++
@@ -242,17 +242,24 @@ mergeCoordinates(x, y, unifiedX); // unifiedX wird generiert und y Vektoren ange
 
 .Die Funktion zum Vereinheitlichen der Stützstellen
 ```c++
-void mergeCoordinates(const QVector<QVector<double> > & x, QVector<QVector<double> > & y, QVector<double> & unifiedX) {
+void mergeCoordinates(
+    const QVector<QVector<double> > & x, 
+    QVector<QVector<double> > & y, 
+    QVector<double> & unifiedX) 
+{
 	// Alle Koordinaten von allen Vektoren in ein einheitliches Set einfügen
 	std::set<double> xSet;
 	int seriesCount = x.count();
 	for (int k=0; k<x.count(); ++k)
 		for (double val : x[k])
-			xSet.insert(val); // das ist eine potentiell langsame Operation, weil der Baum des Sets durchlaufen werden muss
+			xSet.insert(val); 
+			// insert() ist eine potentiell langsame Operation, weil der Baum 
+			// des Sets durchlaufen werden muss
 	unifiedX = QVector<double>(xSet.begin(), xSet.end());
 
 	// Nun alle x-Werte aller Serien durchlaufen und y-Werte für fehlende Stützstellen interpolieren.
-	// Da hinterher alle Datenreihen die gleichen Stützstellen haben, brauchen wir nur die y-Werte zu aktualisieren.
+	// Da hinterher alle Datenreihen die gleichen Stützstellen haben, 
+	// brauchen wir nur die y-Werte zu aktualisieren.
 	for (int k=0; k<seriesCount; ++k) {
 		if (x[k].count() == 0) {
 			// Kurve ist leer, mit 0-Werten auffüllen
@@ -316,6 +323,10 @@ QVector<QVector<double> > yPos;
 QVector<QVector<double> > yNeg;
 computeStackedLinesWithNegative(y, yPos, yNeg);
 
+// Untere Intervallgrenze hinzufügen
+QVector<double> nullVector(y.count(), 0.0);
+yPos.prepend(nullVector);
+yNeg.prepend(nullVector);
 // Farbe für die unterste Intervallgrenze einfügen (cols.count() == yPos.count()+1)
 cols.prepend(Qt::black);
 // die positiven Anteile als QwtPlotIntervalCurve hinzufügen
@@ -326,20 +337,18 @@ addIntervalCurve(plot, unifiedX, yNeg, cols);
 
 .Die Funktion zum Addieren der Datenreihen und die Hilfsfunktion zum Hinzufügen der Intervallkurven
 ```c++
-void computeStackedLinesWithNegative(const QVector<QVector<double> > &y, QVector<QVector<double> > &yPos, QVector<QVector<double> > &yNeg) {
-	// y[0] ist die Grundlinie (alles Nullen), y[1..n] sind die Rohdaten der Datenreihen.
-	// Ausgabe: y wird ersetzt durch 2*n Einträge — Paare von (unten,oben) pro Datenreihe.
-	// Positive Werte stapeln sich nach oben
-	// Negative Werte stapeln sich nach unten
+void computeStackedLinesWithNegative(
+    const QVector<QVector<double> > & y, 
+    QVector<QVector<double> > & yPos, 
+    QVector<QVector<double> > & yNeg) 
+{
+	// y[0..n-1] sind die Rohdaten der Datenreihen.
 	int numSeries = y.count();
 	int numPoints = y[0].count();
 
 	QVector<double> posAccum(numPoints, 0.0);
 	QVector<double> negAccum(numPoints, 0.0);
 
-	// add base line
-	yPos.append(posAccum);
-	yNeg.append(posAccum);
 	QVector<QVector<double> > result;
 	for (int j = 0; j < numSeries; ++j) {
 		QVector<double> lower(numPoints), upper(numPoints);
@@ -358,8 +367,12 @@ void computeStackedLinesWithNegative(const QVector<QVector<double> > &y, QVector
 	}
 }
 
-
-void addIntervalCurve(QwtPlot * plot, const QVector<double>  & x, const QVector<QVector<double> >   & y, const QVector<QColor> & cols) {
+// Hilfsfunktion zum Hinzufügen einer Intervallkurve
+void addIntervalCurve(QwtPlot * plot, 
+    const QVector<double>  & x, 
+    const QVector<QVector<double> >  & y, 
+    const QVector<QColor> & cols) 
+{
 	int numSeries = y.count()-1;
 	for (int j = 0; j < numSeries; ++j) {
 		QwtPlotIntervalCurve *curve = new QwtPlotIntervalCurve();

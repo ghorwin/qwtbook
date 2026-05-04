@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include <QPainterPath>
 #include <QDateTime>
 #include <QTimeZone>
+#include <QElapsedTimer>
 
 #include <QwtPlot>
 #include <QwtPlotCurve>
@@ -45,6 +46,42 @@ THE SOFTWARE.
 #include <QwtScaleMap>
 #include <QwtSymbol>
 
+class BenchmarkedPlot : public QwtPlot {
+public:
+	// QWidget interface
+protected:
+	void paintEvent(QPaintEvent * event) {
+		QElapsedTimer timer;
+		timer.start();
+		QwtPlot::paintEvent(event);
+		// qInfo() << "QwtPlot::paintEvent(): " << timer.elapsed() << "ms";
+	}
+
+	// QwtPlot interface
+	void drawCanvas(QPainter *p) {
+		QElapsedTimer timer;
+		timer.start();
+		QwtPlot::drawCanvas(p);
+		qInfo() << "QwtPlot::drawCanvas(): " << timer.elapsed() << "ms";
+
+	}
+};
+
+
+// Spezialisierte QwtPlotCurve mit Zeitmessung um drawCurve()
+class BenchmarkedPlotCurve : public QwtPlotCurve {
+protected:
+	void drawCurve(QPainter *p, int style,
+		const QwtScaleMap & xMap, const QwtScaleMap & yMap,
+		const QRectF & canvasRect, int from, int to) const override
+	{
+		QElapsedTimer timer;
+		timer.start();
+		QwtPlotCurve::drawCurve(p, style, xMap, yMap, canvasRect, from, to);
+		qDebug() << "QwtPlotCurve::drawCurve(): " << timer.elapsed() << "ms";
+	}
+};
+
 void addIntervalCurve(QwtPlot * plot, const QVector<double>  & x, const QVector<QVector<double> >   & y, const QVector<QColor> & cols) {
 	int numSeries = y.count()-1;
 	for (int j = 0; j < numSeries; ++j) {
@@ -53,7 +90,7 @@ void addIntervalCurve(QwtPlot * plot, const QVector<double>  & x, const QVector<
 		for (int i = 0; i < x.count(); ++i)
 			intervalSamples.append(QwtIntervalSample(x[i], y[j][i], y[j+1][i]));
 		curve->setStyle(QwtPlotIntervalCurve::Tube);
-		curve->setPen(cols[j+1], 2);
+		curve->setPen(cols[j+1].darker(150), 0);
 		curve->setBrush(cols[j+1].lighter(120));
 		curve->setZ(numSeries - j);
 		curve->setRenderHint( QwtPlotItem::RenderAntialiased, true );
@@ -171,20 +208,18 @@ void mergeCoordinates(const QVector<QVector<double> > & x, QVector<QVector<doubl
 }
 
 
-void computeStackedLinesWithNegative(const QVector<QVector<double> > &y, QVector<QVector<double> > &yPos, QVector<QVector<double> > &yNeg) {
-	// y[0] ist die Grundlinie (alles Nullen), y[1..n] sind die Rohdaten der Datenreihen.
-	// Ausgabe: y wird ersetzt durch 2*n Einträge — Paare von (unten,oben) pro Datenreihe.
-	// Positive Werte stapeln sich nach oben
-	// Negative Werte stapeln sich nach unten
+void computeStackedLinesWithNegative(
+	const QVector<QVector<double> > & y,
+	QVector<QVector<double> > & yPos,
+	QVector<QVector<double> > & yNeg)
+{
+	// y[0..n-1] sind die Rohdaten der Datenreihen.
 	int numSeries = y.count();
 	int numPoints = y[0].count();
 
 	QVector<double> posAccum(numPoints, 0.0);
 	QVector<double> negAccum(numPoints, 0.0);
 
-	// add base line
-	yPos.append(posAccum);
-	yNeg.append(posAccum);
 	QVector<QVector<double> > result;
 	for (int j = 0; j < numSeries; ++j) {
 		QVector<double> lower(numPoints), upper(numPoints);
@@ -202,6 +237,7 @@ void computeStackedLinesWithNegative(const QVector<QVector<double> > &y, QVector
 		yPos.append(upper);
 	}
 }
+
 
 bool checkMonotonic(const QVector<double> & x) {
 	bool failed = false;
@@ -228,10 +264,13 @@ void fullAlgorithm(QwtPlot * plot) {
 		QColor(0x2000b0)  // #200080
 	};
 
-#if 0
+#if 1
 	// lade Testdaten aus der Datei
 	QFile f("testdata.tsv");
-	f.open(QFile::ReadOnly);
+	if (!f.open(QFile::ReadOnly)) {
+		qCritical() << "Missing file 'testdata.tsv'";
+		exit(1);
+	}
 	QTextStream strm(&f);
 	QStringList header = strm.readLine().split('\t');
 	y = QVector<QVector<double> >(header.count()-1);
@@ -348,14 +387,15 @@ void fullAlgorithm(QwtPlot * plot) {
 
 	// clear all but last
 	for (unsigned int i=0;i<unifiedX.count(); ++i) {
-		y[0][i] = 0;
-		y[1][i] = 0;
-		y[2][i] = 0;
-		y[3][i] = 0;
-		y[4][i] = 0;
-		y[5][i] = 0;
-		y[6][i] = 0;
-		y[8][i] = 0;
+		// y[0][i] = 0;
+		// y[1][i] = 0;
+		// y[2][i] = 0;
+		// y[3][i] = 0;
+		// y[4][i] = 0;
+		// y[5][i] = 0;
+		// y[6][i] = 0;
+		// y[7][i] = 0;
+		// y[8][i] = 0;
 	}
 
 	// Datenreihen addieren
@@ -363,12 +403,41 @@ void fullAlgorithm(QwtPlot * plot) {
 	QVector<QVector<double> > yNeg;
 	computeStackedLinesWithNegative(y, yPos, yNeg);
 
+#if 1
 	// Farbe für die unterste Intervallgrenze einfügen (cols.count() == yPos.count()+1)
 	cols.prepend(Qt::black);
+	// Untere Intervallgrenze hinzufügen
+	QVector<double> nullVector(unifiedX.count(), 0.0);
+	yPos.prepend(nullVector);
+	yNeg.prepend(nullVector);
 	// die positiven Anteile als QwtPlotIntervalCurve hinzufügen
 	addIntervalCurve(plot, unifiedX, yPos, cols);
 	// und die negativen Anteile
 	addIntervalCurve(plot, unifiedX, yNeg, cols);
+#else
+	// Positive Kurven hinzufügen
+	// Variablendeklarationen und Initialisierung wie oben
+	// j = n-1...1  (0-Datenreihe wird ignoriert)
+	for (int j=yPos.count()-1;j>=0; --j) {
+		QwtPlotCurve *curve = new QwtPlotCurve();
+		curve->setPen(cols[j].darker(150), 0);
+		curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+		curve->setSamples(unifiedX, yPos[j]);
+		curve->setBrush(cols[j].lighter(120));
+		curve->setZ(y.count()-j); // Zeichenreihenfolge über z-Wert setzen
+		curve->attach(plot);
+	}
+	// Variablendeklarationen und Initialisierung wie oben
+	for (int j=yNeg.count()-1;j>=0; --j) {
+		QwtPlotCurve *curve = new QwtPlotCurve();
+		curve->setPen(cols[j].darker(150), 0);
+		curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+		curve->setSamples(unifiedX, yNeg[j]);
+		curve->setBrush(cols[j].lighter(120));
+		curve->setZ(y.count()-j); // Zeichenreihenfolge über z-Wert setzen
+		curve->attach(plot);
+	}
+#endif
 
 #endif
 
@@ -382,8 +451,9 @@ void fullAlgorithm(QwtPlot * plot) {
 
 int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
-	QwtPlot plot;
-	plot.setWindowFlags(Qt::FramelessWindowHint);
+	qDebug() << "Bla";
+	BenchmarkedPlot plot;
+	// plot.setWindowFlags(Qt::FramelessWindowHint);
 
 	// etwas Abstand zwischen Rand und Achsentiteln
 	plot.setContentsMargins(8,8,8,8);
