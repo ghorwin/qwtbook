@@ -82,7 +82,12 @@ protected:
 	}
 };
 
-void addIntervalCurve(QwtPlot * plot, const QVector<double>  & x, const QVector<QVector<double> >   & y, const QVector<QColor> & cols) {
+// Hilfsfunktion zum Hinzufügen einer Intervallkurve
+void addIntervalCurve(QwtPlot * plot,
+					  const QVector<double>  & x,
+					  const QVector<QVector<double> > & y,
+					  const QVector<QColor> & cols)
+{
 	int numSeries = y.count()-1;
 	for (int j = 0; j < numSeries; ++j) {
 		QwtPlotIntervalCurve *curve = new QwtPlotIntervalCurve();
@@ -147,17 +152,24 @@ void addZeroCrossings(QVector<double> & x, QVector<double> & y) {
 }
 
 
-void mergeCoordinates(const QVector<QVector<double> > & x, QVector<QVector<double> > & y, QVector<double> & unifiedX) {
+void mergeCoordinates(
+	const QVector<QVector<double> > & x,
+	QVector<QVector<double> > & y,
+	QVector<double> & unifiedX)
+{
 	// Alle Koordinaten von allen Vektoren in ein einheitliches Set einfügen
 	std::set<double> xSet;
 	int seriesCount = x.count();
 	for (int k=0; k<x.count(); ++k)
 		for (double val : x[k])
-			xSet.insert(val); // das ist eine potentiell langsame Operation, weil der Baum des Sets durchlaufen werden muss
+			xSet.insert(val);
+			// insert() ist eine potentiell langsame Operation, weil der Baum
+			// des Sets durchlaufen werden muss
 	unifiedX = QVector<double>(xSet.begin(), xSet.end());
 
 	// Nun alle x-Werte aller Serien durchlaufen und y-Werte für fehlende Stützstellen interpolieren.
-	// Da hinterher alle Datenreihen die gleichen Stützstellen haben, brauchen wir nur die y-Werte zu aktualisieren.
+	// Da hinterher alle Datenreihen die gleichen Stützstellen haben,
+	// brauchen wir nur die y-Werte zu aktualisieren.
 	for (int k=0; k<seriesCount; ++k) {
 		if (x[k].count() == 0) {
 			// Kurve ist leer, mit 0-Werten auffüllen
@@ -291,7 +303,7 @@ void fullAlgorithm(QwtPlot * plot) {
 		// QDateTime dt = QDateTime::fromString(t + " " + t2, "yyyy-MM-dd hh:mm:ss", QTimeZone::utc());
 		if (!year.isValid())
 			year = dt;
-		double xval = year.secsTo(dt)/365.0;
+		double xval = year.secsTo(dt)/(24*3600.0);
 		if (!x_initial.empty() && x_initial.last() >= xval) {
 			qDebug() << "Not monotinic, skipped:" << x_initial.last() << xval;
 		}
@@ -320,7 +332,8 @@ void fullAlgorithm(QwtPlot * plot) {
 #endif
 
 	// Achenskalierung
-	plot->resize(1600,1000);
+	plot->resize(1000,600);
+	plot->setAxisScale(QwtPlot::xBottom, 0, 365);
 
 #if VAR==1
 	QwtText t("Originale Datenreihen");
@@ -403,8 +416,8 @@ void fullAlgorithm(QwtPlot * plot) {
 	QVector<QVector<double> > yNeg;
 	computeStackedLinesWithNegative(y, yPos, yNeg);
 
-#if 1
-	// Farbe für die unterste Intervallgrenze einfügen (cols.count() == yPos.count()+1)
+#if 0
+	// Farbe für die unterste Intervallgrenze einfügen
 	cols.prepend(Qt::black);
 	// Untere Intervallgrenze hinzufügen
 	QVector<double> nullVector(unifiedX.count(), 0.0);
@@ -415,9 +428,8 @@ void fullAlgorithm(QwtPlot * plot) {
 	// und die negativen Anteile
 	addIntervalCurve(plot, unifiedX, yNeg, cols);
 #else
+	t = QwtText("Performancevergleich, 10000 Datenpunkte nach Algorithmus");
 	// Positive Kurven hinzufügen
-	// Variablendeklarationen und Initialisierung wie oben
-	// j = n-1...1  (0-Datenreihe wird ignoriert)
 	for (int j=yPos.count()-1;j>=0; --j) {
 		QwtPlotCurve *curve = new QwtPlotCurve();
 		curve->setPen(cols[j].darker(150), 0);
@@ -427,7 +439,7 @@ void fullAlgorithm(QwtPlot * plot) {
 		curve->setZ(y.count()-j); // Zeichenreihenfolge über z-Wert setzen
 		curve->attach(plot);
 	}
-	// Variablendeklarationen und Initialisierung wie oben
+	// Negative Kurven hinzufügen
 	for (int j=yNeg.count()-1;j>=0; --j) {
 		QwtPlotCurve *curve = new QwtPlotCurve();
 		curve->setPen(cols[j].darker(150), 0);
@@ -451,9 +463,8 @@ void fullAlgorithm(QwtPlot * plot) {
 
 int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
-	qDebug() << "Bla";
 	BenchmarkedPlot plot;
-	// plot.setWindowFlags(Qt::FramelessWindowHint);
+	plot.setWindowFlags(Qt::FramelessWindowHint);
 
 	// etwas Abstand zwischen Rand und Achsentiteln
 	plot.setContentsMargins(8,8,8,8);

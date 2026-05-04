@@ -243,22 +243,22 @@ mergeCoordinates(x, y, unifiedX); // unifiedX wird generiert und y Vektoren ange
 .Die Funktion zum Vereinheitlichen der Stützstellen
 ```c++
 void mergeCoordinates(
-    const QVector<QVector<double> > & x, 
-    QVector<QVector<double> > & y, 
-    QVector<double> & unifiedX) 
+	const QVector<QVector<double> > & x,
+	QVector<QVector<double> > & y,
+	QVector<double> & unifiedX)
 {
 	// Alle Koordinaten von allen Vektoren in ein einheitliches Set einfügen
 	std::set<double> xSet;
 	int seriesCount = x.count();
 	for (int k=0; k<x.count(); ++k)
 		for (double val : x[k])
-			xSet.insert(val); 
-			// insert() ist eine potentiell langsame Operation, weil der Baum 
+			xSet.insert(val);
+			// insert() ist eine potentiell langsame Operation, weil der Baum
 			// des Sets durchlaufen werden muss
 	unifiedX = QVector<double>(xSet.begin(), xSet.end());
 
 	// Nun alle x-Werte aller Serien durchlaufen und y-Werte für fehlende Stützstellen interpolieren.
-	// Da hinterher alle Datenreihen die gleichen Stützstellen haben, 
+	// Da hinterher alle Datenreihen die gleichen Stützstellen haben,
 	// brauchen wir nur die y-Werte zu aktualisieren.
 	for (int k=0; k<seriesCount; ++k) {
 		if (x[k].count() == 0) {
@@ -323,14 +323,14 @@ QVector<QVector<double> > yPos;
 QVector<QVector<double> > yNeg;
 computeStackedLinesWithNegative(y, yPos, yNeg);
 
+// Farbe für die unterste Intervallgrenze einfügen
+cols.prepend(Qt::black);
 // Untere Intervallgrenze hinzufügen
-QVector<double> nullVector(y.count(), 0.0);
+QVector<double> nullVector(unifiedX.count(), 0.0);
 yPos.prepend(nullVector);
 yNeg.prepend(nullVector);
-// Farbe für die unterste Intervallgrenze einfügen (cols.count() == yPos.count()+1)
-cols.prepend(Qt::black);
 // die positiven Anteile als QwtPlotIntervalCurve hinzufügen
-addIntervalCurves(plot, unifiedX, yPos, cols);
+addIntervalCurve(plot, unifiedX, yPos, cols);
 // und die negativen Anteile
 addIntervalCurve(plot, unifiedX, yNeg, cols);
 ```
@@ -338,9 +338,9 @@ addIntervalCurve(plot, unifiedX, yNeg, cols);
 .Die Funktion zum Addieren der Datenreihen und die Hilfsfunktion zum Hinzufügen der Intervallkurven
 ```c++
 void computeStackedLinesWithNegative(
-    const QVector<QVector<double> > & y, 
-    QVector<QVector<double> > & yPos, 
-    QVector<QVector<double> > & yNeg) 
+	const QVector<QVector<double> > & y,
+	QVector<QVector<double> > & yPos,
+	QVector<QVector<double> > & yNeg)
 {
 	// y[0..n-1] sind die Rohdaten der Datenreihen.
 	int numSeries = y.count();
@@ -368,10 +368,10 @@ void computeStackedLinesWithNegative(
 }
 
 // Hilfsfunktion zum Hinzufügen einer Intervallkurve
-void addIntervalCurve(QwtPlot * plot, 
-    const QVector<double>  & x, 
-    const QVector<QVector<double> >  & y, 
-    const QVector<QColor> & cols) 
+void addIntervalCurve(QwtPlot * plot,
+					  const QVector<double>  & x,
+					  const QVector<QVector<double> > & y,
+					  const QVector<QColor> & cols)
 {
 	int numSeries = y.count()-1;
 	for (int j = 0; j < numSeries; ++j) {
@@ -380,7 +380,7 @@ void addIntervalCurve(QwtPlot * plot,
 		for (int i = 0; i < x.count(); ++i)
 			intervalSamples.append(QwtIntervalSample(x[i], y[j][i], y[j+1][i]));
 		curve->setStyle(QwtPlotIntervalCurve::Tube);
-		curve->setPen(cols[j+1], 2);
+		curve->setPen(cols[j+1].darker(150), 0);
 		curve->setBrush(cols[j+1].lighter(120));
 		curve->setZ(numSeries - j);
 		curve->setRenderHint( QwtPlotItem::RenderAntialiased, true );
@@ -388,11 +388,51 @@ void addIntervalCurve(QwtPlot * plot,
 		curve->attach(plot);
 	}
 }
-
 ```
 
 .Akkumulierte Datenreihen (getrennt nach Vorzeichen)
 image::IntervalCurves/StackedCurve_accumulated.png[pdfwidth=10cm]
+
+### Performancevergleich
+
+Weiter oben hab ich ja schon darauf hingewiesen, dass man statt der `QwtIntervalCurve` auch ausgefüllte Kurven verwenden kann. In diesem Fall sieht der Plot-Code nach `computeStackedLinesWithNegative()` wie folgt aus:
+
+```c++
+// Positive Kurven hinzufügen
+for (int j=yPos.count()-1;j>=0; --j) {
+	QwtPlotCurve *curve = new QwtPlotCurve();
+	curve->setPen(cols[j].darker(150), 0);
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+	curve->setSamples(unifiedX, yPos[j]);
+	curve->setBrush(cols[j].lighter(120));
+	curve->setZ(y.count()-j); // Zeichenreihenfolge über z-Wert setzen
+	curve->attach(plot);
+}
+// Negative Kurven hinzufügen
+for (int j=yNeg.count()-1;j>=0; --j) {
+	QwtPlotCurve *curve = new QwtPlotCurve();
+	curve->setPen(cols[j].darker(150), 0);
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
+	curve->setSamples(unifiedX, yNeg[j]);
+	curve->setBrush(cols[j].lighter(120));
+	curve->setZ(y.count()-j); // Zeichenreihenfolge über z-Wert setzen
+	curve->attach(plot);
+}
+```
+
+Das Ergebnis sieht fast identisch aus, mit dem Unterschied, dass bei den Intervallkurven am unteren Rand auch eine Begrenzungslinie gezeichnet wird.
+
+Welches Verfahren ist jetzt schneller? Hier mal ein Beispiel aus der Praxis: Anfänglich 8760 Stundenwerte, nach dem Hinzufügen noch Nulldurchgängen und Vereinheitlichen des Rasters sind es knapp 10000 Datenpunkte. 
+
+.Performance-Test - Gesamtansicht
+image::IntervalCurves/StackedCurve_PerformanceExample1.png[pdfwidth=14cm]
+
+.Performance-Test - Zoom
+image::IntervalCurves/StackedCurve_PerformanceExample2.png[pdfwidth=14cm]
+
+Zeit für das Neurendern des Plots nach Größenänderung auf 1920x1080 Auflösung:
+- 800 ms für die Variante mit `QwtIntervalCurve`
+- 530 ms für die Variante mit den ausgefüllten `QwtPlotCurve`
 
 
 
