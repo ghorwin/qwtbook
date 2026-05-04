@@ -1,7 +1,7 @@
 Das Qwt Entwicklerhandbuch
 ==========================
 Andreas Nicolai <andreas.nicolai@gmx.de>
-v2.0, Mai 2025
+v2.1, Mai 2026
 :Author Initials: AN
 :toc: left
 :toclevels: 3

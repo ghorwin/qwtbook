@@ -5,7 +5,7 @@
 # Intervallkurven
 Eine spezielle Kurvenart ist die _Intervallkurve_, bereitgestellt über die Klasse `QwtPlotIntervalCurve`.
 
-Im Prinzip ist das eine Kurve mit zwei y-Werten pro x-Koordinate im Datensatz. Es werden zwei reguläre Kurven gezeichnet und dazwischen wird die Fläche ausgefüllt. Dies kann man auch gut dazu nutzen, um gestackte Liniendiagramme zu zeichnen.
+Im Prinzip ist das eine Kurve mit zwei y-Werten pro x-Koordinate im Datensatz. Es werden zwei reguläre Kurven gezeichnet und dazwischen wird die Fläche ausgefüllt. Dies kann man auch gut dazu nutzen, um gestapelte Liniendiagramme zu zeichnen.
 
 .Beispiel für eine Intervallkurve
 [source,c++]
@@ -58,7 +58,7 @@ image:IntervalCurves/IntervalCurve_Gradient_300.png[Height300,200,400,pdfwidth=5
 image:IntervalCurves/IntervalCurve_Gradient_400.png[Height400,200,400,pdfwidth=5cm]
 
 
-Die Lösung für das Problem besteht darin, die Klasse `QwtPlotIntervalCurve` abzuleiten und die Funktion  je nach aktueller Skal und die Zeichenfunktion selbst zu implementieren.
+Die Lösung für das Problem besteht darin, die Klasse `QwtPlotIntervalCurve` abzuleiten und die Zeichenfunktion selbst zu implementieren.
 
 
 ```c++
@@ -93,7 +93,6 @@ Man kann die Intervallkurven auch nutzen, um gestapelte, ausgefüllte Kurven bzw
 ```c++
 QVector<double> x{1,2,5,6,10,12,15,16,17};
 QVector<QVector<double> >  y;
-// 3 curves, 4 lines
 y.append( QVector<double>{0,  0, 0, 0,  0,  0, 0,  0,  0} );
 y.append( QVector<double>{2,  2, 3, 4,  2,  4, 4,  5, 11} );
 y.append( QVector<double>{6,4.4, 9, 8,5.5,5.7, 9, 11, 12} );
@@ -107,13 +106,13 @@ const QColor cols[] = { QColor(96,60,20),
 
 for (int j=0;j<y.count()-1; ++j) {
 	QwtPlotIntervalCurve *curve = new QwtPlotIntervalCurve();
-	// generate intervals for current curve
 	QVector<QwtIntervalSample> intervalSamples;
-	for (int i=0; i<x.count(); ++i) 
+	for (int i=0; i<x.count(); ++i)
 		intervalSamples.append(QwtIntervalSample(x[i],y[j][i],y[j+1][i]));
 	curve->setStyle(QwtPlotIntervalCurve::Tube);
-	curve->setPen(QColor(96,60,20), 1);
+	curve->setPen(cols[j+1].darker(150), 2);
 	curve->setBrush(cols[j+1]);
+	curve->setZ(y.count()-j);
 	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // Antialiasing verwenden
 	curve->setSamples(intervalSamples);
 	curve->attach(&plot); // Plot takes ownership
@@ -146,6 +145,8 @@ Das Ergebnis ist fast das gleiche wie oben:
 
 .Diagramm mit gestapelten Kurven/Flächendiagrammen, diesmal erzeugt durch ausgefüllte Flächen
 image::IntervalCurves/StackedCurveByFilledCurves.png[pdfwidth=10cm]
+
+// TODO : Performance-Vergleich bei großen Datenreihen
 
 
 ## Berechnung von gestapelten Kurven aus Datenreihen

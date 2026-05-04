@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.23">
 <meta name="author" content="Andreas Nicolai">
 <title>Das Qwt Entwicklerhandbuch</title>
 <style>
@@ -121,216 +121,119 @@ table {
 <style>
 pre.rouge table td { padding: 5px; }
 pre.rouge table pre { margin: 0; }
-pre.rouge .cm {
-  color: #999988;
-  font-style: italic;
+pre.rouge, pre.rouge .w {
+  color: #24292f;
+  background-color: #f6f8fa;
 }
-pre.rouge .cp {
-  color: #999999;
-  font-weight: bold;
-}
-pre.rouge .c1 {
-  color: #999988;
-  font-style: italic;
-}
-pre.rouge .cs {
-  color: #999999;
-  font-weight: bold;
-  font-style: italic;
-}
-pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cpf {
-  color: #999988;
-  font-style: italic;
-}
-pre.rouge .err {
-  color: #a61717;
-  background-color: #e3d2d2;
-}
-pre.rouge .gd {
-  color: #000000;
-  background-color: #ffdddd;
-}
-pre.rouge .ge {
-  color: #000000;
-  font-style: italic;
+pre.rouge .k, pre.rouge .kd, pre.rouge .kn, pre.rouge .kp, pre.rouge .kr, pre.rouge .kt, pre.rouge .kv {
+  color: #cf222e;
 }
 pre.rouge .gr {
-  color: #aa0000;
+  color: #f6f8fa;
 }
-pre.rouge .gh {
-  color: #999999;
+pre.rouge .gd {
+  color: #82071e;
+  background-color: #ffebe9;
+}
+pre.rouge .nb {
+  color: #953800;
+}
+pre.rouge .nc {
+  color: #953800;
+}
+pre.rouge .no {
+  color: #953800;
+}
+pre.rouge .nn {
+  color: #953800;
+}
+pre.rouge .sr {
+  color: #116329;
+}
+pre.rouge .na {
+  color: #116329;
+}
+pre.rouge .nt {
+  color: #116329;
 }
 pre.rouge .gi {
-  color: #000000;
-  background-color: #ddffdd;
+  color: #116329;
+  background-color: #dafbe1;
 }
-pre.rouge .go {
-  color: #888888;
+pre.rouge .ges {
+  font-weight: bold;
+  font-style: italic;
 }
-pre.rouge .gp {
-  color: #555555;
+pre.rouge .kc {
+  color: #0550ae;
 }
-pre.rouge .gs {
+pre.rouge .l, pre.rouge .ld, pre.rouge .m, pre.rouge .mb, pre.rouge .mf, pre.rouge .mh, pre.rouge .mi, pre.rouge .il, pre.rouge .mo, pre.rouge .mx {
+  color: #0550ae;
+}
+pre.rouge .sb {
+  color: #0550ae;
+}
+pre.rouge .bp {
+  color: #0550ae;
+}
+pre.rouge .ne {
+  color: #0550ae;
+}
+pre.rouge .nl {
+  color: #0550ae;
+}
+pre.rouge .py {
+  color: #0550ae;
+}
+pre.rouge .nv, pre.rouge .vc, pre.rouge .vg, pre.rouge .vi, pre.rouge .vm {
+  color: #0550ae;
+}
+pre.rouge .o, pre.rouge .ow {
+  color: #0550ae;
+}
+pre.rouge .gh {
+  color: #0550ae;
   font-weight: bold;
 }
 pre.rouge .gu {
-  color: #aaaaaa;
-}
-pre.rouge .gt {
-  color: #aa0000;
-}
-pre.rouge .kc {
-  color: #000000;
+  color: #0550ae;
   font-weight: bold;
 }
-pre.rouge .kd {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kn {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kp {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kr {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kt {
-  color: #445588;
-  font-weight: bold;
-}
-pre.rouge .k, pre.rouge .kv {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .mf {
-  color: #009999;
-}
-pre.rouge .mh {
-  color: #009999;
-}
-pre.rouge .il {
-  color: #009999;
-}
-pre.rouge .mi {
-  color: #009999;
-}
-pre.rouge .mo {
-  color: #009999;
-}
-pre.rouge .m, pre.rouge .mb, pre.rouge .mx {
-  color: #009999;
-}
-pre.rouge .sa {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .sb {
-  color: #d14;
-}
-pre.rouge .sc {
-  color: #d14;
-}
-pre.rouge .sd {
-  color: #d14;
-}
-pre.rouge .s2 {
-  color: #d14;
-}
-pre.rouge .se {
-  color: #d14;
-}
-pre.rouge .sh {
-  color: #d14;
-}
-pre.rouge .si {
-  color: #d14;
-}
-pre.rouge .sx {
-  color: #d14;
-}
-pre.rouge .sr {
-  color: #009926;
-}
-pre.rouge .s1 {
-  color: #d14;
-}
-pre.rouge .ss {
-  color: #990073;
-}
-pre.rouge .s, pre.rouge .dl {
-  color: #d14;
-}
-pre.rouge .na {
-  color: #008080;
-}
-pre.rouge .bp {
-  color: #999999;
-}
-pre.rouge .nb {
-  color: #0086B3;
-}
-pre.rouge .nc {
-  color: #445588;
-  font-weight: bold;
-}
-pre.rouge .no {
-  color: #008080;
+pre.rouge .s, pre.rouge .sa, pre.rouge .sc, pre.rouge .dl, pre.rouge .sd, pre.rouge .s2, pre.rouge .se, pre.rouge .sh, pre.rouge .sx, pre.rouge .s1, pre.rouge .ss {
+  color: #0a3069;
 }
 pre.rouge .nd {
-  color: #3c5d5d;
-  font-weight: bold;
-}
-pre.rouge .ni {
-  color: #800080;
-}
-pre.rouge .ne {
-  color: #990000;
-  font-weight: bold;
+  color: #8250df;
 }
 pre.rouge .nf, pre.rouge .fm {
-  color: #990000;
+  color: #8250df;
+}
+pre.rouge .err {
+  color: #f6f8fa;
+  background-color: #82071e;
+}
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cm, pre.rouge .cp, pre.rouge .cpf, pre.rouge .c1, pre.rouge .cs {
+  color: #6e7781;
+}
+pre.rouge .gl {
+  color: #6e7781;
+}
+pre.rouge .gt {
+  color: #6e7781;
+}
+pre.rouge .ni {
+  color: #24292f;
+}
+pre.rouge .si {
+  color: #24292f;
+}
+pre.rouge .ge {
+  color: #24292f;
+  font-style: italic;
+}
+pre.rouge .gs {
+  color: #24292f;
   font-weight: bold;
-}
-pre.rouge .nl {
-  color: #990000;
-  font-weight: bold;
-}
-pre.rouge .nn {
-  color: #555555;
-}
-pre.rouge .nt {
-  color: #000080;
-}
-pre.rouge .vc {
-  color: #008080;
-}
-pre.rouge .vg {
-  color: #008080;
-}
-pre.rouge .vi {
-  color: #008080;
-}
-pre.rouge .nv, pre.rouge .vm {
-  color: #008080;
-}
-pre.rouge .ow {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .o {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .w {
-  color: #bbbbbb;
-}
-pre.rouge {
-  background-color: #f8f8f8;
 }
 </style>
 </head>
@@ -429,7 +332,7 @@ pre.rouge {
 <li><a href="#_bild_symbole_pixmaps">5.3.4. Bild-Symbole (Pixmaps)</a></li>
 </ul>
 </li>
-<li><a href="#_ausgefüllte_kurven">5.4. Ausgefüllte Kurven</a></li>
+<li><a href="#sec:filledCurves">5.4. Ausgefüllte Kurven</a></li>
 <li><a href="#_legendeneinträge">5.5. Legendeneinträge</a></li>
 <li><a href="#sec:curvePerformance">5.6. Zeichenattribute, Zeichengeschwindigkeit und Performanceoptimierung bei großen Datenreihen</a>
 <ul class="sectlevel3">
@@ -451,6 +354,12 @@ pre.rouge {
 <li><a href="#sec:intervalCurves">6. Intervallkurven</a>
 <ul class="sectlevel2">
 <li><a href="#_gestapelte_intervall_kurvenflächendiagramme">6.1. Gestapelte (Intervall-)Kurven/Flächendiagramme</a></li>
+<li><a href="#_berechnung_von_gestapelten_kurven_aus_datenreihen">6.2. Berechnung von gestapelten Kurven aus Datenreihen</a>
+<ul class="sectlevel3">
+<li><a href="#_nulldurchgänge_bestimmen">6.2.1. Nulldurchgänge bestimmen</a></li>
+<li><a href="#_einheitliche_stützstellen_berechnen">6.2.2. Einheitliche Stützstellen berechnen</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#sec:barPlots">7. Balkendiagramme</a>
@@ -624,7 +533,7 @@ eine sehr flexible und mächtige Diagrammkomponente.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/exBode.png" alt="exBode">
+<img src="../images/Introduction/exBode.png" alt="exBode">
 </div>
 <div class="title">Abbildung 1. Beispiel für die QwtPlot-Komponente</div>
 </div>
@@ -679,7 +588,7 @@ eine sehr flexible und mächtige Diagrammkomponente.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/styledDialsAndPlot.png" alt="styledDialsAndPlot">
+<img src="../images/Introduction/styledDialsAndPlot.png" alt="styledDialsAndPlot">
 </div>
 <div class="title">Abbildung 2. QwtPlot mit abgerundeten Ecken</div>
 </div>
@@ -852,7 +761,7 @@ Dazu in den Projekteinstellungen, unter "Ausführen", im Abschnitt "Umgebung" di
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_a.png" alt="Tutorial1 a">
+<img src="../images/BasicTutorial/Tutorial1_a.png" alt="Tutorial1 a">
 </div>
 <div class="title">Abbildung 3. Das nackte Plotwidget</div>
 </div>
@@ -935,7 +844,7 @@ Dazu in den Projekteinstellungen, unter "Ausführen", im Abschnitt "Umgebung" di
 		<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">yval</span><span class="p">);</span>
 	<span class="p">}</span>
 
-	<span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotCurve</span><span class="p">();</span>
+	<span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setTitle</span><span class="p">(</span><span class="s">"Gamma-Spektrum"</span><span class="p">);</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span> <span class="p">);</span> <span class="c1">// Antialiasing verwenden</span>
@@ -1005,7 +914,7 @@ Dazu in den Projekteinstellungen, unter "Ausführen", im Abschnitt "Umgebung" di
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_b.png" alt="Tutorial1 b">
+<img src="../images/BasicTutorial/Tutorial1_b.png" alt="Tutorial1 b">
 </div>
 <div class="title">Abbildung 4. Diagramm mit Linie</div>
 </div>
@@ -1098,7 +1007,7 @@ Wie auch bei den Plotkurven übergibt <code>attach()</code> das <code>QwtPlotGri
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_c.png" alt="Tutorial1 c">
+<img src="../images/BasicTutorial/Tutorial1_c.png" alt="Tutorial1 c">
 </div>
 <div class="title">Abbildung 5. Diagramm mit Linie, Legende, Titel und Gitterlinien</div>
 </div>
@@ -1157,7 +1066,7 @@ Der Font für die Zahlen an den Achsen selbst wird über <code>setAxisFont()</co
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_d.png" alt="Tutorial1 d">
+<img src="../images/BasicTutorial/Tutorial1_d.png" alt="Tutorial1 d">
 </div>
 <div class="title">Abbildung 6. Vollständig formatiertes Diagramm</div>
 </div>
@@ -1187,7 +1096,7 @@ Der Font für die Zahlen an den Achsen selbst wird über <code>setAxisFont()</co
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_e.png" alt="Tutorial1 e">
+<img src="../images/BasicTutorial/Tutorial1_e.png" alt="Tutorial1 e">
 </div>
 <div class="title">Abbildung 7. Diagramm mit logarithmischer Y-Achse</div>
 </div>
@@ -1220,7 +1129,7 @@ Der Font für die Zahlen an den Achsen selbst wird über <code>setAxisFont()</co
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_f.png" alt="Tutorial1 f">
+<img src="../images/BasicTutorial/Tutorial1_f.png" alt="Tutorial1 f">
 </div>
 <div class="title">Abbildung 8. Diagramm mit logarithmischer Y-Achse und vertikaler Peak-Markierung</div>
 </div>
@@ -1292,7 +1201,7 @@ Der Font für die Zahlen an den Achsen selbst wird über <code>setAxisFont()</co
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_g.png" alt="Tutorial1 g">
+<img src="../images/BasicTutorial/Tutorial1_g.png" alt="Tutorial1 g">
 </div>
 <div class="title">Abbildung 9. Diagramm mit aufgezogenem Zoom-Rechteck</div>
 </div>
@@ -1357,7 +1266,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/controlsSlider.png" alt="controlsSlider">
+<img src="../images/QwtWidgets/controlsSlider.png" alt="controlsSlider">
 </div>
 <div class="title">Abbildung 10. Beispiele für <code>QwtSlider</code></div>
 </div>
@@ -1375,7 +1284,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/controlsWheelThermo.png" alt="controlsWheelThermo">
+<img src="../images/QwtWidgets/controlsWheelThermo.png" alt="controlsWheelThermo">
 </div>
 <div class="title">Abbildung 11. Beispiele für <code>QwtWheel</code> und  <code>QwtThermo</code></div>
 </div>
@@ -1390,7 +1299,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/controlsKnob.png" alt="controlsKnob">
+<img src="../images/QwtWidgets/controlsKnob.png" alt="controlsKnob">
 </div>
 <div class="title">Abbildung 12. Beispiele für <code>QwtKnob</code></div>
 </div>
@@ -1405,7 +1314,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/controlsDials.png" alt="controlsDials">
+<img src="../images/QwtWidgets/controlsDials.png" alt="controlsDials">
 </div>
 <div class="title">Abbildung 13. Beispiele für <code>QwtDial</code></div>
 </div>
@@ -1427,7 +1336,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/2D_time_plot_2axes.png" alt="2D time plot 2axes">
+<img src="../images/QwtPlot/2D_time_plot_2axes.png" alt="2D time plot 2axes">
 </div>
 <div class="title">Abbildung 14. Beispiel für ein typisches <code>QwtPlot</code> mit zwei y-Achsen und innenliegender Legende.</div>
 </div>
@@ -1499,7 +1408,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/ClassDiagrams/QwtPlotItem-class-hierarchy.png" alt="QwtPlotItem class hierarchy">
+<img src="../images/QwtPlot/QwtPlotItem-class-hierarchy.png" alt="QwtPlotItem class hierarchy">
 </div>
 <div class="title">Abbildung 15. Von QwtPlotItem abgeleitete Klassen der verschiedenen Zeichenelemente</div>
 </div>
@@ -1590,7 +1499,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/ClassDiagrams/QwtPlotSeriesItem-class-hierarchy.png" alt="QwtPlotSeriesItem class hierarchy">
+<img src="../images/QwtPlot/QwtPlotSeriesItem-class-hierarchy.png" alt="QwtPlotSeriesItem class hierarchy">
 </div>
 <div class="title">Abbildung 16. Klasse QwtPlotSeriesItem, Elternklassen und abgeleitete Klassen</div>
 </div>
@@ -1638,7 +1547,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/ClassDiagrams/QwtAbstractSeriesStore-class-hierarchy.png" alt="QwtAbstractSeriesStore class hierarchy">
+<img src="../images/QwtPlot/QwtAbstractSeriesStore-class-hierarchy.png" alt="QwtAbstractSeriesStore class hierarchy">
 </div>
 <div class="title">Abbildung 17. Abstrakte Klasse QwtAbstractSeriesStore und abgeleitete Klassen</div>
 </div>
@@ -1821,7 +1730,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurves_StyleLines.png" alt="PlotCurves StyleLines">
+<img src="../images/LineCurves/PlotCurves_StyleLines.png" alt="PlotCurves StyleLines">
 </div>
 <div class="title">Abbildung 18. Liniendiagramm</div>
 </div>
@@ -1840,7 +1749,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurves_StyleSticksVertical.png" alt="PlotCurves StyleSticksVertical">
+<img src="../images/LineCurves/PlotCurves_StyleSticksVertical.png" alt="PlotCurves StyleSticksVertical">
 </div>
 <div class="title">Abbildung 19. Vertikale Stäbchen</div>
 </div>
@@ -1856,7 +1765,7 @@ Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissen
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurves_StyleSticksHorizontal.png" alt="PlotCurves StyleSticksHorizontal">
+<img src="../images/LineCurves/PlotCurves_StyleSticksHorizontal.png" alt="PlotCurves StyleSticksHorizontal">
 </div>
 <div class="title">Abbildung 20. Horizontale Stäbchen</div>
 </div>
@@ -1876,7 +1785,7 @@ Das Zusatz-Attribut <code>QwtPlotCurve::Inverted</code> gibt dabei an, ob die St
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurves_StyleSteps.png" alt="PlotCurves StyleSteps">
+<img src="../images/LineCurves/PlotCurves_StyleSteps.png" alt="PlotCurves StyleSteps">
 </div>
 <div class="title">Abbildung 21. Stufendiagramm (normal)</div>
 </div>
@@ -1907,7 +1816,7 @@ Das Zusatz-Attribut <code>QwtPlotCurve::Inverted</code> gibt dabei an, ob die St
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurves_StyleStepsInverted.png" alt="PlotCurves StyleStepsInverted">
+<img src="../images/LineCurves/PlotCurves_StyleStepsInverted.png" alt="PlotCurves StyleStepsInverted">
 </div>
 <div class="title">Abbildung 22. Stufendiagramm (invertiert)</div>
 </div>
@@ -1940,7 +1849,7 @@ Das Zusatz-Attribut <code>QwtPlotCurve::Inverted</code> gibt dabei an, ob die St
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurves_StyleDots.png" alt="PlotCurves StyleDots">
+<img src="../images/LineCurves/PlotCurves_StyleDots.png" alt="PlotCurves StyleDots">
 </div>
 <div class="title">Abbildung 23. Punktediagramm</div>
 </div>
@@ -1967,7 +1876,7 @@ Das Zusatz-Attribut <code>QwtPlotCurve::Inverted</code> gibt dabei an, ob die St
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurves_StyleDotsScatter.png" alt="PlotCurves StyleDotsScatter">
+<img src="../images/LineCurves/PlotCurves_StyleDotsScatter.png" alt="PlotCurves StyleDotsScatter">
 </div>
 <div class="title">Abbildung 24. Punktwolke mit halbtransparenten Punkten</div>
 </div>
@@ -2018,7 +1927,7 @@ Das Zusatz-Attribut <code>QwtPlotCurve::Inverted</code> gibt dabei an, ob die St
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Symbols_EllipseFilled.png" alt="Symbols EllipseFilled">
+<img src="../images/LineCurves/Symbols_EllipseFilled.png" alt="Symbols EllipseFilled">
 </div>
 <div class="title">Abbildung 25. Liniendiagramm mit ausgefüllten Kreissymbolen</div>
 </div>
@@ -2077,7 +1986,7 @@ Das Zusatz-Attribut <code>QwtPlotCurve::Inverted</code> gibt dabei an, ob die St
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Symbols_Gallery.png" alt="Symbols Gallery">
+<img src="../images/LineCurves/Symbols_Gallery.png" alt="Symbols Gallery">
 </div>
 <div class="title">Abbildung 26. Eingebaute Symboltypen/Stile und deren Enumerationstypen</div>
 </div>
@@ -2128,7 +2037,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Symbols_PainterPath.png" alt="Symbols PainterPath">
+<img src="../images/LineCurves/Symbols_PainterPath.png" alt="Symbols PainterPath">
 </div>
 <div class="title">Abbildung 27. Eigenes Symbol definiert mittels QPainterPath</div>
 </div>
@@ -2182,7 +2091,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Symbols_SvgCentered.png" alt="Symbols SvgCentered">
+<img src="../images/LineCurves/Symbols_SvgCentered.png" alt="Symbols SvgCentered">
 </div>
 <div class="title">Abbildung 28. Zentriertes SVG-Symbol, welches eigentlich aber nach oben verschoben sein sollte</div>
 </div>
@@ -2198,7 +2107,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Symbols_SvgWithPinPoint.png" alt="Symbols SvgWithPinPoint">
+<img src="../images/LineCurves/Symbols_SvgWithPinPoint.png" alt="Symbols SvgWithPinPoint">
 </div>
 <div class="title">Abbildung 29. SVG-Symbol mit korrekter Ausrichtung des "Stecknadel"-Punktes</div>
 </div>
@@ -2236,14 +2145,14 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Symbols_Pixmap.png" alt="Symbols Pixmap">
+<img src="../images/LineCurves/Symbols_Pixmap.png" alt="Symbols Pixmap">
 </div>
 <div class="title">Abbildung 30. Pixmap-Symbol, auch mit manuell festgelegtem "Stecknadel"-Punkt</div>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_ausgefüllte_kurven">5.4. Ausgefüllte Kurven</h3>
+<h3 id="sec:filledCurves">5.4. Ausgefüllte Kurven</h3>
 <div class="paragraph">
 <p>Eine Kurve kann neben dem Zeichenstift auch noch einen Brush übernehmen. Dann wird die Kurve bis zur x-Achse gefüllt:</p>
 </div>
@@ -2254,7 +2163,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurves_StyleLinesFilled.png" alt="PlotCurves StyleLinesFilled">
+<img src="../images/LineCurves/PlotCurves_StyleLinesFilled.png" alt="PlotCurves StyleLinesFilled">
 </div>
 <div class="title">Abbildung 31. Gefüllte Linienkurve</div>
 </div>
@@ -2268,7 +2177,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurves_StyleLinesFilledWithBaseline.png" alt="PlotCurves StyleLinesFilledWithBaseline">
+<img src="../images/LineCurves/PlotCurves_StyleLinesFilledWithBaseline.png" alt="PlotCurves StyleLinesFilledWithBaseline">
 </div>
 <div class="title">Abbildung 32. Gefüllte Linienkurve mit verschobener Bezugslinie</div>
 </div>
@@ -2280,7 +2189,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurveLegendStandard.png" alt="PlotCurveLegendStandard">
+<img src="../images/LineCurves/PlotCurveLegendStandard.png" alt="PlotCurveLegendStandard">
 </div>
 <div class="title">Abbildung 33. Standardlegende für Datenreihen</div>
 </div>
@@ -2298,7 +2207,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurveLegendLinie.png" alt="PlotCurveLegendLinie">
+<img src="../images/LineCurves/PlotCurveLegendLinie.png" alt="PlotCurveLegendLinie">
 </div>
 <div class="title">Abbildung 34. Legende mit Linien als Icons</div>
 </div>
@@ -2320,7 +2229,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurveLegendLinieWithSymbol.png" alt="PlotCurveLegendLinieWithSymbol">
+<img src="../images/LineCurves/PlotCurveLegendLinieWithSymbol.png" alt="PlotCurveLegendLinieWithSymbol">
 </div>
 <div class="title">Abbildung 35. Legende mit Linien und Symbolen als Legendenicons</div>
 </div>
@@ -2359,7 +2268,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurveLegendLinieWithSymbolSameWidth.png" alt="PlotCurveLegendLinieWithSymbolSameWidth">
+<img src="../images/LineCurves/PlotCurveLegendLinieWithSymbolSameWidth.png" alt="PlotCurveLegendLinieWithSymbolSameWidth">
 </div>
 <div class="title">Abbildung 36. Legende mit gleichgroßen Legendenicons</div>
 </div>
@@ -2489,7 +2398,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 <span class="p">};</span>
 
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
 	<span class="n">QApplication</span> <span class="n">a</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
 	<span class="n">QwtPlot</span> <span class="n">plot</span><span class="p">;</span>
 	<span class="n">plot</span><span class="p">.</span><span class="n">setContentsMargins</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">);</span>
@@ -2502,7 +2411,7 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 		<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mf">0.00001</span><span class="p">));</span>
 	<span class="p">}</span>
 
-	<span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BenchmarkedPlotCurve</span><span class="p">();</span>
+	<span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">BenchmarkedPlotCurve</span><span class="p">();</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span> <span class="c1">// Antialiasing verwenden</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPaintAttribute</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">FilterPoints</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span> <span class="c1">// Punktefilter ausschalten</span>
@@ -2601,13 +2510,13 @@ Folgendes Beispiel generiert ein Glühlampensymbol:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/CurveFilterPoints_Antialias.png" alt="CurveFilterPoints Antialias" width="400">
+<img src="../images/LineCurves/CurveFilterPoints_Antialias.png" alt="CurveFilterPoints Antialias" width="400">
 </div>
 <div class="title">Abbildung 37. Ausgabe mit <code>FilterPoints</code>, Antialiasing eingeschaltet</div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/CurveFilterPointsAggressive_Antialias.png" alt="CurveFilterPointsAggressive Antialias" width="400">
+<img src="../images/LineCurves/CurveFilterPointsAggressive_Antialias.png" alt="CurveFilterPointsAggressive Antialias" width="400">
 </div>
 <div class="title">Abbildung 38. Ausgabe <code>FilterPointsAggressive</code>, Antialiasing eingeschaltet</div>
 </div>
@@ -2617,13 +2526,13 @@ Ohne Antialiasing muss man schon sehr genau hinsehen, um die kleinen Unterschied
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/CurveFilterPoints.png" alt="CurveFilterPoints" width="400">
+<img src="../images/LineCurves/CurveFilterPoints.png" alt="CurveFilterPoints" width="400">
 </div>
 <div class="title">Abbildung 39. Ausgabe mit <code>FilterPoints</code>, Antialiasing ausgeschaltet</div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/CurveFilterPointsAggressive.png" alt="CurveFilterPointsAggressive" width="400">
+<img src="../images/LineCurves/CurveFilterPointsAggressive.png" alt="CurveFilterPointsAggressive" width="400">
 </div>
 <div class="title">Abbildung 40. Ausgabe <code>FilterPointsAggressive</code>, Antialiasing ausgeschaltet</div>
 </div>
@@ -2778,7 +2687,7 @@ Zum Beispiel rendert das Plot <em>ohne</em> <code>FilterPoints</code> und <em>oh
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/ClassDiagrams/QwtCurveFitter-class-hierarchy.png" alt="QwtCurveFitter class hierarchy">
+<img src="../images/LineCurves/QwtCurveFitter-class-hierarchy.png" alt="QwtCurveFitter class hierarchy">
 </div>
 <div class="title">Abbildung 41. Kind-Klassen der Basisklasse <code>QwtCurveFitter</code></div>
 </div>
@@ -2792,7 +2701,7 @@ Zum Beispiel rendert das Plot <em>ohne</em> <code>FilterPoints</code> und <em>oh
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/ClassDiagrams/QwtSpline-class-hierarchy.png" alt="QwtSpline class hierarchy">
+<img src="../images/LineCurves/QwtSpline-class-hierarchy.png" alt="QwtSpline class hierarchy">
 </div>
 <div class="title">Abbildung 42. Kind-Klassen der Basisklasse <code>QwtSpline</code></div>
 </div>
@@ -2804,7 +2713,7 @@ Zum Beispiel rendert das Plot <em>ohne</em> <code>FilterPoints</code> und <em>oh
 <pre class="rouge highlight"><code data-lang="c++"><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">x</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">};</span>
 <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">y</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">};</span>
 <span class="c1">// Kurve hinzufügen</span>
-<span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotCurve</span><span class="p">();</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
 <span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotCurve</span><span class="o">::</span><span class="n">Lines</span><span class="p">);</span>
 <span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">220</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="mi">2</span><span class="p">);</span>
 <span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span> <span class="p">);</span> <span class="c1">// Antialiasing verwenden</span>
@@ -2813,7 +2722,7 @@ Zum Beispiel rendert das Plot <em>ohne</em> <code>FilterPoints</code> und <em>oh
 <span class="c1">// SplineFitter-Objekt erstellen</span>
 <span class="n">QwtSplineCurveFitter</span> <span class="o">*</span> <span class="n">splineFitter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtSplineCurveFitter</span><span class="p">;</span>
 <span class="c1">// Spline-Implementierung auswählen, hier QwtSplinePleasing</span>
-<span class="n">QwtSplinePleasing</span> <span class="o">*</span> <span class="n">spline</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtSplinePleasing</span><span class="p">();</span>
+<span class="n">QwtSplinePleasing</span> <span class="o">*</span> <span class="n">spline</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtSplinePleasing</span><span class="p">();</span>
 <span class="c1">// Splinealgorithmus setzen</span>
 <span class="n">splineFitter</span><span class="o">-&gt;</span><span class="n">setSpline</span><span class="p">(</span><span class="n">spline</span><span class="p">);</span> <span class="c1">// takes ownership</span>
 <span class="c1">// SplineFitter-Objekt der Kurve geben</span>
@@ -2837,7 +2746,7 @@ Zum Beispiel rendert das Plot <em>ohne</em> <code>FilterPoints</code> und <em>oh
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/CurveFitterSplinePleasing.png" alt="CurveFitterSplinePleasing">
+<img src="../images/LineCurves/CurveFitterSplinePleasing.png" alt="CurveFitterSplinePleasing">
 </div>
 <div class="title">Abbildung 43. QwtSplineCurveFitter mit QwtSplinePleasing</div>
 </div>
@@ -2896,12 +2805,12 @@ only few polynomials."</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/CurveFitterSpline1.png" alt="CurveFitterSpline1">
+<img src="../images/LineCurves/CurveFitterSpline1.png" alt="CurveFitterSpline1">
 </div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/CurveFitterSpline2.png" alt="CurveFitterSpline2">
+<img src="../images/LineCurves/CurveFitterSpline2.png" alt="CurveFitterSpline2">
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -2980,7 +2889,7 @@ only few polynomials."</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/CurveFitterWeeding_tol1.png" alt="CurveFitterWeeding tol1">
+<img src="../images/LineCurves/CurveFitterWeeding_tol1.png" alt="CurveFitterWeeding tol1">
 </div>
 <div class="title">Abbildung 44. Datenreduktion mit dem QwtWeedingCurveFitter</div>
 </div>
@@ -2995,25 +2904,25 @@ only few polynomials."</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/CurveFitterWeeding_tol10.png" alt="CurveFitterWeeding tol10" width="400">
+<img src="../images/LineCurves/CurveFitterWeeding_tol10.png" alt="CurveFitterWeeding tol10" width="400">
 </div>
 <div class="title">Abbildung 45. Toleranz beim QwtWeedingCurveFitter 10, resultierende Punktzahl 21</div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/CurveFitterWeeding_tol1.png" alt="CurveFitterWeeding tol1" width="400">
+<img src="../images/LineCurves/CurveFitterWeeding_tol1.png" alt="CurveFitterWeeding tol1" width="400">
 </div>
 <div class="title">Abbildung 46. Toleranz beim QwtWeedingCurveFitter 1, resultierende Punktzahl 78</div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/CurveFitterWeeding_tol01.png" alt="CurveFitterWeeding tol01" width="400">
+<img src="../images/LineCurves/CurveFitterWeeding_tol01.png" alt="CurveFitterWeeding tol01" width="400">
 </div>
 <div class="title">Abbildung 47. Toleranz beim QwtWeedingCurveFitter 0.1, resultierende Punktzahl 194</div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/CurveFitterWeeding_tol001.png" alt="CurveFitterWeeding tol001" width="400">
+<img src="../images/LineCurves/CurveFitterWeeding_tol001.png" alt="CurveFitterWeeding tol001" width="400">
 </div>
 <div class="title">Abbildung 48. Toleranz beim QwtWeedingCurveFitter 0.01, resultierende Punktzahl 684</div>
 </div>
@@ -3065,7 +2974,7 @@ only few polynomials."</em></p>
 		<span class="p">((</span><span class="n">QWidget</span><span class="o">*</span><span class="p">)</span><span class="n">parent</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">resize</span><span class="p">(</span><span class="mi">2400</span><span class="p">,</span><span class="mi">1200</span><span class="p">);</span>
 	<span class="p">}</span>
 
-<span class="nl">protected:</span>
+<span class="k">protected</span><span class="o">:</span>
 	<span class="kt">void</span> <span class="n">paintEvent</span><span class="p">(</span><span class="n">QPaintEvent</span> <span class="o">*</span> <span class="n">event</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
 		<span class="n">QElapsedTimer</span> <span class="n">timer</span><span class="p">;</span>
 		<span class="n">timer</span><span class="p">.</span><span class="n">start</span><span class="p">();</span>
@@ -3089,7 +2998,7 @@ only few polynomials."</em></p>
 <span class="p">};</span>
 
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
 	<span class="n">QApplication</span> <span class="n">a</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
 	<span class="n">QwtPlot</span> <span class="n">plot</span><span class="p">;</span>
 
@@ -3106,7 +3015,7 @@ only few polynomials."</em></p>
 		<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mf">0.00001</span><span class="p">));</span>
 	<span class="p">}</span>
 
-	<span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotCurve</span><span class="p">();</span>
+	<span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotCurve</span><span class="p">();</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span> <span class="c1">// Antialiasing verwenden</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSamples</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
@@ -3337,7 +3246,7 @@ only few polynomials."</em></p>
 <p>Eine spezielle Kurvenart ist die <em>Intervallkurve</em>, bereitgestellt über die Klasse <code>QwtPlotIntervalCurve</code>.</p>
 </div>
 <div class="paragraph">
-<p>Im Prinzip ist das eine Kurve mit zwei y-Werten pro x-Koordinate im Datensatz. Es werden zwei reguläre Kurven gezeichnet und dazwischen wird die Fläche ausgefüllt. Dies kann man auch gut dazu nutzen, um gestackte Liniendiagramme zu zeichnen.</p>
+<p>Im Prinzip ist das eine Kurve mit zwei y-Werten pro x-Koordinate im Datensatz. Es werden zwei reguläre Kurven gezeichnet und dazwischen wird die Fläche ausgefüllt. Dies kann man auch gut dazu nutzen, um gestapelte Liniendiagramme zu zeichnen.</p>
 </div>
 <div class="listingblock">
 <div class="title">Beispiel für eine Intervallkurve</div>
@@ -3350,7 +3259,7 @@ only few polynomials."</em></p>
 <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
 	<span class="n">intervalSamples</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">QwtIntervalSample</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y2</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
 
-<span class="n">QwtPlotIntervalCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotIntervalCurve</span><span class="p">();</span>
+<span class="n">QwtPlotIntervalCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">QwtPlotIntervalCurve</span><span class="p">();</span>
 <span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotIntervalCurve</span><span class="o">::</span><span class="n">Tube</span><span class="p">);</span>
 <span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">180</span><span class="p">),</span> <span class="mi">2</span><span class="p">);</span>
 <span class="n">curve</span><span class="o">-&gt;</span><span class="n">setBrush</span><span class="p">(</span> <span class="n">QColor</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span> <span class="p">);</span>
@@ -3361,7 +3270,7 @@ only few polynomials."</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/IntervalCurve.png" alt="IntervalCurve">
+<img src="../images/IntervalCurves/IntervalCurve.png" alt="IntervalCurve">
 </div>
 <div class="title">Abbildung 49. Intervallkurve</div>
 </div>
@@ -3393,7 +3302,7 @@ only few polynomials."</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/IntervalCurve_Gradient.png" alt="IntervalCurve Gradient">
+<img src="../images/IntervalCurves/IntervalCurve_Gradient.png" alt="IntervalCurve Gradient">
 </div>
 <div class="title">Abbildung 50. Intervallkurve mit Gradientenfüllung</div>
 </div>
@@ -3402,12 +3311,12 @@ only few polynomials."</em></p>
 </div>
 <div class="paragraph">
 <div class="title">Intervallkurve mit festem Gradienten bei Änderung der Plotgeometrie</div>
-<p><span class="image"><img src="../images/IntervalCurve_Gradient_200.png" alt="Height200" width="200" height="400"></span>
-<span class="image"><img src="../images/IntervalCurve_Gradient_300.png" alt="Height300" width="200" height="400"></span>
-<span class="image"><img src="../images/IntervalCurve_Gradient_400.png" alt="Height400" width="200" height="400"></span></p>
+<p><span class="image"><img src="../images/IntervalCurves/IntervalCurve_Gradient_200.png" alt="Height200" width="200" height="400"></span>
+<span class="image"><img src="../images/IntervalCurves/IntervalCurve_Gradient_300.png" alt="Height300" width="200" height="400"></span>
+<span class="image"><img src="../images/IntervalCurves/IntervalCurve_Gradient_400.png" alt="Height400" width="200" height="400"></span></p>
 </div>
 <div class="paragraph">
-<p>Die Lösung für das Problem besteht darin, die Klasse <code>QwtPlotIntervalCurve</code> abzuleiten und die Funktion  je nach aktueller Skal und die Zeichenfunktion selbst zu implementieren.</p>
+<p>Die Lösung für das Problem besteht darin, die Klasse <code>QwtPlotIntervalCurve</code> abzuleiten und die Zeichenfunktion selbst zu implementieren.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3440,10 +3349,10 @@ only few polynomials."</em></p>
 <p>Man kann die Intervallkurven auch nutzen, um gestapelte, ausgefüllte Kurven bzw. Flächendiagramme zu erstellen. Dazu erstellt man einfach mehrere <code>QwtPlotIntervalCurve</code> Zeichenelemente, die sich jeweils die gleichen Y-Werte teilen.</p>
 </div>
 <div class="listingblock">
+<div class="title">Gestapelte Kurven</div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="c++"><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">x</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">17</span><span class="p">};</span>
 <span class="n">QVector</span><span class="o">&lt;</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">y</span><span class="p">;</span>
-<span class="c1">// 3 curves, 4 lines</span>
 <span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">}</span> <span class="p">);</span>
 <span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">}</span> <span class="p">);</span>
 <span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">6</span><span class="p">,</span><span class="mf">4.4</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span><span class="mf">5.5</span><span class="p">,</span><span class="mf">5.7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">}</span> <span class="p">);</span>
@@ -3457,13 +3366,13 @@ only few polynomials."</em></p>
 
 <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">y</span><span class="p">.</span><span class="n">count</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
 	<span class="n">QwtPlotIntervalCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotIntervalCurve</span><span class="p">();</span>
-	<span class="c1">// generate intervals for current curve</span>
 	<span class="n">QVector</span><span class="o">&lt;</span><span class="n">QwtIntervalSample</span><span class="o">&gt;</span> <span class="n">intervalSamples</span><span class="p">;</span>
 	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
 		<span class="n">intervalSamples</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">QwtIntervalSample</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">]));</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotIntervalCurve</span><span class="o">::</span><span class="n">Tube</span><span class="p">);</span>
-	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">96</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">darker</span><span class="p">(</span><span class="mi">150</span><span class="p">),</span> <span class="mi">2</span><span class="p">);</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setBrush</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setZ</span><span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="n">count</span><span class="p">()</span><span class="o">-</span><span class="n">j</span><span class="p">);</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span> <span class="p">);</span> <span class="c1">// Antialiasing verwenden</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSamples</span><span class="p">(</span><span class="n">intervalSamples</span><span class="p">);</span>
 	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">attach</span><span class="p">(</span><span class="o">&amp;</span><span class="n">plot</span><span class="p">);</span> <span class="c1">// Plot takes ownership</span>
@@ -3472,11 +3381,302 @@ only few polynomials."</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/IntervalCurve_StackedCurve.png" alt="IntervalCurve StackedCurve">
+<img src="../images/IntervalCurves/StackedCurveByIntervalCurve.png" alt="StackedCurveByIntervalCurve">
 </div>
-<div class="title">Abbildung 51. Diagramm mit gestapelten Kurven/Flächendiagramm</div>
+<div class="title">Abbildung 51. Diagramm mit gestapelten Kurven/Flächendiagrammen</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Gestapelte Kurven kann man klassisch auch mit gefüllten Linienkurven machen (siehe <a href="#sec:filledCurves">Kapitel 5.4</a>), welche übereinander gezeichnet werden. Dazu müssen die Linen einen Brush erhalten und von hinten nach vorne gezeichnet werden. Mittels <code>QwtPlotItem::setZ()</code> kann man den Tiefenwert setzen - je höher der Wert, umso weiter vorne ist das Zeichenelement.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Gestapelte Kurven unter Verwendung ausgefüllter QwtPlotCurves</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="c1">// Variablendeklarationen und Initialisierung wie oben</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">y</span><span class="p">.</span><span class="n">count</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="n">j</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">QwtPlotCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotCurve</span><span class="p">();</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">darker</span><span class="p">(</span><span class="mi">150</span><span class="p">),</span> <span class="mi">2</span><span class="p">);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span> <span class="p">);</span> <span class="c1">// Antialiasing verwenden</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSamples</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setBrush</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setZ</span><span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="n">count</span><span class="p">()</span><span class="o">-</span><span class="n">j</span><span class="p">);</span> <span class="c1">// Zeichenreihenfolge über z-Wert setzen</span>
+	<span class="n">curve</span><span class="o">-&gt;</span><span class="n">attach</span><span class="p">(</span><span class="o">&amp;</span><span class="n">plot</span><span class="p">);</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Das Ergebnis ist fast das gleiche wie oben:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/IntervalCurves/StackedCurveByFilledCurves.png" alt="StackedCurveByFilledCurves">
+</div>
+<div class="title">Abbildung 52. Diagramm mit gestapelten Kurven/Flächendiagrammen, diesmal erzeugt durch ausgefüllte Flächen</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_berechnung_von_gestapelten_kurven_aus_datenreihen">6.2. Berechnung von gestapelten Kurven aus Datenreihen</h3>
+<div class="paragraph">
+<p>Gestapelte Kurven entstehen ja durch as <em>Stapeln</em> normaler Dateireihen. Diese müssen nicht zwingend die gleichen X-Werte pro Datenreihe verwenden und können positive und negative Zahlen haben. Um solche Daten korrekt zu Stapeln und Anzuzeigen ist etwas Vorbereitungsarbeit notwendig.</p>
+</div>
+<div class="paragraph">
+<p>Beginnen wir mal mit drei einfachen Datenreihen, die direkt darstellt so aussehen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="c1">// Originale Daten</span>
+<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">x_initial</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span>   <span class="mi">2</span><span class="p">,</span>   <span class="mi">5</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span>  <span class="mi">10</span><span class="p">};</span>
+<span class="n">QVector</span><span class="o">&lt;</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">y</span><span class="p">;</span>
+<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>  <span class="o">-</span><span class="mi">3</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span>   <span class="mi">2</span><span class="p">}</span> <span class="p">);</span> <span class="c1">// rot</span>
+<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">6</span><span class="p">,</span>   <span class="mi">5</span><span class="p">,</span>   <span class="mi">3</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span>  <span class="o">-</span><span class="mi">5</span><span class="p">}</span> <span class="p">);</span> <span class="c1">// grün</span>
+<span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span>  <span class="o">-</span><span class="mi">6</span><span class="p">,</span>  <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>   <span class="mi">1</span><span class="p">}</span> <span class="p">);</span> <span class="c1">// blau</span>
+<span class="n">QVector</span><span class="o">&lt;</span><span class="n">QColor</span><span class="o">&gt;</span> <span class="n">cols</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="n">QColor</span><span class="p">(</span><span class="mh">0xb00000</span><span class="p">),</span> <span class="c1">// #a00000</span>
+	<span class="n">QColor</span><span class="p">(</span><span class="mh">0x20b000</span><span class="p">),</span> <span class="c1">// #208000</span>
+	<span class="n">QColor</span><span class="p">(</span><span class="mh">0x2000b0</span><span class="p">)</span>  <span class="c1">// #200080</span>
+<span class="p">};</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/IntervalCurves/StackedCurve_originalDataSeries.png" alt="StackedCurve originalDataSeries">
+</div>
+<div class="title">Abbildung 53. Drei Datenreihen mit positive und negativen Zahlenwerten</div>
+</div>
+<div class="sect3">
+<h4 id="_nulldurchgänge_bestimmen">6.2.1. Nulldurchgänge bestimmen</h4>
+<div class="paragraph">
+<p>Als erstes muss man die Nulldurchgänge der Kurven bestimmen und an diesen Stellen neue Stützstellen mit y=0 einfügen. Das macht eine Funktion <code>addZeroCrossings()</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="p">...</span> <span class="c1">// wie bisher</span>
+
+<span class="c1">// jede Datenreihe braucht einen eigenen X-Vector</span>
+<span class="n">QVector</span><span class="o">&lt;</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">x</span><span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="n">count</span><span class="p">());</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">y</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_initial</span><span class="p">;</span>
+	<span class="n">addZeroCrossings</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span> <span class="c1">// x und y Vektoren werden verändert</span>
+<span class="p">}</span>
+<span class="p">...</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Die Funktion zum Hinzufügen der Nulldurchgänge</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="kt">void</span> <span class="nf">addZeroCrossings</span><span class="p">(</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">const</span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">y</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="k">return</span><span class="p">;</span> <span class="c1">// leere Kurven überspringen</span>
+
+	<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">newX</span><span class="p">,</span> <span class="n">newY</span><span class="p">;</span>
+	<span class="n">newX</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+	<span class="n">newY</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+	<span class="c1">// Alle Originalpunkte und dazwischenliegende Intervalle durchlaufen</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// Originale Punkte behalten</span>
+		<span class="n">newX</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+		<span class="n">newY</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+		<span class="c1">// Darauffolgendes Interval auf Nulldurchgang prüfen</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+			<span class="kt">double</span> <span class="n">y0</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+			<span class="k">if</span> <span class="p">((</span><span class="n">y0</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="o">&amp;&amp;</span> <span class="n">y1</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">y0</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="o">&amp;&amp;</span> <span class="n">y1</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">))</span> <span class="p">{</span>
+				<span class="kt">double</span> <span class="n">denom</span> <span class="o">=</span> <span class="n">y0</span> <span class="o">-</span> <span class="n">y1</span><span class="p">;</span> <span class="c1">// may never become 0</span>
+				<span class="c1">// X Wert interpolieren 0 = x_0 + (y1-y0)/(x1-x0)*x_0</span>
+				<span class="n">newX</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">y0</span> <span class="o">/</span> <span class="n">denom</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+				<span class="n">newY</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="n">x</span><span class="p">.</span><span class="n">swap</span><span class="p">(</span><span class="n">newX</span><span class="p">);</span>
+	<span class="n">y</span><span class="p">.</span><span class="n">swap</span><span class="p">(</span><span class="n">newY</span><span class="p">);</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/IntervalCurves/StackedCurve_withZeroCrossings.png" alt="StackedCurve withZeroCrossings">
+</div>
+<div class="title">Abbildung 54. Drei Datenreihen mit interpolierten Nulldurchgängen</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_einheitliche_stützstellen_berechnen">6.2.2. Einheitliche Stützstellen berechnen</h4>
+<div class="paragraph">
+<p>Um die Datenwerte addieren zu können, müssen die Stützstellen übereinstimmen. Also wird ein einheitliches X-Werte-Raster bestimmt und die jeweiligen fehlenden Werte interpoliert.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="p">...</span> <span class="c1">// wie bisher</span>
+
+<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">unifiedX</span><span class="p">;</span>
+<span class="n">mergeCoordinates</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">unifiedX</span><span class="p">);</span> <span class="c1">// unifiedX wird generiert und y Vektoren angepasst</span>
+<span class="p">...</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Die Funktion zum Vereinheitlichen der Stützstellen</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="kt">void</span> <span class="nf">mergeCoordinates</span><span class="p">(</span><span class="k">const</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">y</span><span class="p">,</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">unifiedX</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// Alle Koordinaten von allen Vektoren in ein einheitliches Set einfügen</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">xSet</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">seriesCount</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">count</span><span class="p">();</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">double</span> <span class="n">val</span> <span class="o">:</span> <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+			<span class="n">xSet</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">val</span><span class="p">);</span> <span class="c1">// das ist eine potentiell langsame Operation, weil der Baum des Sets durchlaufen werden muss</span>
+	<span class="n">unifiedX</span> <span class="o">=</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">xSet</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">xSet</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+	<span class="c1">// Nun alle x-Werte aller Serien durchlaufen und y-Werte für fehlende Stützstellen interpolieren.</span>
+	<span class="c1">// Da hinterher alle Datenreihen die gleichen Stützstellen haben, brauchen wir nur die y-Werte zu aktualisieren.</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="n">seriesCount</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="c1">// Kurve ist leer, mit 0-Werten auffüllen</span>
+			<span class="n">y</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">unifiedX</span><span class="p">.</span><span class="n">count</span><span class="p">(),</span> <span class="mf">0.0</span><span class="p">);</span>
+			<span class="k">continue</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="k">const</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">xk</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>  <span class="c1">// Lesbarkeitsvereinfachung</span>
+		<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span>       <span class="o">&amp;</span> <span class="n">yk</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>  <span class="c1">// Lesbarkeitsvereinfachung</span>
+		<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span>       <span class="n">newY</span><span class="p">;</span>         <span class="c1">// Vektor für neue y-Werte</span>
+		<span class="n">newY</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">unifiedX</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+		<span class="kt">double</span> <span class="n">xLast</span> <span class="o">=</span> <span class="n">xk</span><span class="p">.</span><span class="n">back</span><span class="p">();</span>
+		<span class="kt">int</span> <span class="n">i_unified</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// Indexzähler für unifiedX Werte</span>
+		<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>         <span class="c1">// Indexzähler für x-Werte der aktuellen Serie</span>
+		<span class="kt">int</span> <span class="n">n_unified</span> <span class="o">=</span> <span class="n">unifiedX</span><span class="p">.</span><span class="n">count</span><span class="p">();</span>
+		<span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">xk</span><span class="p">.</span><span class="n">count</span><span class="p">();</span>
+		<span class="c1">// Die x-Vectoren (unifiedX und xk) sind beide streng monoton steigend</span>
+		<span class="k">while</span> <span class="p">(</span><span class="n">i_unified</span> <span class="o">&lt;</span> <span class="n">n_unified</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+			<span class="c1">// Fallunterscheidungen</span>
+			<span class="c1">// unifiedX[i_unified] &lt; x[0]  -&gt; x[i_unified] und y=0 einfügen (auffüllen)</span>
+			<span class="c1">// unifiedX[i_unified] &lt; xLast -&gt; x[i_unified] und y=0 einfügen (auffüllen)</span>
+			<span class="kt">double</span> <span class="n">xUni</span> <span class="o">=</span> <span class="n">unifiedX</span><span class="p">[</span><span class="n">i_unified</span><span class="p">];</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">xUni</span> <span class="o">&lt;</span> <span class="n">xk</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">||</span> <span class="n">xUni</span> <span class="o">&gt;</span> <span class="n">xLast</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">newY</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+				<span class="o">++</span><span class="n">i_unified</span><span class="p">;</span>
+				<span class="k">continue</span><span class="p">;</span>
+			<span class="p">}</span>
+
+			<span class="c1">// Fall 1: x-Werte stimmen überein (gleiche Stützstelle)</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">xk</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">xUni</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">newY</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">yk</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+				<span class="o">++</span><span class="n">i</span><span class="p">;</span>
+				<span class="o">++</span><span class="n">i_unified</span><span class="p">;</span>
+				<span class="k">continue</span><span class="p">;</span>
+			<span class="p">}</span>
+
+			<span class="c1">// Fall 2: x-Wert fehlt im Interval: Interpolation notwendig</span>
+			<span class="kt">double</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">yk</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+			<span class="kt">double</span> <span class="n">y0</span> <span class="o">=</span> <span class="n">yk</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+			<span class="kt">double</span> <span class="n">dx</span> <span class="o">=</span> <span class="n">xk</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">xk</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+			<span class="c1">// y = (x - x0)/(x1-x0)(y1-y0) + y0</span>
+			<span class="kt">double</span> <span class="n">yinterpol</span> <span class="o">=</span> <span class="p">(</span><span class="n">xUni</span> <span class="o">-</span> <span class="n">xk</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">dx</span><span class="o">*</span><span class="p">(</span><span class="n">y1</span><span class="o">-</span><span class="n">y0</span><span class="p">)</span> <span class="o">+</span> <span class="n">y0</span><span class="p">;</span>
+			<span class="n">newY</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">yinterpol</span><span class="p">);</span>
+			<span class="o">++</span><span class="n">i_unified</span><span class="p">;</span> <span class="c1">// nur den Zähler für den gemeinsamen X-Vector erhöhen</span>
+		<span class="p">}</span>
+		<span class="n">yk</span><span class="p">.</span><span class="n">swap</span><span class="p">(</span><span class="n">newY</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/IntervalCurves/StackedCurve_withUnifiedX.png" alt="StackedCurve withUnifiedX">
+</div>
+<div class="title">Abbildung 55. Drei Datenreihen mit vereinheitlichten Stützstellen</div>
+</div>
+<div class="paragraph">
+<p>Nun kann man die Datenreihen addieren. Dabei werden jeweils die positiven und die negativen Anteile separat addiert und man erhält quasi zwei gestapelte Linienreihen, die aber gleichzeitig ins gleiche Diagramm gezeichnet werden.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="p">...</span> <span class="c1">// wie bisher</span>
+
+<span class="c1">// Datenreihen addieren</span>
+<span class="n">QVector</span><span class="o">&lt;</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">yPos</span><span class="p">;</span>
+<span class="n">QVector</span><span class="o">&lt;</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">yNeg</span><span class="p">;</span>
+<span class="n">computeStackedLinesWithNegative</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">yPos</span><span class="p">,</span> <span class="n">yNeg</span><span class="p">);</span>
+
+<span class="c1">// Farbe für die unterste Intervallgrenze einfügen (cols.count() == yPos.count()+1)</span>
+<span class="n">cols</span><span class="p">.</span><span class="n">prepend</span><span class="p">(</span><span class="n">Qt</span><span class="o">::</span><span class="n">black</span><span class="p">);</span>
+<span class="c1">// die positiven Anteile als QwtPlotIntervalCurve hinzufügen</span>
+<span class="n">addIntervalCurves</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">unifiedX</span><span class="p">,</span> <span class="n">yPos</span><span class="p">,</span> <span class="n">cols</span><span class="p">);</span>
+<span class="c1">// und die negativen Anteile</span>
+<span class="n">addIntervalCurve</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">unifiedX</span><span class="p">,</span> <span class="n">yNeg</span><span class="p">,</span> <span class="n">cols</span><span class="p">);</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Die Funktion zum Addieren der Datenreihen und die Hilfsfunktion zum Hinzufügen der Intervallkurven</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="c++"><span class="kt">void</span> <span class="nf">computeStackedLinesWithNegative</span><span class="p">(</span><span class="k">const</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">y</span><span class="p">,</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">yPos</span><span class="p">,</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">yNeg</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// y[0] ist die Grundlinie (alles Nullen), y[1..n] sind die Rohdaten der Datenreihen.</span>
+	<span class="c1">// Ausgabe: y wird ersetzt durch 2*n Einträge — Paare von (unten,oben) pro Datenreihe.</span>
+	<span class="c1">// Positive Werte stapeln sich nach oben</span>
+	<span class="c1">// Negative Werte stapeln sich nach unten</span>
+	<span class="kt">int</span> <span class="n">numSeries</span> <span class="o">=</span> <span class="n">y</span><span class="p">.</span><span class="n">count</span><span class="p">();</span>
+	<span class="kt">int</span> <span class="n">numPoints</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">count</span><span class="p">();</span>
+
+	<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">posAccum</span><span class="p">(</span><span class="n">numPoints</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+	<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">negAccum</span><span class="p">(</span><span class="n">numPoints</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+
+	<span class="c1">// add base line</span>
+	<span class="n">yPos</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">posAccum</span><span class="p">);</span>
+	<span class="n">yNeg</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">posAccum</span><span class="p">);</span>
+	<span class="n">QVector</span><span class="o">&lt;</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">result</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">numSeries</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">lower</span><span class="p">(</span><span class="n">numPoints</span><span class="p">),</span> <span class="n">upper</span><span class="p">(</span><span class="n">numPoints</span><span class="p">);</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numPoints</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="kt">double</span> <span class="n">v</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">];</span>
+			<span class="c1">// Positive Werte in posAccum akkumulieren, negative in negAccum</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">v</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">)</span>
+				<span class="n">posAccum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">v</span><span class="p">;</span>
+			<span class="k">else</span>
+				<span class="n">negAccum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">v</span><span class="p">;</span>
+			<span class="n">upper</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">posAccum</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+			<span class="n">lower</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">negAccum</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+		<span class="p">}</span>
+		<span class="n">yNeg</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">lower</span><span class="p">);</span>
+		<span class="n">yPos</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">upper</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kt">void</span> <span class="nf">addIntervalCurve</span><span class="p">(</span><span class="n">QwtPlot</span> <span class="o">*</span> <span class="n">plot</span><span class="p">,</span> <span class="k">const</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span>  <span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="n">QVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span>   <span class="o">&amp;</span> <span class="n">y</span><span class="p">,</span> <span class="k">const</span> <span class="n">QVector</span><span class="o">&lt;</span><span class="n">QColor</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">cols</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">numSeries</span> <span class="o">=</span> <span class="n">y</span><span class="p">.</span><span class="n">count</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">numSeries</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">QwtPlotIntervalCurve</span> <span class="o">*</span><span class="n">curve</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QwtPlotIntervalCurve</span><span class="p">();</span>
+		<span class="n">QVector</span><span class="o">&lt;</span><span class="n">QwtIntervalSample</span><span class="o">&gt;</span> <span class="n">intervalSamples</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+			<span class="n">intervalSamples</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">QwtIntervalSample</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">]));</span>
+		<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setStyle</span><span class="p">(</span><span class="n">QwtPlotIntervalCurve</span><span class="o">::</span><span class="n">Tube</span><span class="p">);</span>
+		<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setPen</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">);</span>
+		<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setBrush</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">lighter</span><span class="p">(</span><span class="mi">120</span><span class="p">));</span>
+		<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setZ</span><span class="p">(</span><span class="n">numSeries</span> <span class="o">-</span> <span class="n">j</span><span class="p">);</span>
+		<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setRenderHint</span><span class="p">(</span> <span class="n">QwtPlotItem</span><span class="o">::</span><span class="n">RenderAntialiased</span><span class="p">,</span> <span class="nb">true</span> <span class="p">);</span>
+		<span class="n">curve</span><span class="o">-&gt;</span><span class="n">setSamples</span><span class="p">(</span><span class="n">intervalSamples</span><span class="p">);</span>
+		<span class="n">curve</span><span class="o">-&gt;</span><span class="n">attach</span><span class="p">(</span><span class="n">plot</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/IntervalCurves/StackedCurve_accumulated.png" alt="StackedCurve accumulated">
+</div>
+<div class="title">Abbildung 56. Akkumulierte Datenreihen (getrennt nach Vorzeichen)</div>
 </div>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 </div>
@@ -3485,7 +3685,7 @@ only few polynomials."</em></p>
 <div class="sectionbody">
 <div class="imageblock">
 <div class="content">
-<img src="../images/BarPlot_1_MultiColor.png" alt="BarPlot 1 MultiColor">
+<img src="../images/BarPlots/BarPlot_1_MultiColor.png" alt="BarPlot 1 MultiColor">
 </div>
 </div>
 <div class="paragraph">
@@ -3525,9 +3725,9 @@ only few polynomials."</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/BarPlot_1.png" alt="BarPlot 1">
+<img src="../images/BarPlots/BarPlot_1.png" alt="BarPlot 1">
 </div>
-<div class="title">Abbildung 52. Minimalistisches Balkendiagramm</div>
+<div class="title">Abbildung 57. Minimalistisches Balkendiagramm</div>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3558,9 +3758,9 @@ only few polynomials."</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/BarPlot_1_baseLine.png" alt="BarPlot 1 baseLine">
+<img src="../images/BarPlots/BarPlot_1_baseLine.png" alt="BarPlot 1 baseLine">
 </div>
-<div class="title">Abbildung 53. Balkendiagramm mit Bezugslinie bei y=15</div>
+<div class="title">Abbildung 58. Balkendiagramm mit Bezugslinie bei y=15</div>
 </div>
 </div>
 <div class="sect2">
@@ -3573,9 +3773,9 @@ only few polynomials."</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/BarPlot_1_spacingMargin.png" alt="BarPlot 1 spacingMargin">
+<img src="../images/BarPlots/BarPlot_1_spacingMargin.png" alt="BarPlot 1 spacingMargin">
 </div>
-<div class="title">Abbildung 54. Balkendiagramm mit angepassten Abständen und Rändern</div>
+<div class="title">Abbildung 59. Balkendiagramm mit angepassten Abständen und Rändern</div>
 </div>
 <div class="paragraph">
 <p>Die Breite der Balken selbst wird über Layoutvorgaben und konkret über die Funktionen <code>QwtPlotAbstractBarChart::setLayoutPolicy()</code> und <code>QwtPlotAbstractBarChart::setLayoutHint()</code> kontrolliert.</p>
@@ -3612,9 +3812,9 @@ only few polynomials."</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/BarPlot_1_LayoutAutoAdjustSamples_minWidth.png" alt="BarPlot 1 LayoutAutoAdjustSamples minWidth">
+<img src="../images/BarPlots/BarPlot_1_LayoutAutoAdjustSamples_minWidth.png" alt="BarPlot 1 LayoutAutoAdjustSamples minWidth">
 </div>
-<div class="title">Abbildung 55. Durch LayoutHint definierte Mindestbalkenbreite</div>
+<div class="title">Abbildung 60. Durch LayoutHint definierte Mindestbalkenbreite</div>
 </div>
 </div>
 <div class="sect3">
@@ -3707,9 +3907,9 @@ only few polynomials."</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/BarPlot_1_BoxSymbol.png" alt="BarPlot 1 BoxSymbol">
+<img src="../images/BarPlots/BarPlot_1_BoxSymbol.png" alt="BarPlot 1 BoxSymbol">
 </div>
-<div class="title">Abbildung 56. Balkendiagram mit angepasstem Stil für die Balken</div>
+<div class="title">Abbildung 61. Balkendiagram mit angepasstem Stil für die Balken</div>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -3742,9 +3942,9 @@ only few polynomials."</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/BarPlot_1_BoxSymbolBlackFrame.png" alt="BarPlot 1 BoxSymbolBlackFrame">
+<img src="../images/BarPlots/BarPlot_1_BoxSymbolBlackFrame.png" alt="BarPlot 1 BoxSymbolBlackFrame">
 </div>
-<div class="title">Abbildung 57. Balkendiagram mit schwarz umrandeten, einfarbigen Balken</div>
+<div class="title">Abbildung 62. Balkendiagram mit schwarz umrandeten, einfarbigen Balken</div>
 </div>
 </div>
 <div class="sect2">
@@ -3812,11 +4012,11 @@ Dann schaltet man die Unterteilungsstriche (<em>Ticks</em>) und die Achsenlinie 
 		<span class="n">setLabelAlignment</span><span class="p">(</span> <span class="n">Qt</span><span class="o">::</span><span class="n">AlignHCenter</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">::</span><span class="n">AlignVCenter</span> <span class="p">);</span>
 	<span class="p">}</span>
 
-	<span class="k">virtual</span> <span class="n">QwtText</span> <span class="n">label</span><span class="p">(</span> <span class="kt">double</span> <span class="n">value</span> <span class="p">)</span> <span class="k">const</span> <span class="n">QWT_OVERRIDE</span> <span class="p">{</span>
+	<span class="k">virtual</span> <span class="n">QwtText</span> <span class="nf">label</span><span class="p">(</span> <span class="kt">double</span> <span class="n">value</span> <span class="p">)</span> <span class="k">const</span> <span class="n">QWT_OVERRIDE</span> <span class="p">{</span>
 		<span class="k">const</span> <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">qRound</span><span class="p">(</span> <span class="n">value</span> <span class="p">);</span>
 		<span class="k">if</span> <span class="p">(</span> <span class="n">index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">m_labels</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="p">)</span>
 			<span class="k">return</span> <span class="n">m_labels</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
-		<span class="k">return</span> <span class="n">QwtText</span><span class="p">();</span>
+		<span class="k">return</span> <span class="nf">QwtText</span><span class="p">();</span>
 	<span class="p">}</span>
 
 	<span class="n">QStringList</span> <span class="n">m_labels</span><span class="p">;</span>
@@ -3843,9 +4043,9 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/BarPlot_1_xAxisWithLabels_zoomedFixed.png" alt="BarPlot 1 xAxisWithLabels zoomedFixed">
+<img src="../images/BarPlots/BarPlot_1_xAxisWithLabels_zoomedFixed.png" alt="BarPlot 1 xAxisWithLabels zoomedFixed">
 </div>
-<div class="title">Abbildung 58. Hineingezoomt in ein Balkendiagramm mit Textbeschriftung</div>
+<div class="title">Abbildung 63. Hineingezoomt in ein Balkendiagramm mit Textbeschriftung</div>
 </div>
 </div>
 <div class="sect2">
@@ -3863,7 +4063,7 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 	<span class="p">}</span>
 
 	<span class="c1">// we want to have individual colors for each bar</span>
-	<span class="k">virtual</span> <span class="n">QwtColumnSymbol</span><span class="o">*</span> <span class="n">specialSymbol</span><span class="p">(</span>
+	<span class="k">virtual</span> <span class="n">QwtColumnSymbol</span><span class="o">*</span> <span class="nf">specialSymbol</span><span class="p">(</span>
 	    <span class="kt">int</span> <span class="n">sampleIndex</span><span class="p">,</span> <span class="k">const</span> <span class="n">QPointF</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">const</span> <span class="n">QWT_OVERRIDE</span>
 	<span class="p">{</span>
 		<span class="c1">// generate symbol with color for each bar</span>
@@ -3871,7 +4071,7 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 		<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setLineWidth</span><span class="p">(</span> <span class="mi">2</span> <span class="p">);</span>
 		<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setFrameStyle</span><span class="p">(</span> <span class="n">QwtColumnSymbol</span><span class="o">::</span><span class="n">Raised</span> <span class="p">);</span>
 
-		<span class="n">QColor</span> <span class="n">c</span><span class="p">(</span> <span class="n">Qt</span><span class="o">::</span><span class="n">white</span> <span class="p">);</span>
+		<span class="n">QColor</span> <span class="nf">c</span><span class="p">(</span> <span class="n">Qt</span><span class="o">::</span><span class="n">white</span> <span class="p">);</span>
 		<span class="k">if</span> <span class="p">(</span> <span class="n">sampleIndex</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">sampleIndex</span> <span class="o">&lt;</span> <span class="n">m_colors</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="p">)</span>
 			<span class="n">c</span> <span class="o">=</span> <span class="n">m_colors</span><span class="p">[</span> <span class="n">sampleIndex</span> <span class="p">];</span>
 		<span class="n">symbol</span><span class="o">-&gt;</span><span class="n">setPalette</span><span class="p">(</span> <span class="n">c</span> <span class="p">);</span>
@@ -3902,9 +4102,9 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/BarPlot_1_MultiColor.png" alt="BarPlot 1 MultiColor">
+<img src="../images/BarPlots/BarPlot_1_MultiColor.png" alt="BarPlot 1 MultiColor">
 </div>
-<div class="title">Abbildung 59. Balkendiagramm mit unterschiedlich gefärbten Balken</div>
+<div class="title">Abbildung 64. Balkendiagramm mit unterschiedlich gefärbten Balken</div>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -3993,9 +4193,9 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/BarPlot_1_MultiColorWithLegend.png" alt="BarPlot 1 MultiColorWithLegend">
+<img src="../images/BarPlots/BarPlot_1_MultiColorWithLegend.png" alt="BarPlot 1 MultiColorWithLegend">
 </div>
-<div class="title">Abbildung 60. Balkendiagramm mit unterschiedlich gefärbten Balken und Legendeneinträgen</div>
+<div class="title">Abbildung 65. Balkendiagramm mit unterschiedlich gefärbten Balken und Legendeneinträgen</div>
 </div>
 </div>
 <div class="sect2">
@@ -4012,7 +4212,7 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 <div class="sectionbody">
 <div class="imageblock">
 <div class="content">
-<img src="../images/Spectrogram_2D_with_gaps.png" alt="Spectrogram 2D with gaps">
+<img src="../images/Spectrograms/Spectrogram_2D_with_gaps.png" alt="Spectrogram 2D with gaps">
 </div>
 </div>
 <div class="paragraph">
@@ -4077,12 +4277,12 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 
     <span class="c1">// Dies ist die eigentliche Berechnungsfunktion, welche für eine x,y-Plotkoordinate den</span>
     <span class="c1">// entsprechenden z-Wert zurückliefert.</span>
-	<span class="k">virtual</span> <span class="kt">double</span> <span class="n">value</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+	<span class="k">virtual</span> <span class="kt">double</span> <span class="nf">value</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
 		<span class="kt">double</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
 		<span class="k">return</span> <span class="n">z</span><span class="p">;</span>
 	<span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
 	<span class="n">QwtInterval</span> <span class="n">m_intervals</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
 <span class="p">};</span></code></pre>
 </div>
@@ -4092,9 +4292,9 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Spectrogram_1.png" alt="Spectrogram 1">
+<img src="../images/Spectrograms/Spectrogram_1.png" alt="Spectrogram 1">
 </div>
-<div class="title">Abbildung 61. Spektrogramm einer analytischen Funktion unter Verwendung der Standard-Farbpalette für die Umrechnung der generierten z-Werte in eine Farbe</div>
+<div class="title">Abbildung 66. Spektrogramm einer analytischen Funktion unter Verwendung der Standard-Farbpalette für die Umrechnung der generierten z-Werte in eine Farbe</div>
 </div>
 <div class="paragraph">
 <p>Der Farbwert ergibt sich aus dem von der Funktion <code>value()</code> zurückgelieferten Wert. Unter Verwendung des z-Wertebereichs, zurückgeliefert von <code>QwtRasterData::interval(Qt::ZAxis)</code>, wird dieser Wert normalisiert (0 = min-z-Wert, 1 = max-z-Wert). Mittels dieses normalisierten Wertes wird dann aus der Farbtabelle die dazu passende Farbe gewählt.</p>
@@ -4260,7 +4460,7 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 
 
 	<span class="c1">// Diese Funktion sucht die zu den x,y-Koordinaten passende Zelle heraus und liefert den Wert zurück</span>
-	<span class="k">virtual</span> <span class="kt">double</span> <span class="n">value</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+	<span class="k">virtual</span> <span class="kt">double</span> <span class="nf">value</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
 		<span class="c1">// Außerhalb des Wertebereichs?</span>
 		<span class="k">if</span> <span class="p">((</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">m_xvalues</span><span class="p">.</span><span class="n">front</span><span class="p">())</span>  <span class="o">||</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">m_yvalues</span><span class="p">.</span><span class="n">front</span><span class="p">())</span> <span class="o">||</span>
 			<span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">m_xvalues</span><span class="p">.</span><span class="n">back</span><span class="p">())</span> <span class="o">||</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">m_yvalues</span><span class="p">.</span><span class="n">back</span><span class="p">()))</span>
@@ -4291,7 +4491,7 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 		<span class="k">return</span> <span class="n">m_zvalues</span><span class="p">[</span><span class="n">yIdx</span><span class="p">][</span><span class="n">xIdx</span><span class="p">];</span>
 	<span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
 	<span class="n">QwtInterval</span> <span class="n">m_intervals</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
 <span class="p">};</span></code></pre>
 </div>
@@ -4320,9 +4520,9 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Spectrogram_Datatable_ElementBased.png" alt="Spectrogram Datatable ElementBased">
+<img src="../images/Spectrograms/Spectrogram_Datatable_ElementBased.png" alt="Spectrogram Datatable ElementBased">
 </div>
-<div class="title">Abbildung 62. Spektrogramm einer Datentabelle ohne Interpolation (je Element ein Wert)</div>
+<div class="title">Abbildung 67. Spektrogramm einer Datentabelle ohne Interpolation (je Element ein Wert)</div>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -4392,9 +4592,9 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurveLegendLinieWithCustomLegendIcon.png" alt="PlotCurveLegendLinieWithCustomLegendIcon">
+<img src="../images/Legend/PlotCurveLegendLinieWithCustomLegendIcon.png" alt="PlotCurveLegendLinieWithCustomLegendIcon">
 </div>
-<div class="title">Abbildung 63. Legende mit eigenem Legendenicon (schwarzumrandete Linien)</div>
+<div class="title">Abbildung 68. Legende mit eigenem Legendenicon (schwarzumrandete Linien)</div>
 </div>
 <div class="paragraph">
 <p>Wenn man eher die Standard-Rechtecke bevorzugt, dann ist folgender Zeichencode ausreichend:</p>
@@ -4414,9 +4614,9 @@ Entscheidend ist die Implementierung der Funktion <code>QwtScaleDraw::label()</c
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PlotCurveLegendLinieWithCustomLegendIcon2.png" alt="PlotCurveLegendLinieWithCustomLegendIcon2">
+<img src="../images/Legend/PlotCurveLegendLinieWithCustomLegendIcon2.png" alt="PlotCurveLegendLinieWithCustomLegendIcon2">
 </div>
-<div class="title">Abbildung 64. Legende mit eigenem Legendenicon (schwarzumrandete Box)</div>
+<div class="title">Abbildung 69. Legende mit eigenem Legendenicon (schwarzumrandete Box)</div>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -4722,9 +4922,9 @@ plot&#8594;setAxisTitle( QwtAxis::YLeft, QwtText("Intensity") );</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_f.png" alt="Tutorial1 f">
+<img src="../images/Print/Tutorial1_f.png" alt="Tutorial1 f">
 </div>
-<div class="title">Abbildung 65. 1-zu-1 Kopie des Plot, exportiert in ein PNG-Bild</div>
+<div class="title">Abbildung 70. 1-zu-1 Kopie des Plot, exportiert in ein PNG-Bild</div>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -4800,9 +5000,9 @@ plot&#8594;setAxisTitle( QwtAxis::YLeft, QwtText("Intensity") );</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_h.png" alt="Tutorial1 h">
+<img src="../images/Print/Tutorial1_h.png" alt="Tutorial1 h">
 </div>
-<div class="title">Abbildung 66. Plot in höherer Auflösung abgespeichert</div>
+<div class="title">Abbildung 71. Plot in höherer Auflösung abgespeichert</div>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -4993,9 +5193,9 @@ plot&#8594;setAxisTitle( QwtAxis::YLeft, QwtText("Intensity") );</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_export1.png" alt="Tutorial1 export1">
+<img src="../images/Print/Tutorial1_export1.png" alt="Tutorial1 export1">
 </div>
-<div class="title">Abbildung 67. Plot ohne Widget-Hintergrund (Rand), ohne Zeichenflächenhintergrund und ohne Rahmen</div>
+<div class="title">Abbildung 72. Plot ohne Widget-Hintergrund (Rand), ohne Zeichenflächenhintergrund und ohne Rahmen</div>
 </div>
 <div class="paragraph">
 <p>Zusätzlich könnte man noch weitere Dinge ausblenden:</p>
@@ -5023,9 +5223,9 @@ plot&#8594;setAxisTitle( QwtAxis::YLeft, QwtText("Intensity") );</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_export2.png" alt="Tutorial1 export2">
+<img src="../images/Print/Tutorial1_export2.png" alt="Tutorial1 export2">
 </div>
-<div class="title">Abbildung 68. Plot gerendert im Layoutmodus <em>FrameWithScales</em></div>
+<div class="title">Abbildung 73. Plot gerendert im Layoutmodus <em>FrameWithScales</em></div>
 </div>
 <div class="paragraph">
 <p>Die linke untere Ecke des Diagramms ist hier nicht direkt am Punkt (0, 0,001). Das kann man erzwingen, wenn man die Zeichenfläche an alle vier Achsen ausrichtet:</p>
@@ -5040,9 +5240,9 @@ plot&#8594;setAxisTitle( QwtAxis::YLeft, QwtText("Intensity") );</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_export3.png" alt="Tutorial1 export3">
+<img src="../images/Print/Tutorial1_export3.png" alt="Tutorial1 export3">
 </div>
-<div class="title">Abbildung 69. Plot mit ausgerichteten Skalen - typisches Plotlayout für den Export</div>
+<div class="title">Abbildung 74. Plot mit ausgerichteten Skalen - typisches Plotlayout für den Export</div>
 </div>
 </div>
 <div class="sect3">
@@ -5075,9 +5275,9 @@ plot&#8594;setAxisTitle( QwtAxis::YLeft, QwtText("Intensity") );</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/PDF-Export-Detail.png" alt="PDF Export Detail">
+<img src="../images/Print/PDF-Export-Detail.png" alt="PDF Export Detail">
 </div>
-<div class="title">Abbildung 70. Vergrößerung des Vektorexports (PDF), Linien der Skalen werden als kosmetische Linien immer mit einem Pixel Breite gezeichnet</div>
+<div class="title">Abbildung 75. Vergrößerung des Vektorexports (PDF), Linien der Skalen werden als kosmetische Linien immer mit einem Pixel Breite gezeichnet</div>
 </div>
 <div class="paragraph">
 <p>Auch bei den Skalen darf man nicht vergessen, den Zeichenstift (<code>QPen</code>)  entsprechend zu setzen.</p>
@@ -5117,15 +5317,15 @@ Analog gilt das auch, wenn mittels <code>QwtPlotRenderer</code> eine Pixelgrafik
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Export_plotA4.png" alt="Export plotA4">
+<img src="../images/Print/Export_plotA4.png" alt="Export plotA4">
 </div>
-<div class="title">Abbildung 71. Export in A4 Landscape Format</div>
+<div class="title">Abbildung 76. Export in A4 Landscape Format</div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Export_plotA5.png" alt="Export plotA5">
+<img src="../images/Print/Export_plotA5.png" alt="Export plotA5">
 </div>
-<div class="title">Abbildung 72. Export in A5 Landscape Format</div>
+<div class="title">Abbildung 77. Export in A5 Landscape Format</div>
 </div>
 <div class="paragraph">
 <p>Wie man gut sieht, sind Zeichenelemente und Schriftgrößen aufgrund der gleichen DPI-Zahl identisch groß. Durch die unterschiedliche Zielgröße wird aber das Diagramm unterschiedlich gelayouted und die Skalen anders berechnet.</p>
@@ -5184,9 +5384,9 @@ Daher sind diese Techniken mit Vorsicht zu genießen!</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/ClassDiagrams/QwtSpline-class-hierarchy.png" alt="QwtSpline class hierarchy">
+<img src="../images/Advanced/QwtSpline-class-hierarchy.png" alt="QwtSpline class hierarchy">
 </div>
-<div class="title">Abbildung 73. Kind-Klassen der Basisklasse <code>QwtSpline</code></div>
+<div class="title">Abbildung 78. Kind-Klassen der Basisklasse <code>QwtSpline</code></div>
 </div>
 <div class="paragraph">
 <p>Direkt zu verwenden sind die Klassen:</p>
@@ -5231,36 +5431,36 @@ Das erste Argument ist das Polygon mit den zu fittende Stützstellen und das zwe
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/SplinePleasing.png" alt="SplinePleasing">
+<img src="../images/Advanced/SplinePleasing.png" alt="SplinePleasing">
 </div>
-<div class="title">Abbildung 74. SplinePleasing: generiert mittels polygon() und mittels painterPath()</div>
+<div class="title">Abbildung 79. SplinePleasing: generiert mittels polygon() und mittels painterPath()</div>
 </div>
 <div class="paragraph">
 <p>Hineingezoomt erkennt man jedoch Unterschiede:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/SplinePleasingZoom.png" alt="SplinePleasingZoom">
+<img src="../images/Advanced/SplinePleasingZoom.png" alt="SplinePleasingZoom">
 </div>
-<div class="title">Abbildung 75. SplinePleasing: Unterschiede zwischen generierte Spline-Polygon und PainterPath</div>
+<div class="title">Abbildung 80. SplinePleasing: Unterschiede zwischen generierte Spline-Polygon und PainterPath</div>
 </div>
 <div class="paragraph">
 <p>Auch bei <code>QwtSplineLocal(QwtSplineLocal::PChip)</code> mit (testweise veränderten Stützstellen) sieht das so aus:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/SplineLocal.png" alt="SplineLocal">
+<img src="../images/Advanced/SplineLocal.png" alt="SplineLocal">
 </div>
-<div class="title">Abbildung 76. SplineLocal: generiert mittels polygon() und mittels painterPath()</div>
+<div class="title">Abbildung 81. SplineLocal: generiert mittels polygon() und mittels painterPath()</div>
 </div>
 <div class="paragraph">
 <p>Hineingezoomt erkennt man jedoch Unterschiede:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/SplineLocalZoom.png" alt="SplineLocalZoom">
+<img src="../images/Advanced/SplineLocalZoom.png" alt="SplineLocalZoom">
 </div>
-<div class="title">Abbildung 77. SplineLocal: Unterschiede zwischen generierte Spline-Polygon und PainterPath</div>
+<div class="title">Abbildung 82. SplineLocal: Unterschiede zwischen generierte Spline-Polygon und PainterPath</div>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -5484,16 +5684,16 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_ui1.png" alt="Tutorial1 ui1">
+<img src="../images/Building/Tutorial1_ui1.png" alt="Tutorial1 ui1">
 </div>
-<div class="title">Abbildung 78. Widget mit Platzhalter-Widget für das Diagramm</div>
+<div class="title">Abbildung 83. Widget mit Platzhalter-Widget für das Diagramm</div>
 </div>
 <div class="paragraph">
 <p>Unter der Spinbox wurde ein <code>QWidget</code> eingefügt. Dieses soll nun als Platzhalter für das <code>QwtPlot</code> dienen. Dazu im Kontextmenü des Widgets die Option "Als Platzhalter für benutzerdefinierte Klasse festlegen&#8230;&#8203;" auswählen:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_ui2.png" alt="Tutorial1 ui2">
+<img src="../images/Building/Tutorial1_ui2.png" alt="Tutorial1 ui2">
 </div>
 </div>
 <div class="paragraph">
@@ -5501,7 +5701,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_ui3.png" alt="Tutorial1 ui3">
+<img src="../images/Building/Tutorial1_ui3.png" alt="Tutorial1 ui3">
 </div>
 </div>
 <div class="paragraph">
@@ -5509,7 +5709,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../images/Tutorial1_ui4.png" alt="Tutorial1 ui4">
+<img src="../images/Building/Tutorial1_ui4.png" alt="Tutorial1 ui4">
 </div>
 </div>
 <div class="paragraph">
@@ -5547,7 +5747,7 @@ c:\Qwt-6.3.0\doc\html - API Dokumentation (`index.html` in diesem Verzeichnis ö
 <div id="footer">
 <div id="footer-text">
 Version 2.0<br>
-Last updated 2025-07-09 20:36:29 +0200
+Last updated 2026-05-04 13:44:49 +0200
 </div>
 </div>
 </body>
