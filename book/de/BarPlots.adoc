@@ -6,12 +6,10 @@
 
 image::BarPlots/BarPlot_1_MultiColor.png[pdfwidth=6cm]
 
-
 Balkendiagramme sind mit `QwtPlot` ebenfalls einfach möglich. Dabei gibt es verschiedene Varianten, je nach Datenlage:
 
 - ein Balken pro Intervall, nebeneinander oder gestapelt
 - mehrere Balken pro Intervall, nebeneinander oder gestapelt
-- mehrere Balken pro Intervall, nebeneinander und gestapelt (das geht z.B. mit Excel nicht!)
 
 Als Zeichenelement/Diagrammtyp werden entweder `QwtPlotBarChart` oder `QwtPlotMultiBarChart` verwendet. Beide Klassen implementieren die Schnittstelle der abstrakten Basisklasse `QwtPlotAbstractBarChart`.
 
@@ -39,7 +37,6 @@ Die Funktion `QwtPlotBarChart::setSamples()` generiert aus dem Vektor der y-Wert
 ## Bezugslinie
 
 Standardmäßig beginnen die Balken bei 0. Mitunter will man aber relative Unterschiede bezogen auf eine Grundlinie einstellen. Dazu verwendet man `setBaseLine(yPlotCoordinate)`.
-
 
 ```c++
 QVector<double> y{10,20,15,14,18,12};
@@ -82,7 +79,6 @@ Der zusätzliche Parameter `setLayoutHint()` definiert die Anzahl der Pixel, die
 curve->setLayoutPolicy(QwtPlotAbstractBarChart::AutoAdjustSamples);
 curve->setLayoutHint(100);  // minimum width of bars is 100 pixels
 ```
-
 
 .Durch LayoutHint definierte Mindestbalkenbreite
 image::BarPlots/BarPlot_1_LayoutAutoAdjustSamples_minWidth.png[pdfwidth=6cm]
@@ -148,7 +144,7 @@ Die Balken selbst werden durch die Klasse `QwtColumnSymbol` gezeichnet. Diese ka
 QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
 symbol->setLineWidth( 2 );
 symbol->setFrameStyle( QwtColumnSymbol::Raised );
-symbol->setPalette( QPalette( QColor(0xff0040) ) );
+symbol->setPalette( QPalette( QColor(0xE35811) ) );
 curve->setSymbol( symbol );
 ```
 
@@ -246,6 +242,15 @@ public:
 
 	QStringList m_labels;
 };
+
+...
+
+// create scale draw
+QwtScaleDraw * scaleDraw = new ScaleDraw(QStringList() 
+	<< "Dresden" << "Berlin" << "Leipzig" << "Hamburg" 
+	<< "Wolgast" << "Saalfeld");
+// set to plot - plot takes ownership
+plot.setAxisScaleDraw(QwtPlot::xBottom, scaleDraw);
 ```
 
 
@@ -257,7 +262,7 @@ Entscheidend ist die Implementierung der Funktion `QwtScaleDraw::label()`. Diese
 image:BarPlot_1_xAxisWithLabels.png[pdfwidth=6cm]
 image:BarPlot_1_xAxisWithLabels_zoomed.png[pdfwidth=6cm]
 
-Das Problem mit dem hineinzoomen lässt sich durch eine minimale Erweiterung des Codes lösen (nur Labels dort zeichnen, wo der x-Achsen-Skalenwert gerundet ziemlich exakt einer ganzen Zahl entspricht):
+Das Problem mit dem Hineinzoomen lässt sich durch eine minimale Erweiterung des Codes lösen (nur Labels dort zeichnen, wo der x-Achsen-Skalenwert gerundet ziemlich exakt einer ganzen Zahl entspricht):
 
 ```c++
 	if ( index >= 0 && index < m_labels.size() && qAbs(index-value) < 1e-6 )
@@ -273,16 +278,19 @@ image::BarPlots/BarPlot_1_xAxisWithLabels_zoomedFixed.png[pdfwidth=6cm]
 Wenn man die Balken nun auch noch individuell einfärben möchte, so kommt man um eine Re-Implemetierung des `QwtPlotBarChart` Zeichenelements nicht herum. Man muss eigentlich nur die Funktion `QwtPlotBarChart::specialSymbol()` reimplementieren und hier unterschiedlich gefärbte Balkensymbole zurückliefern.
 
 ```c++
-class MultiColorBarChart : public  {
+class MultiColorBarChart : public QwtPlotBarChart {
 public:
 	MultiColorBarChart() {
 		setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
 		setLayoutHint(0.8);
+		// Legende zeigt individuelle Balkentitel
+		setLegendMode( QwtPlotBarChart::LegendBarTitles );
+		setLegendIconSize( QSize( 10, 14 ) );
 	}
 
 	// we want to have individual colors for each bar
 	virtual QwtColumnSymbol* specialSymbol(
-	    int sampleIndex, const QPointF&) const QWT_OVERRIDE 
+		int sampleIndex, const QPointF&) const QWT_OVERRIDE
 	{
 		// generate symbol with color for each bar
 		QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
@@ -297,9 +305,17 @@ public:
 		return symbol;
 	}
 
+	virtual QwtText barTitle( int sampleIndex ) const QWT_OVERRIDE {
+		if ( sampleIndex >= 0 && sampleIndex < m_titles.size() )
+			return m_titles[ sampleIndex ];
+		return QwtText();
+	}
+
+	QStringList	  m_titles;
 	QList<QColor> m_colors;
 };
 ```
+
 Für jeden Balken im Diagramm speichern wir uns eine Farbe in der Membervariable `m_colors`. In der überschriebenen Funktion `QwtPlotBarChart::specialSymbol()` erstellen wir nun jeweils ein `QwtColumnSymbol` wie im vorangehenden Kapitel und liefern dieses zurück. Die Funktion übernimmt sowohl den Index des Balkens (oder _samples_) als Argument, wie auch die Plotkoordinaten des Balkens, wobei der x-Wert der Punktes wieder der Balkenindex ist, und der y-Wert dem Funktionswert des Balkens entspricht.
 
 [IMPORTANT]
@@ -376,7 +392,10 @@ plot.setAxisVisible(QwtPlot::xBottom, false);
 .Balkendiagramm mit unterschiedlich gefärbten Balken und Legendeneinträgen
 image::BarPlots/BarPlot_1_MultiColorWithLegend.png[pdfwidth=6cm]
 
-
 ## Gestapelte Balkendiagramme oder Balkendiagramme mit mehreren Balken pro Gruppe
+
+TODO 
+
+## Gestapelte Balkendiagramme mit negativen Balken
 
 TODO 

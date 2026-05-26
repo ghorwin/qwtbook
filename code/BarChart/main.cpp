@@ -225,10 +225,6 @@ int main(int argc, char *argv[]) {
 			curve->setMargin(10); // margin left/right of bars
 			plot.plotLayout()->setCanvasMargin( 10 ); // canvas margin all around
 
-			QwtScaleDraw* scaleDraw1 = plot.axisScaleDraw( QwtPlot::xBottom );
-			scaleDraw1->enableComponent( QwtScaleDraw::Backbone, false );
-			scaleDraw1->enableComponent( QwtScaleDraw::Ticks, false );
-
 			plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, false );
 			plot.updateCanvasMargins();
 

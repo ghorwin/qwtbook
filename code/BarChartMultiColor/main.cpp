@@ -99,7 +99,30 @@ public:
 	QList<QColor> m_colors;
 };
 
+class ScaleDraw : public QwtScaleDraw {
+public:
+	ScaleDraw(const QStringList& labels ) : m_labels( labels ) {
+		enableComponent( QwtScaleDraw::Ticks, false );
+		enableComponent( QwtScaleDraw::Backbone, false );
+		setLabelAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+	}
+
+	virtual QwtText label( double value ) const QWT_OVERRIDE {
+		const int index = qRound( value );
+		if ( index >= 0 && index < m_labels.size() && qAbs(index-value) < 1e-6)
+			return m_labels[index];
+		return QwtText();
+	}
+
+	QStringList m_labels;
+};
+
+
 int main(int argc, char *argv[]) {
+	int plotType = 0;
+	if (argc > 1)
+		plotType = std::atoi(argv[1]);
+
 	QApplication a(argc, argv);
 	QwtPlot plot;
 	plot.resize(400,300);
@@ -136,23 +159,30 @@ int main(int argc, char *argv[]) {
 	curve->setSamples(samples);
 	curve->attach(&plot); // plot takes ownership
 
-	// Legende anzeigen
-	QwtLegend * legend = new QwtLegend();
-	QFont legendFont;
-	legendFont.setPointSize(7);
-	legend->setFont(legendFont);
-	plot.insertLegend(legend, QwtPlot::RightLegend); // plot takes ownership
+	switch (plotType) {
+		// with scale draw
+		case 0 : {
+			QwtScaleDraw * scaleDraw = new ScaleDraw(QStringList() << "Dresden" << "Berlin" << "Leipzig" << "Hamburg" << "Wolgast" << "Saalfeld");
+			QFont f;
+			f.setPointSize(7);
+			f.setBold(true);
+			plot.setAxisFont(QwtPlot::xBottom, f);
+			plot.setAxisScaleDraw(QwtPlot::xBottom, scaleDraw);
+		} break;
 
-	// Titel hinzufügen
-	QwtText text("Multi-colored QwtPlotBarChart");
-	QFont titleFont;
-	titleFont.setBold(true);
-	titleFont.setPointSize(10);
-	text.setFont(titleFont);
-	plot.setTitle(text);
+		// with legend
+		case 1 : {
+			// show legend
+			QwtLegend * legend = new QwtLegend();
+			QFont legendFont;
+			legendFont.setPointSize(7);
+			legend->setFont(legendFont);
+			plot.insertLegend(legend, QwtPlot::RightLegend); // plot takes ownership
+			plot.setAxisVisible(QwtPlot::xBottom, false);
+		} break;
+	}
 
 	curve->setMargin(10); // margin left/right of bars
-	plot.setAxisVisible(QwtPlot::xBottom, false);
 	plot.plotLayout()->setCanvasMargin( 0 ); // canvas margin all around
 	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, false); // do not fix y-axis at 0 and left edge of canvas
 	plot.updateCanvasMargins();
