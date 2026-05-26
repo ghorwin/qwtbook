@@ -139,7 +139,7 @@ void addZeroCrossings(QVector<double> & x, QVector<double> & y) {
 		// Darauffolgendes Interval auf Nulldurchgang prüfen
 		if (i + 1 < n) {
 			double y0 = y[i], y1 = y[i + 1];
-			if ((y0 > 0.0 && y1 < 0.0) || (y0 < 0.0 && y1 > 0.0)) {
+			if (y0 * y1 < 0.0) {
 				double denom = y0 - y1; // may never become 0
 				// X Wert interpolieren 0 = x_0 + (y1-y0)/(x1-x0)*x_0
 				newX.append(x[i] + (y0 / denom) * (x[i + 1] - x[i]));
@@ -157,17 +157,18 @@ void mergeCoordinates(
 	QVector<QVector<double> > & y,
 	QVector<double> & unifiedX)
 {
-	// Alle Koordinaten von allen Vektoren in ein einheitliches Set einfügen
-	std::set<double> xSet;
+	// Alle Koordinaten von allen Vektoren in einen einheitlichen Vektor überführen
+	unifiedX.reserve(x.size()*x.front().size());
 	int seriesCount = x.count();
 	for (int k=0; k<x.count(); ++k)
 		for (double val : x[k])
-			xSet.insert(val);
-			// insert() ist eine potentiell langsame Operation, weil der Baum
-			// des Sets durchlaufen werden muss
-	unifiedX = QVector<double>(xSet.begin(), xSet.end());
+			unifiedX.append(val);
+	// jetzt sortieren und Duplikate entfernen
+	std::sort(unifiedX.begin(), unifiedX.end());
+	unifiedX.erase(std::unique(unifiedX.begin(), unifiedX.end()), unifiedX.end());
 
-	// Nun alle x-Werte aller Serien durchlaufen und y-Werte für fehlende Stützstellen interpolieren.
+	// Nun alle x-Werte aller Serien durchlaufen und y-Werte für fehlende
+	// Stützstellen interpolieren.
 	// Da hinterher alle Datenreihen die gleichen Stützstellen haben,
 	// brauchen wir nur die y-Werte zu aktualisieren.
 	for (int k=0; k<seriesCount; ++k) {
