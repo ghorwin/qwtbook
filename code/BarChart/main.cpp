@@ -72,7 +72,11 @@ public:
 
 	virtual QwtText label( double value ) const QWT_OVERRIDE {
 		const int index = qRound( value );
-		if ( index >= 0 && index < m_labels.size() && qAbs(index-value) < 1e-6)
+		if ( index >= 0 && index < m_labels.size()
+#if 1
+			 && qAbs(index-value) < 1e-6
+#endif
+		   )
 			return m_labels[index];
 		return QwtText();
 	}
@@ -122,116 +126,120 @@ int main(int argc, char *argv[]) {
 		case 3:
 			curve->setLayoutPolicy(QwtPlotAbstractBarChart::AutoAdjustSamples);
 		break;
+
+		case 4:
+			curve->setLayoutPolicy(QwtPlotAbstractBarChart::AutoAdjustSamples);
+			curve->setLayoutHint(10);
+		break;
+
+		case 5:
+			curve->setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
+			curve->setLayoutHint(0.5);
+		break;
+
+		case 6:
+			curve->setLayoutPolicy(QwtPlotBarChart::ScaleSampleToCanvas);
+			curve->setLayoutHint(0.1); // bar width 10% of canvas width
+		break;
+
+		case 7: {
+			QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+			symbol->setLineWidth( 2 );
+			symbol->setFrameStyle( QwtColumnSymbol::Raised );
+			symbol->setPalette( QPalette( QColor(0xE35811) ) );
+			curve->setSymbol( symbol );
+		} break;
+
+		case 8: {
+			QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+			symbol->setFrameStyle(QwtColumnSymbol::Plain);
+			symbol->setLineWidth(1);
+			QPalette palette(QColor(0xc1e311));
+			palette.setBrush(QPalette::Dark, Qt::black); // black frame
+			symbol->setPalette(palette);
+			curve->setSymbol( symbol );
+		} break;
+
+		case 9: {
+			QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+			symbol->setFrameStyle(QwtColumnSymbol::Plain);
+			symbol->setLineWidth(1);
+			QPalette palette(QColor(0x4B8FD7));
+			palette.setBrush(QPalette::Dark, Qt::black); // black frame
+			symbol->setPalette(palette);
+			curve->setSymbol( symbol );
+
+			curve->setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
+			curve->setLayoutHint(1);
+
+			curve->setMargin(20); // margin left/right of bars
+			plot.plotLayout()->setCanvasMargin( 10 ); // canvas margin all around
+
+			// x-Achsenticks verstecken
+			QwtScaleDraw* scaleDraw1 = plot.axisScaleDraw( QwtPlot::xBottom );
+			scaleDraw1->enableComponent( QwtScaleDraw::Backbone, false );
+			scaleDraw1->enableComponent( QwtScaleDraw::Ticks, false );
+
+			// do not fix y-axis at 0 and left edge of canvas
+			plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, false );
+			plot.updateCanvasMargins();
+		} break;
+
+		case 10: {
+			QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+			symbol->setFrameStyle(QwtColumnSymbol::Plain);
+			symbol->setLineWidth(1);
+			QPalette palette(QColor(0x4B8FD7));
+			palette.setBrush(QPalette::Dark, Qt::black); // black frame
+			symbol->setPalette(palette);
+			curve->setSymbol( symbol );
+
+			curve->setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
+			curve->setLayoutHint(1);
+
+			curve->setMargin(0);
+			plot.plotLayout()->setCanvasMargin(0);
+
+			// hide x-axis ticks
+			QwtScaleDraw* scaleDraw1 = plot.axisScaleDraw( QwtPlot::xBottom );
+			scaleDraw1->enableComponent( QwtScaleDraw::Backbone, false );
+			scaleDraw1->enableComponent( QwtScaleDraw::Ticks, false );
+
+			// do not fix y-axis at 0 and left edge of canvas
+			plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, true );
+			plot.updateCanvasMargins();
+		} break;
+
+		case 11: {
+			QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+			symbol->setFrameStyle(QwtColumnSymbol::Plain);
+			symbol->setLineWidth(1);
+			QPalette palette(QColor(0xFFF194));
+			palette.setBrush(QPalette::Dark, Qt::black); // black frame
+			symbol->setPalette(palette);
+			curve->setSymbol( symbol );
+
+			curve->setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
+			curve->setLayoutHint(0.8);
+
+			curve->setMargin(10); // margin left/right of bars
+			plot.plotLayout()->setCanvasMargin( 10 ); // canvas margin all around
+
+			QwtScaleDraw* scaleDraw1 = plot.axisScaleDraw( QwtPlot::xBottom );
+			scaleDraw1->enableComponent( QwtScaleDraw::Backbone, false );
+			scaleDraw1->enableComponent( QwtScaleDraw::Ticks, false );
+
+			plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, false );
+			plot.updateCanvasMargins();
+
+			QwtScaleDraw * scaleDraw = new ScaleDraw(QStringList() << "Dresden" << "Berlin" << "Leipzig" << "Hamburg" << "Wolgast" << "Saalfeld");
+			QFont f;
+			f.setPointSize(7);
+			f.setBold(true);
+			plot.setAxisFont(QwtPlot::xBottom, f);
+			plot.setAxisScaleDraw(QwtPlot::xBottom, scaleDraw);
+		} break;
 	}
-
-#if 0
-//	curve->setLayoutPolicy(QwtPlotBarChart::AutoAdjustSamples);
-//	curve->setLayoutHint(10);
-	curve->setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
-	curve->setLayoutHint(0.8);
-//	curve->setLayoutPolicy(QwtPlotBarChart::ScaleSampleToCanvas);
-//	curve->setLayoutHint(0.1); // bar width 10% of canvas width
-
-//	curve->setBaseline(15);
-
-	QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
-	symbol->setFrameStyle(QwtColumnSymbol::Plain);
-	symbol->setLineWidth(1);
-	QPalette palette(QColor(0xfff194));
-	palette.setBrush(QPalette::Dark, Qt::black); // black frame
-	symbol->setPalette(palette);
-
-	curve->setSymbol( symbol );
-
-
-	// Legende anzeigen
-	QwtLegend * legend = new QwtLegend();
-	QFont legendFont;
-	legendFont.setPointSize(7);
-	legend->setFont(legendFont);
-	plot.insertLegend( legend , QwtPlot::RightLegend); // plot takes ownership
-
-	// Titel hinzufügen
-	QwtText text("QwtPlotBarChart");
-	QFont titleFont;
-	titleFont.setBold(true);
-	titleFont.setPointSize(10);
-	text.setFont(titleFont);
-	plot.setTitle(text);
-
-
-//	QwtScaleDraw* scaleDraw1 = plot.axisScaleDraw( QwtPlot::xBottom );
-//	scaleDraw1->enableComponent( QwtScaleDraw::Backbone, false );
-//	scaleDraw1->enableComponent( QwtScaleDraw::Ticks, false );
-
-	QwtScaleDraw * scaleDraw = new ScaleDraw(QStringList() << "Dresden" << "Berlin" << "Leipzig" << "Hamburg" << "Wolgast" << "Saalfeld");
-	QFont f;
-	f.setPointSize(7);
-	f.setBold(true);
-	plot.setAxisFont(QwtPlot::xBottom, f);
-	plot.setAxisScaleDraw(QwtPlot::xBottom, scaleDraw);
-
-	curve->setMargin(10); // margin left/right of bars
-	plot.plotLayout()->setCanvasMargin( 0 ); // canvas margin all around
-	plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, false); // do not fix y-axis at 0 and left edge of canvas
-	plot.updateCanvasMargins();
-
-
-
-//	// Haupt- und Nebengitter anzeigen
-//	QwtPlotGrid *grid = new QwtPlotGrid();
-//	QPen gridPen(Qt::gray);
-//	gridPen.setStyle(Qt::DashLine);
-//	grid->setMajorPen(gridPen);
-//	// Minor grid
-//	grid->enableYMin( true );
-//	gridPen.setColor(Qt::lightGray);
-//	gridPen.setStyle(Qt::DotLine);
-//	grid->setMinorPen(gridPen);
-//	grid->attach( &plot ); // plot takes ownership
-
-
-//	// Achsen formatieren
-//	QFont axisFont;
-//	axisFont.setPointSize(8);
-//	axisFont.setBold(true);
-//	QFont axisLabelFont;
-//	axisLabelFont.setPointSize(8);
-//	// X-Achse
-//	QwtText axisTitle("Kanal");
-//	axisTitle.setFont(axisFont);
-//	// Titel Text und Font setzen
-//	plot.setAxisTitle(QwtPlot::xBottom, axisTitle);
-//	// Font für Achsenzahlen setzen
-//	plot.setAxisFont(QwtPlot::xBottom, axisLabelFont);
-//	// Y-Achse
-//	axisTitle.setText("Ereignisse");
-//	plot.setAxisTitle(QwtPlot::yLeft, axisTitle);
-//	plot.setAxisFont(QwtPlot::yLeft, axisLabelFont);
-
-//	// Logarithmische Y-Achse
-//	QwtLogScaleEngine * logScale = new QwtLogScaleEngine();
-//	plot.setAxisScaleEngine(QwtPlot::yLeft, logScale); // plot takes ownership
-//	// manuelle Achsenlimits festlegen, da autoscale bei log-Achsen nicht sinnvoll funktioniert
-//	plot.setAxisScale(QwtPlot::yLeft, 1e-3,1000);
-
-//	// Vertikale, gestrichelte Plot-Markierung einfügen
-//	QwtPlotMarker * marker = new QwtPlotMarker("207,50 keV");
-//	marker->setLabelOrientation(Qt::Vertical); // Vertikale Linie
-//	marker->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom); // Label unten und rechts von der Linie
-//	marker->setValue(36, 0); // bei vertikalen Linien muss die x-Koordinate festgelegt werden
-//	QPen markerPen(QColor(40,60,255));
-//	markerPen.setStyle(Qt::SolidLine);
-//	marker->setLinePen(markerPen);
-//	marker->setLineStyle(QwtPlotMarker::VLine);
-//	marker->setLabel(QwtText("207,50 keV"));
-//	marker->attach(&plot); // plot takes ownership
-
-
-//	// Panner hinzufügen, wie auch beim PlotZoomer muss das Canvas-Objekt als Argument übergeben werden
-//	QwtPlotPanner * panner = new QwtPlotPanner(plot.canvas());  // plot takes ownership
-//	panner->setMouseButton(Qt::MiddleButton); // Mittlere Maustaste verschiebt
-#endif
 
 	plot.show();
 	return a.exec();
