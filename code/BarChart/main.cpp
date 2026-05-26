@@ -96,6 +96,35 @@ int main(int argc, char *argv[]) {
 	QVector<double> y{10,20,15,14,18,12};
 	QwtPlotBarChart * curve = new QwtPlotBarChart;
 	curve->setSamples(y);
+	curve->attach(&plot); // Plot takes ownership
+
+	// Zoomer hinzufügen
+	// Achtung: NICHT QwtPlot selbst als 3 Argument übergeben, sonder das canvas()
+	QwtPlotZoomer * zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, plot.canvas());  // plot takes ownership
+	zoomer->setTrackerMode( QwtPlotPicker::AlwaysOn ); // Kurvenvwerte unterm Cursor anzeigen
+
+	int plotType = 0;
+	if (argc > 1)
+		plotType = std::atoi(argv[1]);
+	switch (plotType) {
+		case 0 :
+		break; // nothing to do
+
+		case 1 :
+			curve->setBaseline(15);
+		break;
+
+		case 2 :
+			curve->setMargin(20);
+			curve->setSpacing(40);
+		break;
+
+		case 3:
+			curve->setLayoutPolicy(QwtPlotAbstractBarChart::AutoAdjustSamples);
+		break;
+	}
+
+#if 0
 //	curve->setLayoutPolicy(QwtPlotBarChart::AutoAdjustSamples);
 //	curve->setLayoutHint(10);
 	curve->setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
@@ -103,7 +132,6 @@ int main(int argc, char *argv[]) {
 //	curve->setLayoutPolicy(QwtPlotBarChart::ScaleSampleToCanvas);
 //	curve->setLayoutHint(0.1); // bar width 10% of canvas width
 
-//	curve->setSpacing(40);
 //	curve->setBaseline(15);
 
 	QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
@@ -115,14 +143,13 @@ int main(int argc, char *argv[]) {
 
 	curve->setSymbol( symbol );
 
-	curve->attach(&plot); // Plot takes ownership
 
-//	// Legende anzeigen
-//	QwtLegend * legend = new QwtLegend();
-//	QFont legendFont;
-//	legendFont.setPointSize(7);
-//	legend->setFont(legendFont);
-//	plot.insertLegend( legend , QwtPlot::BottomLegend); // plot takes ownership
+	// Legende anzeigen
+	QwtLegend * legend = new QwtLegend();
+	QFont legendFont;
+	legendFont.setPointSize(7);
+	legend->setFont(legendFont);
+	plot.insertLegend( legend , QwtPlot::RightLegend); // plot takes ownership
 
 	// Titel hinzufügen
 	QwtText text("QwtPlotBarChart");
@@ -200,14 +227,11 @@ int main(int argc, char *argv[]) {
 //	marker->setLabel(QwtText("207,50 keV"));
 //	marker->attach(&plot); // plot takes ownership
 
-	// Zoomer hinzufügen
-	// Achtung: NICHT QwtPlot selbst als 3 Argument übergeben, sonder das canvas()
-	QwtPlotZoomer * zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, plot.canvas());  // plot takes ownership
-	zoomer->setTrackerMode( QwtPlotPicker::AlwaysOn ); // Kurvenvwerte unterm Cursor anzeigen
 
 //	// Panner hinzufügen, wie auch beim PlotZoomer muss das Canvas-Objekt als Argument übergeben werden
 //	QwtPlotPanner * panner = new QwtPlotPanner(plot.canvas());  // plot takes ownership
 //	panner->setMouseButton(Qt::MiddleButton); // Mittlere Maustaste verschiebt
+#endif
 
 	plot.show();
 	return a.exec();

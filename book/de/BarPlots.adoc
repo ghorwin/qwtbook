@@ -44,7 +44,7 @@ Standardmäßig beginnen die Balken bei 0. Mitunter will man aber relative Unter
 ```c++
 QVector<double> y{10,20,15,14,18,12};
 curve->setSamples(y);
-curve->setBaseLine(15);
+curve->setBaseline(15);
 ```
 
 .Balkendiagramm mit Bezugslinie bei y=15 
@@ -60,18 +60,14 @@ In der Standardeinstellung werden die Balken mit minimalem Abstand zueinander un
 .Balkendiagramm mit angepassten Abständen und Rändern
 image::BarPlots/BarPlot_1_spacingMargin.png[pdfwidth=6cm]
 
-
 Die Breite der Balken selbst wird über Layoutvorgaben und konkret über die Funktionen `QwtPlotAbstractBarChart::setLayoutPolicy()` und `QwtPlotAbstractBarChart::setLayoutHint()` kontrolliert.
-
 
 ### AutoAdjustSamples
 
 In diesem Modus, gesetzt durch
-
 ```c++
 curve->setLayoutPolicy(QwtPlotAbstractBarChart::AutoAdjustSamples);
 ```
-
 wird die Größe der Balken basierend auf der Größe der Zeichenfläche und der gesetzen Rand- und Zwischenabstände bestimmt.
 
 .Balkendiagram im Layoutmodus 'AutoAdjustSamples', normal (links) und hineingezoomt (rechts)
