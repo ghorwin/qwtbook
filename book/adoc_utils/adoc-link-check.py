@@ -126,28 +126,31 @@ def scanForLinkLabels(fpath, links):
 		raise RuntimeError("Error processing adoc file.")
 
 
-def checkReferences(fpath, links):
+def checkReferences(fpath, links, errors):
 	"""Processes asciidoctor input file:
-	
+
 	**Arguments**
-	
+
 	*fpath*
 	  full file path to Ascii-Doctor input file
-	  
+
 	*links*
 	  list with link labels collected so far,
 	  list contains tuples of (label, filename, line nr., description, is_duplicate)
+
+	*errors*
+	  list to collect invalid cross-reference tuples (label, filename, line nr.)
 	"""
 	try:
 		adocDirPath, adocFName = ntpath.split(fpath)
 		#print("\n  {}".format(adocFName))
-		
+
 		# read the file
 		fobj = open(fpath, 'r')
 		lines = fobj.readlines()
 		fobj.close
 		del fobj
-		
+
 		# now scan all lines for << followed by >>
 		for i in range(len(lines)):
 			line = lines[i]
@@ -166,8 +169,7 @@ def checkReferences(fpath, links):
 						crossRefLabel = tokens[0]
 						# try to find the cross ref label in link list
 						if findLinkLabel(crossRefLabel, links) == None:
-							loc = "{}:{}".format(adocFName, i+1)
-							printError("  {:<30s} {:<30s}".format(crossRefLabel, loc))
+							errors.append( (crossRefLabel, adocFName, i+1) )
 				pos = line.find("<<", pos+2)
 
 	except IOError as e:
@@ -201,8 +203,8 @@ try:
 		scanForLinkLabels(fullPath, links)
 
 	print("\nList of labels:")
-	# sort labels by link label
-	links = sorted(links, key=lambda tup: tup[0])
+	# sort labels by file and line number (second column)
+	links = sorted(links, key=lambda tup: (tup[1], tup[2]))
 	# dump out a list of all labels
 	for l in links:
 		loc = "{}:{}".format(l[1], l[2])
@@ -220,10 +222,16 @@ try:
 			print("  {:<30s} {:<30s} '{}'".format(l[0], loc, l[3]) )
 	
 	print("\nInvalid/problematic cross-references:")
-	# process all adoc files - second pass, scan for <<xxx>> references and print errors if encountered
+	# process all adoc files - second pass, scan for <<xxx>> references and collect errors
+	refErrors = []
 	for f in glob.glob(adocdir+"/*.adoc"):
 		fullPath = os.path.abspath(f)
-		checkReferences(fullPath, links)
+		checkReferences(fullPath, links, refErrors)
+	# sort by file and line number (second column) before printing
+	refErrors = sorted(refErrors, key=lambda tup: (tup[1], tup[2]))
+	for e in refErrors:
+		loc = "{}:{}".format(e[1], e[2])
+		printError("  {:<30s} {:<30s}".format(e[0], loc))
 	
 except RuntimeError as e:
 	printError(str(e))
