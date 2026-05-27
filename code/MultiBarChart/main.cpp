@@ -26,8 +26,10 @@ THE SOFTWARE.
 
 #include <QApplication>
 #include <QPen>
+#include <QPainter>
 
 #include <QwtPlot>
+#include <QwtPainter>
 #include <QwtLegend>
 #include <QwtText>
 #include <QwtPlotGrid>
@@ -57,10 +59,56 @@ public:
 };
 
 
+class MultiBarSingleLineChart : public QwtPlotMultiBarChart {
+public:
+	MultiBarSingleLineChart() = default;
+	explicit MultiBarSingleLineChart( const QwtText& title ) : QwtPlotMultiBarChart(title) {}
+
+protected:
+	virtual void drawBar( QPainter* p, int sampleIndex, int valueIndex, const QwtColumnRect& r) const {
+		QwtPlotMultiBarChart::drawBar(p, sampleIndex, valueIndex, r);
+	}
+
+};
+
+
+class CustomSymbol : public QwtColumnSymbol {
+public:
+	explicit CustomSymbol( Style s = NoStyle ) : QwtColumnSymbol(s) {}
+
+	virtual void draw( QPainter* painter, const QwtColumnRect& rect) const {
+		painter->save();
+
+		QRectF r = rect.toRect();
+		if ( QwtPainter::roundingAlignment( painter ) )
+		{
+			r.setLeft( qRound( r.left() ) );
+			r.setRight( qRound( r.right() ) );
+			r.setTop( qRound( r.top() ) );
+			r.setBottom( qRound( r.bottom() ) );
+		}
+
+		if ( r.width() != 0.0 && r.height() != 0) {
+			// fill the rectangle
+			painter->fillRect( r.adjusted( 0, 0, 1, 1 ), palette().window() );
+
+			// now draw the upper, left and right lines
+			painter->setPen( palette().dark().color() );
+			painter->drawLine( r.topLeft(), r.bottomLeft() );
+			painter->drawLine( r.topLeft(), r.topRight() );
+			painter->drawLine( r.topRight(), r.bottomRight() );
+			// painter->drawLine( r.bottomLeft() + QPointF(0,1), r.bottomRight() + QPointF(0,1) );
+		}
+
+		painter->restore();
+	}
+};
+
 int main(int argc, char *argv[]) {
 	QApplication a(argc, argv);
 	QwtPlot plot;
-	plot.resize(500, 350);
+	plot.resize(400,300);
+	plot.setWindowFlag(Qt::FramelessWindowHint, true);
 
 	plot.setContentsMargins(8, 8, 8, 8);
 	plot.setCanvasBackground(Qt::white);
@@ -77,11 +125,12 @@ int main(int argc, char *argv[]) {
 	QVector<QVector<double>> samples;
 	samples << (QVector<double>() << 10 << 15 << 12); // Dresden
 	samples << (QVector<double>() << 20 << 18 << 22); // Berlin
-	samples << (QVector<double>() << 15 << 13 << 17); // Leipzig
-	samples << (QVector<double>() << 14 << 16 << 19); // Hamburg
+	samples << (QVector<double>() << 5 << 13 << 7); // Leipzig
+	samples << (QVector<double>() << 4 << 16 << 19); // Hamburg
 
-	QwtPlotMultiBarChart *barChart = new QwtPlotMultiBarChart;
-	barChart->setStyle(QwtPlotMultiBarChart::Grouped);
+	QwtPlotMultiBarChart *barChart = new MultiBarSingleLineChart;
+	barChart->setStyle(QwtPlotMultiBarChart::Stacked);
+	// barChart->setStyle(QwtPlotMultiBarChart::Grouped);
 	barChart->setSamples(samples);
 
 	// Farben und Symbole für jeden Balken (Index = Jahres-Reihe)
@@ -106,6 +155,7 @@ int main(int argc, char *argv[]) {
 	barChart->setBarTitles(titles);
 	barChart->setLegendIconSize(QSize(10, 14));
 
+	barChart->setRenderHint(QwtPlotItem::RenderAntialiased, false);
 	barChart->attach(&plot);
 
 	// Legende
@@ -116,7 +166,7 @@ int main(int argc, char *argv[]) {
 	plot.insertLegend(legend, QwtPlot::RightLegend);
 
 	// Titel
-	QwtText title("QwtPlotMultiBarChart (gruppiert)");
+	QwtText title("QwtPlotMultiBarChart - Symbolrahmen 'Plain'");
 	QFont titleFont;
 	titleFont.setBold(true);
 	titleFont.setPointSize(10);

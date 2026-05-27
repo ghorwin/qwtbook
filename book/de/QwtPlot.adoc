@@ -26,6 +26,8 @@ Das Diagramm selbst ist ein kartesisches Diagramm mit maximal 4 Achsen, identifi
 
 Diese Achsen haben primär die Aufgabe, zwischen den _Plotkoordinaten_ (x,y) und _Bildschirmkoordinaten_ umzurechnen. Jede der vier Achsen kann individuell konfiguriert werden, welches sich auf die min/max-Werte und die Achsenskalierung auswirkt.
 
+
+[[sec:plotitems]]
 ### Diagramm-/Zeichenelemente
 
 Innerhalb der Zeichenfläche kann man nun die verschiedensten Elemente zeichen, bspw.:

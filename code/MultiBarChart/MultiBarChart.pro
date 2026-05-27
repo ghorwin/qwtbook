@@ -15,9 +15,16 @@ win32 {
 }
 else {
 	# Pfad zu den Qwt Headerdateien hinzufügen
-	INCLUDEPATH += /usr/local/qwt-6.3.0/include/ /usr/local/qwt-6.3.0-qt-6.10.3/include/
+	INCLUDEPATH += \
+		/usr/local/qwt-6.3.0/include/ \
+		/usr/local/qwt-6.3.0-qt-6.10.3/include/ \
+		/usr/local/qwt-6.3.0-qt-6.9.2/include/
 	# Linkerpfad, unter Linux wird standardmäßig nur die release-Version der Lib gebaut und installiert
-	LIBS += -L/usr/local/qwt-6.3.0/lib -L/usr/local/qwt-6.3.0-qt-6.10.3/lib -lqwt
+	LIBS += \
+		-L/usr/local/qwt-6.3.0/lib \
+		-L/usr/local/qwt-6.3.0-qt-6.10.3/lib \
+		-L/usr/local/qwt-6.3.0-qt-6.9.2/lib \
+		-lqwt
 }
 
 

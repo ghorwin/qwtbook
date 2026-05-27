@@ -235,6 +235,50 @@ int main(int argc, char *argv[]) {
 			plot.setAxisFont(QwtPlot::xBottom, f);
 			plot.setAxisScaleDraw(QwtPlot::xBottom, scaleDraw);
 		} break;
+
+		case 12: {
+			QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+			symbol->setFrameStyle(QwtColumnSymbol::Plain);
+			symbol->setLineWidth(1);
+			QPalette palette(QColor(0xf16011));
+			palette.setBrush(QPalette::Dark, Qt::black); // black frame
+			symbol->setPalette(palette);
+			curve->setSymbol( symbol );
+
+			curve->setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
+
+			QwtArraySeriesData<QPointF> * series = new QwtArraySeriesData<QPointF>();
+			series->setSamples({ QPointF(1,5), QPointF(3,10), QPointF(4,4) } );
+			curve->setSamples(series); // plot takes ownership of series
+		} break;
+
+		case 13: {
+			QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+			symbol->setFrameStyle(QwtColumnSymbol::Plain);
+			symbol->setLineWidth(1);
+			QPalette palette(QColor(0xf16011));
+			palette.setBrush(QPalette::Dark, Qt::black); // black frame
+			symbol->setPalette(palette);
+			curve->setSymbol( symbol );
+			curve->setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
+			curve->setLayoutHint(0.5);
+
+			// now add a second bar chart with negative bars
+			{
+				QwtPlotBarChart * curve2 = new QwtPlotBarChart;
+				QVector<double> y{-2,-5,-1,-4,-1,-5};
+				curve2->setSamples(y);
+				curve2->attach(&plot); // Plot takes ownership
+
+				QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+				symbol->setFrameStyle(QwtColumnSymbol::Plain);
+				symbol->setLineWidth(1);
+				QPalette palette(QColor(0x0570f0));
+				palette.setBrush(QPalette::Dark, Qt::black); // black frame
+				symbol->setPalette(palette);
+				curve2->setSymbol( symbol );
+			}
+		} break;
 	}
 
 	plot.show();
