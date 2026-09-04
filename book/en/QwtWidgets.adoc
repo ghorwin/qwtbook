@@ -1,0 +1,55 @@
+:imagesdir: ../images
+
+<<<
+[[sec:qwtWigets]]
+# Qwt Widgets and Input Components
+
+Besides `QwtPlot`, the Qwt library contains a number of other input components, which are briefly introduced in this chapter.
+Many of these components are modeled on classic displays and adjustment dials in scientific/technical instruments.
+
+For displaying the scales, the components introduced below internally use the scale computation and scale drawing classes described in more detail in <<sec:axisScales>>.
+
+## Slider
+
+The `QwtSlider` class allows displaying various sliders that can be operated with the mouse or the keyboard (cursor keys). In contrast to the `QSlider` class, the scales can be defined much more flexibly and also non-linearly.
+
+.Examples of `QwtSlider`
+image::QwtWidgets/controlsSlider.png[pdfwidth=8cm]
+
+The example in the screenshot above is included in the Qwt library as the `controls` example.
+
+
+## Dials/adjustment wheels and bar displays
+
+The `QwtWheel` class shows a horizontal or vertical adjustment wheel. The `QwtThermo` class shows a bar display, but with a freely configurable color table. This allows, for example, color gradients or color jumps when certain threshold values are exceeded.
+
+Qt itself offers the `QProgressBar` class for a bar display, but its appearance follows the respective platform style for progress bars and it also does not provide any scales.
+
+.Examples of `QwtWheel` and `QwtThermo`
+image::QwtWidgets/controlsWheelThermo.png[pdfwidth=8cm]
+
+The example in the screenshot above is included in the Qwt library as the `controls` example.
+
+
+## Rotary knobs
+
+The `QwtKnob` class shows a rotary knob, with equally flexibly configurable scale units. The Qt class `QDial` also offers a control dial, but again a much simpler one and with fewer options regarding scale display and scaling.
+
+.Examples of `QwtKnob`
+image::QwtWidgets/controlsKnob.png[pdfwidth=8cm]
+
+The example in the screenshot above is included in the Qwt library as the `controls` example.
+
+
+## Analog pointer displays
+
+The `QwtDial` class draws analog pointer displays, which can also be changed with the mouse/keyboard (if you enable that). The displays can be configured very individually in terms of color.
+
+.Examples of `QwtDial`
+image::QwtWidgets/controlsDials.png[pdfwidth=8cm]
+
+The example in the screenshot above is included in the Qwt library as the `controls` example.
+
+It is perhaps also worth noting that the display needle itself is implemented by a separate class, independent of the `QwtDial` class. By default, `QwtDialSimpleNeedle` is used here, as in the screenshot above. But you can also go wild here and design and integrate arbitrary display needles yourself.
+
+

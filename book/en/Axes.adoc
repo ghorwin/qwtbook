@@ -1,0 +1,78 @@
+:imagesdir: ../images
+
+<<<
+[[sec:axes]]
+# Plot Axes
+
+The axes/scales of a plot (4 in total: top, bottom, left and right) can already be customized and modified in many ways in the class implementations that ship with Qwt.
+And of course the classes involved can also be derived and thus modified/changed as desired.
+
+The most important classes with respect to the axes are:
+
+- `QwtAxis`
+- `QwtAbstractScaleDraw` and the specializations `QwtScaleDraw` and `QwtDateScaleDraw`
+- `QwtScaleEngine` and the specializations `QwtLinearScaleEngine` and `QwtLogScaleEngine`
+
+
+## General axis formatting
+
+
+
+[[sec:axisScales]]
+## Scales
+
+
+
+### Fonts
+
+Different fonts are used for drawing the scale labels (numbers) and the title.
+
+The font for the scales must be set individually for each visible scale, with
+
+[source,c++]
+----
+// via QwtScaleWidget::setFont()
+plot->axisWidget(QwtPlot::xBottom)->setFont(f);
+// or via QwtPlot::setAxisFont(), which ultimately calls the function above
+plot->setAxisFont(QwtPlot::xBottom, f);
+----
+
+For the title of an axis it is a bit more complicated, since there are several ways to set the text.
+On the one hand you can create a `QwtText` object, configure it individually and then hand it to the `QwtScaleWidget`:
+
+[source,c++]
+----
+QwtText title("Intensity");
+QFont f;
+f.setPointSize(8);
+f.setBold(true);
+title.setFont(f);
+
+// via QwtScaleWidget::setTitle()
+plot->axisWidget( QwtAxis::YLeft )->setTitle( title );
+
+// or via QwtPlot::setAxisTitle()
+plot->setAxisTitle( QwtAxis::YLeft, title );
+----
+
+That, however, is often quite a lot of typing and you have to set the font consistently everywhere. But since you usually want the axis title in bold anyway, there is hardly any way around it.
+
+You can also simply set the axis text directly:
+
+[source,c++]
+----
+// directly as a QString argument to setAxisTitle(const QString &)
+plot->setAxisTitle( QwtAxis::YLeft, "Intensity" );
+// or explicitly converted into a QwtText in setAxisTitle(const QwtText &)
+plot->setAxisTitle( QwtAxis::YLeft, QwtText("Intensity") );
+----
+
+[CAUTION]
+====
+But be careful: these very similar-looking calls do _not_ produce the same result. In the first case, a `QwtText` object already present in the QwtScaleWidget is reused and only the text itself is changed. The object keeps its default paint attribute `QwtText::PaintUsingTextFont` and uses for it the global application font that was in effect at creation time. That, however, is mostly not the one you have in mind for configuring the plot. Therefore this syntax passing a string should generally not be used.
+
+In the 2nd variant, a brand-new `QwtText` object without any paint attributes set is used, and as such the font of the parent widget is used for drawing. Thus the same font is used as for the axis scale labels.
+====
+
+
+

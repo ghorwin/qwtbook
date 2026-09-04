@@ -1,0 +1,552 @@
+:imagesdir: ../images
+
+<<<
+[[sec:barPlots]]
+# Bar Charts
+
+image::BarPlots/BarPlot_1_MultiColor.png[pdfwidth=6cm]
+
+Bar charts are also easily possible with `QwtPlot`. There are various variants, depending on the data situation:
+
+- one bar per interval, side by side or stacked
+- several bars per interval, side by side or stacked
+
+As the drawing element/diagram type, either `QwtPlotBarChart` or `QwtPlotMultiBarChart` is used. Both classes implement the interface of the abstract base class `QwtPlotAbstractBarChart`.
+
+## Basic properties of the plots
+
+For simple bar charts you use the `QwtPlotBarChart` class. As with `QwtPlotCurve`, the bar chart drawing element is created on the heap and handed to the diagram with `attach()`.
+
+```c++
+QwtPlotBarChart * curve = new QwtPlotBarChart();
+QVector<double> y{10,20,15,14,18,12};
+curve->setSamples(y);
+curve->attach(&plot); // Plot takes ownership
+```
+
+Without further customization the diagram still looks rather boring.
+
+.Minimalistic bar chart
+image::BarPlots/BarPlot_1.png[pdfwidth=6cm]
+
+[NOTE]
+====
+The function `QwtPlotBarChart::setSamples()` automatically generates a vector of x,y value pairs from the vector of y values, with the x values numbered consecutively starting from 0. The bars internally correspond to a normal plot curve with equidistant support points on the x axis.
+====
+
+## Baseline
+
+By default the bars start at 0. Sometimes, however, you want to show relative differences with respect to a baseline. For this you use `setBaseLine(yPlotCoordinate)`.
+
+```c++
+QVector<double> y{10,20,15,14,18,12};
+curve->setSamples(y);
+curve->setBaseline(15);
+```
+
+.Bar chart with baseline at y=15
+image::BarPlots/BarPlot_1_baseLine.png[pdfwidth=6cm]
+
+
+## Layout and spacing
+
+The appearance of the diagram can be customized in many ways. When you enlarge and shrink the diagram, the axes are scaled and the bars along with them.
+
+In the default setting, the bars are drawn with minimal spacing to each other and to the border. You can change the margin with `setMargin(pixels)` and you define the spacing between the individual bars with `setSpacing(pixels)`.
+
+.Bar chart with adjusted spacing and margins
+image::BarPlots/BarPlot_1_spacingMargin.png[pdfwidth=6cm]
+
+The width of the bars themselves is controlled via layout specifications, concretely via the functions `QwtPlotAbstractBarChart::setLayoutPolicy()` and `QwtPlotAbstractBarChart::setLayoutHint()`.
+
+### AutoAdjustSamples
+
+In this mode, set by
+```c++
+curve->setLayoutPolicy(QwtPlotAbstractBarChart::AutoAdjustSamples);
+```
+the size of the bars is determined based on the size of the drawing canvas and the configured margin and spacing values.
+
+.Bar chart in layout mode 'AutoAdjustSamples', normal (left) and zoomed in (right)
+image:BarPlot_1_LayoutAutoAdjustSamples.png[pdfwidth=6cm]
+image:BarPlot_1_LayoutAutoAdjustSamples_zoomed.png[pdfwidth=6cm]
+
+The bars, the spacing and the margins fill the drawing canvas completely. As you can see in the right diagram, this stays that way even when zooming into the diagram.
+
+The additional parameter `setLayoutHint()` defines the number of pixels that a bar should be at least wide. This lets you prevent the bars from eventually disappearing completely when the plot size is reduced. The following example shows what happens with a larger LayoutHint in `AutoAdjustSamples` mode:
+
+```c++
+curve->setLayoutPolicy(QwtPlotAbstractBarChart::AutoAdjustSamples);
+curve->setLayoutHint(100);  // minimum width of bars is 100 pixels
+```
+
+.Minimum bar width defined by LayoutHint
+image::BarPlots/BarPlot_1_LayoutAutoAdjustSamples_minWidth.png[pdfwidth=6cm]
+
+
+### ScaleSamplesToAxes
+
+In this layout mode the bar width is set based on the current x axis scaling. If, in this layout mode, you set the LayoutHint to 0.5, then a bar is drawn exactly half as wide as an axis tick and then centered on the axis tick. So the X axis is used to convert the 0.5 in plot coordinates into pixel widths of the drawing canvas.
+
+```c++
+curve->setLayoutPolicy(QwtPlotAbstractBarChart::ScaleSamplesToAxes);
+curve->setLayoutHint(0.5); // 0.5 axis scale as bar width
+```
+
+
+.Bar chart in layout mode 'ScaleSamplesToAxes', normal (left) and zoomed in (right)
+image:BarPlot_1_LayoutScaleSamplesToAxes.png[pdfwidth=6cm]
+image:BarPlot_1_LayoutScaleSamplesToAxes_zoomed.png[pdfwidth=6cm]
+
+When zooming in, too, the bar width always follows the X axis scaling.
+
+[NOTE]
+====
+The bar spacing here is defined exclusively via the LayoutHint, and the bar spacing that you set with `setSpacing()` is not taken into account in this layout mode. So if you set a bar width of 1 (in x axis scale units), then the bars are drawn tight against each other, regardless of the _spacing_. The _margin_, on the other hand, is applied as before.
+====
+
+
+### ScaleSampleToCanvas
+
+In this mode the bar widths are determined as a function of (as a percentage of) the drawing canvas size. To set the LayoutHint parameter, you should consider how many bars will at most be visible in the diagram.
+
+```c++
+curve->setLayoutPolicy(QwtPlotAbstractBarChart::ScaleSampleToCanvas);
+curve->setLayoutHint(0.1); // bar width 10% of canvas width
+```
+
+
+.Bar chart in layout mode 'ScaleSampleToCanvas', with 10% canvas width as bar width
+image:BarPlot_1_LayoutScaleSampleToCanvas.png[pdfwidth=6cm]
+image:BarPlot_1_LayoutScaleSampleToCanvas_zoomed.png[pdfwidth=6cm]
+
+When zooming in, the bar width stays constant and changes only when the plot size changes.
+
+
+### Layout recommendation
+
+Apart from special requirements, for most cases the layout policy `QwtPlotAbstractBarChart::ScaleSamplesToAxes` is recommended. Both when resizing the plot and when zooming, the plot behaves as you would expect.
+
+```c++
+curve->setLayoutPolicy(QwtPlotAbstractBarChart::ScaleSamplesToAxes);
+curve->setLayoutHint(0.8); // 0.8 axis scale as bar width
+curve->setMargin(10); // 10 pixel margin
+```
+
+If you really want to have always the same spacing between the bars, no matter how large the plot is or how far you zoom in, then the layout policy `QwtPlotAbstractBarChart::AutoAdjustSamples` is recommended.
+
+
+## Bar shapes and colors
+
+The bars themselves are drawn by the `QwtColumnSymbol` class. This can be configured in various ways. By default the symbol type `QwtColumnSymbol::Box` is used, as in the following example:
+
+```c++
+QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+symbol->setLineWidth( 2 );
+symbol->setFrameStyle( QwtColumnSymbol::Raised );
+symbol->setPalette( QPalette( QColor(0xE35811) ) );
+curve->setSymbol( symbol );
+```
+
+What can be customized is the shape of the rectangle frame (`Raised`, `Plain`, `NoFrame`), the fill color and the line color.
+
+.Bar chart with customized style for the bars
+image::BarPlots/BarPlot_1_BoxSymbol.png[pdfwidth=6cm]
+
+
+[TIP]
+====
+If you create a `QPalette` object with a single color in the constructor, then the colors for the individual palette roles are computed automatically.
+`QwtColumnSymbol` uses the roles `QPalette::Window`, `QPalette::Dark` and `QPalette::Light` for the individual elements. With the `plain` style, the frame is drawn with the palette role `Dark`.
+====
+
+By customizing individual palette roles you can customize the drawing of the bars.
+
+```c++
+QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+symbol->setFrameStyle(QwtColumnSymbol::Plain);
+symbol->setLineWidth(1);
+QPalette palette(QColor(0xc1e311));
+palette.setBrush(QPalette::Dark, Qt::black); // black frame
+symbol->setPalette(palette);
+curve->setSymbol( symbol );
+```
+
+
+.Bar chart with black-bordered, single-color bars
+image::BarPlots/BarPlot_1_BoxSymbolBlackFrame.png[pdfwidth=6cm]
+
+## Bar labels on the X axis
+
+The X axis shown in the example diagrams so far is a bit unusual for bar charts. Without wanting to preempt <<sec:axes>>, the customization of the x axis that is typical for bar charts shall nevertheless be shown here.
+
+First the axis drawing functionality is customized, for which you first obtain access to the current drawing class `QwtScaleDraw` (header `QwtScaleDraw` or `qwt_scale_draw.h`) with `QwtPlot::axisScaleDraw()`.
+Then you switch off the subdivision marks (_ticks_) and the axis line (_backbone_).
+
+To better understand the different margin settings of the plot, bars are chosen with `ScaleSamplesToAxes` and LayoutHint 1 (full width), the bar chart margins (_margins_) are set to 20 and the canvas margin (all around) is set to 10 pixels.
+
+Finally, we also make sure that the plot layout does not place the y axis directly over the x=0 value at the left edge of the drawing canvas. This is done by customizing the `QwtPlotLayout` (header `QwtPlotLayout` or `qwt_plot_layout.h`). `QwtPlotLayout::setAlignCanvasToScale()` specifies whether the chosen axis lies directly at the edge of the drawing canvas and thus whether the respectively assigned axis (here the x axis) lies with its 0 value directly at the left edge of the drawing canvas.
+
+```c++
+QwtScaleDraw* scaleDraw1 = plot.axisScaleDraw( QwtPlot::xBottom );
+scaleDraw1->enableComponent( QwtScaleDraw::Backbone, false );
+scaleDraw1->enableComponent( QwtScaleDraw::Ticks, false );
+
+curve->setMargin(20); // margin left/right of bars
+plot.plotLayout()->setCanvasMargin( 10 ); // canvas margin all around
+
+// do not fix y-axis at 0 and left edge of canvas
+plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, false );
+plot.updateCanvasMargins();
+```
+
+
+For comparison, the same diagram again _without_ margins and with `setAlignCanvasToScale(yLeft, true)`.
+
+```c++
+QwtScaleDraw* scaleDraw1 = plot.axisScaleDraw( QwtPlot::xBottom );
+scaleDraw1->enableComponent( QwtScaleDraw::Backbone, false );
+scaleDraw1->enableComponent( QwtScaleDraw::Ticks, false );
+
+curve->setMargin(0);
+plot.plotLayout()->setCanvasMargin(0);
+plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, true );
+plot.updateCanvasMargins();
+```
+
+
+.Bar chart with typical X axis labeling, with margins (left), without margins and y axis intersecting the x axis at x=0 directly at the left edge
+image:BarPlot_1_xAxis.png[pdfwidth=6cm]
+image:BarPlot_1_xAxis_aligned.png[pdfwidth=6cm]
+
+
+## Bar labeling
+
+If you want labels for the individual bars instead of the numbers at the bottom edge of the screen, you have to derive the `QwtScaleDraw` class and then override the virtual function `QwtScaleDraw::label()`.
+
+```c++
+class ScaleDraw : public QwtScaleDraw {
+public:
+	ScaleDraw(const QStringList& labels ) : m_labels( labels ) {
+		enableComponent( QwtScaleDraw::Ticks, false );
+		enableComponent( QwtScaleDraw::Backbone, false );
+		setLabelAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+	}
+
+	virtual QwtText label( double value ) const QWT_OVERRIDE {
+		const int index = qRound( value );
+		if ( index >= 0 && index < m_labels.size() )
+			return m_labels[index];
+		return QwtText();
+	}
+
+	QStringList m_labels;
+};
+
+...
+
+// create scale draw
+QwtScaleDraw * scaleDraw = new ScaleDraw(QStringList()
+	<< "Dresden" << "Berlin" << "Leipzig" << "Hamburg"
+	<< "Wolgast" << "Saalfeld");
+// set to plot - plot takes ownership
+plot.setAxisScaleDraw(QwtPlot::xBottom, scaleDraw);
+```
+
+
+This class implementation configures the display of the subdivision marks and the scale line as before, ensures correct alignment of the labels and remembers the texts passed in the constructor as an indexed list.
+The decisive part is the implementation of the function `QwtScaleDraw::label()`. This function's task is to display appropriate labels matching the passed numeric values (here x axis values). As mentioned at the beginning of this chapter, each bar is assigned a consecutive number. So when the axis wants to draw a number, e.g. the 4, then in the function the value is rounded and used as an index to return the corresponding text.
+
+
+.Bar chart with text labels for the bars, on the right zoomed in with incorrect labeling of the bars
+image:BarPlot_1_xAxisWithLabels.png[pdfwidth=6cm]
+image:BarPlot_1_xAxisWithLabels_zoomed.png[pdfwidth=6cm]
+
+The problem with zooming in can be solved with a minimal extension of the code (only draw labels where the rounded x axis scale value corresponds fairly exactly to an integer):
+
+```c++
+	if ( index >= 0 && index < m_labels.size() && qAbs(index-value) < 1e-6 )
+		return m_labels[index];
+```
+
+.Zoomed into a bar chart with text labels
+image::BarPlots/BarPlot_1_xAxisWithLabels_zoomedFixed.png[pdfwidth=6cm]
+
+
+## Multi-color bars
+
+If you now also want to color the bars individually, there is no way around re-implementing the `QwtPlotBarChart` drawing element. You basically only need to re-implement the function `QwtPlotBarChart::specialSymbol()` and return differently colored bar symbols here.
+
+```c++
+class MultiColorBarChart : public QwtPlotBarChart {
+public:
+	MultiColorBarChart() {
+		setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
+		setLayoutHint(0.8);
+		// legend shows individual bar titles
+		setLegendMode( QwtPlotBarChart::LegendBarTitles );
+		setLegendIconSize( QSize( 10, 14 ) );
+	}
+
+	// we want to have individual colors for each bar
+	virtual QwtColumnSymbol* specialSymbol(
+		int sampleIndex, const QPointF&) const QWT_OVERRIDE
+	{
+		// generate symbol with color for each bar
+		QwtColumnSymbol* symbol = new QwtColumnSymbol( QwtColumnSymbol::Box );
+		symbol->setLineWidth( 2 );
+		symbol->setFrameStyle( QwtColumnSymbol::Raised );
+
+		QColor c( Qt::white );
+		if ( sampleIndex >= 0 && sampleIndex < m_colors.size() )
+			c = m_colors[ sampleIndex ];
+		symbol->setPalette( c );
+
+		return symbol;
+	}
+
+	virtual QwtText barTitle( int sampleIndex ) const QWT_OVERRIDE {
+		if ( sampleIndex >= 0 && sampleIndex < m_titles.size() )
+			return m_titles[ sampleIndex ];
+		return QwtText();
+	}
+
+	QStringList	  m_titles;
+	QList<QColor> m_colors;
+};
+```
+
+For each bar in the diagram we store a color in the member variable `m_colors`. In the overridden function `QwtPlotBarChart::specialSymbol()` we now create a `QwtColumnSymbol` as in the previous chapter and return it. The function takes both the index of the bar (or _sample_) as an argument and the plot coordinates of the bar, where the x value of the point is again the bar index and the y value corresponds to the function value of the bar.
+
+[IMPORTANT]
+====
+The function `QwtPlotBarChart::specialSymbol()` is a _factory function_ and transfers ownership of the heap-created object to the caller. Therefore you _must_ create a new `QwtColumnSymbol` object with `new` in every call of the function. After the bar has been drawn, the bar chart element automatically deletes the created column symbol object again (so you must and may _not_ delete the generated object yourself later).
+====
+
+.Bar chart with differently colored bars
+image::BarPlots/BarPlot_1_MultiColor.png[pdfwidth=6cm]
+
+
+[TIP]
+====
+If you only want to color certain bars but have the others drawn in the default design, you can also simply have the function `QwtPlotBarChart::specialSymbol()` return a _nullptr_. Then the bar chart uses the default symbol.
+====
+
+
+## Legend entries
+
+For bar charts you can create two kinds of legend entries:
+
+- one entry for the entire bar chart drawing element, or
+- individual entries for each single bar
+
+The first variant makes sense if further drawing elements with legend entries are shown alongside the bar chart drawing element. In the present case, an individual labeling of the bars makes sense.
+
+For this, the virtual function `QwtPlotBarChart::barTitle()` has to be re-implemented (the default implementation always returns an empty title text). In addition, the legend type has to be switched to "individual bars" by calling the function `QwtPlotBarChart::setLegendMode( QwtPlotBarChart::LegendBarTitles )`. Additionally, you can adjust the size of the legend symbols with `QwtPlotBarChart::setLegendIconSize()`:
+
+```c++
+class MultiColorBarChart : public QwtPlotBarChart {
+public:
+	MultiColorBarChart() {
+		setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
+		setLayoutHint(0.8);
+		// legend shows individual bar titles
+		setLegendMode( QwtPlotBarChart::LegendBarTitles );
+		setLegendIconSize( QSize( 10, 14 ) );
+	}
+
+	// individual colors for the individual bars
+	virtual QwtColumnSymbol* specialSymbol(
+	    int sampleIndex, const QPointF&) const QWT_OVERRIDE
+	{
+	    // ... as before
+	}
+
+	virtual QwtText barTitle( int sampleIndex ) const QWT_OVERRIDE {
+	 	if ( sampleIndex >= 0 && sampleIndex < m_titles.size() )
+	 		return m_titles[ sampleIndex ];
+	 	return QwtText();
+	}
+
+	QStringList	  m_titles;
+	QList<QColor> m_colors;
+};
+```
+
+In addition to the colors, the titles of the bars are now held in the member variable `m_titles` and returned in every call of `barTitle()`.
+
+For the legend to be drawn at all, you have to show it for the plot:
+
+```c++
+// show legend
+QwtLegend * legend = new QwtLegend();
+QFont legendFont;
+legendFont.setPointSize(7);
+legend->setFont(legendFont);
+plot.insertLegend(legend, QwtPlot::RightLegend); // plot takes ownership
+
+// hide x axis
+plot.setAxisVisible(QwtPlot::xBottom, false);
+```
+
+.Bar chart with differently colored bars and legend entries
+image::BarPlots/BarPlot_1_MultiColorWithLegend.png[pdfwidth=6cm]
+
+### Bar charts with gaps between the bars or irregular spacing
+
+The position of the bars, i.e. the X coordinates, is set automatically in the function `setSamples()` (0,1,2,3, ...). The bars are then drawn centered around this coordinate (see also the examples at the very top).
+
+If you want to draw the bars at different spacings or with gaps between the bars, you can use the overloaded function `setSamples( QwtSeriesData< QPointF >* )`:
+
+```c++
+QwtArraySeriesData<QPointF> * series = new QwtArraySeriesData<QPointF>();
+series->setSamples({ QPointF(1,5), QPointF(3,10), QPointF(4,4) } );
+curve->setSamples(series); // plot takes ownership of series
+```
+
+.Bar chart with irregular x coordinates, unfavorable bar width
+image::BarPlots/BarPlot_1_IrregularXCoordsOverlapping.png[pdfwidth=6cm]
+
+The width of the bars is by default determined with `QwtPlotAbstractBarChart::AutoAdjustSamples`, which leads to the overlapping bars shown above. It is better to set the computation mode to
+
+```c++
+curve->setLayoutPolicy(QwtPlotBarChart::ScaleSamplesToAxes);
+```
+
+
+.Bar chart with irregular x coordinates (this time with sensible bar widths)
+image::BarPlots/BarPlot_1_IrregularXCoords.png[pdfwidth=6cm]
+
+
+### Several bar charts in the same diagram
+
+If you integrate several `QwtPlotBarChart` objects into one diagram, `QwtPlot` draws them independently of each other. This lets you, for example, draw positive and negative bars at the same X coordinates, or overlapping bars.
+
+For this you simply create and configure several `QwtPlotBarChart` objects:
+
+```c++
+QwtPlotBarChart * curve = new QwtPlotBarChart;
+curve->setSamples(y);
+curve->attach(&plot);
+...
+QwtPlotBarChart * curve2 = new QwtPlotBarChart;
+curve2->setSamples(y2);
+curve2->attach(&plot);
+```
+
+The plots are by default drawn in the order in which they were added to the plot. But you can also change this by setting the z order (see also <<sec:plotitems>>).
+
+.Bar chart with two BarChart plot items, one drawing only positive and the other only negative bars
+image::BarPlots/BarPlot_1_TwoBarChartItems.png[pdfwidth=6cm]
+
+
+## Stacked bar charts or bar charts with several bars per group
+
+So far there was exactly one bar per X coordinate, or one positive and one negative bar if you used two `QwtPlotBarChart` objects. However, you can also draw groups of bars, and thereby represent 3D information.
+
+For this you use the drawing element `QwtPlotMultiBarChart`. This shares a number of properties with the previously discussed `QwtPlotBarChart`. But instead of drawing _one bar_ centered around an X coordinate, this drawing element can draw several bars, namely:
+
+- side by side
+- stacked on top of each other (only exclusively positive or exclusively negative values)
+
+The data is provided in a 3D data structure, as in the following example (city, year, count):
+
+.Source data for a `QwtPlotMultiBarChart` diagram
+image::BarPlots/MultiBarPlot_SourceData.png[pdfwidth=6cm]
+
+The associated diagram is configured as follows:
+
+```c++
+// data: 4 cities (groups), 3 bars each (years 2021, 2022, 2023)
+// Each entry in samples corresponds to a group (x position),
+// each value in it to a bar of the group.
+QVector<QVector<double>> samples;
+samples << (QVector<double>() << 10 << 15 << 12); // Dresden
+samples << (QVector<double>() << 20 << 18 << 22); // Berlin
+samples << (QVector<double>() << 5 << 13 << 7); // Leipzig
+samples << (QVector<double>() << 4 << 16 << 19); // Hamburg
+
+// create QwtPlotMultiBarChart
+QwtPlotMultiBarChart *barChart = new QwtPlotMultiBarChart;
+// choose grouped display
+barChart->setStyle(QwtPlotMultiBarChart::Grouped);
+// set data
+barChart->setSamples(samples);
+
+// colors and symbols for each bar (index = year series)
+const QColor colors[] = {
+	QColor(0x5b9bd5), // blue   — 2021
+	QColor(0x70ad47), // green  — 2022
+	QColor(0xed7d31)  // orange — 2023
+};
+for (int i = 0; i < 3; ++i) {
+	QwtColumnSymbol *sym = new QwtColumnSymbol(QwtColumnSymbol::Box);
+	sym->setFrameStyle(QwtColumnSymbol::Plain);
+	sym->setLineWidth(1);
+	QPalette pal(colors[i].lighter(130));
+	pal.setBrush(QPalette::Dark, colors[i].darker(140));
+	sym->setPalette(pal);
+	barChart->setSymbol(i, sym);
+}
+
+// legend title for each bar series
+QList<QwtText> titles;
+titles << QwtText("2021") << QwtText("2022") << QwtText("2023");
+barChart->setBarTitles(titles);
+barChart->setLegendIconSize(QSize(10, 14));
+
+barChart->attach(&plot);
+
+// legend
+QwtLegend *legend = new QwtLegend();
+QFont legendFont;
+legendFont.setPointSize(8);
+legend->setFont(legendFont);
+plot.insertLegend(legend, QwtPlot::RightLegend);
+
+// label the x axis with city names
+QwtScaleDraw *scaleDraw = new ScaleDraw(
+	QStringList() << "Dresden" << "Berlin" << "Leipzig" << "Hamburg");
+QFont axisFont;
+axisFont.setPointSize(8);
+axisFont.setBold(true);
+plot.setAxisFont(QwtPlot::xBottom, axisFont);
+plot.setAxisScaleDraw(QwtPlot::xBottom, scaleDraw);
+plot.setAxisScale(QwtPlot::xBottom, -0.5, 3.5);
+
+barChart->setMargin(10);
+plot.plotLayout()->setCanvasMargin(0);
+plot.plotLayout()->setAlignCanvasToScale(QwtPlot::yLeft, false);
+plot.updateCanvasMargins();
+
+```
+
+
+.`QwtPlotMultiBarChart` diagram with grouped bars
+image::BarPlots/MultiBarPlot_grouped.png[pdfwidth=6cm]
+
+
+Alternatively, you can also switch to stacked diagram data:
+
+```c++
+barChart->setStyle(QwtPlotMultiBarChart::Stacked);
+```
+
+.`QwtPlotMultiBarChart` diagram with stacked bars
+image::BarPlots/MultiBarPlot_stacked.png[pdfwidth=6cm]
+
+
+### Different frames for the stacked curves
+
+With the stacked curves, the symbol frame `QwtColumnSymbol::Plain` leads to double separator lines between the bars (see image above).
+You can, of course, also change the style:
+
+```c++
+sym->setFrameStyle(QwtColumnSymbol::NoFrame);
+// or
+sym->setFrameStyle(QwtColumnSymbol::Raised);
+```
+
+image::BarPlots/MultiBarPlot_stackedNoFrame.png[pdfwidth=6cm]
+image::BarPlots/MultiBarPlot_stackedRaised.png[pdfwidth=6cm]
+

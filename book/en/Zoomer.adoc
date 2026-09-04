@@ -1,0 +1,8 @@
+:imagesdir: ../images
+
+<<<
+[[sec:zoomer]]
+# Interactive Zooming and Panning of Plot Sections
+
+
+

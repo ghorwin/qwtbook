@@ -1,0 +1,149 @@
+:imagesdir: ../images
+
+<<<
+[[sec:qwtPlot]]
+# General Fundamentals of QwtPlot
+
+`QwtPlot` is certainly the most useful and best-known component of the Qwt library. In contrast to many other Qt diagram components, `QwtPlot` lets you create and display all kinds of diagram types very flexibly (and efficiently).
+
+.Example of a typical `QwtPlot` with two y axes and an inset legend.
+image::QwtPlot/2D_time_plot_2axes.png[pdfwidth=10cm]
+
+Before the individual diagram types are introduced from <<sec:linecurves>> onwards, this chapter covers the essential fundamentals.
+
+## Structure and elements of the diagram component
+
+`QwtPlot` consists of a title, surrounding axes, legends and the actual drawing canvas. All of these elements can be configured and shown/hidden.
+
+### Axes and coordinate system
+
+The diagram itself is a Cartesian diagram with at most 4 axes, identified by the following enumeration values:
+
+- `QwtPlot::xBottom`
+- `QwtPlot::xTop`
+- `QwtPlot::yLeft`
+- `QwtPlot::yRight`
+
+The primary task of these axes is to convert between _plot coordinates_ (x,y) and _screen coordinates_. Each of the four axes can be configured individually, which affects the min/max values and the axis scaling.
+
+
+[[sec:plotitems]]
+### Diagram/drawing elements
+
+Within the drawing canvas you can now draw a wide variety of elements, e.g.:
+
+- lines,
+- bars,
+- symbols,
+- markers,
+- legend entries,
+- grid,
+- ... and many more
+
+All of these objects are derived from the base class `QwtPlotItem` and therefore share certain common properties.
+
+.Classes of the various drawing elements derived from QwtPlotItem
+image::QwtPlot/QwtPlotItem-class-hierarchy.png[pdfwidth=12cm]
+
+
+In a single diagram you can combine all kinds of elements, i.e. you can also display line diagrams together with bars, symbols and markers.
+
+[TIP]
+====
+The drawing order, i.e. which drawing element covers another, is determined by the z attribute. This is controlled via the functions `QwtPlotItem::setZ(...)` and `QwtPlotItem::z()`.
+====
+
+The diagram elements are positioned via plot coordinates. The conversion into screen coordinates, i.e. the concrete position on the drawing canvas, is done using the respectively assigned x and y axis. Since there are two x axes and two y axes, when displaying a diagram element at a particular x,y data point you necessarily need an assignment to _one_ x axis and _one_ y axis. This property is set on the individual drawing elements, with `xBottom` and `yLeft` being selected by default.
+
+[TIP]
+====
+A drawing element is assigned to an axis with the member functions `QwtPlotItem::setAxes(...)`, `QwtPlotItem::setXAxis(...)`, `QwtPlotItem::setYAxis(...)`.
+====
+
+`QwtPlotItem` also declares and implements the virtual functions for drawing as well as for computing important layout data. This will be explained in more detail later in the advanced chapters. But now on to the individual drawing elements and the diagram types built from them.
+
+
+### Adding/removing drawing elements
+
+All drawing elements are _always_ created on the heap with `new` and added to the actual `QwtPlot` via the member function `QwtPlotItem::attach(plot)`.
+
+Drawing elements can be removed using the function `QwtPlotItem::detach()`.
+
+[IMPORTANT]
+====
+When `attach()` is called, the drawing element is handed over into the care of `QwtPlot`, which then takes care of freeing the memory. As long as `QwtPlot` still owns a plot element, you may/should not delete the object.
+
+If you still want to get the drawing element back, you call the member function `detach()`. In doing so you take over responsibility for freeing the memory again yourself.
+====
+
+You can also remove all drawing elements of a particular type:
+
+[source,cpp]
+----
+// remove all curves and delete the curve objects in the process
+plot.detachItems(QwtPlotItem::Rtti_PlotCurve, true); // detach and delete
+----
+
+The first argument of `detachItems()` is the drawing element type. With the second argument you specify whether the object itself should be deleted, or only removed from the plot. In the latter case you have to take care of freeing the memory yourself again.
+
+[[sec:seriesData]]
+## Data storage in QwtPlot / QwtSeriesStore
+
+To display plot curves/bars or other drawing elements, the data for several data points (_samples_) is required. Depending on the requirements of the drawing element, there are various types of _samples_. For example, line curves usually need x,y value pairs, whereas interval curves need x,y1,y2 tuples.
+
+All drawing elements that use such series data are children of the class `QwtPlotSeriesItem`.
+
+.Class QwtPlotSeriesItem, parent classes and derived classes
+image::QwtPlot/QwtPlotSeriesItem-class-hierarchy.png[pdfwidth=12cm]
+
+Data storage is handled by the template class `QwtSeriesStore`, which implements the abstract interface class `QwtAbstractSeriesStore`.
+
+[TIP]
+====
+The combination used here in Qwt - template classes for storing data of individual types and, at the same time, implementation of common class functionality via virtual functions - once again nicely demonstrates the flexibility of C++.
+
+However, at first glance this makes it somewhat more complicated to understand the interaction between the data storage classes and the drawing element classes. Fortunately, you don't need to know this in such detail in order to use `QwtPlot`.
+====
+
+Depending on the requirements of the individual drawing element/diagram type, different data is required:
+
+- `QPointF` for regular series diagrams (lines)
+- `QwtIntervalSample` for histograms and interval curves
+- `QwtPoint3D` for spectrogram plots (color gradient diagrams)
+- `QwtOHLCSample` for trading curves (OHLC - _Open-High-Low-Close_)
+- `QwtVectorFieldSample` for vector fields
+
+
+.Abstract class QwtAbstractSeriesStore and derived classes
+image::QwtPlot/QwtAbstractSeriesStore-class-hierarchy.png[pdfwidth=15cm]
+
+[TIP]
+====
+Most diagram elements/diagram classes have suitable interface functions for passing the plot data to the diagram. You therefore rarely need to work directly with `QwtSeriesStore`. This is explained individually in the following chapters.
+====
+
+## Automatic drawing or drawing on demand
+
+Drawing a complex plot can take quite a while, so when adjusting the plot it is often not necessary to redraw everything for each individual change. Instead, it is sufficient to redraw the plot after all data has been updated and other settings (axes, legends, ...) have been adjusted.
+
+_Drawing_ here actually means two different work steps:
+
+1. Recomputing the layout, i.e. sizes for axes, legends, title, labels, drawing canvas, etc. This also involves recomputing the axis scaling and thus the mapping of plot coordinates to pixel sizes.
+2. The actual drawing (_rendering_) of the plot.
+
+Step 1 is executed when you call `QwtPlot::replot()`. By default this is always done whenever you change any plot property. This automatic call can be switched on/off with `QwtPlot::setAutoReplot()`.
+
+[source,cpp]
+----
+// switch off automatic re-layouting
+plot->setAutoReplot(false);
+----
+
+[NOTE]
+====
+Calling `replot()` directly, or indirectly on changes when _autoReplot_ is switched on, does not trigger the sometimes time-consuming rendering of the plot. Depending on the complexity of the plot and the size of the data, this is even very fast. Switching off auto-replot is therefore rarely necessary for performance reasons.
+
+Switching off _autoReplot_ can, however, be useful if, while adjusting individual plot properties, a temporarily inconsistent state could occur where re-layouting would only produce nonsense or something like a _division by zero_. In that case it is better to wait until all plot/curve properties have been fully updated and then call `replot()`.
+====
+
+After a layout update in `replot()`, a drawing update is triggered via the Qt event queue. Drawing/rendering then happens _only in the next frame refresh_ and also only _once_. So you can happily call `replot()` 1000 times and it will still be rendered only once. This saves a lot of time.

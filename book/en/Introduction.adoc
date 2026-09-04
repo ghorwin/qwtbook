@@ -1,0 +1,78 @@
+:imagesdir: ../images
+
+<<<
+# Overview of the Qwt Library
+
+_Qwt - Qt Widgets for Technical Applications_ is an open-source library for technical applications and provides
+certain widgets for displays and control components. Probably the most important component of the Qwt library is `QwtPlot`,
+a very flexible and powerful diagram component.
+
+.Example of the QwtPlot component
+image::Introduction/exBode.png[pdfwidth=12cm]
+
+The Qwt library is released under an open-source license, has been and continues to be actively maintained by its developer _Uwe Rathmann_, and is hosted on SourceForge.net:
+
+- http://qwt.sourceforge.net[Qwt website (English)]
+- https://sourceforge.net/projects/qwt[Qwt SourceForge project page]
+
+
+## Development history
+
+- the first version of the Qwt library dates back to 1997 and was written by Josef Wilgen
+- since 2002 the library has been developed and maintained by _Uwe Rathmann_
+- version 5 is probably the most widely used (first release on 2007-02-26)
+- version 6 (first release on 2011-04-15, no more Qt3 support) contains significant API changes
+- current stable version 6.3.0 (as of May 2025)
+- the trunk already contains, in part, considerably more and more advanced functionality
+
+### Downloading the library
+
+The Qwt library can be downloaded as a source code archive from the https://sourceforge.net/projects/qwt[Qwt SourceForge project page]. On Linux, Qwt is packaged by many distributions. Strictly speaking, there are several packages for the different Qwt library versions or Qt versions. Details about installing and using the library can be found in <<sec:building>>.
+
+
+## Widget concept and appearance
+
+The Qwt library provides components that can be used in desktop applications just like the regular Qt widgets. The components use the Qt palette, so that the Qwt widgets fit into the respective user interface. As a result, the widgets integrate seamlessly into application interfaces. Individual components of `QwtPlot` also support styles. For example, rounding effects on the plot widget make it possible to imitate classic instrument displays.
+
+.QwtPlot with rounded corners
+image::Introduction/styledDialsAndPlot.png[pdfwidth=12cm]
+
+Details about styling and customizing the appearance can be found in <<sec:styling>>.
+
+
+## Ownership concept of the QwtPlot widget
+
+A fundamental property of the `QwtPlot` class is that it takes ownership of the elements added to it. This applies generally to all elements of the plot (lines, markers, legend, ...). That is, once ownership has been transferred, `QwtPlot` takes care of freeing the memory.
+
+Elements that have been added are not detached again (or only via a trick, as described in <<sec:releasingObjectsFromQwtPlot>>). It therefore makes sense, for plot elements that change, to provide a mechanism for recreating a drawing object as needed (factory concept).
+
+
+## Drawing objects and their axis dependency
+
+An essential design feature of `QwtPlot` is the ability to hand arbitrary drawing objects (curves, markers, legend, ...) to the plot. So that these drawing objects (_plot items_) can align themselves with the coordinate grid, they are given an axis dependency. As a result, these drawing objects receive a notification whenever the axis scaling changes (by zooming, or by changing the value ranges, etc.).
+
+This functionality defines the central importance of the (up to) 4 axes in the diagram. That is also why they are firmly anchored in `QwtPlot` and are not added arbitrarily like other drawing objects.
+
+
+## Inheritance concept
+
+Fundamentally, `QwtPlot` and the classes involved are designed for maximum adaptability, i.e. polymorphism is supported (almost) everywhere. If the built-in functionality is not sufficient, you can always simply derive the corresponding class and re-implement and modify the particular function to be adapted. This is described with examples in the individual chapters of the manual.
+
+
+## Qwt Designer plugins
+
+The Qwt library ships plugins for Qt Designer and Qt Creator that make it easier to insert Qwt components into ui files. However, no QwtPlot properties can be set and no curves can be added. The actual customization and configuration of the plot is done in the source code.
+
+[WARNING]
+====
+The API of the Qt Designer plugins has changed in more recent Qt Creator versions, which is why the Qwt Designer plugins no longer work with current Qt and Qt Creator versions, even if you compile them against the matching library versions.
+====
+
+This is another reason why the configuration and customization of `QwtPlot` in this manual is demonstrated exclusively through normal API calls.
+
+[TIP]
+====
+If `QwtPlot` is to be inserted in the graphical Qt Designer editor even without the Designer plugins, you can simply insert a QWidget and define it as a placeholder for the `QwtPlot` class, see <<sec:usingQwtPlot>>.
+====
+
+

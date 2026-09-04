@@ -1,0 +1,157 @@
+:imagesdir: ../images
+
+<<<
+[[sec:building]]
+# Download/Installation/Building the Qwt Library
+
+## Downloading ready-made packages
+
+### Windows/Mac
+
+On these platforms I would always recommend building from source, since that is sufficiently easy (see <<sec:buildingFromSource>> below).
+
+### Linux
+
+On Linux you can fall back on the packages of the package manager.
+
+#### Debian/Ubuntu
+
+For Ubuntu 24.04, for example:
+
+```sh
+# package with headers for development
+sudo apt install libqwt-qt5-dev
+```
+
+Header file path: `/usr/include/qwt`
+
+For deploying your own programs and as a dependency of your own packages, it is enough to install the package `libqwt-qt5-6`.
+
+
+
+[[sec:buildingFromSource]]
+## Building from source
+
+### Windows
+
+- Download the release `qwt-6.3.0.zip` and unpack it.
+- Edit the file `qwtconfig.pri` and switch options on/off
+- Open a command line with Qt environment variables, e.g.: _Start menu_ -> _Qt 5.15.2 (MinGW 8.1.0 64-bit)_, or alternatively set the required environment variables in the command line.
+- Change into the directory containing the `qwt.pro`
+
+
+On the command line it is expected that:
+
+- the compiler is executable, i.e. in the search path
+- the QTPATH is set
+
+#### MinGW32/64
+
+A MinGW32/64 installation with `mingw32-make` in the PATH is expected.
+
+```bat
+:: create Makefile
+qmake qwt.pro
+:: build library and plugin/examples
+mingw32-make -j8
+:: install library
+mingw32-make install
+```
+
+[TIP]
+====
+The `-j8` is for building in parallel on 8 CPUs.
+====
+
+
+#### Visual Studio compiler
+
+There are various compiler versions, of which 2017, 2019, 2022 or VSCode are currently common.
+A prepared command line is best opened via the prepared Start menu link, which for 2019 is called roughly: _Developer Command Prompt for VS 2019_
+
+[TIP]
+====
+Here you have to make sure that you choose the right variant, i.e. x86 or x64.
+====
+
+Alternatively, you can also open a normal command line and then set the compiler paths and options.
+Here it helps to run the batch file that is normally linked via the Start menu:
+
+```bat
+"%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat" -arch=amd64
+```
+
+Building is done with jom:
+
+```bat
+:: create Makefile
+qmake qwt.pro
+:: build library and plugin/examples
+nmake
+:: install library
+nmake install
+```
+
+
+#### Installation directory/relevant paths
+
+Unless a different installation prefix has been set in the file `qwtconfig.pri` via the variable `QWT_INSTALL_PREFIX`, after building, the library is installed under `c:\Qwt-6.3.0`:
+
+  c:\Qwt-6.3.0\include  - header files
+  c:\Qwt-6.3.0\lib      - library/DLLs
+  c:\Qwt-6.3.0\doc\html - API documentation (open `index.html` in this directory)
+
+
+
+
+### Linux/Mac
+
+[[sec:designerPlugins]]
+## Qt Designer plugins
+
+... how to build the Designer plugins and get them into the component palette...
+
+## Using the plot in your own programs
+
+
+### Windows
+
+### Linux/Mac
+
+
+[[sec:usingQwtPlot]]
+## Integrating QwtPlot into a Designer interface/ui file
+
+When you build a program interface with Qt Designer, you may also want to embed a `QwtPlot` there. You can do this in two different ways:
+
+a. insert a QWidget as a placeholder and turn it into a placeholder widget for the `QwtPlot`, or
+b. use the Qwt Designer plugins.
+
+### Defining a placeholder widget
+
+For the explanation, a simple widget is designed in Qt Designer:
+
+.Widget with a placeholder widget for the diagram
+image::Building/Tutorial1_ui1.png[pdfwidth=8cm]
+
+A `QWidget` was inserted below the spin box. This is now to serve as a placeholder for the `QwtPlot`. For this, select the option "Promote to..." in the widget's context menu:
+
+image::Building/Tutorial1_ui2.png[pdfwidth=6cm]
+
+And define a new promoted class in the dialog as follows:
+
+image::Building/Tutorial1_ui3.png[pdfwidth=6cm]
+
+Confirm the input with "Add" and then click "Promote" to turn the placeholder widget into the `QwtPlot`. We rename it to _plot_, and put the horizontal layout and the plot widget into a vertical layout:
+
+image::Building/Tutorial1_ui4.png[pdfwidth=8cm]
+
+So that the plot widget grabs all the vertical space, select the top-level widget and scroll down in the property panel to the settings for the vertical layout. There, enter "0,1" for the stretch factors, so that the 2nd widget in the layout (the plot) expands completely.
+
+### Using the Designer plugins
+
+For this you first have to build and integrate the Qt Designer plugins.
+
+TODO :
+
+Once you have installed them, you can drag a `QwtPlot` directly from the component palette into the design and you are done.

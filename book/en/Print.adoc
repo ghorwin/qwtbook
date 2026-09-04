@@ -1,0 +1,314 @@
+:imagesdir: ../images
+
+<<<
+[[sec:print]]
+# Exporting and Printing
+
+Besides displaying on screen, saving nice-looking diagrams and using them in reports is a not unimportant task. However, it is not trivial to export good diagrams with sensible font sizes. Fundamentally, a distinction has to be made here between pixel graphics export and vector graphics.
+
+## Exporting the plot as pixel graphics
+
+The most obvious export of the plot is a 1-to-1 copy to the clipboard or to a bitmap file (jpg, gif, png, ...).
+
+### Creating a 1-to-1 copy of the plot widget
+
+Every QWidget can be drawn directly into a QPixmap. And this can then be saved to a file.
+
+[source,cpp]
+----
+// render plot into pixmap
+QPixmap p = plot.grab();
+// save pixmap to file
+p.save("diagramm_screenshot.png");
+----
+
+The diagram from Tutorial 1 (<<sec:tutorial1>>), exported as a PNG image, looks like this:
+
+.1-to-1 copy of the plot, exported into a PNG image
+image::Print/Tutorial1_f.png[pdfwidth=8cm]
+
+[TIP]
+====
+The function `QWidget::grab()` takes a screenshot of any arbitrary Qt widget, or when using `QWidget::grab(QRect(...))` a partial screenshot of the widget and all of its child widgets. The resulting QPixmap can then be processed further as desired.
+====
+
+[NOTE]
+====
+The widget title was included in the export with `QWidget::grab()` only because `QwtPlot` was the top-level application widget. If, however, `QwtPlot` is embedded in a layout and exported with `QWidget::grab()`, you get only the plot itself.
+====
+
+
+### Copy to the clipboard
+
+Instead of saving the pixmap to a file, you can also simply copy it to the clipboard. For this, include `QClipboard` and `QApplication` and:
+
+[source,cpp]
+----
+// render plot into pixmap
+QPixmap p = plot.grab();
+// copy pixmap to clipboard
+qApp->clipboard()->setImage(p.toImage());
+----
+
+
+[[sec:pixelExportWithDifferentResulution]]
+### Saving QwtPlot with a different resolution
+
+If the QwtPlot is to be saved with a different resolution/pixel size than displayed on screen, you use the `QwtPlotRenderer`:
+
+[source,cpp]
+----
+// create render object
+QwtPlotRenderer renderer;
+// specify target size
+QRect imageRect( 0.0, 0.0, 1200, 600 );
+// create image object of the corresponding size...
+QImage image( imageRect.size(), QImage::Format_ARGB32 );
+// and fill with white background
+image.fill(Qt::white);
+
+// draw the diagram into the QImage
+QPainter painter( &image );
+renderer.render( &plot, &painter, imageRect );
+painter.end();
+
+// convert QImage back into a pixmap
+QPixmap plotPixmap( QPixmap::fromImage(image) );
+plotPixmap.save("diagram.png");
+----
+
+The diagram from Tutorial 1 (<<sec:tutorial1>>) then looks, for example, like this:
+
+.Plot saved at higher resolution
+image::Print/Tutorial1_h.png[pdfwidth=15cm]
+
+[IMPORTANT]
+====
+When you compare this diagram with the previous one of the 1-to-1 copy, you notice that font sizes, line widths and some margins (e.g. at the vertical marker) have stayed the same. The axis scaling, however, and thus the grid and axis labels, has changed due to the higher resolution. You can take advantage of this if, for example, axis labels do not fully fit into the diagram on screen and can now be written thanks to the higher resolution. However, this also carries the danger that the font sizes in the printout become too small. That is more of a problem with vector export, though, and is addressed in <<sec:exportDPI>>.
+====
+
+
+### Printing
+
+When printing, the image is simply rendered onto a printer drawing surface. For print support, the pro file first has to be extended in the Qt program:
+
+```
+QT += printsupport
+```
+
+You create and configure a printer object:
+
+[source,cpp]
+----
+QPrinter printer( QPrinter::HighResolution );
+printer.setCreator("Me");           // only for exporting to (PDF) files
+printer.setDocName("My plot");      // only for exporting to (PDF) files
+
+printer.setPageOrientation( QPageLayout::Landscape );
+----
+
+Then the user can also select the printer:
+
+[source,cpp]
+----
+QPrintDialog dialog( &printer );
+if ( dialog.exec() ) {
+	QwtPlotRenderer renderer;
+	renderer.renderTo( &plot, printer );
+}
+----
+
+And the image is pushed to the printer or PDF printer.
+
+[NOTE]
+====
+The printer properties _creator_ and _docName_ are stored as properties in the PDF file for PDF printers. For normal printers they are not necessary.
+====
+
+Important with printers is the resolution to be used. This is set in the constructor of the `QPrinter` class:
+
+- `QPrinter::HighResolution` sets the print resolution as configured for the printer (or 1200 DPI for PDFs)
+- `QPrinter::ScreenResolution` sets the resolution as on the current screen, usually 72 DPI. As a result, the printed diagram will look almost exactly as displayed on screen
+
+You can also manually specify the resolution to use by calling `QPrinter::setResolution()`.
+
+The interplay of resolution and print size is described in <<sec:exportDPI>>.
+
+
+### PDF export via QPdfWriter
+
+Instead of producing PDFs via a PDF printer, you can also use the `QPdfWriter` provided by Qt:
+
+[source,cpp]
+----
+QPdfWriter writer("plot.pdf");
+writer.setTitle("My plot");
+writer.setCreator("Me");
+writer.setPageSize(QPageSize::A4);
+writer.setPageOrientation(QPageLayout::Landscape);
+renderer.renderTo( &plot, writer);
+----
+
+### SVG export via QSvgGenerator
+
+SVG export is done via the `QSvgGenerator` class. For SVG support, the Qt pro file first has to be extended:
+
+```
+QT += svg
+```
+
+Then you create and configure the generator object and render into the SVG generator paint device.
+
+[source,cpp]
+----
+QSvgGenerator generator;
+generator.setFileName("plot.svg");
+generator.setSize(QSize(600, 400));
+generator.setViewBox(QRect(0, 0, 600, 400));
+generator.setTitle("My plot");
+generator.setResolution(72);
+generator.setDescription("An SVG plot");
+renderer.renderTo( &plot, generator);
+----
+
+[CAUTION]
+====
+If you apply the code above to the diagram in the first tutorial, then _no_ line is shown when viewing the SVG document. This is because the SVG generator, in contrast to the pixel renderer or PDF writer, cannot handle NAN values. These often arise unnoticed, e.g. in this example when taking the logarithm of 0 values by choosing a corresponding y axis scaling. On screen the line is still shown correctly, but on SVG export a curve (internally a polyline) is only drawn up to the first occurrence of a NAN value. If by chance the first value is already a NAN (as is the case here, since the first value 0 becomes a NAN when taking the logarithm), then the curve is missing in the export and you then usually search for a very long time until you have found the error.
+====
+
+
+Specifying the resolution with `QSvgGenerator::setResolution()` defines, together with the given size, the final resolution of the image. The higher the resolution, the larger the font and pen widths. In this respect, SVG export differs from PDF export/printing.
+
+A generated SVG document can also be copied to the clipboard. For this you set an alternative output device in the `QSvgGenerator` (with `QSvgGenerator::setOutputDevice()`) and
+
+[source,cpp]
+----
+// set buffer as output device
+QBuffer b;
+generator.setOutputDevice(&b);
+renderer.renderTo( &plot, generator);
+// put buffer as MimeData onto the clipboard
+QMimeData * d = new QMimeData();
+d->setData("image/svg+xml",b.buffer());
+QApplication::clipboard()->setMimeData(d,QClipboard::Clipboard);
+----
+
+### EMF export on Windows
+
+Qt does not come with its own support for creating EMF files. These are sometimes quite handy, though, if you want to insert diagrams directly into PowerPoint, Word or other Microsoft software.
+
+There are various EMF generator libraries (open-source and commercial) that you can use well for this. The procedure corresponds exactly to what was shown so far: create and configure a `QwtPlotRenderer` and then render into the export object (i.e. into the `QPaintDevice` of the export object).
+
+
+
+### Customizing the rendered plot
+
+Between a plot displayed on screen and a printout there are often various differences. For example, for black-and-white printouts you probably do not want to print a colorful diagram background, and the border of the plot should not be printed in widget colors either. Such adjustments are made directly in the `QwtPlotRenderer` via various layout adjustment functions.
+
+You can instruct the renderer not to draw certain elements:
+[source,cpp]
+----
+// no widget background
+renderer.setDiscardFlag( QwtPlotRenderer::DiscardBackground );
+// no canvas background
+renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasBackground );
+// no frame around the canvas
+renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasFrame );
+----
+
+.Plot without widget background (border), without canvas background and without frame
+image::Print/Tutorial1_export1.png[pdfwidth=8cm]
+
+In addition, you could hide further things:
+
+- title with `QwtPlotRenderer::DiscardTitle` (since you often write the diagram title in the figure caption anyway)
+- legend with `QwtPlotRenderer::DiscardLegend`
+- footer with `QwtPlotRenderer::DiscardFooter` (if the plot has one, see <<sec:plotFooter>>)
+
+With this the plot can already look quite decent when printed. But you can change the appearance for a printout further by drawing a flat frame with docked scales.
+
+[source,cpp]
+----
+renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
+----
+
+.Plot rendered in layout mode _FrameWithScales_
+image::Print/Tutorial1_export2.png[pdfwidth=8cm]
+
+The lower left corner of the diagram is here not directly at the point (0, 0.001). You can force this by aligning the canvas to all four axes:
+
+[source,cpp]
+----
+plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yLeft, true );
+plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xBottom, true );
+plot.plotLayout()->setAlignCanvasToScale( QwtPlot::yRight, true );
+plot.plotLayout()->setAlignCanvasToScale( QwtPlot::xTop, true );
+----
+
+.Plot with aligned scales - typical plot layout for export
+image::Print/Tutorial1_export3.png[pdfwidth=8cm]
+
+
+[[sec:exportDPI]]
+### Scaling diagram elements (changing DPI)
+
+As already described above, with a different print pixel size the scaling of plot elements is recomputed. With modern printers, resolutions of 600 or 1200 DPI are normal, which for an A4 printout leads to _very high_ pixel sizes, and individual printed pixels are no longer discernible in the printout.
+
+[CAUTION]
+====
+When outputting the plot as vector graphics, especially when printing or outputting to PDF files, _all_ plot elements must be specified with scalable sizes. This is necessary in particular for all definitions of a `QPen()`, e.g. for line curves. Here you must _not_ use cosmetic pens with line width 0. The resulting lines with widths of one pixel would simply not be visible in the printout.
+====
+
+The scaling of font sizes and line widths is determined via the resolution (specified in DPI) of the chosen paint device. Together with the pixel size of the plot, this then results in the final appearance of the diagram, which may well differ from the image on screen.
+
+When exporting a plot as vector graphics (PDF or SVG document), font size and line width are properties of the exported vector elements. It is important here that pen widths (also as a decimal number) are specified for all drawing elements.
+
+If you export the diagram as PDF, the scale lines are exported only as cosmetic lines with a width of one pixel (i.e. when zooming in, these lines always stay exactly one pixel wide). All other diagram elements are scaled accordingly.
+
+.Magnification of the vector export (PDF); lines of the scales are drawn as cosmetic lines always with a width of one pixel
+image::Print/PDF-Export-Detail.png[pdfwidth=6cm]
+
+With the scales, too, you must not forget to set the pen (`QPen`) accordingly.
+
+[source,cpp]
+----
+plot.axisScaleDraw(QwtPlot::xBottom)->setPenWidthF(1);
+plot.axisScaleDraw(QwtPlot::yLeft)->setPenWidthF(1);
+----
+
+When the render mode `QwtPlotRenderer::FrameWithScales` is chosen, `QwtPlot` uses the _widest_ pen width of the pens set for the individual _visible_ scales.
+
+[IMPORTANT]
+====
+Up to Qwt-Plot version 6.1.3, the pen widths for drawing the frame are rounded (down) to integer values. Therefore pen widths < 1 always lead to a cosmetic pen for the surrounding frame. You should therefore always use a pen width of 1 for the frame, or else do without the option `QwtPlotRenderer::FrameWithScales`.
+====
+
+
+With the SVG generator you can scale the diagram by changing the DPI value.
+The same applies analogously when a pixel graphic is rendered via `QwtPlotRenderer`.
+
+With the other export formats, the DPI number is only additional information for the viewing program on how to scale the respective image. But since all sizes and distances are stored relatively in the file, and font sizes and line widths are attributes of the vector elements, the appearance of the diagram on PDF export/print does not change depending on the DPI number.
+
+On printout/export to PDF, however, the target size is decisive for the final appearance, shown below by comparing the export in A4 format and A5 format:
+
+
+.Export in A4 landscape format
+image::Print/Export_plotA4.png[pdfwidth=11.3cm]
+
+.Export in A5 landscape format
+image::Print/Export_plotA5.png[pdfwidth=8cm]
+
+
+As you can clearly see, drawing elements and font sizes are of identical size due to the same DPI number. Due to the different target size, however, the diagram is laid out differently and the scales are computed differently.
+
+[TIP]
+====
+If you want to use consistent diagrams in reports, where font sizes and line widths are always the same size, then for vector export you only need to always set the same DPI number and insert the image without scaling (100% size).
+
+Sometimes, however, the fonts in the diagram are too small or too large, or you want the diagram scaled down in the report in order to get more labeling detail. The alternative would be to enlarge/reduce the fonts and line widths in the diagram accordingly before export.
+
+So you could perhaps take the exported diagram into the report at 75% magnification, or optionally scale it to a fixed width (e.g. page width). In the latter case, i.e. whenever concrete heights/widths are specified on insertion, you should make sure that the ratio of export geometry and import geometry is always identical. Because only that way do you ensure that font sizes in differently sized diagrams nevertheless always stay the same.
+====
+
+
+

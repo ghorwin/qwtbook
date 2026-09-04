@@ -1,0 +1,414 @@
+:imagesdir: ../images
+
+<<<
+[[sec:tutorial1]]
+# First Steps and an Interactive Diagram
+
+To get comfortable with the Qwt library, in a simple example we will create an interactive diagram using the `QwtPlot` component.
+The complete example source code can be downloaded as a 7z archive: link:../code/tutorial1.7z[tutorial1.7z]
+
+
+## Program skeleton
+
+### QMake project file
+
+We start with the qmake project file, in which we set the path for the library's header files and the library to link against. Here I assume that Qwt was built from the 6.3.0 source archive and installed locally into the default directories (`C:\qwt-6.3.0` on Windows and `/usr/local/qwt-6.3.0` on Linux/Mac). Information about compiling the library from source and installing it can be found in <<sec:building>>.
+
+[source,sh]
+----
+TARGET   = Tutorial1
+QT       += core gui widgets
+CONFIG   += c++11
+
+win32 {
+	# add path to the Qwt header files
+	INCLUDEPATH += C:/qwt-6.3.0/include
+	CONFIG(debug, debug|release) {
+		QWTLIB = qwtd
+	}
+	else {
+		QWTLIB = qwt
+	}
+	# linker path
+	LIBS += -LC://qwt-6.3.0/lib -l$$QWTLIB
+}
+else {
+	# add path to the Qwt header files
+	INCLUDEPATH += /usr/local/qwt-6.3.0/include/
+	# linker path; on Linux, by default only the release version of the lib is built and installed
+	LIBS += -L/usr/local/qwt-6.3.0/lib -lqwt
+}
+
+SOURCES += main.cpp
+----
+
+This is a `.pro` file for a Qwt 6.3.0 installation from source with default settings (see <<sec:buildingFromSource>>).
+
+[IMPORTANT]
+====
+Note that the Qwt library compiled in debug mode has an appended 'd'. On Linux, by default only the release version is built and installed, so the case distinction is not needed here.
+====
+
+### Minimalistic main program
+
+To use `QwtPlot` you only need a very minimalistic `main.cpp`.
+
+.Main program in which only the bare plot itself is created and displayed
+[source,cpp]
+----
+#include <QApplication>
+
+#include <QwtPlot>
+
+int main(int argc, char *argv[]) {
+	QApplication a(argc, argv);
+	QwtPlot plot;
+	plot.resize(800,500);
+	plot.show();
+	return a.exec();
+}
+----
+
+[TIP]
+====
+Once you have compiled the program and want to run it, Windows complains about a missing DLL.
+For this, in the project settings, under "Run", in the "Environment" section, edit the PATH variable and add the path `C:\qwt-6.3.0\lib` there.
+====
+
+The program shows a rather boring (and ugly) diagram window (it will be made more attractive later).
+
+.The bare plot widget
+image::BasicTutorial/Tutorial1_a.png[pdfwidth=6cm]
+
+[NOTE]
+====
+A note about the header files of the Qwt library.
+
+Analogously to Qt classes, the Qwt classes are included via the header of the same name, i.e.:
+
+```cpp
+#include <QwtPlot>       // for class QwtPlot
+#include <QwtPlotCurve>  // for class QwtPlotCurve
+#include <QwtLegend>     // for class QwtLegend
+// ...
+```
+
+These header files are, however, only wrappers around the actual include files, with the naming scheme:
+```cpp
+#include <qwt_plot.h>        // for class QwtPlot
+#include <qwt_plot_curve.h>  // for class QwtPlotCurve
+#include <qwt_legend.h>      // for class QwtLegend
+// ...
+```
+
+In earlier versions of the Qwt lib (including the Debian package version `libqwt-qt5-dev`), the wrapper header files following the new naming scheme were not installed, so that you have to use the original `qwt_xxx.h` includes. So if you also want to support older Qwt versions, or want to use the package version on Linux, you should use the original header file names.
+====
+
+## Adding diagram elements
+
+### Adding a line
+
+First we add a line, i.e. a diagram curve (header `QwtPlotCurve` or `qwt_plot_curve.h`):
+
+.Main program with a line
+[source,cpp]
+----
+#include <QApplication>
+
+#include <QwtPlot>
+#include <QwtPlotCurve>
+
+int main(int argc, char *argv[]) {
+	QApplication a(argc, argv);
+	QwtPlot plot;
+	plot.resize(500,300);
+
+	// a bit of spacing between border and axis titles
+	plot.setContentsMargins(8,8,8,8);
+	// background of the drawing canvas should be white
+	plot.setCanvasBackground( Qt::white );
+
+	// read in the data to be displayed
+	QVector<double> x, y;
+	QFile f("spektrum.tsv");  // file contains 2 columns
+	f.open(QFile::ReadOnly);
+	QTextStream strm(&f);
+	strm.readLine(); // skip header line
+	while (!strm.atEnd()) {
+		double xval, yval;
+		strm >> xval >> yval;
+		x.append(xval);
+		y.append(yval);
+	}
+
+	QwtPlotCurve *curve = new QwtPlotCurve();
+	curve->setPen(QColor(180,40,20), 0);
+	curve->setTitle("Gamma spectrum");
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // use antialiasing
+	curve->setSamples(x, y);
+	curve->attach(&plot); // Plot takes ownership
+
+	plot.show();
+	return a.exec();
+}
+----
+
+In the extended main program, the header for `QwtPlotCurve` is included first. The curve object itself is created with `new` on the heap. We read the curve's data from a text file (2 columns, with a header line). The file `spektrum.tsv` is included in the archive of the tutorial source code.
+
+[CAUTION]
+====
+The following rule always applies with `QwtPlot`: all plot elements _must_ be created with `new` on the heap and then handed over to the plot. The plot then becomes the owner and frees the memory. Therefore lines, legend, markers etc. must _never_ be created as stack variables, otherwise you will get (depending on the destructor call order) a memory access violation.
+====
+
+Attributes such as line color, title (shown in the legend later), and antialiasing are set (in <<sec:linecurves>> all properties of lines are explained in detail).
+
+The function `setSamples()` sets the line's data. It is important here that the passed vectors have the same length. This is a parametric curve, i.e. neither the x nor the y values have to be monotonic or follow any other rules. Each x,y value pair defines a point and these points are connected by the line.
+
+The function `attach()` adds the `QwtPlotCurve` object to the diagram.
+
+[IMPORTANT]
+====
+When adding the line to the diagram via `attach()`, the plot becomes the new owner and takes care of freeing the memory. So you no longer need to call `delete` for the `QwtPlotCurve` object manually.
+====
+
+In addition to the code that adds the line, 2 small adjustments were made to the appearance:
+
+- margins were added via `setContentsMargins()` (see also `QWidget::setContentsMargins()`)
+- the background of the drawing canvas (_canvas_) was colored white.
+
+The result already looks more like a diagram.
+
+.Diagram with a line
+image::BasicTutorial/Tutorial1_b.png[pdfwidth=6cm]
+
+### Adding a legend
+
+Next we insert a legend (header `QwtLegend` or `qwt_legend.h`):
+
+[source,cpp]
+----
+// show legend
+QwtLegend * legend = new QwtLegend();
+QFont legendFont;
+legendFont.setPointSize(8);
+legend->setFont(legendFont);
+plot.insertLegend( legend , QwtPlot::BottomLegend); // plot takes ownership
+----
+
+Here, too, the header for the `QwtLegend` class is included at the top.
+
+The legend is given a modified font here. Further customization of the legend is described in <<sec:legend>>.
+
+The legend can be placed left, right, above or below the drawing canvas, or inside the drawing canvas itself. The placement is specified in the call to `insertLegend()`.
+
+When `insertLegend()` is called, the plot again takes ownership of the legend object and takes care of freeing the memory.
+
+### Adding a diagram title
+
+[source,cpp]
+----
+// add title
+QwtText text("Gamma spectrum");
+QFont titleFont;
+titleFont.setBold(true);
+titleFont.setPointSize(10);
+text.setFont(titleFont);
+plot.setTitle(text);
+----
+
+The `QwtText` class (header `QwtText` or `qwt_text.h`) wraps a QString and adds functionality for rendering mathematical symbols via MathML (see <<sec:mathML>>).
+
+### Adding a diagram grid
+
+Grid lines are drawn by the `QwtPlotGrid` drawing object (header `QwtPlotGrid` or `qwt_plot_grid.h`):
+
+[source,cpp]
+----
+// show major and minor grid
+QwtPlotGrid *grid = new QwtPlotGrid();
+QPen gridPen(Qt::gray);
+gridPen.setStyle(Qt::DashLine);
+grid->setMajorPen(gridPen);
+// Minor grid
+grid->enableYMin( true );
+gridPen.setColor(Qt::lightGray);
+gridPen.setStyle(Qt::DotLine);
+grid->setMinorPen(gridPen);
+grid->attach( &plot ); // plot takes ownership
+----
+
+The grid itself can be customized with respect to the pen (QPen) for the major and minor grid. The function `enableYMin()` switches on the minor grid for the Y axis.
+As with the plot curves, `attach()` hands the `QwtPlotGrid` object to `QwtPlot`, which then takes care of memory management.
+
+[TIP]
+====
+By default, a grid is bound to one x and one y axis, but you can also hide the grid lines for one of the axes. If, for example, you have a diagram with 2 y axes and want to display a grid for each (even though that usually looks confusing), then you need two `QwtPlotGrid` objects.
+====
+
+By now the diagram already looks quite decent.
+
+.Diagram with line, legend, title and grid lines
+image::BasicTutorial/Tutorial1_c.png[pdfwidth=6cm]
+
+
+### Axis configuration
+
+`QwtPlot` has 4 axes built in, called:
+
+- `QwtPlot::yLeft` and `QwtPlot::yRight`
+- `QwtPlot::xBottom` and `QwtPlot::xTop`
+
+By default, the axes `xBottom` and `yLeft` are visible, as in the plot used so far.
+
+Every drawing element in the plot (curves, markers, ...) is assigned to one or more axes. In our introductory example the `QwtPlotCurve` uses the axes `xBottom` and `yLeft` by default.
+
+The axes can be configured as follows.
+
+[source,cpp]
+----
+// format axes
+QFont axisFont;
+axisFont.setPointSize(8);
+axisFont.setBold(true);
+QFont axisLabelFont;
+axisLabelFont.setPointSize(8);
+// X axis
+QwtText axisTitle("Channel");
+axisTitle.setFont(axisFont);
+// set title text and font
+plot.setAxisTitle(QwtPlot::xBottom, axisTitle);
+// set font for axis numbers
+plot.setAxisFont(QwtPlot::xBottom, axisLabelFont);
+// Y axis
+axisTitle.setText("Events");
+plot.setAxisTitle(QwtPlot::yLeft, axisTitle);
+plot.setAxisFont(QwtPlot::yLeft, axisLabelFont);
+----
+
+The title of each axis is again set via a `QwtText` object (contains text and font).
+The font for the numbers on the axes themselves is changed via `setAxisFont()`.
+
+The axes themselves can be customized in many ways, see <<sec:axes>>.
+
+.Fully formatted diagram
+image::BasicTutorial/Tutorial1_d.png[pdfwidth=6cm]
+
+By default, the axes automatically adjust to the value range of the displayed curves. Of course you can change this too, see <<sec:axes>>.
+
+
+### Logarithmic axes
+
+`QwtPlot` can also use logarithmic axes. For this you have to plug in a different scale computation class, the `QwtLogScaleEngine` (header `QwtLogScaleEngine` or `qwt_scale_engine.h`):
+
+[source,cpp]
+----
+// logarithmic Y axis
+QwtLogScaleEngine * logScale = new QwtLogScaleEngine();
+plot.setAxisScaleEngine(QwtPlot::yLeft, logScale); // plot takes ownership
+// set manual axis limits, since autoscale does not work sensibly with log axes
+plot.setAxisScale(QwtPlot::yLeft, 1e-3,1000);
+----
+
+When `setAxisScaleEngine()` is called, the plot again takes ownership of the object and then takes care of freeing the memory.
+
+<<sec:axes>> describes the details of the _ScaleEngine_ and gives further examples.
+
+.Diagram with logarithmic Y axis
+image::BasicTutorial/Tutorial1_e.png[pdfwidth=6cm]
+
+
+### Marker lines
+
+Another drawing element that you need from time to time is horizontal or vertical marker lines. As an example, let's add such a line to the plot (header `QwtPlotMarker` or `qwt_plot_marker.h`):
+
+[source,cpp]
+----
+QwtPlotMarker * marker = new QwtPlotMarker;
+marker->setLabelOrientation(Qt::Vertical); // vertical line
+marker->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom); // label below and to the right of the line
+marker->setValue(36, 0); // for vertical lines the x coordinate must be specified
+QPen markerPen(QColor(40,60,255));
+markerPen.setStyle(Qt::SolidLine);
+marker->setLinePen(markerPen);
+marker->setLineStyle(QwtPlotMarker::VLine);
+QwtText markerLabel("207.50 keV");
+QFont markerFont;
+markerFont.setPointSize(8);
+markerLabel.setFont(markerFont);
+marker->setLabel(markerLabel);
+marker->attach(&plot); // plot takes ownership
+----
+
+Markers also have many configuration options, see <<sec:marker>>.
+
+.Diagram with logarithmic Y axis and a vertical peak marker
+image::BasicTutorial/Tutorial1_f.png[pdfwidth=6cm]
+
+Now the diagram itself is finished and we turn to user interaction.
+
+## Interacting with the diagram
+
+`QwtPlot` offers the usual interaction options for the user, such as zooming in and out, or panning the plot section.
+
+### Zoom functionality with QwtPlotZoomer
+
+The zoom functionality is added via the `QwtPlotZoomer` class (header `QwtPlotZoomer` or `qwt_plot_zoomer.h`):
+
+[source,cpp]
+----
+// add zoomer
+// Caution: do NOT pass QwtPlot itself as the 3rd argument, but plot.canvas()
+QwtPlotZoomer * zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, plot.canvas());  // plot takes ownership
+zoomer->setTrackerMode( QwtPlotPicker::AlwaysOn ); // show curve values under the cursor
+----
+
+When you move the mouse over the diagram, you already see a changed cursor and, thanks to the call `setTrackerMode(QwtPlotPicker::AlwaysOn)`, you now also see the x and y values (of the axes `xBottom` and `yLeft`) under the cursor.
+
+You can zoom in by holding down the left mouse button and dragging a zoom rectangle. You can also do this several times in a row. `QwtPlot` internally remembers these zoom levels. You can zoom out by clicking the right mouse button, which always zooms out one zoom level.
+
+[TIP]
+====
+The outermost zoom level is determined in the constructor of the `QwtPlotZoomer` class based on the current value ranges of the _curves that have already been added_. If you change the values of the curves afterwards, or add the zoomer _before_ you have given any curves to the plot, you can call the function `QwtPlotZoomer::setZoomBase()`. Details on this can be found in <<sec:zoomer>>.
+====
+
+There is one more peculiarity in the source code. Whereas the plot elements so far have always been added with member functions of the `QwtPlot` class, or via `attach()`, the zoomer object is, analogously to Qt classes, given as a child object of the drawing canvas and registers itself through that as an interactive element with the plot.
+
+[CAUTION]
+====
+It is important to make sure that you pass the plot's canvas object as the 3rd argument to the constructor of the `QwtPlotZoomer` class. You get it with the function `QwtPlot::canvas()`. If you pass the plot itself here instead, this leads to a memory access violation.
+
+In the constructor of the `QwtPlotZoomer` class, the object registers itself as a child of the canvas widget, so that the QObject system takes care of memory management. So you do not need to free the `QwtPlotZoomer` object.
+====
+
+So that the zoomer knows which axes are to be manipulated when zooming, you have to specify the x and y axis in the constructor. If, for example, you want to zoom both y axes at the same time, you need two `QwtPlotZoomer` objects.
+
+.Diagram with a zoom rectangle being dragged
+image::BasicTutorial/Tutorial1_g.png[pdfwidth=6cm]
+
+
+### Panning the plot section with QwtPlotPanner
+
+If you want to interactively move the section of a zoomed-in plot, you can add the `QwtPlotPanner` (header `QwtPlotZoomer` or `qwt_plot_zoomer.h`):
+
+[source,cpp]
+----
+// add panner; as with the PlotZoomer, the canvas object must be passed as an argument
+QwtPlotPanner * panner = new QwtPlotPanner(plot.canvas());  // plot takes ownership
+panner->setMouseButton(Qt::MiddleButton); // middle mouse button pans
+----
+
+As with `QwtPlotZoomer`, the object is added as a child object of the canvas widget. It is customary to move screen content with the middle mouse button held down, so you set that with `setMouseButton()`.
+
+
+---
+
+This concludes the introductory tutorial. With `QwtPlot` you can already create a fully functional and interactive diagram with just a few steps.
+
+In this tutorial, `QwtPlot` was also the application widget. But if you want to insert `QwtPlot` into existing Designer form classes, there are various techniques:
+
+- the use of placeholder widgets
+- the integration of Qt Designer plugins for the Qwt library
+
+These methods are described in <<sec:usingQwtPlot>>.
+
+Individual chapters are dedicated to all diagram types and further plot properties. For `QwtPlot`, only the functionality shipped with `QwtPlot` and the associated classes is covered first. Later chapters show how to extend the plot functionality by overriding/replacing the built-in functions.

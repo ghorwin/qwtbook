@@ -1,0 +1,85 @@
+:imagesdir: ../images
+
+<<<
+[[sec:advanced]]
+# Advanced Topics
+
+The topics presented below reach into the internal data structures of the Qwt library classes, and these could certainly change significantly again in future library versions.
+Therefore these techniques should be treated with caution!
+
+
+
+[[sec:releasingObjectsFromQwtPlot]]
+## Detaching objects from QwtPlot
+
+The API of `QwtPlot` assumes that when adding/replacing existing plot elements, the object gets the plot as its new owner. As soon as a plot element replaces a previous plot element, `QwtPlot` automatically deletes the old object. There are no _release_ functions such as the ones you know from _shared pointer_ implementations. Therefore you cannot remove, adjust and re-add objects once they have been added.
+
+For plot elements that were added via `QwtPlotItem::attach()`, you can simply remove the element again with `QwtPlotItem::detach()`.
+
+With the legend, however, this does not work that way.
+
+TODO explain the detach trick...
+
+
+[[sec:splines]]
+## Splines and Bézier curves
+
+The Qwt library comes with a number of spline interpolation algorithms that can also be used outside of the `QwtCurveFitter` functionality (see <<sec:curveFitter>>). Here is an overview again:
+
+.Child classes of the base class `QwtSpline`
+image::Advanced/QwtSpline-class-hierarchy.png[pdfwidth=10cm]
+
+The classes to be used directly are:
+
+`QwtSplinePleasing`
+`QwtSplineLocal`
+`QwtSplineCubic`
+
+Each of these spline implementations implements two functions that you can use for generating splines from given support points:
+
+- `QwtSpline::polygon()` - interpolates the polygon piecewise using Bézier curves and generates from it a polyline as a `QPolygonF` with points that approximate the spline
+- `QwtSpline::painterPath()` - computes the Bézier control lines and then computes piecewise cubic functions between the support points and adds these to the PainterPath via `QPainterPath::cubicTo()`
+
+The function `QwtSpline::polygon( const QPolygonF&, double tolerance )` generates a Bézier curve, or more precisely approximates it using a polyline.
+The first argument is the polygon with the support points to be fitted and the second argument is the tolerance. The function itself returns a polyline as a `QPolygonF`, which can then be used further. The number of support points in the polyline is defined by the tolerance such that the maximum deviation between the line segment and the original spline curve does not exceed this tolerance. As a result, more points are placed in areas of stronger curvature than in the more linear sections of the curve, as can be seen nicely in the following example. The smaller the tolerance, the more points are used.
+
+```c++
+QVector<double> x{1,2,5,6,10,12,15,16,8};
+QVector<double> y{5,4,8,8, 4, 5, 8, 9,10};
+QPolygonF poly;
+for (int i=0; i<x.count(); ++i)
+	poly << QPointF(x[i],y[i]);
+// create spline implementation (here QwtSplinePleasing)
+QwtSplinePleasing spline;
+// generate polygon
+QPolygonF splinePoly = spline.polygon(poly, 1e-2);
+```
+
+The support points of the example curve above are put into a polyline and converted by the spline into a new polyline. The tolerance of 0.01 produces 95 points here. If you plot the generated curve in comparison to the curve generated with `QwtSplineCurveFitter`, both lines look identical at first glance. As you can also see clearly, the points are clustered more strongly at the points of curvature.
+
+.SplinePleasing: generated via polygon() and via painterPath()
+image::Advanced/SplinePleasing.png[pdfwidth=10cm]
+
+Zoomed in, however, you can see differences:
+
+.SplinePleasing: differences between generated spline polygon and PainterPath
+image::Advanced/SplinePleasingZoom.png[pdfwidth=10cm]
+
+
+With `QwtSplineLocal(QwtSplineLocal::PChip)` (with support points changed for testing) it also looks like this:
+
+.SplineLocal: generated via polygon() and via painterPath()
+image::Advanced/SplineLocal.png[pdfwidth=10cm]
+
+Zoomed in, however, you can see differences:
+
+.SplineLocal: differences between generated spline polygon and PainterPath
+image::Advanced/SplineLocalZoom.png[pdfwidth=10cm]
+
+
+[IMPORTANT]
+====
+Generating the spline as a polyline via `QwtSpline::polygon()` provides an accurate approximation of the respective spline within the required accuracy. For visualizing the spline, the PainterPath variant is often sufficient, where the course of the curve between the support points is represented by a cubic polynomial. Qt draws such polylines very efficiently, so this is also the optimal variant for use in the diagram. Due to the different generation algorithms, however, the two variants are _not_ identical.
+====
+
+

@@ -1,0 +1,80 @@
+:imagesdir: ../images
+
+<<<
+[[sec:styling]]
+# Customization/Styling of the Qwt Components
+
+## General notes on color palettes
+
+The Qwt components use the Qt palette and its color roles for coloring.
+
+
+## Frame and drawing canvas of the diagram
+
+Various elements of QwtPlot can be customized. Below you can see a QwtPlot embedded in an outer widget (dark gray). The light gray area is the actual `QwtPlot`:
+
+![Frame and drawing canvas](imgs/plotStylingOverview.png)
+
+The most important attributes are marked in the screenshot:
+
+1. Inner margin (see `QWidget::setContentsMargins()`)
+2. Frame (mainly important for printing)
+3. Background of the plot widget
+4. Drawing canvas (_canvas_) (concerns background color and frame)
+
+### Color and frame of the plot
+
+The color of the outer area of the plot is controlled via the palette property of `QwtPlot`. By default, the outer border of the plot widget is drawn transparent, i.e. the color of the widget underneath is visible. To set a custom color, you therefore have to call ```setAutoFillBackground(true)```:
+```c++
+QPalette pal = plot.palette();
+// The QPalette::Window color role defines the coloring
+// of the outer plot area
+pal.setColor(QPalette::Window, QColor(196,196,220));
+plot->setPalette(pal);
+// the "autoFillBackground" property must be switched on for this
+plot->setAutoFillBackground(true);
+```
+![](imgs/plotStyling1.png)
+
+> **Note:** In the section [Gradient as plot background](customization/#gradient-als-plot-hintergrund) it is described how to implement a color gradient in the plot background and adjust it accordingly on resize.
+
+The frame is customized as for a normal widget:
+```c++
+plot->setFrameStyle(QFrame::Box | QFrame::Sunken);
+```
+Normally such a frame is not necessary for on-screen display or for embedding the QwtPlot into a program interface. However, the frame is often useful for [exporting/printing](export) the widget.
+
+### Drawing canvas
+
+The drawing canvas can be colored:
+```c++
+plot->setCanvasBackground(Qt::darkGray);
+```
+![](imgs/plotStyling3.png)
+
+The margin between the axis labels/title and the border can be defined:
+```c++
+plot->setContentsMargins(15,10,35,5);
+```
+![](imgs/plotStyling4.png)
+
+The frame around the drawing canvas can be changed by customizing the canvas object (`QwtPlotCanvas`). `QwtPlotCanvas` is derived from QFrame, so it can be customized accordingly. You simply create a new object, configure it and hand it to the plot (QwtPlot becomes the new owner of the canvas object):
+```c++
+QwtPlotCanvas * canvas = new QwtPlotCanvas(&plot);
+canvas->setPalette(Qt::white);
+canvas->setFrameStyle(QFrame::Box | QFrame::Plain );
+canvas->setLineWidth(1);
+plot->setCanvas(canvas);
+```
+![](imgs/plotStyling5.png)
+
+It is easier to do this by setting the style sheet for the canvas widget (see the Qt Widgets documentation for which attributes are supported):
+```c++
+plot->canvas()->setStyleSheet(
+    "border: 1px solid Black;"
+    "border-radius: 15px;"
+    "background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1,"
+        "stop: 0 LemonChiffon, stop: 1 PaleGoldenrod );"
+);
+```
+![](imgs/plotStyling6.png)

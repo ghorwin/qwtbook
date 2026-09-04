@@ -1,0 +1,440 @@
+:imagesdir: ../images
+
+<<<
+[[sec:intervalCurves]]
+# Interval Curves
+A special kind of curve is the _interval curve_, provided via the class `QwtPlotIntervalCurve`.
+
+In principle, this is a curve with two y values per x coordinate in the data set. Two regular curves are drawn and the area between them is filled. You can also use this well to draw stacked line diagrams.
+
+.Example of an interval curve
+[source,c++]
+----
+QVector<double> x{1,2,5,6,10,12,15,16,17};
+QVector<double> y1{2,2,3,4, 2, 4, 4, 5,11};
+QVector<double> y2{6,4.4,9,10, 5.5, 5.7, 9, 11,12};
+
+QVector<QwtIntervalSample> intervalSamples;
+for (int i=0; i<x.count(); ++i)
+	intervalSamples.append(QwtIntervalSample(x[i],y1[i],y2[i]));
+
+QwtPlotIntervalCurve *curve = new QwtPlotIntervalCurve();
+curve->setStyle(QwtPlotIntervalCurve::Tube);
+curve->setPen(QColor(0,40,180), 2);
+curve->setBrush( QColor(60,200,255) );
+curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // use antialiasing
+curve->setSamples(intervalSamples);
+curve->attach(&plot); // Plot takes ownership
+----
+
+.Interval curve
+image::IntervalCurves/IntervalCurve.png[pdfwidth=8cm]
+
+The function `setSamples()` comes in two variants:
+
+- `QwtPlotIntervalCurve::setSamples( const QVector< QwtIntervalSample >& )` : expects a vector of interval samples, consisting of an x coordinate, a lower and an upper y value
+- `QwtPlotIntervalCurve::setSamples( QwtSeriesData< QwtIntervalSample >* )` : expects a `QwtSeriesData` object (see <<sec:seriesData>>) which becomes the property of the interval curve. This function corresponds to the function `setData()` of the parent class `QwtSeriesStore`.
+
+You can enhance the appearance a bit further by using a gradient for the fill of the curve. For this you simply give the curve a `QBrush` that was created with a gradient.
+
+```c++
+...
+QLinearGradient grad(0,90,0,220);
+grad.setColorAt(0, QColor(60,200,255));
+grad.setColorAt(1, QColor(0,60,120));
+curve->setBrush( QBrush(grad));
+...
+```
+
+.Interval curve with gradient fill
+image::IntervalCurves/IntervalCurve_Gradient.png[pdfwidth=8cm]
+
+The color stops of gradients in Qt are specified in pixel coordinates. So if you enlarge/shrink the plot window, this leads to funny effects:
+
+.Interval curve with a fixed gradient when the plot geometry changes
+
+image:IntervalCurves/IntervalCurve_Gradient_200.png[Height200,200,400,pdfwidth=5cm]
+image:IntervalCurves/IntervalCurve_Gradient_300.png[Height300,200,400,pdfwidth=5cm]
+image:IntervalCurves/IntervalCurve_Gradient_400.png[Height400,200,400,pdfwidth=5cm]
+
+
+The solution to the problem is to derive the class `QwtPlotIntervalCurve` and implement the drawing function yourself.
+
+
+```c++
+class OwnPlotIntervalCurve : public QwtPlotIntervalCurve {
+public:
+	void draw(QPainter * painter,
+			  const QwtScaleMap & xMap, const QwtScaleMap & yMap,
+			  const QRectF & canvasRect) const override
+	{
+		// compute min/max y pixel
+		QRectF br = boundingRect();
+		double topPixel = yMap.transform(br.top());
+		double bottomPixel = yMap.transform(br.bottom());
+		QLinearGradient grad(0,bottomPixel,0,topPixel);
+		grad.setColorAt(0, QColor(60,200,255));
+		grad.setColorAt(1, QColor(0,60,120));
+		const_cast<OwnPlotIntervalCurve*>(this)->setBrush( QBrush(grad));
+		// call original drawing function
+		QwtPlotIntervalCurve::draw(painter, xMap, yMap, canvasRect);
+	}
+};
+```
+
+Now, when zooming, panning or adjusting the window size, the gradient stays in place.
+
+
+## Stacked (interval) curves/area diagrams
+
+You can also use interval curves to create stacked, filled curves or area diagrams. For this you simply create several `QwtPlotIntervalCurve` drawing elements, which each share the same X values but have different Y values.
+
+.Stacked curves
+```c++
+QVector<double> x{1,2,5,6,10,12,15,16,17};
+QVector<QVector<double> >  y;
+y.append( QVector<double>{0,  0, 0, 0,  0,  0, 0,  0,  0} );
+y.append( QVector<double>{2,  2, 3, 4,  2,  4, 4,  5, 11} );
+y.append( QVector<double>{6,4.4, 9, 8,5.5,5.7, 9, 11, 12} );
+y.append( QVector<double>{7,6.6,12,10,  9, 11,12, 12, 13} );
+
+const QColor cols[] = { QColor(96,60,20),
+						QColor(156,39,6),
+						QColor(212,91,18),
+						QColor(242,188,43)
+					  };
+
+for (int j=0;j<y.count()-1; ++j) {
+	QwtPlotIntervalCurve *curve = new QwtPlotIntervalCurve();
+	QVector<QwtIntervalSample> intervalSamples;
+	for (int i=0; i<x.count(); ++i)
+		intervalSamples.append(QwtIntervalSample(x[i],y[j][i],y[j+1][i]));
+	curve->setStyle(QwtPlotIntervalCurve::Tube);
+	curve->setPen(cols[j+1].darker(150), 2);
+	curve->setBrush(cols[j+1]);
+	curve->setZ(y.count()-j);
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // use antialiasing
+	curve->setSamples(intervalSamples);
+	curve->attach(&plot); // Plot takes ownership
+}
+```
+
+.Diagram with stacked curves/area diagrams
+image::IntervalCurves/StackedCurveByIntervalCurve.png[pdfwidth=8cm]
+
+[TIP]
+====
+Stacked curves can also be created in the classic way with filled line curves (see <<sec:filledCurves>>) that are drawn on top of each other. For this, the lines must be given a brush and be drawn from back to front. With `QwtPlotItem::setZ()` you can set the depth value - the higher the value, the further to the front the drawing element is.
+====
+
+.Stacked curves using filled QwtPlotCurves
+```c++
+// variable declarations and initialization as above
+for (int j=y.count()-1;j>0; --j) {
+	QwtPlotCurve *curve = new QwtPlotCurve();
+	curve->setPen(cols[j].darker(150), 2);
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // use antialiasing
+	curve->setSamples(x, y[j]);
+	curve->setBrush(cols[j]);
+	curve->setZ(y.count()-j); // set drawing order via z value
+	curve->attach(&plot);
+}
+```
+
+The result is almost the same as above:
+
+.Diagram with stacked curves/area diagrams, this time created via filled areas
+image::IntervalCurves/StackedCurveByFilledCurves.png[pdfwidth=10cm]
+
+// TODO : performance comparison with large data series
+
+
+## Computing stacked curves from data series
+
+Stacked curves arise from _stacking_ normal data series. These do not necessarily have to use the same X values per data series and can have positive and negative numbers. To stack and display such data correctly, some preparation work is necessary.
+
+Let's start with three simple data series, which, plotted directly, look like this:
+
+
+```c++
+// original data
+QVector<double> x_initial{1,   2,   5,  6,  10};
+QVector<QVector<double> >  y;
+y.append( QVector<double>{2,   1,  -3,  4,   2} ); // red
+y.append( QVector<double>{6,   5,   3,  4,  -5} ); // green
+y.append( QVector<double>{5,  -6,  -3, -2,   1} ); // blue
+QVector<QColor> cols = {
+	QColor(0xb00000), // #a00000
+	QColor(0x20b000), // #208000
+	QColor(0x2000b0)  // #200080
+};
+```
+
+.Three data series with positive and negative numeric values
+image::IntervalCurves/StackedCurve_originalDataSeries.png[pdfwidth=10cm]
+
+### Determining zero crossings
+
+First you have to determine the zero crossings of the curves and insert new support points with y=0 at these positions. The function `addZeroCrossings()` does this:
+
+```c++
+... // as before
+
+// each data series needs its own X vector
+QVector<QVector<double> >  x(y.count());
+for (int i=0; i<y.count(); ++i) {
+	x[i] = x_initial;
+	addZeroCrossings(x[i], y[i]); // x and y vectors are modified
+}
+...
+
+```
+
+.The function for adding the zero crossings
+```c++
+void addZeroCrossings(QVector<double> & x, QVector<double> & y) {
+	const int n = y.size();
+	if (n == 0)
+		return; // skip empty curves
+
+	QVector<double> newX, newY;
+	newX.reserve(x.size());
+	newY.reserve(x.size());
+
+	// iterate over all original points and the intervals between them
+	for (int i = 0; i < n; ++i) {
+		// keep original points
+		newX.append(x[i]);
+		newY.append(y[i]);
+		// check the following interval for a zero crossing
+		if (i + 1 < n) {
+			double y0 = y[i], y1 = y[i + 1];
+			if ((y0 > 0.0 && y1 < 0.0) || (y0 < 0.0 && y1 > 0.0)) {
+				double denom = y0 - y1; // never becomes 0
+				// interpolate X value: 0 = x_0 + (y1-y0)/(x1-x0)*x_0
+				newX.append(x[i] + (y0 / denom) * (x[i + 1] - x[i]));
+				newY.append(0);
+			}
+		}
+	}
+	x.swap(newX);
+	y.swap(newY);
+}
+```
+
+.Three data series with interpolated zero crossings
+image::IntervalCurves/StackedCurve_withZeroCrossings.png[pdfwidth=10cm]
+
+
+### Computing uniform support points
+
+In order to be able to add the data values, the support points must match. So a uniform X value grid is determined and the respective missing values are interpolated.
+
+
+```c++
+... // as before
+
+QVector<double> unifiedX;
+mergeCoordinates(x, y, unifiedX); // unifiedX is generated and y vectors adjusted
+...
+
+```
+
+.The function for unifying the support points
+```c++
+void mergeCoordinates(
+	const QVector<QVector<double> > & x,
+	QVector<QVector<double> > & y,
+	QVector<double> & unifiedX)
+{
+	// transfer all coordinates from all vectors into a uniform vector
+	unifiedX.reserve(x.size()*x.front().size());
+	int seriesCount = x.count();
+	for (int k=0; k<x.count(); ++k)
+		for (double val : x[k])
+			unifiedX.append(val);
+	// now sort and remove duplicates
+	std::sort(unifiedX.begin(), unifiedX.end());
+	unifiedX.erase(std::unique(unifiedX.begin(), unifiedX.end()), unifiedX.end());
+
+	// Now iterate over all x values of all series and interpolate y values for
+	// missing support points.
+	// Since afterwards all data series have the same support points,
+	// we only need to update the y values.
+	for (int k=0; k<seriesCount; ++k) {
+		if (x[k].count() == 0) {
+			// curve is empty, fill with 0 values
+			y[k] = QVector<double>(unifiedX.count(), 0.0);
+			continue;
+		}
+
+		const QVector<double> & xk = x[k];  // readability simplification
+		QVector<double>       & yk = y[k];  // readability simplification
+		QVector<double>       newY;         // vector for new y values
+		newY.reserve(unifiedX.size());
+		double xLast = xk.back();
+		int i_unified = 0; // index counter for unifiedX values
+		int i = 0;         // index counter for x values of the current series
+		int n_unified = unifiedX.count();
+		int n = xk.count();
+		// the x vectors (unifiedX and xk) are both strictly monotonically increasing
+		while (i_unified < n_unified && i < n) {
+			// case distinctions
+			// unifiedX[i_unified] < x[0]  -> insert x[i_unified] and y=0 (fill)
+			// unifiedX[i_unified] < xLast -> insert x[i_unified] and y=0 (fill)
+			double xUni = unifiedX[i_unified];
+			if (xUni < xk[0] || xUni > xLast) {
+				newY.append(0);
+				++i_unified;
+				continue;
+			}
+
+			// case 1: x values match (same support point)
+			if (xk[i] == xUni) {
+				newY.append(yk[i]);
+				++i;
+				++i_unified;
+				continue;
+			}
+
+			// case 2: x value missing in the interval: interpolation necessary
+			double y1 = yk[i];
+			double y0 = yk[i-1];
+			double dx = xk[i] - xk[i-1];
+			// y = (x - x0)/(x1-x0)(y1-y0) + y0
+			double yinterpol = (xUni - xk[i-1])/dx*(y1-y0) + y0;
+			newY.append(yinterpol);
+			++i_unified; // only increment the counter for the common X vector
+		}
+		yk.swap(newY);
+	}
+}
+```
+
+.Three data series with unified support points
+image::IntervalCurves/StackedCurve_withUnifiedX.png[pdfwidth=10cm]
+
+Now you can add the data series. The positive and the negative parts are added separately, and you get, in effect, two stacked line series that are, however, drawn into the same diagram at the same time.
+
+```c++
+... // as before
+
+// add data series
+QVector<QVector<double> > yPos;
+QVector<QVector<double> > yNeg;
+computeStackedLinesWithNegative(y, yPos, yNeg);
+
+// insert color for the lowest interval boundary
+cols.prepend(Qt::black);
+// add lower interval boundary
+QVector<double> nullVector(unifiedX.count(), 0.0);
+yPos.prepend(nullVector);
+yNeg.prepend(nullVector);
+// add the positive parts as QwtPlotIntervalCurve
+addIntervalCurve(plot, unifiedX, yPos, cols);
+// and the negative parts
+addIntervalCurve(plot, unifiedX, yNeg, cols);
+```
+
+.The function for adding the data series and the helper function for adding the interval curves
+```c++
+void computeStackedLinesWithNegative(
+	const QVector<QVector<double> > & y,
+	QVector<QVector<double> > & yPos,
+	QVector<QVector<double> > & yNeg)
+{
+	// y[0..n-1] are the raw data of the data series.
+	int numSeries = y.count();
+	int numPoints = y[0].count();
+
+	QVector<double> posAccum(numPoints, 0.0);
+	QVector<double> negAccum(numPoints, 0.0);
+
+	QVector<QVector<double> > result;
+	for (int j = 0; j < numSeries; ++j) {
+		QVector<double> lower(numPoints), upper(numPoints);
+		for (int i = 0; i < numPoints; ++i) {
+			double v = y[j][i];
+			// accumulate positive values in posAccum, negative in negAccum
+			if (v >= 0.0)
+				posAccum[i] += v;
+			else
+				negAccum[i] += v;
+			upper[i] = posAccum[i];
+			lower[i] = negAccum[i];
+		}
+		yNeg.append(lower);
+		yPos.append(upper);
+	}
+}
+
+// helper function for adding an interval curve
+void addIntervalCurve(QwtPlot * plot,
+					  const QVector<double>  & x,
+					  const QVector<QVector<double> > & y,
+					  const QVector<QColor> & cols)
+{
+	int numSeries = y.count()-1;
+	for (int j = 0; j < numSeries; ++j) {
+		QwtPlotIntervalCurve *curve = new QwtPlotIntervalCurve();
+		QVector<QwtIntervalSample> intervalSamples;
+		for (int i = 0; i < x.count(); ++i)
+			intervalSamples.append(QwtIntervalSample(x[i], y[j][i], y[j+1][i]));
+		curve->setStyle(QwtPlotIntervalCurve::Tube);
+		curve->setPen(cols[j+1].darker(150), 0);
+		curve->setBrush(cols[j+1].lighter(120));
+		curve->setZ(numSeries - j);
+		curve->setRenderHint( QwtPlotItem::RenderAntialiased, true );
+		curve->setSamples(intervalSamples);
+		curve->attach(plot);
+	}
+}
+```
+
+.Accumulated data series (separated by sign)
+image::IntervalCurves/StackedCurve_accumulated.png[pdfwidth=10cm]
+
+### Performance comparison
+
+Further up I already pointed out that instead of `QwtIntervalCurve` you can also use filled curves. In this case the plot code after `computeStackedLinesWithNegative()` looks like this:
+
+```c++
+// add positive curves
+for (int j=yPos.count()-1;j>=0; --j) {
+	QwtPlotCurve *curve = new QwtPlotCurve();
+	curve->setPen(cols[j].darker(150), 0);
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // use antialiasing
+	curve->setSamples(unifiedX, yPos[j]);
+	curve->setBrush(cols[j].lighter(120));
+	curve->setZ(y.count()-j); // set drawing order via z value
+	curve->attach(plot);
+}
+// add negative curves
+for (int j=yNeg.count()-1;j>=0; --j) {
+	QwtPlotCurve *curve = new QwtPlotCurve();
+	curve->setPen(cols[j].darker(150), 0);
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // use antialiasing
+	curve->setSamples(unifiedX, yNeg[j]);
+	curve->setBrush(cols[j].lighter(120));
+	curve->setZ(y.count()-j); // set drawing order via z value
+	curve->attach(plot);
+}
+```
+
+The result looks almost identical, with the difference that with the interval curves a boundary line is also drawn along the lower edge.
+
+Which method is faster now? Here is an example from practice: initially 8760 hourly values; after adding zero crossings and unifying the grid there are just under 10000 data points.
+
+.Performance test - overall view
+image::IntervalCurves/StackedCurve_PerformanceExample1.png[pdfwidth=14cm]
+
+.Performance test - zoom
+image::IntervalCurves/StackedCurve_PerformanceExample2.png[pdfwidth=14cm]
+
+Time for re-rendering the plot after resizing to 1920x1080 resolution:
+
+- **800 ms** for the variant with `QwtIntervalCurve`
+- **530 ms** for the variant with the filled `QwtPlotCurve`
+
+
+

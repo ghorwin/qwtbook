@@ -1,0 +1,1028 @@
+:imagesdir: ../images
+
+<<<
+[[sec:linecurves]]
+# Curve Diagrams
+
+The most common kind of diagram will probably be curve diagrams. Curve diagrams, i.e. line diagrams or series diagrams, are parametric curves in which the individual points are drawn one after another and, in the case of line diagrams, connected by lines. Neither the x nor the y values have to increase monotonically.
+
+The `QwtPlotCurve` drawing element is, however, not only used for line diagrams in the classic sense, but also for steps, sticks, dot/symbol diagrams and so on. All of these variants have in common, though, that they expect an x vector and a y vector with data in plot coordinates.
+
+The individual style of the curve is set with the function `QwtPlotCurve::setStyle()`. Depending on the style, further parameters can/must be specified. In the following sections the possible diagram types are shown in comparison, each for the same x/y data.
+
+## Passing data
+As explained in <<sec:seriesData>>, the class `QwtSeriesStore<QPointF>` is used for the internal data storage in `QwtPlotCurve`.
+
+Data can be passed to the plot curve in several ways:
+
+.Using two QVector<double> (or, analogously, QVector<float>)
+```c++
+QVector<double> x{1,2,5,6,10,12,15,16,17};
+QVector<double> y{5,4,8,8, 4, 5, 8, 9,11};
+curve->setSamples(x, y);
+```
+
+.Using one QVector<QPointF>
+```c++
+QVector<QPointF> samples{
+	QPointF(1,5),
+	QPointF(2,4),
+	QPointF(5,8)
+};
+curve->setSamples(samples);
+```
+
+If the data is available in a C array or `std::vector`, `QwtPlotCurve::setSamples()` is a good choice.
+
+.Passing the data directly in memory
+```c++
+std::vector<double> x{1,2,5,6,10,12,15,16,17};
+std::vector<double> y{5,4,8,8, 4, 5, 8, 9,11};
+const double * xdata = x.data();
+const double * ydata = y.data();
+unsigned int count = x.size();
+
+curve->setSamples(xdata, ydata, count);
+```
+
+[IMPORTANT]
+====
+When using `QwtPlotCurve::setSamples()`, the data is _always_ _copied_ into the internal `QwtSeriesStore` of the plot curve, even if you pass the address of the memory holding the data directly here.
+====
+
+
+With very large amounts of data and limited main memory, it can be useful not to copy the data into the plot, but to let the plot curves access the memory directly. For this there is the function `QwtPlotCurve::setRawSamples()`. The syntax is as in the previous example:
+
+.Direct use of the data located in memory by the plot
+```c++
+const double * xdata = x.data(); // x is a std::vector
+const double * ydata = y.data(); // y is a std::vector
+unsigned int count = x.size();
+curve->setRawSamples(xdata, ydata, count);
+```
+
+[CAUTION]
+====
+The variables and their memory area used in the call to `setRawSamples()` must have a longer lifetime than the plot or the plot curve itself.
+====
+
+A direct change of the data in memory becomes visible immediately on the next rendering of the plot. However, the plot and its drawing elements that have an interest in the value ranges of the plot curves must be informed manually about a change of the data. For this, simply call `QwtPlot::replot()`.
+
+
+
+## Kinds of curves
+
+### Line diagram
+
+Configuration of a `QwtPlotCurve` as a line:
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Lines);
+```
+
+.Line diagram
+image::LineCurves/PlotCurves_StyleLines.png[pdfwidth=8cm]
+
+### Sticks
+
+Configuration of a `QwtPlotCurve` as vertical sticks:
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Lines);
+curve->setOrientation(Qt::Vertical);
+```
+
+.Vertical sticks
+image::LineCurves/PlotCurves_StyleSticksVertical.png[pdfwidth=8cm]
+
+Alternatively, you can also draw the sticks horizontally. For this you additionally have to set the orientation with `QwtPlotSeriesItem::setOrientation()`:
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Lines);
+curve->setOrientation(Qt::Horizontal);
+```
+
+.Horizontal sticks
+image::LineCurves/PlotCurves_StyleSticksHorizontal.png[pdfwidth=8cm]
+
+
+### Step diagrams
+
+If the data should not be connected linearly but rather represent steps, you can use the line type `Steps`.
+The additional attribute `QwtPlotCurve::Inverted` specifies whether the step should be at the end of the interval or at the beginning of the interval. Curve attributes are set with `QwtPlotCurve::setCurveAttribute()`:
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Steps);
+curve->setCurveAttribute(QwtPlotCurve::Inverted, false);
+```
+
+.Step diagram (normal)
+image::LineCurves/PlotCurves_StyleSteps.png[pdfwidth=8cm]
+
+
+If you look at the input data:
+
+```
+x   y
+1   5
+2   4
+5   8
+...
+```
+
+you notice that in the first interval, i.e. between x=1..2, the value y2=4 is drawn, and at position x1=1 the connecting line between y1=5 and y2=4 is drawn.
+
+If you want to draw the first y value directly in the first interval (that would be the more natural expectation), you have to set the `Inverted` attribute:
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Steps);
+curve->setCurveAttribute(QwtPlotCurve::Inverted, true);
+```
+
+.Step diagram (inverted)
+image::LineCurves/PlotCurves_StyleStepsInverted.png[pdfwidth=8cm]
+
+
+### Dots
+
+At the respective x,y coordinates you can also simply draw only dots (even just single pixels). This is _very fast_ compared to drawing symbols (see <<sec:plotSymbols>>) and can be used for larger point clouds.
+
+[TIP]
+====
+When using `QwtPlotCurve::Dots`, at today's usual screen resolutions you should always set a `QPen` with a larger width, since otherwise you can hardly see _single pixels_. For visualizing large point clouds (> 100000 pixels), using single pixels can still offer added value. For all special shapes (crosses, diamonds, rings, stars, ...) the use of symbols (see <<sec:plotSymbols>>) makes sense.
+====
+
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Dots);
+curve->setPen(QColor(180,40,20), 4); // width of 4 makes points better visible
+```
+
+.Dot diagram
+image::LineCurves/PlotCurves_StyleDots.png[pdfwidth=8cm]
+
+[TIP]
+====
+When visualizing point clouds, it can be helpful to use transparency/alpha blending. For this, simply set an alpha value smaller than 255 on the drawing color.
+====
+
+```c++
+QwtPlotCurve *curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Dots);
+curve->setPen(QColor(0,40,180,32), 2); // 2 pixels wide, alpha value 32
+```
+
+.Point cloud with semi-transparent points
+image::LineCurves/PlotCurves_StyleDotsScatter.png[pdfwidth=8cm]
+
+[TIP]
+====
+If you want a line diagram with visualization of the support points, you can of course insert _two_ lines into the diagram: one with style `QwtPlotCurve::Lines` and draw the second with style `QwtPlotCurve::Dots` on top, i.e. with a higher z value. But then you also have to give the data to the diagram twice and you also get two legend entries (you can, admittedly, also switch these off individually for single curves, see <<sec:legend>>, but initially there is one legend entry per curve). It is better here to use only one curve and symbols at the support points (see <<sec:plotSymbols>>).
+====
+
+### No line
+
+If you want to draw a curve exclusively with symbols (see <<sec:plotSymbols>>), you can also switch off the drawing of the polyline completely:
+
+```c++
+curve->setStyle(QwtPlotCurve::NoCurve);
+```
+
+
+[[sec:plotSymbols]]
+## Symbols/points
+
+At the respective x,y coordinates of a curve you can also draw symbols. For this the Qwt library offers the class `QwtSymbol`.
+
+
+You add a symbol to a curve as follows:
+
+```c++
+// add symbol
+QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Ellipse);
+symbol->setSize(8);
+symbol->setPen(QColor(0,0,160), 2);
+symbol->setBrush(QColor(120,170,255));
+curve->setSymbol(symbol); // Curve takes ownership of symbol
+```
+
+.Line diagram with filled circle symbols
+image::LineCurves/Symbols_EllipseFilled.png[pdfwidth=8cm]
+
+First the symbol to be used is created on the heap with `new`. The constructor takes the type of the symbol (see also the gallery below). But you can also set this later via `QwtSymbol::setStyle()`.
+
+Also important is the size of the symbol, set via `QwtSymbol::setSize()` in pixels. This size scales the symbol depending on its shape.
+
+Also important are the properties pen and brush (`QwtSymbol::setPen()` and `QwtSymbol::setBrush()`). The pen is used for drawing the outline and the brush, if set, for filling the shape. Some symbols such as the cross are not filled, so the brush has no effect here.
+
+Finally, the symbol is given to the curve with `QwtPlotCurve::setSymbol()`.
+
+[IMPORTANT]
+====
+When `QwtPlotCurve::setSymbol()` is called, the plot curve takes over responsibility for freeing the memory.
+====
+
+The symbol class is quite powerful and can draw a wide variety of symbols:
+
+- ready-made shapes such as circles, rectangles, crosses, etc. (style `QwtSymbol::Ellipse`...`QwtSymbol::Hexagon`)
+- user-defined images/pixmaps (style `QwtSymbol::Pixmap`)
+- specific graphics encapsulated in the class `QwtGraphic` and generated by a number of `QwtPainterCommand` instructions (style `QwtSymbol::Graphic`) (see also <<sec:qwtGraphic>>)
+- SVG documents (style `QwtSymbol::SvgDocument`)
+- user-defined shapes defined by a QPainterPath (style `QwtSymbol::Path`)
+
+
+### Symbol styles/built-in symbol shapes
+
+There are numerous built-in symbol shapes (in bold in the diagram title is the respective `QwtSymbol::Style` enumeration name):
+
+.Built-in symbol types/styles and their enumeration types
+image::LineCurves/Symbols_Gallery.png[pdfwidth=16cm]
+
+
+Symbols do not always have to be square. If you set the size of a symbol with
+
+```c++
+symbol->setSize(10);
+```
+
+then `width=height=10` is used automatically. Alternatively, you can also define a rectangle as the size:
+
+```c++
+symbol->setSize(w,h);
+// or via QSize
+QSize s(w,h);
+symbol->setSize(s);
+```
+
+That is also why there are no separate line styles for circle and ellipse or rectangle and square.
+
+### User-defined shapes via QPainterPath
+
+You can set arbitrary custom symbol shapes by using the `QPainterPath` class.
+The following example generates a light bulb symbol:
+
+```c++
+// add symbol
+QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Path);
+QPainterPath p;
+p.addEllipse(QRectF(-10,-10,20,20));
+p.moveTo(-7,-7);
+p.lineTo(7,7);
+p.moveTo(7,-7);
+p.lineTo(-7,7);
+symbol->setPath(p);
+symbol->setPen(QColor(0,0,120), 2);
+symbol->setBrush(QColor(160,200,255));
+curve->setSymbol(symbol); // Curve takes ownership of symbol
+```
+
+.Custom symbol defined via QPainterPath
+image::LineCurves/Symbols_PainterPath.png[pdfwidth=8cm]
+
+[CAUTION]
+====
+If you define a non-rectangular geometry with QPainterPath, you should, when changing the size via `QwtSymbol::setSize()`, call the variant with two arguments, i.e. `QwtSymbol::setSize(width,height)`. The variant with only one argument otherwise transforms the path onto a square. Since you usually do not define non-square shapes as a symbol, this should rarely be a problem, though.
+====
+
+
+### SVG symbols
+
+You can render and display your own SVG files. For this you only have to read in/define an SVG file and set it as a symbol:
+
+```c++
+QwtSymbol * symbol = new QwtSymbol(QwtSymbol::SvgDocument);
+QFile f("symbol.svg");
+f.open(QFile::ReadOnly);
+QTextStream strm(&f);
+QByteArray svgDoc = strm.readAll().toLatin1();
+symbol->setSvgDocument(svgDoc);
+curve->setSymbol(symbol); // Curve takes ownership of symbol
+```
+
+[CAUTION]
+====
+Here, too, you have to pay attention to the aspect ratio when specifying the size and mostly use the variant `QwtSymbol::setSize(width,height)`.
+====
+
+Sometimes the anchor point of the SVG image is not in the center, as in the example above:
+
+.Centered SVG symbol which should actually be shifted upward
+image::LineCurves/Symbols_SvgCentered.png[pdfwidth=8cm]
+
+You can change the anchor point, i.e. the centering point of the symbol, with `QwtSymbol::setPinPoint()`. The coordinates of the pin point are measured from the left/top of the SVG image:
+
+```c++
+...
+QRect br = symbol->boundingRect(); // size of symbol
+symbol->setPinPoint(QPointF(br.width()/2-1,br.height()-3));
+```
+
+.SVG symbol with correct alignment of the "pin" point
+image::LineCurves/Symbols_SvgWithPinPoint.png[pdfwidth=8cm]
+
+[TIP]
+====
+You can also deactivate the manually set anchor point again with `QwtSymbol::setPinPointEnabled(false)`.
+====
+
+
+### Image symbols (pixmaps)
+
+As an alternative to custom vector graphic symbols, you can also use arbitrary images as symbols. This is done analogously to the SVG symbols:
+
+[source,c++]
+----
+QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Pixmap);
+QwtText t("QwtSymbol::Pixmap");
+QPixmap pixmap;
+pixmap.load("symbol.png");
+symbol->setPixmap(pixmap);
+QRect br = symbol->boundingRect(); // size of symbol
+symbol->setPinPoint(QPointF(br.width()/2,br.height()-1));
+curve->setSymbol(symbol); // Curve takes ownership of symbol
+----
+
+.Pixmap symbol, also with a manually specified "pin" point
+image::LineCurves/Symbols_Pixmap.png[pdfwidth=8cm]
+
+[[sec:filledCurves]]
+## Filled curves
+
+Besides the pen, a curve can also take a brush. Then the curve is filled down to the x axis:
+
+[source,c++]
+----
+curve->setBrush(QColor(0xa0d0ff));
+----
+
+.Filled line curve
+image::LineCurves/PlotCurves_StyleLinesFilled.png[pdfwidth=8cm]
+
+You can also shift the baseline for the fill:
+
+[source,c++]
+----
+curve->setBaseLine(8);
+----
+
+.Filled line curve with shifted baseline
+image::LineCurves/PlotCurves_StyleLinesFilledWithBaseline.png[pdfwidth=8cm]
+
+
+## Legend entries
+
+Every `QwtPlotCurve` creates its own icon for display in the legend. The text shown in the legend is set with `QwtPlotItem::setTitle()`. To show the legend, you first have to create a legend and insert it into the plot, as described in <<sec:legend>>.
+
+.Default legend for data series
+image::LineCurves/PlotCurveLegendStandard.png[pdfwidth=8cm]
+
+
+In addition, `QwtPlotCurve::setLegendAttribute()` can be used to specify whether a filled rectangle, a line or the series symbol is drawn in the legend.
+
+These properties are set individually for each `QwtPlotCurve`:
+
+```c++
+curve->setTitle("Line 1");
+curve->setLegendAttribute(QwtPlotCurve::LegendShowLine, true);
+```
+
+.Legend with lines as icons
+image::LineCurves/PlotCurveLegendLinie.png[pdfwidth=8cm]
+
+For lines with markers you can also draw the markers:
+
+```c++
+curve->setTitle("Line 1");
+curve->setLegendAttribute(QwtPlotCurve::LegendShowLine, true);
+curve->setLegendAttribute(QwtPlotCurve::LegendShowSymbol, true);
+
+QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Rect);
+symbol->setSize(6);
+symbol->setPen(QColor(0,0,160), 1);
+symbol->setBrush(QColor(160,200,255));
+curve->setSymbol(symbol); // Curve takes ownership of symbol
+```
+
+.Legend with lines and symbols as legend icons
+image::LineCurves/PlotCurveLegendLinieWithSymbol.png[pdfwidth=8cm]
+
+[IMPORTANT]
+====
+If you use different line symbols, this affects the automatically determined legend icon size. As a result, the legend titles are then sometimes not perfectly aligned, as in the screenshot above.
+
+You can, however, change the size of the legend icons uniformly with `QwtPlotItem::setLegendIconSize()`.
+====
+
+[source,c++]
+----
+curve->setTitle("Line 1");
+curve->setLegendAttribute(QwtPlotCurve::LegendShowLine, true);
+curve->setLegendAttribute(QwtPlotCurve::LegendShowSymbol, true);
+
+QwtSymbol * symbol = new QwtSymbol(QwtSymbol::Rect);
+symbol->setSize(6);
+symbol->setPen(QColor(0,0,160), 1);
+symbol->setBrush(QColor(160,200,255));
+curve->setSymbol(symbol); // Curve takes ownership of symbol
+
+// uniform legend icon width independent of the chosen symbol
+curve->setLegendIconSize(QSize(30,16));
+----
+
+.Legend with equally sized legend icons
+image::LineCurves/PlotCurveLegendLinieWithSymbolSameWidth.png[pdfwidth=8cm]
+
+[CAUTION]
+====
+Since the legend icons are configured when setting curve symbols, the change of the legend icon sizes must always be done _after_ setting/adjusting curve symbols. So the call to `setLegendIconSize()` must happen _after_ `setSymbol()`!
+====
+
+[TIP]
+====
+All information about legends, and also specific customizations, e.g. how to draw your own icons, can be found in <<sec:legend>>.
+====
+
+[[sec:curvePerformance]]
+## Paint attributes, drawing speed and performance optimization for large data series
+
+Drawing large data series can sometimes take quite a while. Especially when resizing the plot window, this then manifests as a noticeable delay in the screen redraw. The larger the data series are, i.e. the more points they contain, the longer the drawing of the plot generally takes. This section is about various properties and capabilities of `QwtPlotCurve` that directly affect the drawing speed.
+
+
+### Paint attributes (PaintAttribute / PaintAttributes)
+
+The `QwtPlotCurve` class has various paint attributes that configure the algorithms used in more detail. Here is a short list first; the individual attributes and their effects are described in more detail later:
+
+- `ClipPolygons` - this thins out the data series to be drawn so that only the parts of the curve visible in the current zoom window are drawn. It is active by default and is necessary for SVG export. Otherwise, this filtering out of points lying outside is effective mainly when zooming in.
+- `FilterPoints` - this filters out points/line segments from the data series that would not be drawn anyway because they lie on top of each other.
+- `FilterPointsAggressive` - _only_ for line type `QwtPlotCurve::Lines`: replaces many short overlapping polygon pieces with individual line segments
+- `MinimizeMemory` - _only_ for line type `QwtPlotCurve::Dots`: if switched on, prevents a possibly large polygon copy from being created during the transformation of the data series from plot coordinates to render coordinates. Instead, all point coordinates are transformed, clipped and drawn individually. Since this requires a certain amount of extra effort for each point, it is generally somewhat slower.
+- `ImageBuffer` - _only_ for line type `QwtPlotCurve::Dots`: a very special optimization where the points (only one pixel per point) are first drawn into a `QImage`. This is done in parallel and can therefore be very fast, but it is only effective with very large sets of points.
+
+[IMPORTANT]
+====
+The paint attribute `FilterPointsAggressive` only affects line type `QwtPlotCurve::Lines`. The attributes `MinimizeMemory` and `ImageBuffer` are very special optimizations for the line type `QwtPlotCurve::Dots`.
+====
+
+### Point filter
+
+By using the data filter `FilterPoints` you can, with very large series data, only really draw the data that affects the diagram. If, for example, 100 data points land on the same pixel, you do not need to draw them all. Filtering out invisible points and line segments depends, of course, on the zoom level and is therefore integrated into the drawing routine of `QwtPlotCurve`.
+
+[NOTE]
+====
+Besides filtering out superfluous points by setting the paint attribute `FilterPoints`, there is also the possibility of using the `QwtWeedingCurveFitter` (see <<sec:weedingCurveFitter>>). This, however, is actually intended for data reduction on export, and because of the additional computation effort, drawing on screen generally takes longer.
+====
+
+The paint attribute `QwtPlotCurve::FilterPoints` is set by default and causes duplicate points to be filtered out already when transforming the data series coordinates into screen coordinates (this is done by the `QwtPointMapper` class). If a data series contains, for example, 100000 evenly distributed points along the x axis and is drawn on a 1000-pixel-wide plot, then 100 points each share an x pixel coordinate. If, after the coordinate conversion, two consecutive points have identical pixel coordinates, the duplicate points are removed. This function, switched on by default, already makes a big difference to the drawing speed.
+
+To illustrate this, here is a small test program for the filter functions:
+
+.Test program for the filter algorithm with 10 million points in the data series
+[source,c++]
+----
+#include <QApplication>
+#include <QElapsedTimer>
+#include <QDebug>
+
+#include <cmath>
+
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_weeding_curve_fitter.h>
+
+// specialized QwtPlotCurve with time measurement around drawCurve()
+class BenchmarkedPlotCurve : public QwtPlotCurve {
+protected:
+	void drawCurve(QPainter *p, int style,
+		const QwtScaleMap & xMap, const QwtScaleMap & yMap,
+		const QRectF & canvasRect, int from, int to) const override
+	{
+		QElapsedTimer timer;
+		timer.start();
+		QwtPlotCurve::drawCurve(p, style, xMap, yMap, canvasRect, from, to);
+		qDebug() << "QwtPlotCurve::drawCurve(): " << timer.elapsed() << "ms";
+	}
+};
+
+
+int main(int argc, char *argv[]) {
+	QApplication a(argc, argv);
+	QwtPlot plot;
+	plot.setContentsMargins(8,8,8,8);
+	plot.setCanvasBackground( Qt::white );
+
+	// generate data to be displayed
+	QVector<double> x, y;
+	for (unsigned int i=0; i<10000000; ++i) {
+		x.append(i);
+		y.append(std::sin(i*0.00001));
+	}
+
+	QwtPlotCurve *curve = new BenchmarkedPlotCurve();
+	curve->setPen(QColor(180,40,20), 1);
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // use antialiasing
+	curve->setPaintAttribute(QwtPlotCurve::FilterPoints, false); // switch off point filter
+	curve->setSamples(x, y);
+	curve->attach(&plot); // Plot takes ownership
+
+	plot.resize(1000,800);
+	plot.show();
+
+	return a.exec();
+}
+----
+
+The test program generates 10 million data points (several sine waves) and then draws them into a 1000x800 pixel diagram, initially _without_ the point filter. For this, in the line
+
+```c++
+curve->setPaintAttribute(QwtPlotCurve::FilterPoints, false);
+```
+
+the paint attribute `FilterPoints` is switched off. The drawing time for the curve, including the time for the data filtering, is measured in the derived `QwtPlotCurve` and the small wrapper around the central `drawCurve()` function.
+
+On my machine the program outputs about **650 ms** in the release build. All 10 million points are really taken into the polyline to be drawn and drawn on the painter (which of course discards line segments of length 0, but needs some time for that).
+
+If you now switch the `FilterPoints` attribute back on, then _after_ the filtering the polygon contains only about 24500 points and the drawing takes about **300 ms**.
+
+
+[TIP]
+====
+With the paint attribute `FilterPoints`, line segments of length 0 are filtered out, which brings a noticeable drawing speed-up with very large data series.
+====
+
+
+### Aggressive point filtering
+
+If data series are very noisy and at the same time contain very large amounts of data, then several line segments can overlap. For example, several lines with the same x screen coordinate are then drawn on top of each other, even though a single line drawn between the minimum and maximum y coordinate would suffice.
+
+The paint attribute `FilterPointsAggressive` switches on a pre-computation that performs exactly this kind of optimization (also implemented in the `QwtPointMapper` class) and turns several overlapping vertical line segments into a single line (which is also why this optimization only makes sense for the line type `QwtPlotCurve::Lines`).
+
+To test this, we modify the program above and generate a strongly noisy curve:
+
+
+[source,c++]
+----
+QVector<double> x, y;
+for (unsigned int i=0; i<1000000; ++i) {
+	x.append(i);
+	y.append(QRandomGenerator64::global()->generateDouble());
+}
+----
+
+Without `FilterPointsAggressive`, drawing takes about **1500 ms**. Although the data series consists of "only" 1 million points, the line segments are significantly longer than with the sine wave and it takes longer to draw them. The paint attribute `FilterPoints` can also hardly throw out any points because of the strongly fluctuating y values (the line segments almost never have a length of 0).
+
+If you now switch on the attribute with
+
+```c++
+curve->setPaintAttribute(QwtPlotCurve::FilterPointsAggressive, true);
+```
+
+the drawing time shortens to about **32 ms** !!!! After the filtering, the polygon to be drawn has only about 3670 points left.
+
+[TIP]
+====
+Using the paint attribute `FilterPointsAggressive` speeds up the display drastically, especially for curves with many data points and strongly noisy values.
+====
+
+If you look at the diagrams with and without `FilterPointsAggressive` in comparison, you see minor differences.
+
+.Output with `FilterPoints`, antialiasing switched on
+image::LineCurves/CurveFilterPoints_Antialias.png[width=400,pdfwidth=8cm]
+
+.Output with `FilterPointsAggressive`, antialiasing switched on
+image::LineCurves/CurveFilterPointsAggressive_Antialias.png[width=400,pdfwidth=8cm]
+
+With antialiasing you see differences in the semi-transparent segments.
+Without antialiasing you have to look very closely to see the small differences.
+
+.Output with `FilterPoints`, antialiasing switched off
+image::LineCurves/CurveFilterPoints.png[width=400,pdfwidth=8cm]
+
+.Output with `FilterPointsAggressive`, antialiasing switched off
+image::LineCurves/CurveFilterPointsAggressive.png[width=400,pdfwidth=8cm]
+
+(For comparison, download both images and display them alternately in an image viewer, then you can see the small differences.)
+
+
+[NOTE]
+====
+In contrast to `FilterPoints`, the result of `FilterPointsAggressive` is a slightly changed display. This is due to the way line segments are merged.
+
+After the scaling from plot coordinates to screen coordinates, for example, the following polygon is available for filtering:
+
+    x      y
+    ----------
+    6      230
+    6      379
+    6      602
+    7      304
+    7      602
+    7       81
+    7      155
+    8      424
+    ...
+
+then _after_ the filtering the polygon contains only the points:
+
+    x      y
+    ----------
+    6      230
+    6      602
+    7      304
+    7      602
+    7      81
+    8      424
+    ...
+
+The line segments at x drawing coordinates 6 and 7 were merged here.
+
+But whereas previously a line was drawn from (7,155) -> (8,424), now a line is drawn from (7,81) -> (8,424), which gives a minimally different appearance in detail. The differences in the output are, however, so small that for the relevant use cases, i.e. larger data series and strongly fluctuating values, switching on the paint attribute `FilterPointsAggressive` can generally be recommended.
+====
+
+
+### Polygon clipping
+
+Depending on the choice of the plot section, to be set via axis scaling (see <<sec:axes>>) or interactively via the plot zoomer (see <<sec:zoomer>>), sometimes only parts of curves are drawn. In this case it makes sense to limit the polygon to the visible ranges only. The `QwtPlotCurve` class offers this functionality by switching on the paint attribute `QwtPlotCurve::ClipPolygons`.
+
+[NOTE]
+====
+When drawing the plot on screen, you could also leave out the polygon clipping, since the Qt painter itself performs clipping. When exporting data into an SVG file (see <<sec:print>>), however, the clipping is absolutely necessary.
+====
+
+By default the `QwtPlotCurve::ClipPolygons` attribute is switched on. The clipping is, by the way, applied only _after_ the point filter algorithm, so that a data reduction in that step has a positive effect on the time for the clipping.
+
+Interestingly, polygon clipping affects rendering performance only imperceptibly when rendering to the screen.
+
+For the 10 million point sine curve plot above (antialiasing on, FilterPoints on, FilterPointsAggressive off, ClipPolygons on), the drawing time for the complete diagram is about **300 ms**. Zoomed in with
+
+```c++
+plot.setAxisScale(QwtPlot::xBottom, 150000, 160000);
+plot.setAxisScale(QwtPlot::yLeft, 0.99, 1);
+```
+
+the render time increases to about **370 ms**. If you now switch off `ClipPolygons`, then it takes **290 ms** for the complete plot and **410 ms** for the zoomed-in plot.
+
+[NOTE]
+====
+In the zoomed-in state the clipping algorithm takes longer, but in return the drawing is somewhat faster. Both effects work against each other, but in the end it is, in my test case, minimally slower than in the zoomed-out state.
+====
+
+The difference between **300 ms** and **290 ms** for the complete plot is due to the overhead for the polygon clipping function, which of course has no effect for the fully visible plot.
+
+In the strongly zoomed-in state, the plot with polygon clipping switched on draws about **40 ms** faster, which should, however, rarely be significant.
+
+[NOTE]
+====
+The influence of the `ClipPolygons` attribute on drawing performance is marginal, so you can safely always leave this attribute switched on.
+
+Only when switching off the `FilterPoints` attribute and with very large amounts of data could `ClipPolygons` have some effect in the zoomed-in state.
+For example, the plot renders _without_ `FilterPoints` and _without_ `ClipPolygons` in the zoomed-in state (see above) in **550 ms**, compared to **360 ms** _with_ `ClipPolygons`. But even in this rather unrealistic scenario, the effect of the attribute is small.
+
+Conclusion: leave `ClipPolygons` switched on!
+====
+
+
+
+[[sec:curveFitter]]
+## Curve filters/curve fitters
+
+The `QwtPlotCurve` can, before the actual rendering, pass the given raw data to an algorithm that smooths the data or lays a continuous curve through the data points. These operations depend on the current zoom level and the plot size, because depending on the resolution the course of the fitted curve is recomputed. This gives better quality than pre-computing the data and plotting a polyline through pre-computed curves. That is why this functionality is integrated directly into `QwtPlot`.
+
+You give such a fitting/filter algorithm to the curve by handing it a class derived from `QwtCurveFitter`.
+
+Various implementations of this interface are shipped:
+
+.Child classes of the base class `QwtCurveFitter`
+image::LineCurves/QwtCurveFitter-class-hierarchy.png[pdfwidth=10cm]
+
+### Curve smoothing/spline interpolation
+
+Let's first look at the `QwtSplineCurveFitter`. This class encapsulates an algorithm that computes a smooth course from the given support points of the curve. There are various mathematical algorithms for this.
+
+Each of these algorithms is implemented in a class derived from `QwtSpline`.
+
+
+.Child classes of the base class `QwtSpline`
+image::LineCurves/QwtSpline-class-hierarchy.png[pdfwidth=10cm]
+
+
+The result can best be illustrated with a simple parametric data set:
+
+[source,c++]
+----
+QVector<double> x{1,2,5,6,10,12,15,16,8};
+QVector<double> y{5,4,8,8, 4, 5, 8, 9,10};
+// add curve
+curve = new QwtPlotCurve();
+curve->setStyle(QwtPlotCurve::Lines);
+curve->setPen(QColor(0,220,20), 2);
+curve->setRenderHint( QwtPlotItem::RenderAntialiased, true ); // use antialiasing
+curve->setSamples(x, y);
+
+// create SplineFitter object
+QwtSplineCurveFitter * splineFitter = new QwtSplineCurveFitter;
+// choose spline implementation, here QwtSplinePleasing
+QwtSplinePleasing * spline = new QwtSplinePleasing();
+// set spline algorithm
+splineFitter->setSpline(spline); // takes ownership
+// give SplineFitter object to the curve
+curve->setCurveFitter(splineFitter); // takes ownership
+// switch on fitting
+curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
+
+curve->attach(&plot); // takes ownership
+----
+
+It is important that the use of the curve fitter/filter is switched on explicitly with
+
+[source,cpp]
+----
+curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
+----
+
+.QwtSplineCurveFitter with QwtSplinePleasing
+image::LineCurves/CurveFitterSplinePleasing.png[pdfwidth=10cm]
+
+The Qwt library comes with a whole range of different algorithms and matching implementations:
+
+- `QwtSplinePleasing`: _"QwtSplinePleasing is some sort of cardinal spline, with non C1 continuous extra rules for narrow angles. It has a locality of 2.
+   The algorithm is the one offered by a popular office package."_
+
+- `QwtSplineLocal`: _"QwtSplineLocal offers several standard algorithms for interpolating
+   a curve with polynomials having C1 continuity at the control points.
+   All algorithms are local in a sense, that changing one control point
+   only few polynomials."_
+
+    * `Cardinal`: _"The cardinal spline interpolation is a very cheap calculation with a locality of 1"_
+    * `ParabolicBlending`: _"Parabolic blending is a cheap calculation with a locality of 1. Sometimes is also called Cubic Bessel interpolation."_
+    * `Akima`: _"The algorithm of H.Akima is a calculation with a locality of 2."_
+    * `PChip`: _"Piecewise Cubic Hermite Interpolating Polynomial (PCHIP) is an algorithm that is popular because of being offered by MATLAB. It preserves the shape of the data and respects monotonicity. It has a locality of 1."_
+
+- `QwtSplineCubic`: _"A cubic spline is a spline with C2 continuity at all control points. It is a non local spline, what means that all polynomials are changing when one control point has changed."_
+
+[IMPORTANT]
+====
+Only `QwtSplinePleasing` works for truly parametric curves, even when the x values do not increase monotonically.
+====
+
+For comparison, the various spline algorithms are shown:
+
+image::LineCurves/CurveFitterSpline1.png[pdfwidth=10cm]
+image::LineCurves/CurveFitterSpline2.png[pdfwidth=10cm]
+
+
+[TIP]
+====
+Although the various spline implementations are primarily intended for _QwtPlot_, there is nothing wrong with using them for general spline interpolation tasks. What the spline classes in the Qwt library can do is described in detail in <<sec:splines>>.
+====
+
+
+### PolarCurveFitter
+
+This curve filter is intended for polar diagrams, see <<sec:polarPlots>>.
+
+
+[[sec:weedingCurveFitter]]
+### Data reduction filter
+
+As already described in <<sec:curvePerformance>>, the `QwtPlotCurve` class already comes with a number of its own functions to filter out unnecessary points and line segments. These are, however, primarily useful for raster output, i.e. on screen.
+
+When outputting to vector formats (PDF/SVG), the paint attribute filters `QwtPlotCurve::FilterPoints` or `QwtPlotCurve::FilterPointsAggressive` are not used, since they only work with rounded coordinates.
+
+[IMPORTANT]
+====
+The data reduction methods enabled by setting the paint attributes `QwtPlotCurve::FilterPoints` or `QwtPlotCurve::FilterPointsAggressive` only take effect for raster plots. When rendering to vector formats (PDF/SVG), with `QwtPlotCurve::FilterPoints` _only really identical_ points in the original data set are filtered out.
+====
+
+For data reduction on vector exports, however, you can use an alternative point filter algorithm to remove points that are not needed. Such a data reduction filter is implemented in the `QwtWeedingCurveFitter` class. This one really is a _filter_ and removes data points according to certain rules.
+
+Concretely, the algorithm tries to remove all points that are already sufficiently well approximated by linear interpolation between the neighboring points.
+
+For testing, a sine wave is generated again:
+
+[source,c++]
+----
+QVector<double> x, y;
+for (unsigned int i=0; i<10000000; ++i) {
+	x.append(i);
+	y.append(std::sin(i*0.000001)*330);
+}
+----
+
+The example from <<sec:curvePerformance>> is now extended with the `QwtWeedingCurveFitter`:
+
+[source,c++]
+----
+QwtWeedingCurveFitter * weedingFitter = new QwtWeedingCurveFitter;
+curve->setCurveFitter(weedingFitter);
+curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
+----
+
+This curve filter is used like the previous curve filters, and here, too, you must not forget to set the curve attribute `QwtPlotCurve::Fitted`.
+
+.Data reduction with the QwtWeedingCurveFitter
+image::LineCurves/CurveFitterWeeding_tol1.png[pdfwidth=10cm]
+
+The WeedingCurveFitter reduces the number of data points significantly, as here with rather smooth curves. In the example above, of the originally 10 million points, just 78 remain. To visualize the resulting support points, a second data series was created, where the data was directly reduced in advance from the data points with the `QwtWeedingCurveFitter` class (see also <<sec:weedingBeforePlot>>).
+
+An important parameter for the algorithm is the allowed tolerance, to be set in the constructor or via `QwtWeedingCurveFitter::setTolerance(double)`. This tolerance is an _absolute value_ based on the y coordinates in the passed polygon. Depending on the order of magnitude of the y values of the points, the points are filtered differently. This means that with larger plots and correspondingly larger pixel resolution in the y direction, more support points are also generated and the quality of the diagram does not suffer.
+
+The `tolerance` parameter roughly has the following effect when the y values are in the order of magnitude of 100 (as in the example above).
+
+.Tolerance for the QwtWeedingCurveFitter 10, resulting number of points 21
+image::LineCurves/CurveFitterWeeding_tol10.png[width=400,pdfwidth=10cm]
+.Tolerance for the QwtWeedingCurveFitter 1, resulting number of points 78
+image::LineCurves/CurveFitterWeeding_tol1.png[width=400,pdfwidth=10cm]
+.Tolerance for the QwtWeedingCurveFitter 0.1, resulting number of points 194
+image::LineCurves/CurveFitterWeeding_tol01.png[width=400,pdfwidth=10cm]
+.Tolerance for the QwtWeedingCurveFitter 0.01, resulting number of points 684
+image::LineCurves/CurveFitterWeeding_tol001.png[width=400,pdfwidth=10cm]
+
+The second parameter of the `QwtWeedingCurveFitter` class is the _chunk size_, set with `QwtWeedingCurveFitter::setChunkSize(int)`.
+
+The original polygon is split into pieces of the given chunk size and the algorithm is applied to the individual pieces individually. In doing so, _at least one point_ is generated per chunk. So if you were to choose a chunk size of 100000 for the example above, you would get 200 points (even with tolerance 10). The algorithm then has somewhat less to do and is finished after about **50 ms**, instead of after about **270 ms** as before. But if you consider that here 10 million points are turned into a very small polygon with fewer than 100 points, without the data quality visibly suffering, then the algorithm is (especially on today's hardware) overall very fast.
+
+[IMPORTANT]
+====
+The `QwtWeedingCurveFitter` effectively reduces the number of points drawn in the diagram, which contributes to reducing the data size especially when exporting data into a vector format (svg, pdf, see <<sec:print>>).
+====
+
+#### Optimizing drawing speed with `QwtWeedingCurveFitter`
+
+You might now get the idea of using the `QwtWeedingCurveFitter` to speed up the on-screen display - after all, there are fewer points to draw. You can test this with a small benchmark program:
+
+.Example source code for measuring the on-screen drawing speed at various resolutions with and without QwtWeedingCurveFitter
+[source,c++]
+----
+#include <QApplication>
+#include <QPen>
+#include <QElapsedTimer>
+#include <QDebug>
+#include <QTimer>
+
+#include <cmath>
+
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_weeding_curve_fitter.h>
+#include <qwt_plot_canvas.h>
+
+class BenchmarkedPlotCanvas : public QwtPlotCanvas {
+public slots:
+	// slot, when called, resizes parent QwtPlot window
+	void resizePlot() {
+		((QWidget*)parent())->resize(2400,1200);
+	}
+
+protected:
+	void paintEvent(QPaintEvent * event) override {
+		QElapsedTimer timer;
+		timer.start();
+		QwtPlotCanvas::paintEvent(event);
+		qDebug() << "QwtPlotCanvas::paintEvent(): " << timer.elapsed() << "ms";
+	}
+};
+
+
+class BenchmarkedWeedingCurveFitter : public QwtWeedingCurveFitter {
+public:
+	QPolygonF fitCurve(const QPolygonF & polygon) const override {
+		QElapsedTimer timer;
+		timer.start();
+		const QPolygonF & stripped = QwtWeedingCurveFitter::fitCurve(polygon);
+		qDebug() << "QwtWeedingCurveFitter::fitCurve():"
+		         << polygon.count() << "->" << stripped.count()
+				 << "points: " << timer.elapsed() << "ms";
+		return stripped;
+	}
+};
+
+
+int main(int argc, char *argv[]) {
+	QApplication a(argc, argv);
+	QwtPlot plot;
+
+	plot.setContentsMargins(8,8,8,8);
+	// use custom canvas class with benchmark wrapper
+	BenchmarkedPlotCanvas * canvas = new BenchmarkedPlotCanvas;
+	plot.setCanvas(canvas);
+	plot.setCanvasBackground( Qt::white );
+
+	// generate data to be displayed
+	QVector<double> x, y;
+	for (unsigned int i=0; i<10000000; ++i) {
+		x.append(i);
+		y.append(std::sin(i*0.00001));
+	}
+
+	QwtPlotCurve *curve = new QwtPlotCurve();
+	curve->setPen(QColor(180,40,20), 1);
+	curve->setRenderHint( QwtPlotItem::RenderAntialiased, true); // use antialiasing
+	curve->setSamples(x, y);
+	curve->attach(&plot); // Plot takes ownership
+
+	// use WeedingCurveFitter with benchmark wrapper
+	QwtWeedingCurveFitter * weedingFitter = new BenchmarkedWeedingCurveFitter;
+	curve->setCurveFitter(weedingFitter);
+	curve->setCurveAttribute(QwtPlotCurve::Fitted, true);
+
+	plot.show();
+	plot.resize(1000,800);
+
+	QTimer::singleShot(1000, canvas, &BenchmarkedPlotCanvas::resizePlot);
+	QTimer::singleShot(4000, &plot, &BenchmarkedPlotCanvas::close);
+
+	return a.exec();
+}
+----
+
+In the benchmark program above, the classes `QwtPlotCanvas` and `QwtWeedingCurveFitter` are derived and the relevant drawing routines are wrapped with time measurement.
+
+It is important to note that the paint attributes `FilterPoints` and `ClipPolygons` (see <<sec:curvePerformance>>) are switched on by default.
+
+If you run the program, you see with the large plot at resolution 2400x1200 that of the 10 million points only 284 points remain after the `QwtWeedingCurveFitter`. That should surely lead to a significantly faster drawn plot, right?
+
+.Speed comparison with/without QwtWeedingCurveFitter
+[width="100%",options="header"]
+|====================
+| CurveFitter | FilterPoints | ClipPolygons | Fitter algorithm [ms] |  Total drawing [ms]
+| on | on | on | 670 | 1260
+| on | off | on | 660 | 1200
+| on | on | off | 660 | 860
+| on | off | off | 660 | 820
+| off | on | on | --- | 320
+| off | off | on | --- | 870
+| off | on | off | --- | 320
+| off | off | off | --- | 550
+|====================
+
+In no variant is the option _with_ WeedingFitter faster. In the output in `fitCurve()` you notice that, regardless of the `FilterPoints` option, the WeedingFitter always gets all 10 million points passed to it. And the polygon clipping algorithm also gets the original polygon passed to it.
+
+This then leads to the situation that although the `QwtWeedingCurveFitter` ultimately shrinks the polygon very significantly, the extra effort in the algorithms is enormous because the point filtering is dropped.
+
+.Qwt internals
+[NOTE]
+====
+When you switch on the curve attribute `QwtPlotCurve::Fitted`, the paint attributes `FilterPoints` and `FilterPointsAggressive` are automatically rendered ineffective, since internally _the rounding to integer screen coordinates is switched off_. As a result, the polygons are, of course, no longer sensibly thinned out (see <<sec:curvePerformance>>) and the subsequent algorithms have to work with very, very many more data points.
+
+If you reactivate the _rounding alignment_ directly in the Qwt source code despite the `Fitted` attribute being switched on, namely in `qwt_plot_curve.cpp:487`:
+
+[source,c++]
+----
+const bool doFit = ( m_data->attributes & Fitted ) && m_data->curveFitter;
+// original Qwt 6.3.0
+// const bool doAlign = !doFit && QwtPainter::roundingAlignment( painter );
+// new: alignment depends only on paint device
+const bool doAlign = QwtPainter::roundingAlignment( painter );
+----
+
+you see the real influence of the `QwtWeedingCurveFitter`. Tested with `QwtWeedingCurveFitter` on, `FilterPoints` on, `ClipPolygons` on:
+
+- `FilterPoints` reduces the 10 million points to 38666
+- `QwtWeedingCurveFitter` needs only **1 ms** for the further reduction to 200 points
+- total drawing time is **300 ms**
+
+That is marginally faster than the variant _without_ `QwtWeedingCurveFitter`.
+====
+
+As you can see, even patching the Qwt source code does not bring a significant improvement. The final conclusion is therefore: the `QwtWeedingCurveFitter` is primarily useful as a data reduction filter for vector plot data exports.
+
+[[sec:weedingBeforePlot]]
+#### Use for data reduction in advance
+
+You can, however, also use the `QwtWeedingCurveFitter` class for data reduction _outside_ the QwtPlotCurve, i.e. you reduce the data passed to the curve in advance. And here lies the real potential for a performance increase.
+
+In this case you use the `QwtWeedingCurveFitter` algorithm to thin out the original data series and pass a smaller polygon to the PlotCurve right away. The following source code takes the points of the original data series and transfers them into a polygon, which is then passed to the `QwtWeedingCurveFitter`.
+
+.Using the `QwtWeedingCurveFitter` for data reduction outside of QwtPlot
+[source,c++]
+----
+// use curve fitter to reduce data to plot
+QPolygonF poly;
+for (int i=0; i<x.count(); ++i)
+	poly << QPointF(x[i],y[i]);
+QwtWeedingCurveFitter weedingAlgorithm(0.001);
+poly = weedingAlgorithm.fitCurve(poly);
+// set weeeded-out polygon in curve
+curve->setSamples(poly);
+----
+
+The function `QwtWeedingCurveFitter::fitCurve(QPolygonF)` returns the correspondingly reduced polygon.
+
+[WARNING]
+====
+If you use the `QwtWeedingCurveFitter` only as a utility class and do not pass it as an object to the `QwtPlotCurve` (thereby transferring ownership of the object to the PlotCurve), you should create the object on the stack or take care of freeing the memory yourself.
+====
+
+Now the algorithm needs about **800 ms** once, but drawing on screen and updating the plot on plot resize takes a minimal **2 ms**, and _that_ is a genuine performance increase.
+
+[TIP]
+====
+A really enormous performance increase is possible with the `QwtWeedingCurveFitter` if you use it _in advance_ for data reduction of the data series data, _before_ you pass it to the plot curve.
+====
+

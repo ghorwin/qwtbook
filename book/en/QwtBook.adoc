@@ -1,0 +1,70 @@
+The Qwt Developer's Manual
+=========================
+Andreas Nicolai <andreas.nicolai@gmx.de>
+v2.1, May 2026
+:Author Initials: AN
+:toc: left
+:toclevels: 3
+:icons: font
+:imagesdir: ../images
+:numbered:
+:website: https://ghorwin.github.io/QwtBook
+:source-highlighter: rouge
+:rouge-style: custom
+:title-page:
+:stylesdir: ../css
+:stylesheet: roboto_ubuntu.css
+:toc-title: Table of Contents
+:caution-caption: Caution
+:example-caption: Example
+:figure-caption: Figure
+:table-caption: Table
+:section-refsig: Chapter
+:xrefstyle: short
+
+:numbered!:
+
+## About this manual
+
+This project complements the API documentation of the Qwt library and provides something like a programmer's manual with lots of detail about the library's internals. The focus, however, is clearly on the `QwtPlot` diagram component.
+By the way, this is already the 2nd edition (completely reworked), because at the time of the first edition there was no nice AsciiDoc yet and I somehow got stuck while writing the text.
+
+The German version and the PDF variant are available here: https://ghorwin.github.io/qwtbook[https://ghorwin.github.io/qwtbook].
+
+The text and images are licensed under the Creative Commons BY-NC license (see the license text in the Qwt manual repository https://github.com/ghorwin/QwtBook[https://github.com/ghorwin/QwtBook]), so they may be used, modified and adapted freely, but please do not republish them or use them to train commercial AI systems.
+All source code examples, both in the text and in the downloadable tutorial/example source code archives, are licensed under the MIT license and may therefore be used in open-source as well as commercial projects.
+
+[TIP]
+====
+`QwtPlot` is often used to write your own post-processing or visualization tool. It may be worth taking a look at the free _PostProc 2_, which we developed at TU Dresden and which internally uses a customized and extended `QwtPlot`. The program is specialized in visualizing dynamic simulation results and measurement data/time series, and it gives a good impression of what is possible with `QwtPlot`. _PostProc 2_ continues to be actively maintained and can be downloaded free of charge here: https://bauklimatik-dresden.de/software/postproc2/[https://bauklimatik-dresden.de/software/postproc2/].
+====
+
+Enjoy the read - and if some content is still missing, just be patient and come back later (or open an issue in the GitHub repo). And maybe also take a look at my other tutorials at https://schneggenport.de[https://schneggenport.de]!
+
+-- Andreas Nicolai
+
+:numbered:
+
+include::Introduction.adoc[leveloffset=+1]
+include::BasicTutorial.adoc[leveloffset=+1]
+include::QwtWidgets.adoc[leveloffset=+1]
+include::QwtPlot.adoc[leveloffset=+1]
+include::LineCurves.adoc[leveloffset=+1]
+include::IntervalCurves.adoc[leveloffset=+1]
+include::BarPlots.adoc[leveloffset=+1]
+include::Spectrograms.adoc[leveloffset=+1]
+include::Legend.adoc[leveloffset=+1]
+include::Marker.adoc[leveloffset=+1]
+include::Axes.adoc[leveloffset=+1]
+include::Text.adoc[leveloffset=+1]
+include::Zoomer.adoc[leveloffset=+1]
+
+include::Styling.adoc[leveloffset=+1]
+include::Print.adoc[leveloffset=+1]
+include::Advanced.adoc[leveloffset=+1]
+
+include::Building.adoc[leveloffset=+1]
+
+## About the author
+
+... later, see https://schneggenport.de[https://schneggenport.de]

@@ -1,0 +1,80 @@
+:imagesdir: ../images
+
+<<<
+[[sec:legend]]
+# Legend
+
+## External legend
+
+...
+
+## Legend drawing element
+
+...
+
+## Custom legend icons
+
+Sometimes, however, you want to display entirely custom icons. You can do this by deriving one of the child classes of `QwtPlotItem` and overriding the virtual function `QwtPlotItem::legendIcon()`. In it you can then paint/generate an image to your heart's content and return it as a `QwtGraphic`.
+
+The `QwtGraphic` object is used like an ordinary paint device, i.e. you create a `QPainter` with it and start drawing.
+
+The following example shows such an implementation, using a `QwtPlotCurve` as an example:
+
+```c++
+class OwnPlotCurve : public QwtPlotCurve {
+public:
+	QwtGraphic legendIcon(int, const QSizeF & ) const override {
+		QwtGraphic graphic;
+
+		QSizeF s(30,16); // fix the icon size
+		graphic.setDefaultSize( s );
+		graphic.setRenderHint( QwtGraphic::RenderPensUnscaled, true );
+
+		QPainter painter( &graphic );
+		painter.setRenderHint( QPainter::Antialiasing, false);
+
+		// center line within the icon rectangle
+		const double y = 0.5 * s.height();
+
+		// draw background (for the black border)
+		QPen backgroundPen(Qt::black);
+		backgroundPen.setWidth(5);
+		backgroundPen.setCapStyle( Qt::FlatCap );
+		painter.setPen( backgroundPen );
+		QwtPainter::drawLine( &painter, 0.0, y, s.width(), y );
+
+		// draw line color
+		QPen pn = pen();
+		pn.setCapStyle( Qt::FlatCap );
+		pn.setWidth(3);
+		painter.setPen( pn );
+		QwtPainter::drawLine( &painter, 1, y, s.width()-1, y );
+
+		return graphic;
+	}
+};
+```
+
+.Legend with a custom legend icon (black-bordered lines)
+image::Legend/PlotCurveLegendLinieWithCustomLegendIcon.png[pdfwidth=8cm]
+
+If you prefer the standard rectangles instead, then the following drawing code is sufficient:
+
+```c++
+// ...
+QRect r(0, 0, s.width(), s.height() );
+painter.setPen(Qt::black);
+painter.setBrush(pen().color());
+painter.drawRect(r);
+return graphic;
+```
+
+which then also looks quite neat:
+
+.Legend with a custom legend icon (black-bordered box)
+image::Legend/PlotCurveLegendLinieWithCustomLegendIcon2.png[pdfwidth=8cm]
+
+[TIP]
+====
+When drawing your own icons, you can also fix the size of the icon as in the example above. That way you have complete control over the appearance and can also factor in DPI scaling (for high-res screens).
+====
