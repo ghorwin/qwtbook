@@ -30,7 +30,7 @@ Diese Achsen haben primär die Aufgabe, zwischen den _Plotkoordinaten_ (x,y) und
 [[sec:plotitems]]
 ### Diagramm-/Zeichenelemente
 
-Innerhalb der Zeichenfläche kann man nun die verschiedensten Elemente zeichen, bspw.:
+Innerhalb der Zeichenfläche kann man nun die verschiedensten Elemente zeichnen, bspw.:
 
 - Linien,
 - Balken,
@@ -53,7 +53,7 @@ In einem Diagramm kann man alle möglichen Elemente kombinieren, also auch Linie
 Die Zeichenreihenfolge, also welches Zeichenelement ein anderes überdeckt, bestimmt das z-Attribut. Dies wird über die Funktionen `QwtPlotItem::setZ(...)` und `QwtPlotItem::z()`  kontrolliert.
 ====
 
-Die Positionierung der Diagrammelemente erfolgt über die Plotkoordinaten. Die Umrechung in Bildschirmkoordinaten bzw. die konkrete Position auf der Zeichenfläche wird mittels der jeweils zugeordneten x- und y-Achse gemacht.  Da es nun jeweils zwei x- und y-Achsen gibt, braucht man also bei Anzeige eines Diagrammelements an einem bestimmtenx,y-Datenpunkt zwingend eine Zuordnung zu _einer_ x- und _einer_ y-Achse. Diese Eigenschaft setzt man den einzelnen Zeichenelementen, wobei standardmäßig `xBottom` und `yLeft` ausgewählt sind.
+Die Positionierung der Diagrammelemente erfolgt über die Plotkoordinaten. Die Umrechung in Bildschirmkoordinaten bzw. die konkrete Position auf der Zeichenfläche wird mittels der jeweils zugeordneten x- und y-Achse gemacht.  Da es nun jeweils zwei x- und y-Achsen gibt, braucht man also bei Anzeige eines Diagrammelements an einem bestimmten x,y-Datenpunkt zwingend eine Zuordnung zu _einer_ x- und _einer_ y-Achse. Diese Eigenschaft setzt man den einzelnen Zeichenelementen, wobei standardmäßig `xBottom` und `yLeft` ausgewählt sind.
 
 [TIP]
 ====
@@ -89,7 +89,7 @@ Das erste Argument von `detachItems()` ist der Zeichenelementtyp. Mit dem zweite
 [[sec:seriesData]]
 ## Datenhaltung im QwtPlot / QwtSeriesStore
 
-Für die Darstellen von Plotkurven/Balken oder anderen Zeichenelementen werden die Daten für mehrere Datenpunkte (_samples_) benötigt. Je nach Anforderung des Zeichenelements gibt es verschiedene Typen von _samples_. So brauchen Linienkurven normalerweise x,y-Wertepaare, aber Intervallkurven jeweils x,y1,y2-Tuples.
+Für die Darstellung von Plotkurven/Balken oder anderen Zeichenelementen werden die Daten für mehrere Datenpunkte (_samples_) benötigt. Je nach Anforderung des Zeichenelements gibt es verschiedene Typen von _samples_. So brauchen Linienkurven normalerweise x,y-Wertepaare, aber Intervallkurven jeweils x,y1,y2-Tuples.
 
 Alle Zeichenelemente, welche solche Reihendaten verwenden, sind Kinder der Klasse `QwtPlotSeriesItem`.
 
@@ -100,7 +100,7 @@ Die Datenhaltung erfolgt in der Template-Klasse `QwtSeriesStore`, welche die abs
 
 [TIP]
 ====
-Die hier in Qwt verwendet Kombination von Template-Klassen für die Datenhaltung individueller Typen und gleichzeitig Implementierung gemeinschaftlicher Klassenfunktionalität via virtueller Funktionen, zeigt mal wieder schön die Flexibilität von C++.
+Die hier in Qwt verwendete Kombination von Template-Klassen für die Datenhaltung individueller Typen und gleichzeitig Implementierung gemeinschaftlicher Klassenfunktionalität via virtueller Funktionen, zeigt mal wieder schön die Flexibilität von C++.
 
 Allerdings macht es das Verständnis der Interaktion von Datenhalteklassen und die Zeichenelement-Klassen auf den ersten Blick etwas komplizierter. Glücklicherweise muss man das für die Verwendung des `QwtPlot` gar nicht so genau wissen.
 ====
@@ -124,7 +124,7 @@ Die meisten Diagrammelemente/Diagrammklassen haben geeignete Schnittstellenfunkt
 
 ## Automatisches Zeichnen oder Zeichnen bei Bedarf
 
-Das Zeichnen eines komplexen Plots kann durchaus länger dauern, daher ist es bei Anpassungen des Plots häufig nicht notwendig, bei jeweil individuellen Änderung alles neu zu zeichnen. Stattdessen reicht es aus, nach Aktualisierung aller Daten und Anpassung anderer Einstellungen (Achsen, Legenden,...) das Plot neu zu zeichnen.
+Das Zeichnen eines komplexen Plots kann durchaus länger dauern, daher ist es bei Anpassungen des Plots häufig nicht notwendig, bei jeder individuellen Änderung alles neu zu zeichnen. Stattdessen reicht es aus, nach Aktualisierung aller Daten und Anpassung anderer Einstellungen (Achsen, Legenden,...) das Plot neu zu zeichnen.
 
 _Zeichnen_ bedeutet hier eigentlich zwei unterschiedliche Arbeitsschritte:
 

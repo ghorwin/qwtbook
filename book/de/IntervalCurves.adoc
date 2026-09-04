@@ -35,7 +35,7 @@ Die Funktion `setSamples()` gibt es in zwei Varianten:
 - `QwtPlotIntervalCurve::setSamples( const QVector< QwtIntervalSample >& )` : erwartet einen Vektor mit Interval-Samples, bestehend aus x-Koordinate, unterem und oberen y-Wert
 - `QwtPlotIntervalCurve::setSamples( QwtSeriesData< QwtIntervalSample >* )` : erwartet ein `QwtSeriesData` Objekt (siehe <<sec:seriesData>>) welches Eigentum der Intervallkurve wird. Diese Funktion entspricht der Funktion `setData()` der Elternklasse `QwtSeriesStore`.
 
-Man kann das Erscheinungsbild noch etwas Aufwerten, wenn man für die Füllung der Kurve einen Gradienten verwendet. Dafür gibt man der Kurve einfach einen `QBrush`, der mit einem Gradienten erstellt wurde.
+Man kann das Erscheinungsbild noch etwas aufwerten, wenn man für die Füllung der Kurve einen Gradienten verwendet. Dafür gibt man der Kurve einfach einen `QBrush`, der mit einem Gradienten erstellt wurde.
 
 ```c++
 ...
@@ -151,9 +151,9 @@ image::IntervalCurves/StackedCurveByFilledCurves.png[pdfwidth=10cm]
 
 ## Berechnung von gestapelten Kurven aus Datenreihen
 
-Gestapelte Kurven entstehen ja durch das _Stapeln_ normaler Dateireihen. Diese müssen nicht zwingend die gleichen X-Werte pro Datenreihe verwenden und können positive und negative Zahlen haben. Um solche Daten korrekt zu stapeln und anzuzeigen ist etwas Vorbereitungsarbeit notwendig.
+Gestapelte Kurven entstehen ja durch das _Stapeln_ normaler Datenreihen. Diese müssen nicht zwingend die gleichen X-Werte pro Datenreihe verwenden und können positive und negative Zahlen haben. Um solche Daten korrekt zu stapeln und anzuzeigen ist etwas Vorbereitungsarbeit notwendig.
 
-Beginnen wir mal mit drei einfachen Datenreihen, die direkt darstellt so aussehen:
+Beginnen wir mal mit drei einfachen Datenreihen, die direkt dargestellt so aussehen:
 
 
 ```c++
@@ -423,7 +423,7 @@ for (int j=yNeg.count()-1;j>=0; --j) {
 
 Das Ergebnis sieht fast identisch aus, mit dem Unterschied, dass bei den Intervallkurven am unteren Rand auch eine Begrenzungslinie gezeichnet wird.
 
-Welches Verfahren ist jetzt schneller? Hier mal ein Beispiel aus der Praxis: Anfänglich 8760 Stundenwerte, nach dem Hinzufügen noch Nulldurchgängen und Vereinheitlichen des Rasters sind es knapp 10000 Datenpunkte. 
+Welches Verfahren ist jetzt schneller? Hier mal ein Beispiel aus der Praxis: Anfänglich 8760 Stundenwerte, nach dem Hinzufügen von Nulldurchgängen und Vereinheitlichen des Rasters sind es knapp 10000 Datenpunkte.
 
 .Performance-Test - Gesamtansicht
 image::IntervalCurves/StackedCurve_PerformanceExample1.png[pdfwidth=14cm]

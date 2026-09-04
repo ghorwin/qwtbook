@@ -26,8 +26,8 @@ v2.1, Mai 2026
 
 ## Über dieses Handbuch
 
-Dieses Projekt ergänzt die API-Dokumentation zur Qwt-Bibliothek und bietet sowas wie ein Programmiererhandbuch mit vielen Details zu den Internas der Bibliothek. Der Fokus liegt aber ganz klar auf der `QwtPlot` Diagrammkomponente.  
-Das ist übrigends schon die 2. Auflage (komplett neu überarbeitet), weil es zum Zeitpunkt der ersten Ausgabe noch kein tolles AsciiDoc gab und ich irgendwie beim Textschreiben hängengeblieben bin. 
+Dieses Projekt ergänzt die API-Dokumentation zur Qwt-Bibliothek und bietet sowas wie ein Programmiererhandbuch mit vielen Details zu den Interna der Bibliothek. Der Fokus liegt aber ganz klar auf der `QwtPlot` Diagrammkomponente.
+Das ist übrigens schon die 2. Auflage (komplett neu überarbeitet), weil es zum Zeitpunkt der ersten Ausgabe noch kein tolles AsciiDoc gab und ich irgendwie beim Textschreiben hängengeblieben bin.
 
 Die englische Version und die PDF-Variante gibt's hier: https://ghorwin.github.io/qwtbook[https://ghorwin.github.io/qwtbook].
 
@@ -36,7 +36,7 @@ Alle Quelltextbeispiele, sowohl im Text, als auch in den herunterladbaren Tutori
 
 [TIP]
 ====
-Häufig wird das `QwtPlot` ja benutzt, um ein eigenes Postprozessing oder Visualisierungstool zu schreiben. Vielleicht lohnt sich hier der Blick auf das kostenfreie _PostProc 2_, welches wir an der TU Dresden entwickelt haben und das intern ein angepasstes und erweitertes `QwtPlot` verwendet. Das Programm ist spezialisiert auf die Visualisierung von dynamischen Simulationsergebnissen und Messdaten/Zeitreihen und man kann da einen guten Eindruck davon bekommen, was mit `QwtPlot` alles machbar ist. _Postproc 2_ wird weiter aktiv gepflegt und kann hier kostenfrei heruntergeladen werden: https://bauklimatik-dresden.de/software/postproc2/[https://bauklimatik-dresden.de/software/postproc2/].
+Häufig wird das `QwtPlot` ja benutzt, um ein eigenes Postprozessing oder Visualisierungstool zu schreiben. Vielleicht lohnt sich hier der Blick auf das kostenfreie _PostProc 2_, welches wir an der TU Dresden entwickelt haben und das intern ein angepasstes und erweitertes `QwtPlot` verwendet. Das Programm ist spezialisiert auf die Visualisierung von dynamischen Simulationsergebnissen und Messdaten/Zeitreihen und man kann da einen guten Eindruck davon bekommen, was mit `QwtPlot` alles machbar ist. _PostProc 2_ wird weiter aktiv gepflegt und kann hier kostenfrei heruntergeladen werden: https://bauklimatik-dresden.de/software/postproc2/[https://bauklimatik-dresden.de/software/postproc2/].
 ====
 
 Viel Spaß bei der Lektüre - und falls noch Inhalte fehlen, einfach Geduld haben und später wiederkommen (oder im Github-Repo ein Issue anlegen). Und schaut Euch vielleicht auch meine anderen Tutorials unter https://schneggenport.de[https://schneggenport.de] an!

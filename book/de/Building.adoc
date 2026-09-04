@@ -23,9 +23,9 @@ Beispielsweise für Ubuntu 24.04:
 sudo apt install libqwt-qt5-dev 
 ```
 
-Headerdatei-Pfad:  `/usr/include/qwt`
+Headerdatei-Pfad: `/usr/include/qwt`
 
-Für's Deployment eigener Programme und als Abhängigkeit eigener Pakete reicht es, dass Paket  `libqwt-qt5-6` zu installieren.
+Für's Deployment eigener Programme und als Abhängigkeit eigener Pakete reicht es, das Paket `libqwt-qt5-6` zu installieren.
 
 
 
@@ -36,11 +36,11 @@ Für's Deployment eigener Programme und als Abhängigkeit eigener Pakete reicht 
 
 - Release `qwt-6.3.0.zip`  herunterladen und entpacken.
 - Datei `qwtconfig.pri` bearbeiten und Optionen ein-/ausschalten
-- Kommandozeile mit Qt Umgebungsvariablen öffnen, z.B.: _Startmenu_ -> _Qt 5.15.2 (MinGW 8.1.0 64-bit)_, oder alternativ in der Commandozeile die benötigten Umgebungsvariablen setzen.
+- Kommandozeile mit Qt Umgebungsvariablen öffnen, z.B.: _Startmenü_ -> _Qt 5.15.2 (MinGW 8.1.0 64-bit)_, oder alternativ in der Kommandozeile die benötigten Umgebungsvariablen setzen.
 - Ins Verzeichnis mit der `qwt.pro` wechseln
 
 
-In der Commandozeile wird erwartet, dass:
+In der Kommandozeile wird erwartet, dass:
 
 - der Compiler ausführbar d.h. im Suchpfad ist
 - der QTPATH gesetzt ist
@@ -54,9 +54,9 @@ Es wird eine MinGW32/64 Installation mit `mingw32-make` im PATH erwartet.
 qmake qwt.pro
 :: Bibliothek und Plugin/Beispiele bauen
 mingw32-make -j8
-:: Biblithek installieren
+:: Bibliothek installieren
 mingw32-make install
-``` 
+```
 
 [TIP]
 ====
@@ -87,10 +87,10 @@ Gebaut wird mit jom:
 :: Makefile erstellen
 qmake qwt.pro
 :: Bibliothek und Plugin/Beispiele bauen
-nmake 
-:: Biblithek installieren
+nmake
+:: Bibliothek installieren
 nmake install
-``` 
+```
 
 
 #### Installationsverzeichnis/Relevante Pfade
@@ -142,7 +142,7 @@ Und im Dialog eine neue Platzhalterklasse wie folgt definieren:
 
 image::Building/Tutorial1_ui3.png[pdfwidth=6cm]
 
-Die Eingabe mit "Hinzufügen" bestätigen und dann auf "Anwenden" klicken, um das Platzhalter-Widget in das `QwtPlot` zu wandeln. Wir benennen das noch in _plot_ um, und füge das horizontale Layout und das Plotwidget in ein vertikales Layout ein:
+Die Eingabe mit "Hinzufügen" bestätigen und dann auf "Anwenden" klicken, um das Platzhalter-Widget in das `QwtPlot` zu wandeln. Wir benennen das noch in _plot_ um, und fügen das horizontale Layout und das Plotwidget in ein vertikales Layout ein:
 
 image::Building/Tutorial1_ui4.png[pdfwidth=8cm]
 
@@ -154,5 +154,5 @@ Dazu muss man die QtDesigner-Plugins zunächst erstellen und integrieren.
 
 TODO :
 
-Wenn man die erstmal installiert hat, kann man ein `QwtPlot` direkt aus der Komponentenpalette in den Entwurf zeihen und ist fertig.
+Wenn man die erstmal installiert hat, kann man ein `QwtPlot` direkt aus der Komponentenpalette in den Entwurf ziehen und ist fertig.
 

@@ -5,7 +5,7 @@
 # QWT Widgets und Eingabekomponenten
 
 Neben dem `QwtPlot` gibt es in der Qwt-Bibliothek noch eine Reihe anderer Eingabekomponenten, die in diesem Kapitel kurz vorgestellt werden.
-Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissenschafltlich/technischen Geräten nachempfunden.
+Viele dieser Komponenten sind klassischen Anzeigen und Einstellrädern in wissenschaftlich/technischen Geräten nachempfunden.
 
 Für die Anzeige der Skalen verwenden die nachfolgend vorgestellten Komponenten intern zur Darstellung der Skalen die in <<sec:axisScales>> näher beschriebenen Skalenberechnungs- und -zeichenklassen. 
 
@@ -19,11 +19,11 @@ image::QwtWidgets/controlsSlider.png[pdfwidth=8cm]
 Das Beispiel im Screenshot oben ist in der Qwt-Bibliothek als Beispiel `controls` enthalten.
 
 
-## Drehräder/Einstellräder und 
+## Drehräder/Einstellräder und Balkenanzeigen
 
 Die Klasse `QwtWheel` zeigt ein horizontales oder vertikales Einstellrad. Die Klasse `QwtThermo` zeigt eine Balkenanzeige, allerdings mit einer flexibel hinterlegbaren Farbtabelle. Dies erlaubt z.B. Farbverläufe oder Farbsprünge bei Übersteigen bestimmter Schwellwerte. 
 
-Qt selbst bietet für eine Balkenanzeige die Klasse `QProgressBar` an, welches sich aber im Erscheinungsbild an den jeweiligen Plattformstil für Fortschrittsbalken orientiert und auch keine Skalen bietet.
+Qt selbst bietet für eine Balkenanzeige die Klasse `QProgressBar` an, welche sich aber im Erscheinungsbild an den jeweiligen Plattformstil für Fortschrittsbalken orientiert und auch keine Skalen bietet.
 
 .Beispiele für `QwtWheel` und  `QwtThermo`
 image::QwtWidgets/controlsWheelThermo.png[pdfwidth=8cm]

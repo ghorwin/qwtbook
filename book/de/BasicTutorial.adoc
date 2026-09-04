@@ -160,9 +160,9 @@ Im erweiterten Hauptprogramm wird zunächst der Header für die `QwtPlotCurve` e
 Grundsätzlich gilt beim `QwtPlot`: Alle Plotelemente _müssen_ via new auf dem Heap erstellt werden und dem Plot dann übergeben werden. Dieses wird dann Besitzer und gibt den Speicher frei. Deshalb dürfen Linien, Legende, Marker etc. _niemals_ als Stack-Variablen erstellt werden, sonst gibt es (je nach Destruktoraufrufreihenfolge) einen Speicherzugriffsfehler.
 ====
 
-Attribute wie Linienfarbe, Titel (wird später in der Legende angezeigt), und Antialising werden gesetzt (im <<sec:linecurves>> werden alle Eigenschaften von Linien im Detail erläutert). 
+Attribute wie Linienfarbe, Titel (wird später in der Legende angezeigt), und Antialiasing werden gesetzt (im <<sec:linecurves>> werden alle Eigenschaften von Linien im Detail erläutert).
 
-Die Funktion `setSamples()` setzt die Daten der Linie. Wichtig ist hier, dass die übergebenen Vectoren die gleiche Länge haben. Es handelt sich um eine parametrische Kurve, d.h. weder x noch y Werte müssen monoton sein oder sonstwelchen Regeln folgen. Jedes x,y Wertepaar definiert einen Punkt und diese Punkte werden mit der Linie verbunden.
+Die Funktion `setSamples()` setzt die Daten der Linie. Wichtig ist hier, dass die übergebenen Vektoren die gleiche Länge haben. Es handelt sich um eine parametrische Kurve, d.h. weder x noch y Werte müssen monoton sein oder sonstwelchen Regeln folgen. Jedes x,y Wertepaar definiert einen Punkt und diese Punkte werden mit der Linie verbunden.
 
 Die Funktion `attach()` fügt das `QwtPlotCurve`-Objekt zum Diagramm hinzu.
 
@@ -173,7 +173,7 @@ Beim Hinzufügen der Linie mittels `attach()` zum Diagramm wird das Plot neuer E
 
 Zusätzlich zu dem Code, welcher die Linie hinzufügt, wurden noch 2 kleine Anpassungen am Erscheinungsbild vorgenommen:
 
-- Ränder wurden mittels `setContentsMargins()` hinzugefügt (siehe auch `QWidgdet::setContentsMargins()` )
+- Ränder wurden mittels `setContentsMargins()` hinzugefügt (siehe auch `QWidget::setContentsMargins()`)
 - der Hintergrund der Zeichenfläche (_canvas_) wurde weiß gefärbt.
 
 Das Ergebnis sieht schon eher nach Diagramm aus.
@@ -237,7 +237,7 @@ grid->setMinorPen(gridPen);
 grid->attach( &plot ); // plot takes ownership
 ----
 
-Das Raster selbst kann hinsichtlich der Stifts (QPen) für das Haupt- und Nebengitter angepasst werden. Die Funktion `enableYMin()` schaltet das Nebengitter für die Y-Achse ein. 
+Das Raster selbst kann hinsichtlich des Stifts (QPen) für das Haupt- und Nebengitter angepasst werden. Die Funktion `enableYMin()` schaltet das Nebengitter für die Y-Achse ein. 
 Wie auch bei den Plotkurven übergibt `attach()` das `QwtPlotGrid` Objekt an das `QwtPlot`, welches sich dann um die Speicherverwaltung kümmert.
 
 [TIP]
@@ -298,7 +298,7 @@ Die Achsen passen sich standardmäßig automatisch an den Wertebereich der angez
 
 ### Logarithmische Achsen
 
-Das `QwtPlot` kann auch logarithmische Achsen verwenden. Dazu muss man eine anderen Skalenberechnungsklasse einbinden, die `QwtLogScaleEngine` (Header `QwtLogScaleEngine` bzw. `qwt_scale_engine.h`):
+Das `QwtPlot` kann auch logarithmische Achsen verwenden. Dazu muss man eine andere Skalenberechnungsklasse einbinden, die `QwtLogScaleEngine` (Header `QwtLogScaleEngine` bzw. `qwt_scale_engine.h`):
 
 [source,cpp]
 ----
@@ -348,7 +348,7 @@ Nun ist das Diagramm selbst fertig und wir widmen uns der Nutzerinteraktion.
 
 ## Interaktion mit dem Diagramm
 
-Das `QwtPlot` bietet die üblichen Interaktionsmöglichkeiten für den Anwender, wie z.B. Herein- und Herauszoonmen, oder Verschieben des Plotausschnitts.
+Das `QwtPlot` bietet die üblichen Interaktionsmöglichkeiten für den Anwender, wie z.B. Herein- und Herauszoomen, oder Verschieben des Plotausschnitts.
 
 ### Zoomfunktionalität mit QwtPlotZoomer
 
@@ -357,21 +357,21 @@ Die Zoom-Funktionalität wird über die Klasse `QwtPlotZoomer` hinzugefügt (Hea
 [source,cpp]
 ----
 // Zoomer hinzufügen
-// Achtung: NICHT QwtPlot selbst als 3 Argument übergeben, sonder das canvas()
+// Achtung: NICHT QwtPlot selbst als 3. Argument übergeben, sondern das canvas()
 QwtPlotZoomer * zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft, plot.canvas());  // plot takes ownership
-zoomer->setTrackerMode( QwtPlotPicker::AlwaysOn ); // Kurvenvwerte unterm Cursor anzeigen
+zoomer->setTrackerMode( QwtPlotPicker::AlwaysOn ); // Kurvenwerte unterm Cursor anzeigen
 ----
 
-Wenn man mit der Maus über das Diagramm fährt, sieht man bereits einen veränderten Cursor und dank des Aufrufs `setTrackerMode(QwtPlotPicker::AlwaysOn)` sieht man nun auch die x- und y-Werte (des Achsen `xBottom` und `yLeft`) unter dem Cursor.
+Wenn man mit der Maus über das Diagramm fährt, sieht man bereits einen veränderten Cursor und dank des Aufrufs `setTrackerMode(QwtPlotPicker::AlwaysOn)` sieht man nun auch die x- und y-Werte (der Achsen `xBottom` und `yLeft`) unter dem Cursor.
 
-Hineinzoomen kann man, indem man die Linke Maustaste gedrückt hält, und ein Zoom-Rechteck aufzieht. Das kann man auch mehrmals hintereinander machen. Das `QwtPlot` merkt sich intern diese Zoomstufen. Herauszoomen kann durch Klick auf die rechte Maustaste, wobei immer eine Zoomstufe hinausgezoomt wird.
+Hineinzoomen kann man, indem man die linke Maustaste gedrückt hält, und ein Zoom-Rechteck aufzieht. Das kann man auch mehrmals hintereinander machen. Das `QwtPlot` merkt sich intern diese Zoomstufen. Herauszoomen kann man durch Klick auf die rechte Maustaste, wobei immer eine Zoomstufe hinausgezoomt wird.
 
 [TIP]
 ====
 Die äußerste Zoomstufe wird im Konstruktor der `QwtPlotZoomer`-Klasse basierend auf den aktuellen Wertebereichen der _bereits hinzugefügten Kurven_ bestimmt. Sollte man die Werte der Kurven nachträglich ändern, oder den Zoomer hinzufügen, _bevor_ man dem Plot Kurven gegeben hat, so kann man die Funktion `QwtPlotZoomer::setZoomBase()` aufrufen. Details dazu gibt es im <<sec:zoomer>>.  
 ====
 
-Im Quelltext gibt es noch eine Besonderheit. Während die bisherigen Plotelemente immer mit Memberfunktionen der `QwtPlot`-Klasse hinzugefügt wurde, bzw. mittels `attach()`, wird das Zoomerobjekt analog zu Qt Klassen als Kindobjekt der Zeichenfläche gegeben und registriert sich darüber als interaktives Element bei Plot. 
+Im Quelltext gibt es noch eine Besonderheit. Während die bisherigen Plotelemente immer mit Memberfunktionen der `QwtPlot`-Klasse hinzugefügt wurden, bzw. mittels `attach()`, wird das Zoomerobjekt analog zu Qt Klassen als Kindobjekt der Zeichenfläche gegeben und registriert sich darüber als interaktives Element beim Plot.
 
 [CAUTION]
 ====
@@ -388,7 +388,7 @@ image::BasicTutorial/Tutorial1_g.png[pdfwidth=6cm]
 
 ### Plotausschnitt verschieben mit QwtPlotPanner
 
-Wenn man Ausschnitt eines hineingezoomten Plots interaktiv verschieben möchte, kann man den `QwtPlotPanner` hinzufügen  (Header `QwtPlotZoomer` bzw. `qwt_plot_zoomer.h`):
+Wenn man den Ausschnitt eines hineingezoomten Plots interaktiv verschieben möchte, kann man den `QwtPlotPanner` hinzufügen (Header `QwtPlotZoomer` bzw. `qwt_plot_zoomer.h`):
 
 [source,cpp]
 ----
@@ -397,7 +397,7 @@ QwtPlotPanner * panner = new QwtPlotPanner(plot.canvas());  // plot takes owners
 panner->setMouseButton(Qt::MiddleButton); // Mittlere Maustaste verschiebt
 ----
 
-Wie beim `QwtPlotZoomer` wird das Objekt als Kindobjekt des Canvas-Widgets hinzugefügt.  Üblich ist das Verschieben von Bildschirminhalten mit gedrückter mittlerer Maustaste, also legt man das mit `setMouseButton()` fest.
+Wie beim `QwtPlotZoomer` wird das Objekt als Kindobjekt des Canvas-Widgets hinzugefügt. Üblich ist das Verschieben von Bildschirminhalten mit gedrückter mittlerer Maustaste, also legt man das mit `setMouseButton()` fest.
 
 
 ---

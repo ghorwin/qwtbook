@@ -43,7 +43,7 @@ public:
 		painter.setPen( backgroundPen );
 		QwtPainter::drawLine( &painter, 0.0, y, s.width(), y );
 
-		// Linienfarbe zeichnen)
+		// Linienfarbe zeichnen
 		QPen pn = pen();
 		pn.setCapStyle( Qt::FlatCap );
 		pn.setWidth(3);

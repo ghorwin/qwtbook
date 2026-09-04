@@ -32,7 +32,7 @@ Die Qwt Bibliothek kann von der https://sourceforge.net/projects/qwt[Qwt SourceF
 
 ## Widget-Konzept und Erscheinungsbild
 
-Die Qwt Bibliothek liefert Komponenten, welche analog zu den normalen Qt-Widgets in Desktopanwendungen verwendet werden können. Die Komponenten verwenden die Qt Palette, sodass die Qwt-Widgets in die jeweilige Oberfläche passen. Dadurch integrieren sich die Widgets nahtlos in Programmoberflächen. Einzelne Komponenten des `QwtPlot` unterstützen auch Styles. So ermöglichen z.B. Abrundungseffekte beim Plot-Widget das Immitieren klassischer Anzeigen.
+Die Qwt Bibliothek liefert Komponenten, welche analog zu den normalen Qt-Widgets in Desktopanwendungen verwendet werden können. Die Komponenten verwenden die Qt Palette, sodass die Qwt-Widgets in die jeweilige Oberfläche passen. Dadurch integrieren sich die Widgets nahtlos in Programmoberflächen. Einzelne Komponenten des `QwtPlot` unterstützen auch Styles. So ermöglichen z.B. Abrundungseffekte beim Plot-Widget das Imitieren klassischer Anzeigen.
 
 .QwtPlot mit abgerundeten Ecken
 image::Introduction/styledDialsAndPlot.png[pdfwidth=12cm]
@@ -42,7 +42,7 @@ Details zum Styling und zur Anpassung des Erscheinungsbildes sind im <<sec:styli
 
 ## Besitzer/Eigentümer-Konzept des QwtPlot-Widgets
 
-Eine grundlegende Eigenschaft der `QwtPlot`-Klasse ist die Besitzübername hinzugefügter Elemente. Dies gilt allgemein für alle Elemente des Plots (Linien, Marker, Legende, ...). D.h. nach Übertragung der Eigentümerschaft kümmert sich das `QwtPlot` um das Aufräumen des Speichers.
+Eine grundlegende Eigenschaft der `QwtPlot`-Klasse ist die Besitzübernahme hinzugefügter Elemente. Dies gilt allgemein für alle Elemente des Plots (Linien, Marker, Legende, ...). D.h. nach Übertragung der Eigentümerschaft kümmert sich das `QwtPlot` um das Aufräumen des Speichers.
 
 Einmal hinzugefügte Elemente werden nicht wieder losgelöst werden (bzw. nur über einen Trick, wie im <<sec:releasingObjectsFromQwtPlot>> beschrieben wird). Daher ist es sinnvoll, bei veränderlichen Diagrammelementen einen Mechanismus zur jeweiligen Neuerstellung eines Zeichenobjekts vorzusehen (Factory-Konzept).
 
@@ -65,7 +65,7 @@ Die Qwt Bibliothek bringt Plugins für Qt Designer bzw. Qt Creator mit, welche d
 
 [WARNING]
 ====
-Die API der Qt Designer Plugins hat sich in jüngeren Qt Creator-Versionen geändert, weswegen die Qwt Designer Plugins mit aktuellen Qt und Qt Creator Versionen nicht mehr funktionieren selbst wenn man die mit den passenden Bibliotheksversionen kompiliert.
+Die API der Qt Designer Plugins hat sich in jüngeren Qt Creator-Versionen geändert, weswegen die Qwt Designer Plugins mit aktuellen Qt und Qt Creator Versionen nicht mehr funktionieren, selbst wenn man sie mit den passenden Bibliotheksversionen kompiliert.
 ====
 
 Auch deswegen wird die Konfiguration und Anpassung des `QwtPlot` in diesem Handbuch ausschließlich durch normale API-Aufrufe demonstriert.

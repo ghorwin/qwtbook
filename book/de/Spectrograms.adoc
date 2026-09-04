@@ -12,7 +12,7 @@ Grundsätzlich benötigt man für die Darstellung eines solchen Diagramms drei K
 
 - Umrechnung der Bildkoordinaten zu Plotkoordinaten x,y. Diese Umrechnung wird durch die Achsenskalen realisiert (`QwtScaleEngine`).
 - Berechnung des z-Werts für diese x,y-Plotkoordinaten. Diese Funktionalität muss der Anwender beisteuern.
-- Berechnung eineszum z-Wert passenden Farbwerts. Dies kann mittels vorgefertigter Farbtabellen (`QwtColorMap`, bzw.  `QwtAlphaColorMap` oder `QwtLinearColorMap`) passieren, oder durch nutzerdefinierte Umrechnung.
+- Berechnung eines zum z-Wert passenden Farbwerts. Dies kann mittels vorgefertigter Farbtabellen (`QwtColorMap`, bzw. `QwtAlphaColorMap` oder `QwtLinearColorMap`) passieren, oder durch nutzerdefinierte Umrechnung.
 
 
 ## Grundlagen des Spectrogram Plotelements
@@ -30,7 +30,7 @@ spectro->attach(&plot);
 spectro->setData( new SpectrogramData() );
 ----
 
-Die eigentlichen Daten werden mittels `setData()` gesetzt, wobei die Klasse `SpectrogramData` eine eigen geschrieben Klasse ist, welche von `QwtRasterData` ableitet:
+Die eigentlichen Daten werden mittels `setData()` gesetzt, wobei die Klasse `SpectrogramData` eine selbst geschriebene Klasse ist, welche von `QwtRasterData` ableitet:
 
 
 [source,c++]
@@ -67,7 +67,7 @@ private:
 };
 ----
 
-Das ergibt dann ein Spektrogramm, welches mittels Standard-Farbtabelle eingefährt wird:
+Das ergibt dann ein Spektrogramm, welches mittels Standard-Farbtabelle eingefärbt wird:
 
 .Spektrogramm einer analytischen Funktion unter Verwendung der Standard-Farbpalette für die Umrechnung der generierten z-Werte in eine Farbe
 image::Spectrograms/Spectrogram_1.png[pdfwidth=6cm]
@@ -79,7 +79,7 @@ Der Farbwert ergibt sich aus dem von der Funktion `value()` zurückgelieferten W
 
 Das Spektrogramm berechnet jeden einzelnen Bildpunkt des Diagramms individuell und ruft dabei die Funktion `QwtRasterData::value()` auf. Die Auswertung dieser Funktion sollte komplett unabhängig von der Reihenfolge der berechneten Pixel sein, schon alleine, da es sich um eine `const`-Funktion handelt. Daher kann das perfekt parallelisiert werden. 
 
-Die  `QwtPlotSpectrogram`-Klasse enthält eine parallelisierte Berechnungsfunktion und verwendet dabei standardmäßig alle verfügbaren CPUs/Threads. Die Anzahl der zu verwendenden Threads wird mittels `QwtPlotSpectrogram::setRenderThreadCount(numThreads)` festgelegt, wobei ein Wert von 0 die Standardanzahl der Threads festlegt.
+Die `QwtPlotSpectrogram`-Klasse enthält eine parallelisierte Berechnungsfunktion und verwendet dabei standardmäßig alle verfügbaren CPUs/Threads. Die Anzahl der zu verwendenden Threads wird mittels `QwtPlotSpectrogram::setRenderThreadCount(numThreads)` festgelegt, wobei ein Wert von 0 die Standardanzahl der Threads festlegt.
 
 [TIP]
 ====
@@ -102,7 +102,7 @@ Wenn man die im Spektrogramm intern gespeicherten Daten ändert, sodass sich bei
 
 ### Spektrogramme/Farbverlaufsdiagramme mit Löchern
 
-Grundsätzlich kann ein Spektrogramme auch Löcher haben. Das wird dadurch erreicht, dass man für die betreffenden Plotkoordinaten einen NAN-Wert als z-Wert zurückgibt:
+Grundsätzlich kann ein Spektrogramm auch Löcher haben. Das wird dadurch erreicht, dass man für die betreffenden Plotkoordinaten einen NAN-Wert als z-Wert zurückgibt:
 
 [source,c++]
 ----
@@ -151,16 +151,16 @@ cm->addColorStop(0.5, QColor(0x00ff00));
 cm->addColorStop(0.7, QColor(0xffff00));
 
 // Colormap im Spektrogramm ersetzen
-spectro->setColorMap( cm ); // takes ownershipt
+spectro->setColorMap( cm ); // takes ownership
 ----
 
 
-Die vielfältigen Anpassungsmöglichkeiten der Farbtabellenerstellen sind im Abschnitt <<sec:QwtColorMap>> beschrieben.
+Die vielfältigen Anpassungsmöglichkeiten der Farbtabellenerstellung sind im Abschnitt <<sec:QwtColorMap>> beschrieben.
 
 
 ## Spektrogramme basierend auf Datentabellen
 
-Im anfänglichen Beispiel wurde der z-Wert basierend auf x und y Plotkoordinaten berechnet. Ein sehr viel häufigerer Anwendungsfall ist die Visualisierung von Messdaten. Nachfolgende ist ein Beispiel gezeigt, wie man dies sinnvoll implementiert.
+Im anfänglichen Beispiel wurde der z-Wert basierend auf x und y Plotkoordinaten berechnet. Ein sehr viel häufigerer Anwendungsfall ist die Visualisierung von Messdaten. Nachfolgend ist ein Beispiel gezeigt, wie man dies sinnvoll implementiert.
 
 
 .Beispiel für eine Rasterdatenimplementierung, bei der je Element/Zellen ein Zahlenwert gegeben ist

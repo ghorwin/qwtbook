@@ -4,9 +4,9 @@
 [[sec:linecurves]]
 # Kurvendiagramme
 
-Die wohl häufiges Diagrammart werden wohl Kurvendiagramme sein. Kurvendiagramme bzw. Liniendiagramme oder Reihendiagramme sind parametrische Kurven, bei denen die einzelnen Punkte nacheinander gezeichnet werden, und im Fall von Liniendiagrammen durch Linien verbunden werden. Weder x- noch y-Werte müssen monoton steigen.
+Die wohl häufigste Diagrammart werden Kurvendiagramme sein. Kurvendiagramme bzw. Liniendiagramme oder Reihendiagramme sind parametrische Kurven, bei denen die einzelnen Punkte nacheinander gezeichnet werden, und im Fall von Liniendiagrammen durch Linien verbunden werden. Weder x- noch y-Werte müssen monoton steigen.
 
-Das Zeichenelement `QwtPlotCurve` wird jedoch nicht nur für Liniendiagramme im klassischen Sinn benutzt, sondern auch für Stufen, Stäbchen, Punkt/Symbol-Diagramme und so weiter. Alle diese Varianten haben jedoch gemein, dass sie als Daten einen x- und einen y-Vector mit Daten in Plotkoordinaten erwarten.
+Das Zeichenelement `QwtPlotCurve` wird jedoch nicht nur für Liniendiagramme im klassischen Sinn benutzt, sondern auch für Stufen, Stäbchen, Punkt/Symbol-Diagramme und so weiter. Alle diese Varianten haben jedoch gemein, dass sie als Daten einen x- und einen y-Vektor mit Daten in Plotkoordinaten erwarten.
 
 Der individuelle Stil der Kurve wird mit der Funktion `QwtPlotCurve::setStyle()` festgelegt. Je nach Stil können/müssen weitere Parameter festgelegt werden. In den folgenden Abschnitten werden die möglichen Diagrammtypen für jeweils die gleichen x/y-Daten im Vergleich gezeigt. 
 
@@ -53,7 +53,7 @@ Bei der Verwendung von `QwtPlotCurve::setSamples()` werden die Daten _immer_ in 
 
 Bei sehr großen Datenmengen und begrenztem Hauptspeicher kann es sinnvoll sein, die Daten nicht in das Plot hineinzukopieren, sondern die Plotkurven direkt auf den Speicher zugreifen zu lassen. Dafür gibt es die Funktion `QwtPlotCurve::setRawSamples()`. Die Syntax ist wie beim vorherigen Beispiel:
 
-.Direkte Verwendung der im Speicher befindlichen Daten durch as Plot
+.Direkte Verwendung der im Speicher befindlichen Daten durch das Plot
 ```c++
 const double * xdata = x.data(); // x ist ein std::vector
 const double * ydata = y.data(); // y ist ein std::vector
@@ -66,7 +66,7 @@ curve->setRawSamples(xdata, ydata, count);
 Die Variablen und deren Speicherbereich, welche im Aufruf von `setRawSamples()` verwendet werden, müssen eine längere Lebensdauer haben, als das Plot bzw. die Plotkurve selbst.
 ====
 
-Direkte Änderung der Daten im Speicher wird beim nächsten Rendern des Plots direkt sichtbar. Allerdings müssen das Plot und dessen  Zeichenelemente, die ein Interesse an den Wertebereichen der Plotkurven haben, manuell über eine Änderung der Daten information werden. Dazu einfach `QwtPlot::replot()`.
+Direkte Änderung der Daten im Speicher wird beim nächsten Rendern des Plots direkt sichtbar. Allerdings müssen das Plot und dessen Zeichenelemente, die ein Interesse an den Wertebereichen der Plotkurven haben, manuell über eine Änderung der Daten informiert werden. Dazu einfach `QwtPlot::replot()` aufrufen.
 
 
 
@@ -112,7 +112,7 @@ image::LineCurves/PlotCurves_StyleSticksHorizontal.png[pdfwidth=8cm]
 ### Stufendiagramme
 
 Wenn die Daten nicht linear verbunden werden sollen, sondern eher Stufen darstellen, kann man den Linientyp `Steps` verwenden.
-Das Zusatz-Attribut `QwtPlotCurve::Inverted` gibt dabei an, ob die Stufe am Ende des Intervals oder Anfang des Intervals sein soll. Kurvenattribute werden mit `QwtPlotCurve::setCurveAttribute()` gesetzt:
+Das Zusatz-Attribut `QwtPlotCurve::Inverted` gibt dabei an, ob die Stufe am Ende des Intervalls oder am Anfang des Intervalls sein soll. Kurvenattribute werden mit `QwtPlotCurve::setCurveAttribute()` gesetzt:
 
 ```c++
 QwtPlotCurve *curve = new QwtPlotCurve();
@@ -154,7 +154,7 @@ Man kann an den jeweiligen x,y-Koordinaten auch einfach nur Punkte (auch nur ein
 
 [TIP]
 ====
-Bei der Verwendung von `QwtPlotCurve::Dots` sollte man bei heute üblichen Bildschirmauflösungen immer einen `QPen` mit größerer Breite einstellen, da mein _einzelne Pixel_ sonst nur noch schwer sehen kann. Für die Visualisierung großer Punktwolken (> 100000 Pixel) kann die Verwendung von einzelnen Pixeln durchaus noch einen Mehrwert bieten. Für alle besonderen Formen (Kreuze, Rauten, Ringe, Sterne, ...)  ist die Verwendung von Symbolen (siehe <<sec:plotSymbols>>) sinnvoll.
+Bei der Verwendung von `QwtPlotCurve::Dots` sollte man bei heute üblichen Bildschirmauflösungen immer einen `QPen` mit größerer Breite einstellen, da man _einzelne Pixel_ sonst nur noch schwer sehen kann. Für die Visualisierung großer Punktwolken (> 100000 Pixel) kann die Verwendung von einzelnen Pixeln durchaus noch einen Mehrwert bieten. Für alle besonderen Formen (Kreuze, Rauten, Ringe, Sterne, ...) ist die Verwendung von Symbolen (siehe <<sec:plotSymbols>>) sinnvoll.
 ====
 
 
@@ -201,7 +201,7 @@ curve->setStyle(QwtPlotCurve::NoCurve);
 An den jeweiligen x,y-Koordinaten einer Kurve kann man auch Symbole zeichnen. Dafür bietet die Qwt-Bibliothek die Klasse `QwtSymbol` an.
 
 
-Ein Symbol fügt man zu eine Kurve wie folgt hinzu:
+Ein Symbol fügt man zu einer Kurve wie folgt hinzu:
 
 ```c++
 // Symbol hinzufügen
@@ -219,7 +219,7 @@ Zuerst wird das zu verwendende Symbol auf dem Heap mit new erzeugt. Der Konstruk
 
 Wichtig ist auch die Größe des Symbols, gesetzt mittels `QwtSymbol::setSize()` in Pixeln. Diese Größe skaliert das Symbol je nach Form.
 
-Außerdem wichtig sind die Eigenschaften Pen und Brush (`QwtSymbol::setPen()` und `QwtSymbol::setBruch()`). Der Pen wird für das Zeichnen des Umrisses verwendet und der Brush, so gesetzt, für das Ausfüllen der Form. Manche Symbole wie das Kreuz sind nicht ausgefüllt, daher hat hier der Brush keine Wirkung.
+Außerdem wichtig sind die Eigenschaften Pen und Brush (`QwtSymbol::setPen()` und `QwtSymbol::setBrush()`). Der Pen wird für das Zeichnen des Umrisses verwendet und der Brush, so gesetzt, für das Ausfüllen der Form. Manche Symbole wie das Kreuz sind nicht ausgefüllt, daher hat hier der Brush keine Wirkung.
 
 Schließlich wird das Symbol der Kurve mit `QwtPlotCurve::setSymbol()` gegeben.
 
@@ -230,14 +230,14 @@ Beim Aufruf von `QwtPlotCurve::setSymbol()` übernimmt die Plot-Kurve die Verant
 
 Die Symbolklasse ist ziemlich mächtig und kann verschiedenste Symbole zeichnen:
 
-- vorgefertigte Formen wie Kreise, Rechtecke, Kreuze, etc. (Stil `QwtSymbol::Ellipse`...`QwtSymbol::Hexagon`
+- vorgefertigte Formen wie Kreise, Rechtecke, Kreuze, etc. (Stil `QwtSymbol::Ellipse`...`QwtSymbol::Hexagon`)
 - nutzerdefinierte Bilder/Pixmaps (Stil `QwtSymbol::Pixmap`)
 - spezifische Grafiken gekapselt in Klasse `QwtGraphic` und erzeugt durch eine Anzahl von `QwtPainterCommand` Anweisungen (Stil `QwtSymbol::Graphic`) (siehe auch <<sec:qwtGraphic>>)
 - SVG-Dokumente (Stil `QwtSymbol::SvgDocument`)
 - nutzerdefinierte Formen, welche durch einen QPainterPath definiert sind (Stil `QwtSymbol::Path`)
 
 
-### Symbolstile/Eingebauten Symbolformen
+### Symbolstile/Eingebaute Symbolformen
 
 Es gibt zahlreiche eingebaute Symbolformen (fett gedruckt im Diagrammtitel ist jeweils der `QwtSymbol::Style` Enumerationsname):
 
@@ -287,7 +287,7 @@ image::LineCurves/Symbols_PainterPath.png[pdfwidth=8cm]
 
 [CAUTION]
 ====
-Wenn man eine nicht-rechteckige Geometrie mit QPainterPath definiert, sollte man beim Ändern der Größe mittels `QwtSymbol::setSize()` die Variante mit den zwei Argumenten aufrufen, also `QwtSymbol::setSize(width,height)`. Die Variante mit nur einem Argument transformiert den Pfad onst auf ein Quadrat. Da man üblicherweise keine nicht-quadratischen Formen als Symbol definiert, dürfte das aber nur selten ein Problem sein.
+Wenn man eine nicht-rechteckige Geometrie mit QPainterPath definiert, sollte man beim Ändern der Größe mittels `QwtSymbol::setSize()` die Variante mit den zwei Argumenten aufrufen, also `QwtSymbol::setSize(width,height)`. Die Variante mit nur einem Argument transformiert den Pfad sonst auf ein Quadrat. Da man üblicherweise keine nicht-quadratischen Formen als Symbol definiert, dürfte das aber nur selten ein Problem sein.
 ====
 
 
@@ -328,7 +328,7 @@ image::LineCurves/Symbols_SvgWithPinPoint.png[pdfwidth=8cm]
 
 [TIP]
 ====
-Man kann die manuell gesetzten Ankerpunkt auch wieder mit `QwtSymbol::setPinPointEnabled(false)` deaktivieren.
+Man kann den manuell gesetzten Ankerpunkt auch wieder mit `QwtSymbol::setPinPointEnabled(false)` deaktivieren.
 ====
 
 
@@ -451,7 +451,7 @@ Alle Informationen zu Legenden und auch spezifische Anpassungen, z.B. wie man ei
 [[sec:curvePerformance]]
 ## Zeichenattribute, Zeichengeschwindigkeit und Performanceoptimierung bei großen Datenreihen
 
-Das Zeichnen großer Datenreihen kann mitunter einige Zeit beanspruchen. Vor allem beim Größenändern des Plotfensters wirkt sich das dann durch merkliche Verzögerung beim Bildschirmaufbau aus. Je größer die Datenreihen sind, d.h. umsomehr Punkte enthalten sind, umso länger dauert im Allgemeinen das Zeichnen des Plots. In diesem Abschnitt soll es um verschiedene Eigenschaften und Fähigkeiten der `QwtPlotCurve` gehen, die sich direkt auf die Zeichengeschwindigkeit auswirken.
+Das Zeichnen großer Datenreihen kann mitunter einige Zeit beanspruchen. Vor allem beim Größenändern des Plotfensters wirkt sich das dann durch merkliche Verzögerung beim Bildschirmaufbau aus. Je größer die Datenreihen sind, d.h. je mehr Punkte enthalten sind, umso länger dauert im Allgemeinen das Zeichnen des Plots. In diesem Abschnitt soll es um verschiedene Eigenschaften und Fähigkeiten der `QwtPlotCurve` gehen, die sich direkt auf die Zeichengeschwindigkeit auswirken.
 
 
 ### Zeichenattribute (PaintAttribute / PaintAttributes)
@@ -460,8 +460,8 @@ Die Klasse `QwtPlotCurve` hat verschiedene Zeichenattribute, die verwendete Algo
 
 - `ClipPolygons` - damit werden zu zeichnende Datenreihen ausgedünnt, sodass nur im aktuellen Zoomfenster sichtbare Kurventeile gezeichnet werden. Ist standardmäßig aktiv und ist für den SVG-Export notwendig. Sonst ist dieses Herausfiltern außerhalb liegender Punkte vor allem beim Hineinzoomen wirkungsvoll.
 - `FilterPoints` - damit werden Punkte/Liniensegmente aus den Datenreihen herausgefiltert, die sowieso nicht gezeichnet werden würden, weil sie übereinander liegen.
-- `FilterPointsAggressive` - _Nur_ für Linientyp `QwtPlotCurve::Linien`: Ersetzt viele kurze übereinanderliegende Polygonstücke durch einzelne Liniensegmente
-- `MinimizeMemory` - _Nur_ beim Linientyp `QwtPlotCurve::Dots`: Verhindert wenn eingeschaltet, dass bei der Transformation der Datenreihe von Plotkoordinaten zu Renderkoordinaten eine eventuell große Polygon-Kopie erstellt wird. Stattdessen werden alle Punktkoordinaten einzeln transformiert, geclippt und gezeichnet. Da hierbei für jeden Punkt ein gewisser Extraaufwand benötigt wird, ist dies in der Regel etwas langsamer.
+- `FilterPointsAggressive` - _Nur_ für Linientyp `QwtPlotCurve::Lines`: Ersetzt viele kurze übereinanderliegende Polygonstücke durch einzelne Liniensegmente
+- `MinimizeMemory` - _Nur_ beim Linientyp `QwtPlotCurve::Dots`: Verhindert, wenn eingeschaltet, dass bei der Transformation der Datenreihe von Plotkoordinaten zu Renderkoordinaten eine eventuell große Polygon-Kopie erstellt wird. Stattdessen werden alle Punktkoordinaten einzeln transformiert, geclippt und gezeichnet. Da hierbei für jeden Punkt ein gewisser Extraaufwand benötigt wird, ist dies in der Regel etwas langsamer.
 - `ImageBuffer` - _Nur_ beim Linientyp `QwtPlotCurve::Dots`: Eine sehr spezielle Optimierung, wobei die Punkte (jeweils nur ein Pixel pro Punkt) erst in ein `QImage` gezeichnet werden. Dies erfolgt parallelisiert und kann daher sehr schnell sein, ist allerdings nur effektiv bei sehr großen Punktmengen.
 
 [IMPORTANT]
@@ -558,7 +558,7 @@ Mit dem Zeichenattribut `FilterPoints` werden Liniensegmente mit Länge 0 heraus
 
 ### Aggressives Punktefiltern
 
-Wenn Datenreihen sehr stark rauschen und gleichzeitig sehr große Datenmengen enthalten, dann können sich mehrere Liniensegmente überlagern. Zum Beispiel werden dann mehrere Linien mit der gleichen x-Bildschirmkoordinate übereinander gezeichnet, obwohl ja eine Linie gezeichnet zwischen minimaler und maximaler y-Koordinate ausreichen würde.
+Wenn Datenreihen sehr stark rauschen und gleichzeitig sehr große Datenmengen enthalten, dann können sich mehrere Liniensegmente überlagern. Zum Beispiel werden dann mehrere Linien mit der gleichen x-Bildschirmkoordinate übereinander gezeichnet, obwohl ja eine einzige zwischen minimaler und maximaler y-Koordinate gezeichnete Linie ausreichen würde.
 
 Das Zeichenattribut `FilterPointsAggressive` schaltet eine Vorberechnung ein, die genau diese Art der Optimierung durchführt (ebenfalls in Klasse `QwtPointMapper` implementiert) und aus mehreren sich überlagernden, vertikalen Liniensegmenten nur eine einzige Linie macht (deswegen ist diese Optimierung auch nur für den Linientyp `QwtPlotCurve::Lines` sinnvoll).
 
@@ -586,7 +586,7 @@ einschaltet, verkürzt sich die Zeichenzeit auf ca. **32 ms** !!!! Nach dem Filt
 
 [TIP]
 ====
-Die Verwendung des Zeichenattributs `FilterPointsAggressive` beschleunigt die Darstellung drastisch, vor allem beim Kurven mit vielen Datenpunkten und stark rauschenden Werten.
+Die Verwendung des Zeichenattributs `FilterPointsAggressive` beschleunigt die Darstellung drastisch, vor allem bei Kurven mit vielen Datenpunkten und stark rauschenden Werten.
 ====
 
 Wenn man sich die Diagramme mit und ohne `FilterPointsAggressive` im Vergleich anschaut, so sieht man kleinere Unterschiede.
@@ -654,7 +654,7 @@ Je nach Wahl des Plotausschnitts, festzulegen über Achsenskalierung (siehe <<se
 Beim Zeichnen des Plots auf dem Bildschirm könnte man das Polygon-Clipping auch weglassen, da der Qt-Painter selbst ein Clipping durchführt. Beim Datenexport in eine SVG-Datei (siehe <<sec:print>>) ist das Clipping aber zwingend notwendig. 
 ====
 
-Standardmäßig ist das Attribut `QwtPlotCurve::ClipPolygons` eingeschaltet. Das Clipping wird übrigends erst _nach_ dem Punktfilteralgorithmus angewendet, sodass eine Datenreduktion in diesem Schritt sich positiv auf die Zeit für das Clipping auswirkt.
+Standardmäßig ist das Attribut `QwtPlotCurve::ClipPolygons` eingeschaltet. Das Clipping wird übrigens erst _nach_ dem Punktfilteralgorithmus angewendet, sodass eine Datenreduktion in diesem Schritt sich positiv auf die Zeit für das Clipping auswirkt.
 
 Interessanterweise wirkt sich das Polygon-Clipping beim Rendern auf den Bildschirm nur unmerklich auf die Renderperformance aus.
 
@@ -669,16 +669,16 @@ erhöht sich die Renderzeit auf ca. **370 ms**. Wenn man nun `ClipPolygons` auss
 
 [NOTE]
 ====
-Im hineingezoomten Zustand dauert der Clipping-Algorithmus länger, dafür ist das Zeichnen etwas schneller. Beide Effekte arbeiten gegeneinander aber im Ergebnis ist es bei meinem Testfall minimal langsamer als im herausgezoomten Zustand).
+Im hineingezoomten Zustand dauert der Clipping-Algorithmus länger, dafür ist das Zeichnen etwas schneller. Beide Effekte arbeiten gegeneinander, aber im Ergebnis ist es bei meinem Testfall minimal langsamer als im herausgezoomten Zustand.
 ====
 
-Der Unterschied zwischen **300 ms** und **290 ms** beim vollständigen Plot liegt an dem Oberhead für die Polygon-Clipping-Funktion, die natürlich beim vollständig sichtparen Plot keine Wirkung hat. 
+Der Unterschied zwischen **300 ms** und **290 ms** beim vollständigen Plot liegt an dem Overhead für die Polygon-Clipping-Funktion, die natürlich beim vollständig sichtbaren Plot keine Wirkung hat.
 
 Im stark hineingezoomten Zustand zeichnet das Plot mit eingeschaltetem Polygon-Clipping immerhin ca. **40 ms** schneller, was aber selten signifikant sein sollte.
 
 [NOTE]
 ====
-Dein Einfluss des Attributs `ClipPolygons` auf die Zeichenperformance ist marginal, sodass man dieses Attribut getrost immer eingeschaltet lassen kann.
+Der Einfluss des Attributs `ClipPolygons` auf die Zeichenperformance ist marginal, sodass man dieses Attribut getrost immer eingeschaltet lassen kann.
 
 Lediglich beim Ausschalten des `FilterPoints`-Attributs und sehr großen Datenmengen könnte das `ClipPolygons` im hineingezoomten Zustand etwas bewirken. 
 Zum Beispiel rendert das Plot _ohne_ `FilterPoints` und _ohne_ `ClipPolygons` im hineingezoomten Zustand (siehe oben) in **550 ms**, gegenüber **360 ms** _mit_ `ClipPolygons`. Aber selbst in diesem eher unrealistischen Szenario ist die Auswirkung des Attributs klein. 
@@ -691,9 +691,9 @@ Fazit: `ClipPolygons` eingeschaltet lassen!
 [[sec:curveFitter]]
 ## Kurvenfilter/Kurvenanpasser
 
-Die `QwtPlotCurve` kann die übergebenen Rohdaten vor dem eigentlichen Rendern noch an einen Algorithmus übergeben, der die Daten glättet oder eine kontinuierliche Kuve durch die Datenpunkte legt. Diese Operationen hängen vom aktuellen Zoomlevel und der Plotgröße ab, denn je nach Auflösung wird der Verlauf der angepassten Kurve neu berechnet. Dies gibt eine bessere Qualität als beim Vorberechnen der Daten und Plotten eines Linienzugs durch vorberechnete Kurven. Deshalb ist diese Funktionalität direkt in das `QwtPlot` integriert.
+Die `QwtPlotCurve` kann die übergebenen Rohdaten vor dem eigentlichen Rendern noch an einen Algorithmus übergeben, der die Daten glättet oder eine kontinuierliche Kurve durch die Datenpunkte legt. Diese Operationen hängen vom aktuellen Zoomlevel und der Plotgröße ab, denn je nach Auflösung wird der Verlauf der angepassten Kurve neu berechnet. Dies gibt eine bessere Qualität als beim Vorberechnen der Daten und Plotten eines Linienzugs durch vorberechnete Kurven. Deshalb ist diese Funktionalität direkt in das `QwtPlot` integriert.
 
-Einen solchen Anpass-/Filteralgorithmus übergibt man der Kurve, indem man eine Klasse, abgeleitet von  `QwtCurveFitter` der Kurve übergibt.
+Einen solchen Anpass-/Filteralgorithmus übergibt man der Kurve, indem man eine von `QwtCurveFitter` abgeleitete Klasse der Kurve übergibt.
 
 Es werden verschiedene Implementierungen dieser Schnittstelle mitgeliefert:
 
@@ -702,7 +702,7 @@ image::LineCurves/QwtCurveFitter-class-hierarchy.png[pdfwidth=10cm]
 
 ### Kurvenglättung/Spline-Interpolation
 
-Schauen wir uns zuerst den `QwtSplineCurveFitter` an.  Diese Klasse kapselt einen Algorithmus, der aus den gegebenen Stützstellen der Kurve einen weichen Verlauf berechnet. Dafür gibt es verschiedene mathematischen Algorithmen.
+Schauen wir uns zuerst den `QwtSplineCurveFitter` an. Diese Klasse kapselt einen Algorithmus, der aus den gegebenen Stützstellen der Kurve einen weichen Verlauf berechnet. Dafür gibt es verschiedene mathematische Algorithmen.
 
 Jeder dieser Algorithmen ist in einer von `QwtSpline` abgeleiteten Klasse implementiert.
 
@@ -832,7 +832,7 @@ image::LineCurves/CurveFitterWeeding_tol1.png[pdfwidth=10cm]
 
 Der WeedingCurveFitter reduziert die Anzahl der Datenpunkte wie hier bei eher weichen Kurven deutlich. Im Beispiel oben bleiben von den ursprünglich 10 Mio Punkten gerade mal 78 übrig. Zur Visualisierung der resultierenden Stützstellen wurde eine zweite Datenreihe erzeugt, wobei aus den Datenpunkten mit der `QwtWeedingCurveFitter`-Klasse direkt die Daten vorab reduziert wurden (siehe auch <<sec:weedingBeforePlot>>).
 
-Ein wichtiger Parameter für den Algorithmus ist die erlaubte Toleranz, zu setzen im Konstruktor oder mittels `QwtWeedingCurveFitter::setTolerance(double)`. Diese Toleranz ist ein _Absolutwert_ basierend auf den y-Koordinaten im übergebenen Polygon. Je nach Größenordnung der y-Werte der Punkte werden die Punkte anders gefiltert. Dies bewirkt, dass bei größeren Plots mit entsprechend größerer Pixelauflösung in y-Richtung auch mehr Stütztstellen generiert werden und die Qualität des Diagramms nicht leidet.
+Ein wichtiger Parameter für den Algorithmus ist die erlaubte Toleranz, zu setzen im Konstruktor oder mittels `QwtWeedingCurveFitter::setTolerance(double)`. Diese Toleranz ist ein _Absolutwert_ basierend auf den y-Koordinaten im übergebenen Polygon. Je nach Größenordnung der y-Werte der Punkte werden die Punkte anders gefiltert. Dies bewirkt, dass bei größeren Plots mit entsprechend größerer Pixelauflösung in y-Richtung auch mehr Stützstellen generiert werden und die Qualität des Diagramms nicht leidet.
 
 Der Parameter `tolerance` wirkt sich dabei grob wie folgt aus, wenn die y-Werte in der Größenordnung 100 vorliegen (wie im obigen Beispiel).
 
@@ -847,7 +847,7 @@ image::LineCurves/CurveFitterWeeding_tol001.png[width=400,pdfwidth=10cm]
 
 Der zweite Parameter der `QwtWeedingCurveFitter`-Klasse ist die _chunk size_, gesetzt mit `QwtWeedingCurveFitter::setChunkSize(int)`.
 
-Das Originalpolynom wird dabei in Stücke mit der gegebenen Brockengröße zerteilt und der Algorithmus wird auf die einzelnen Stücke individuel angewendet. Dabei wird dann pro Brocken aber _mindestens ein Punkt_ generiert. Würde man also beim Beispiel oben eine Chunksize von 100000 wählen, so erhält man 200 Punkte (selbst bei Toleranz 10). Der Algorithmus hat dafür etwas weniger zu tun und ist nach ca. **50 ms** fertig, statt wie bisher nach ca. **270 ms**. Wenn man aber bedenkt, dass hier aus 10 Millionen Punkten ein sehr kleines Polynom mit weniger als 100 Punkten gemacht wird, ohne dass die Datenqualität sichtbar leidet, dann ist der Algorithmus (vor allem auf heutiger Hardware) insgesamt sehr schnell.
+Das Originalpolygon wird dabei in Stücke mit der gegebenen Brockengröße zerteilt und der Algorithmus wird auf die einzelnen Stücke individuell angewendet. Dabei wird dann pro Brocken aber _mindestens ein Punkt_ generiert. Würde man also beim Beispiel oben eine Chunksize von 100000 wählen, so erhält man 200 Punkte (selbst bei Toleranz 10). Der Algorithmus hat dafür etwas weniger zu tun und ist nach ca. **50 ms** fertig, statt wie bisher nach ca. **270 ms**. Wenn man aber bedenkt, dass hier aus 10 Millionen Punkten ein sehr kleines Polygon mit weniger als 100 Punkten gemacht wird, ohne dass die Datenqualität sichtbar leidet, dann ist der Algorithmus (vor allem auf heutiger Hardware) insgesamt sehr schnell.
 
 [IMPORTANT]
 ====
@@ -891,7 +891,7 @@ protected:
 };
 
 
-class BenchmarkedWeedingCurveFitter : public  {
+class BenchmarkedWeedingCurveFitter : public QwtWeedingCurveFitter {
 public:
 	QPolygonF fitCurve(const QPolygonF & polygon) const override {
 		QElapsedTimer timer;
@@ -963,7 +963,7 @@ Führt man das Programm aus, so sieht man beim großen Plot mit Auflösung 2400x
 | aus | aus | aus | --- | 550
 |====================
 
-In keiner Variante ist die Option _mit_  WeedingFitter schneller. In der Ausgabe in `fitCurve()` fällt auf, dass unabhängig von der Option `FilterPoints` der WeedingFitter immer alle 10 Mio Punkte übergeben bekommt. Und auch der Polygon-Clipping-Algorithmus bekommt das originale Polygon übergeben.
+In keiner Variante ist die Option _mit_ WeedingFitter schneller. In der Ausgabe in `fitCurve()` fällt auf, dass unabhängig von der Option `FilterPoints` der WeedingFitter immer alle 10 Mio Punkte übergeben bekommt. Und auch der Polygon-Clipping-Algorithmus bekommt das originale Polygon übergeben.
 
 Das führt dann dazu, dass obwohl der `QwtWeedingCurveFitter` letztlich das Polygon sehr stark verkleinert, der Mehraufwand in den Algorithmen durch den Wegfall des Punktefilterns enorm ist.
 
@@ -997,9 +997,9 @@ Wie man sieht, bringt selbst ein Patchen des Qwt-Quelltextes keine signifikante 
 [[sec:weedingBeforePlot]]
 #### Verwendung zur Datenreduktion vorab
 
-Man kann die Klasse `QwtWeedingCurveFitter` jedoch auch zu Datenreduktion _außerhalb_ der QwtPlotCurve verwenden, d.h. man reduziert die der Kurve übergebenen Daten vorab. Und hier liegt das wirkliche Performancesteigerungspotential.
+Man kann die Klasse `QwtWeedingCurveFitter` jedoch auch zur Datenreduktion _außerhalb_ der QwtPlotCurve verwenden, d.h. man reduziert die der Kurve übergebenen Daten vorab. Und hier liegt das wirkliche Performancesteigerungspotential.
 
-In diesem Fall benutzt man den `QwtWeedingCurveFitter`-Algorithmus, um damit die originale Datenreihe auszudünnen und der PlotCurve bereits ein kleineres Polygon zu übergeben. Folgende Quelltext nimmt die Punkte der originalen Datenreihe und überträgt sie in ein Polygon, welches dann dem `QwtWeedingCurveFitter` übergeben wird.
+In diesem Fall benutzt man den `QwtWeedingCurveFitter`-Algorithmus, um damit die originale Datenreihe auszudünnen und der PlotCurve bereits ein kleineres Polygon zu übergeben. Folgender Quelltext nimmt die Punkte der originalen Datenreihe und überträgt sie in ein Polygon, welches dann dem `QwtWeedingCurveFitter` übergeben wird.
 
 .Verwendung des `QwtWeedingCurveFitter` zur Datenreduktion außerhalb des QwtPlot
 [source,c++]
@@ -1014,14 +1014,14 @@ poly = weedingAlgorithm.fitCurve(poly);
 curve->setSamples(poly);
 ----
 
-Die Funktion `QwtWeedingCurveFitter::fitCurve(QPolygonF)` liefert das entsprechend reduzierte Polynom zurück.
+Die Funktion `QwtWeedingCurveFitter::fitCurve(QPolygonF)` liefert das entsprechend reduzierte Polygon zurück.
 
 [WARNING]
 ====
 Wenn man den `QwtWeedingCurveFitter` nur als Utilityklasse benutzt und nicht als Objekt der `QwtPlotCurve` übergibt (und damit das Objekt in das Eigentum der PlotCurve überträgt), sollte man das Objekt auf dem Stack erstellen oder sich selbst um das Speicheraufräumen kümmern.
 ====
 
-Nun benötigt der Algorithmus einmalig ca. **800 ms**, aber das Zeichnen auf dem Bildschirm und Aktualisieren des Plots beim Plot-Größenänderungen dauert minimale **2 ms**, und _das_ ist eine wahrhaftige Performancesteigerung.
+Nun benötigt der Algorithmus einmalig ca. **800 ms**, aber das Zeichnen auf dem Bildschirm und Aktualisieren des Plots bei Plot-Größenänderungen dauert minimale **2 ms**, und _das_ ist eine wahrhaftige Performancesteigerung.
 
 [TIP]
 ====

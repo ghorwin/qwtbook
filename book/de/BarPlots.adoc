@@ -67,7 +67,7 @@ curve->setLayoutPolicy(QwtPlotAbstractBarChart::AutoAdjustSamples);
 ```
 wird die Größe der Balken basierend auf der Größe der Zeichenfläche und der gesetzen Rand- und Zwischenabstände bestimmt.
 
-.Balkendiagram im Layoutmodus 'AutoAdjustSamples', normal (links) und hineingezoomt (rechts)
+.Balkendiagramm im Layoutmodus 'AutoAdjustSamples', normal (links) und hineingezoomt (rechts)
 image:BarPlot_1_LayoutAutoAdjustSamples.png[pdfwidth=6cm] 
 image:BarPlot_1_LayoutAutoAdjustSamples_zoomed.png[pdfwidth=6cm]
 
@@ -94,7 +94,7 @@ curve->setLayoutHint(0.5); // 0.5 axis scale as bar width
 ```
 
 
-.Balkendiagram im Layoutmodus 'ScaleSamplesToAxes', normal (links) und hineingezoomt (rechts)
+.Balkendiagramm im Layoutmodus 'ScaleSamplesToAxes', normal (links) und hineingezoomt (rechts)
 image:BarPlot_1_LayoutScaleSamplesToAxes.png[pdfwidth=6cm]
 image:BarPlot_1_LayoutScaleSamplesToAxes_zoomed.png[pdfwidth=6cm]
 
@@ -116,7 +116,7 @@ curve->setLayoutHint(0.1); // bar width 10% of canvas width
 ```
 
 
-.Balkendiagram im Layoutmodus 'ScaleSampleToCanvas', mit 10% Zeichenflächebreite als Balkenbreite
+.Balkendiagramm im Layoutmodus 'ScaleSampleToCanvas', mit 10% Zeichenflächenbreite als Balkenbreite
 image:BarPlot_1_LayoutScaleSampleToCanvas.png[pdfwidth=6cm]
 image:BarPlot_1_LayoutScaleSampleToCanvas_zoomed.png[pdfwidth=6cm]
 
@@ -150,7 +150,7 @@ curve->setSymbol( symbol );
 
 Angepasst werden können die Form des Rechteckrahmens (`Raised`, `Plain`, `NoFrame`), die Füllfarbe und Linienfarbe.
 
-.Balkendiagram mit angepasstem Stil für die Balken
+.Balkendiagramm mit angepasstem Stil für die Balken
 image::BarPlots/BarPlot_1_BoxSymbol.png[pdfwidth=6cm]
 
 
@@ -173,7 +173,7 @@ curve->setSymbol( symbol );
 ```
 
 
-.Balkendiagram mit schwarz umrandeten, einfarbigen Balken
+.Balkendiagramm mit schwarz umrandeten, einfarbigen Balken
 image::BarPlots/BarPlot_1_BoxSymbolBlackFrame.png[pdfwidth=6cm]
 
 ## Balkenbeschriftung auf der X-Achse
@@ -215,14 +215,14 @@ plot.updateCanvasMargins();
 ```
 
 
-.Balkendiagram mit typischer X-Achsenbeschriftung, mit Rändern (links), ohne Ränder und y-Achse schneidet x-Achse bei x=0 direkt am linken Rand
+.Balkendiagramm mit typischer X-Achsenbeschriftung, mit Rändern (links), ohne Ränder und y-Achse schneidet x-Achse bei x=0 direkt am linken Rand
 image:BarPlot_1_xAxis.png[pdfwidth=6cm]
 image:BarPlot_1_xAxis_aligned.png[pdfwidth=6cm]
 
 
 ## Balkenbeschriftungen
 
-Möchte man statt der Zahlen am unteren Bildschirmrand Beschriftungen für die einzelnen Balken haben, musst man die Klasse `QwtScaleDraw` ableiten und dann die virtuelle Funktionen `QwtScaleDraw::label()` überschreiben.
+Möchte man statt der Zahlen am unteren Bildschirmrand Beschriftungen für die einzelnen Balken haben, muss man die Klasse `QwtScaleDraw` ableiten und dann die virtuelle Funktion `QwtScaleDraw::label()` überschreiben.
 
 ```c++
 class ScaleDraw : public QwtScaleDraw {
@@ -258,7 +258,7 @@ Diese Klassenimplementierung konfiguriert die Darstellung der Unterteilungsstric
 Entscheidend ist die Implementierung der Funktion `QwtScaleDraw::label()`. Diese Funktion hat die Aufgabe, passend zu den übergebenen Zahlenwerten (hier Werte der x-Achse) entsprechende Beschriftungen anzuzeigen. Wie am Anfang dieses Kapitels erwähnt, wird jedem Balken eine fortlaufende Nummer zugeordnet. Wenn die Achse nun also eine Zahl zeichnen will, also z.B. die 4, dann wird in der Funktion der Wert gerundet und als Index benutzt, um den dazugehörigen Text zurückzuliefern.
 
 
-.Balkendiagram mit Textbeschriftung der Balken, rechts hineingezoomed mit fehlerhafter Beschriftung der Balken
+.Balkendiagramm mit Textbeschriftung der Balken, rechts hineingezoomt mit fehlerhafter Beschriftung der Balken
 image:BarPlot_1_xAxisWithLabels.png[pdfwidth=6cm]
 image:BarPlot_1_xAxisWithLabels_zoomed.png[pdfwidth=6cm]
 
@@ -275,7 +275,7 @@ image::BarPlots/BarPlot_1_xAxisWithLabels_zoomedFixed.png[pdfwidth=6cm]
 
 ## Mehrfarbige Balken
 
-Wenn man die Balken nun auch noch individuell einfärben möchte, so kommt man um eine Re-Implemetierung des `QwtPlotBarChart` Zeichenelements nicht herum. Man muss eigentlich nur die Funktion `QwtPlotBarChart::specialSymbol()` reimplementieren und hier unterschiedlich gefärbte Balkensymbole zurückliefern.
+Wenn man die Balken nun auch noch individuell einfärben möchte, so kommt man um eine Re-Implementierung des `QwtPlotBarChart` Zeichenelements nicht herum. Man muss eigentlich nur die Funktion `QwtPlotBarChart::specialSymbol()` reimplementieren und hier unterschiedlich gefärbte Balkensymbole zurückliefern.
 
 ```c++
 class MultiColorBarChart : public QwtPlotBarChart {
@@ -316,7 +316,7 @@ public:
 };
 ```
 
-Für jeden Balken im Diagramm speichern wir uns eine Farbe in der Membervariable `m_colors`. In der überschriebenen Funktion `QwtPlotBarChart::specialSymbol()` erstellen wir nun jeweils ein `QwtColumnSymbol` wie im vorangehenden Kapitel und liefern dieses zurück. Die Funktion übernimmt sowohl den Index des Balkens (oder _samples_) als Argument, wie auch die Plotkoordinaten des Balkens, wobei der x-Wert der Punktes wieder der Balkenindex ist, und der y-Wert dem Funktionswert des Balkens entspricht.
+Für jeden Balken im Diagramm speichern wir uns eine Farbe in der Membervariable `m_colors`. In der überschriebenen Funktion `QwtPlotBarChart::specialSymbol()` erstellen wir nun jeweils ein `QwtColumnSymbol` wie im vorangehenden Kapitel und liefern dieses zurück. Die Funktion übernimmt sowohl den Index des Balkens (oder _samples_) als Argument, wie auch die Plotkoordinaten des Balkens, wobei der x-Wert des Punktes wieder der Balkenindex ist, und der y-Wert dem Funktionswert des Balkens entspricht.
 
 [IMPORTANT]
 ====
@@ -337,7 +337,7 @@ Wenn man nur bestimmte Balken einfärben möchte, die anderen aber im Standardde
 
 Für Balkendiagramme kann man zwei Arten von Legendeneinträgen erstellen:
 
-- einen Eintrag für das gesammte Balkendiagramm-Zeichenelement, oder
+- einen Eintrag für das gesamte Balkendiagramm-Zeichenelement, oder
 - individuelle Einträge für jeden einzelnen Balken
 
 Die erste Variante ist dann sinnvoll, wenn neben dem Balkendiagramm-Zeichenelement noch weitere Zeichenelemente mit Legendeneinträgen angezeigt werden. Im vorliegenden Fall ist eine individuelle Bezeichnung der Balken sinnvoll.
@@ -392,7 +392,7 @@ plot.setAxisVisible(QwtPlot::xBottom, false);
 .Balkendiagramm mit unterschiedlich gefärbten Balken und Legendeneinträgen
 image::BarPlots/BarPlot_1_MultiColorWithLegend.png[pdfwidth=6cm]
 
-### Balkendigramme mit Lücken zwischen den Balken oder unregelmäßigen Abständen
+### Balkendiagramme mit Lücken zwischen den Balken oder unregelmäßigen Abständen
 
 Die Position der Balken, d.h. die X-Koordinaten, werden ja automatisch in der Funktion `setSamples()` festgelegt (0,1,2,3, ...). Die Balken werden dann zentriert um diese Koordinate gezeichnet (siehe auch Beispiele ganz oben).
 
@@ -421,7 +421,7 @@ image::BarPlots/BarPlot_1_IrregularXCoords.png[pdfwidth=6cm]
 
 ### Mehrere Balkendiagramme im gleichen Diagramm
 
-Wenn man in einem Diagram mehrere `QwtPlotBarChart` Objekte integriert, zeichnet das `QwtPlot` diese unabhängig voneinander. Damit kann man beispielsweise positive und negative Balken an den gleichen X-Koordinaten zeichnen, oder sich überlappende Balken.
+Wenn man in einem Diagramm mehrere `QwtPlotBarChart` Objekte integriert, zeichnet das `QwtPlot` diese unabhängig voneinander. Damit kann man beispielsweise positive und negative Balken an den gleichen X-Koordinaten zeichnen, oder sich überlappende Balken.
 
 Dazu erstellt und konfiguriert man einfache mehrere `QwtPlotBarChart` Objekte:
 
@@ -539,7 +539,7 @@ image::BarPlots/MultiBarPlot_stacked.png[pdfwidth=6cm]
 
 ### Andere Rahmen der gestapelten Kurven
 
-Bei den gestapelten Kurven sorgt der Symbolrahmen `QwtColumnSymbol::Plain` zu doppelten Trennstrichen zwischen den Balken (siehe Bild oben).
+Bei den gestapelten Kurven sorgt der Symbolrahmen `QwtColumnSymbol::Plain` für doppelte Trennstriche zwischen den Balken (siehe Bild oben).
 Man kann natürlich auch den Stil ändern:
 
 ```c++

@@ -8,7 +8,7 @@ Neben der Anzeige auf dem Bildschirm ist das Speichern schicker Diagramme und Ve
 
 ## Exportieren des Plots als Pixelgrafik
 
-Der naheliegenste Export des Plots ist eine 1-zu-1 Kopie in die Zwischenablage oder in eine Bitmapdatei (jpg, gif, png,...).
+Der naheliegendste Export des Plots ist eine 1-zu-1 Kopie in die Zwischenablage oder in eine Bitmapdatei (jpg, gif, png,...).
 
 ### Erstellen einer 1-zu-1 Kopie des Plotwidgets
 
@@ -22,14 +22,14 @@ QPixmap p = plot.grab();
 p.save("diagramm_screenshot.png");
 ----
 
-Das Diagramm aus dem Tutorial 1 (<<sec:tutorial1>>) sieht exportiert als PNG-Build so aus:
+Das Diagramm aus dem Tutorial 1 (<<sec:tutorial1>>) sieht exportiert als PNG-Bild so aus:
 
 .1-zu-1 Kopie des Plot, exportiert in ein PNG-Bild
 image::Print/Tutorial1_f.png[pdfwidth=8cm]
 
 [TIP]
 ====
-Die Funktion `QWidget::grab()` macht bei jedem beliebigen Qt Widget einen Screenshot oder bei Verwendung von `QWidget::grab(QRect(...))` eine Teil-Screenshot des Widgets und alle seiner Kind-Widgets. Das resultierende QPixmap kann dann beliebig weiterverarbeitet werden.
+Die Funktion `QWidget::grab()` macht bei jedem beliebigen Qt Widget einen Screenshot oder bei Verwendung von `QWidget::grab(QRect(...))` einen Teil-Screenshot des Widgets und aller seiner Kind-Widgets. Das resultierende QPixmap kann dann beliebig weiterverarbeitet werden.
 ====
 
 [NOTE]
@@ -40,7 +40,7 @@ Der Widget-Titel wurde mit `QWidget::grab()` nur deshalb mit exportiert, weil da
 
 ### Kopie in die Zwischenablage
 
-Statt das Pixmap in eine Datei zu speichern, kann man das auch einfach in die Zwischenablage kopieren. Dazu `QClibBoard` und  `QApplication` einbinden und:
+Statt das Pixmap in eine Datei zu speichern, kann man das auch einfach in die Zwischenablage kopieren. Dazu `QClipboard` und `QApplication` einbinden und:
 
 [source,cpp]
 ----
@@ -84,13 +84,13 @@ image::Print/Tutorial1_h.png[pdfwidth=15cm]
 
 [IMPORTANT]
 ====
-Wenn man dieses Diagramm und das vorherige der 1-zu-1 Kopie vergleicht, so stellt man fest, dass Fontgrößen, Linienstärken und manche Randabstände (z.B. bei der vertikalen Markierung) gleich geblieben sind. Die Achsenskalierung und damit auch das Gitterraster und Achsenbeschriftungen haben sich jedoch aufgrund der höheren Auflösung verändert. Das kann man sich zu Nutze machen, wenn z.B. Achsenbeschriftungen auf dem Bildschirm nicht komplett ins Diagramm passen und nun aufgrund höherer Auflösung geschrieben werden können. Allerdings birg dies auch die Gefahr, dass die Schriftgrößen im Ausdruck zu klein werden. Das ist aber eher ein Problem beim Vektorexport und wird im <<sec:exportDPI>> thematisiert.
+Wenn man dieses Diagramm und das vorherige der 1-zu-1 Kopie vergleicht, so stellt man fest, dass Fontgrößen, Linienstärken und manche Randabstände (z.B. bei der vertikalen Markierung) gleich geblieben sind. Die Achsenskalierung und damit auch das Gitterraster und Achsenbeschriftungen haben sich jedoch aufgrund der höheren Auflösung verändert. Das kann man sich zu Nutze machen, wenn z.B. Achsenbeschriftungen auf dem Bildschirm nicht komplett ins Diagramm passen und nun aufgrund höherer Auflösung geschrieben werden können. Allerdings birgt dies auch die Gefahr, dass die Schriftgrößen im Ausdruck zu klein werden. Das ist aber eher ein Problem beim Vektorexport und wird im <<sec:exportDPI>> thematisiert.
 ====
 
 
 ### Drucken 
 
-Beim Drucken wird das Bild einfach auf eine Druckerzeichenfläche gerendert. Für die Druckunterstützung mit im Qt-Programm zunächst die pro-Datei erweitert werden:
+Beim Drucken wird das Bild einfach auf eine Druckerzeichenfläche gerendert. Für die Druckunterstützung muss im Qt-Programm zunächst die pro-Datei erweitert werden:
 
 ```
 QT += printsupport
@@ -161,7 +161,7 @@ Dann erstellt und konfiguriert man das Generatorobjekt und rendert in das SVG-Ge
 
 [source,cpp]
 ----
- generator;
+QSvgGenerator generator;
 generator.setFileName("plot.svg");
 generator.setSize(QSize(600, 400));
 generator.setViewBox(QRect(0, 0, 600, 400));
@@ -173,13 +173,13 @@ renderer.renderTo( &plot, generator);
 
 [CAUTION]
 ====
-Wendet man obigen Code auf das Diagramm im ersten Tutorial an, so wird beim Betrachten des SVG-Dokuments _keine_ Linie angezeigt. Das liegt daran, dass der SVG-Generator im Gegensatz zum Pixel-Renderer oder PDF-Writer nicht mit NAN-Werten umgehen kann. Diese entstehen häufig unbewusst, z.B. in diesem Beispiel beim Logarithmieren von 0-Werten durch Auswahl einer entsprechenden y-Achsenskalierung. Auf dem Bildschirm wird die Linie zwar trotzdem korrekt angezeigt, aber beim SVG Export wird eine Kurve (intern Polylinie) nur bis zum ersten Erscheinen eines NAN-Werts gezeichnet. Ist zufälligerweise der erste Wert bereits ein NAN (wir hier der Fall, da aus dem erstem Wert 0 beim Logarithmieren ein NAN wird), so fehlt die Kurve im Export und man sucht dann zumeist sehr lange, bis man den Fehler gefunden hat.
+Wendet man obigen Code auf das Diagramm im ersten Tutorial an, so wird beim Betrachten des SVG-Dokuments _keine_ Linie angezeigt. Das liegt daran, dass der SVG-Generator im Gegensatz zum Pixel-Renderer oder PDF-Writer nicht mit NAN-Werten umgehen kann. Diese entstehen häufig unbewusst, z.B. in diesem Beispiel beim Logarithmieren von 0-Werten durch Auswahl einer entsprechenden y-Achsenskalierung. Auf dem Bildschirm wird die Linie zwar trotzdem korrekt angezeigt, aber beim SVG Export wird eine Kurve (intern Polylinie) nur bis zum ersten Erscheinen eines NAN-Werts gezeichnet. Ist zufälligerweise der erste Wert bereits ein NAN (wie hier der Fall, da aus dem ersten Wert 0 beim Logarithmieren ein NAN wird), so fehlt die Kurve im Export und man sucht dann zumeist sehr lange, bis man den Fehler gefunden hat.
 ====
 
 
 Die Angabe der Auflösung mit `QSvgGenerator::setResolution()` definiert zusammen mit der gegebenen Größe die finale Auflösung des Bildes. Je höher die Auflösung, umso größer sind Font und Stiftbreiten. In diesem Zusammenhang unterscheidet sich der SVG-Export vom PDF-Export/Drucken.
 
-Ein generiertes SVG-Dokument kann man auch in die Zwischenablage kopieren. Dazu definiert legt man im `QSvgGenerator` ein alternatives Ausgabegerät an (mit `QSvgGenerator::setOutputDevice()`) und
+Ein generiertes SVG-Dokument kann man auch in die Zwischenablage kopieren. Dazu legt man im `QSvgGenerator` ein alternatives Ausgabegerät an (mit `QSvgGenerator::setOutputDevice()`) und
 
 [source,cpp]
 ----
@@ -229,7 +229,7 @@ Damit kann das Plot gedruckt schon ganz ordentlich aussehen. Man kann das Ersche
 
 [source,cpp]
 ----
-renderer.setLayoutFlag(  );
+renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
 ----
 
 .Plot gerendert im Layoutmodus _FrameWithScales_
@@ -259,7 +259,7 @@ Wie schon oben beschrieben, wird bei unterschiedlicher Druck-Pixelgröße die Sk
 Bei Ausgabe des Plots als Vektorgrafik, vor allem beim Drucken oder Ausgabe in PDF-Dateien, müssen _alle_ Plotelement mit skalierbaren Größen festgelegt sein. Dies ist insbesondere für alle Definitionen eines `QPen()` notwendig, z.B. bei Linienkurven. Hier dürfen _keine_ kosmetischen Pens mit Linienstärke 0 verwendet werden. Die resultierenden Linien mit Breiten von einem Pixel würden im Ausdruck schlicht nicht sichtbar sein.
 ====
 
-Die Skalierung von Schriftgrößen und Linienbreiten wird über die Auflösung (angegeben in DPI) des gewählten Zeichengeräts festgelegt. Zusammen mit der Pixel-Größe des Plots ergibt sich dann das finale Erscheinungsbild der Diagramms, welches durchaus von dem Bild auf dem Bildschirm abweichen kann.
+Die Skalierung von Schriftgrößen und Linienbreiten wird über die Auflösung (angegeben in DPI) des gewählten Zeichengeräts festgelegt. Zusammen mit der Pixel-Größe des Plots ergibt sich dann das finale Erscheinungsbild des Diagramms, welches durchaus von dem Bild auf dem Bildschirm abweichen kann.
 
 Beim Export eines Plots als Vektorgrafik (PDF oder SVG-Dokument) sind Schriftgröße und Linienstärke Eigenschaften der exportierten Vektorelemente. Wichtig ist hierbei, dass bei allen Zeichenelementen Stiftbreiten (auch als Dezimalzahl) angegeben werden.
 
@@ -268,7 +268,7 @@ Exportiert man das Diagramm als PDF, werden die Skalenlinien nur als kosmetische
 .Vergrößerung des Vektorexports (PDF), Linien der Skalen werden als kosmetische Linien immer mit einem Pixel Breite gezeichnet
 image::Print/PDF-Export-Detail.png[pdfwidth=6cm]
 
-Auch bei den Skalen darf man nicht vergessen, den Zeichenstift (`QPen`)  entsprechend zu setzen.
+Auch bei den Skalen darf man nicht vergessen, den Zeichenstift (`QPen`) entsprechend zu setzen.
 
 [source,cpp]
 ----
@@ -289,7 +289,7 @@ Analog gilt das auch, wenn mittels `QwtPlotRenderer` eine Pixelgrafik gerendert 
 
 Bei den anderen Exportformaten ist die DPI-Zahl nur eine Zusatzinformation für das Anzeigeprogramm, wie das jeweilige Bild zu skalieren ist. Da aber alle Größen und Abstände relativ in der Datei abgelegt sind, und Schriftgrößen und Linienstärken Attribute der Vektorelemente sind, ändert sich das Erscheinungsbild des Diagramms beim PDF-Export/Druck nicht in Abhängigkeit der DPI-Zahl.
 
-Beim Ausdruck/Export in PDF ist aber die Zielgröße entscheident für das finale Erscheinungsbild, nachfolgend mal am Vergleich des Exports in A4 Format und A5 Format gezeigt:
+Beim Ausdruck/Export in PDF ist aber die Zielgröße entscheidend für das finale Erscheinungsbild, nachfolgend mal am Vergleich des Exports in A4 Format und A5 Format gezeigt:
 
 
 .Export in A4 Landscape Format
@@ -305,7 +305,7 @@ Wie man gut sieht, sind Zeichenelemente und Schriftgrößen aufgrund der gleiche
 ====
 Wenn man konsistente Diagramme in Berichten verwenden möchte, bei denen Schriftgrößen und Linienstärken immer gleich groß sind, dann braucht man beim Vektorexport nur stets die gleiche DPI-Zahl einstellen und das Bild ohne Skalierung einfügen (100% Größe).
 
-Mitunter sind die Fonts im Diagramm aber zu klein oder zu groß, oder man möchte das Diagramm verkleinert im Bericht haben, um mehr Beschriftungsdetails zu bekommen. Die alternative wäre, im Diagramm die Fonts und Linienstärken vor dem Export entsprechend zu vergrößern/verkleinern. 
+Mitunter sind die Fonts im Diagramm aber zu klein oder zu groß, oder man möchte das Diagramm verkleinert im Bericht haben, um mehr Beschriftungsdetails zu bekommen. Die Alternative wäre, im Diagramm die Fonts und Linienstärken vor dem Export entsprechend zu vergrößern/verkleinern.
 
 So könnte man das exportierte Diagramm eventuell mit 75% Vergrößerung in den Bericht übernehmen, oder wahlweise auf eine feste Breite (z.B. Seitenbreite) skalieren. Im letzteren Fall, also immer, wenn beim Einfügen konkrete Höhen/Breiten festgelegt werden, sollte man sicherstellen, dass das Verhältnis von Exportgeometrie und Importgeometrie stets identisch ist. Denn nur so stellt man sicher, dass Schriftgrößen in unterschiedlich großen Diagrammen dennoch stets gleich bleiben.
 ====
