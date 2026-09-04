@@ -14,16 +14,16 @@ html: $(HTML_OUT)
 pdf: $(PDF_OUT)
 
 $(HTML_OUT): $(ADOC_FILES) $(IMAGE_FILES)
-	asciidoctor QwtBook.adoc
+	asciidoctor -a lang=en QwtBook.adoc
 
 $(PDF_OUT): $(ADOC_FILES) $(IMAGE_FILES)
-	asciidoctor-pdf -a pdf-theme=pdf-theme.yml -r ../rouge_theme.rb \
+	asciidoctor-pdf -a lang=en -a pdf-theme=pdf-theme.yml -r ../rouge_theme.rb \
 			-a pdf-fontsdir="../fonts;GEM_FONTS_DIR" QwtBook.adoc
 
 deploy: $(HTML_OUT) $(PDF_OUT)
-	mkdir -p $(DOCS_DIR)/de
-	cp $(HTML_OUT) $(DOCS_DIR)/de/index.html
-	cp $(PDF_OUT)  $(DOCS_DIR)/QwtBook_de.pdf
+	mkdir -p $(DOCS_DIR)/en
+	cp $(HTML_OUT) $(DOCS_DIR)/en/index.html
+	cp $(PDF_OUT)  $(DOCS_DIR)/QwtBook_en.pdf
 	cp -r ../images $(DOCS_DIR)/
 	cp -r ../fonts  $(DOCS_DIR)/
 	cp -r ../css    $(DOCS_DIR)/
